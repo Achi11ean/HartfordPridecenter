@@ -25,7 +25,7 @@ export default function HomePage() {
           <div className="bg-black/40 border-b-2 sm:py-8 text-center border-yellow-400">
             <img
               src="https://t4.ftcdn.net/jpg/06/96/89/13/360_F_696891328_utj80ZwXsdy8SloC9IBaFGDIcGNBrEze.jpg"
-              alt="Hartford Pride Center Logo"
+              alt="South Haven LGBTQIA+ Advocacy Logo"
               className="mx-auto w-full sm:w-full md:w-96 mt-6 shadow-md shadow-yellow-500 transition-transform duration-700 ease-in-out"
             />
           </div>
