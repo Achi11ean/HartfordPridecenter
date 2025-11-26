@@ -57,16 +57,6 @@ export default function CapitalEvents() {
     sat: "Saturday",
   };
 
-  const dayToIndex = {
-    Sunday: 0,
-    Monday: 1,
-    Tuesday: 2,
-    Wednesday: 3,
-    Thursday: 4,
-    Friday: 5,
-    Saturday: 6,
-  };
-
   const extractAlsoOccursDays = (notes = "") => {
     if (!notes) return [];
 
@@ -80,13 +70,8 @@ export default function CapitalEvents() {
 
     const found = new Set();
 
-    Object.keys(dayToIndex).forEach((day) => {
-      const regex = new RegExp(`\\b${day}\\b`, "i");
-      if (regex.test(relevant)) found.add(day);
-    });
-
-    Object.entries(dayNameMap).forEach(([abbr, full]) => {
-      const regex = new RegExp(`\\b${abbr}\\b:?`, "i");
+    Object.values(dayNameMap).forEach((full) => {
+      const regex = new RegExp(`\\b${full}\\b`, "i");
       if (regex.test(relevant)) found.add(full);
     });
 
@@ -114,7 +99,7 @@ export default function CapitalEvents() {
             href={href}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-300 underline hover:text-blue-400 font-semibold"
+            className="text-yellow-300 underline hover:text-yellow-200 font-semibold"
           >
             {prettyLabel(href)}
           </a>
@@ -124,7 +109,7 @@ export default function CapitalEvents() {
     });
   };
 
-  // ---------- Fetch Events Using NEW ENDPOINT ----------
+  // ---------- Fetch Events ----------
   useEffect(() => {
     const load = async () => {
       try {
@@ -134,7 +119,7 @@ export default function CapitalEvents() {
 
         let data = await res.json();
 
-        // Preprocess for "Also Occurs"
+        // Preprocess
         const enriched = data.map((ev) => ({
           ...ev,
           alsoOccurs: extractAlsoOccursDays(ev.notes || ""),
@@ -154,20 +139,20 @@ export default function CapitalEvents() {
   // ---------- UI ----------
   if (loading)
     return (
-      <div className="text-center text-white py-10">
+      <div className="text-center text-yellow-300 py-10">
         Loading Hartford Pride Center Events...
       </div>
     );
 
   if (events.length === 0)
     return (
-      <div className="text-center text-white text-xl py-10">
+      <div className="text-center text-yellow-300 text-xl py-10">
         ⭐ No Hartford Pride Center events found.
       </div>
     );
 
   return (
-    <div className="w-full max-w-5xl mt-12 mx-auto  grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="w-full max-w-5xl mt-12 mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
       {events.map((ev) => {
         const detectedEventbrite =
           ev.eventbrite_url && EVENTBRITE_RE.test(ev.eventbrite_url)
@@ -186,23 +171,30 @@ export default function CapitalEvents() {
                 window.location.href = `https://karaoverse.com/events/${ev.slug}`;
               }
             }}
-            className="bg-white/10 backdrop-blur-md border border-pink-400 shadow-2xl rounded-none p-6 text-left text-white hover:bg-white/20 transition cursor-pointer"
+            className="
+              bg-white/10 backdrop-blur-md 
+              border border-yellow-400 
+              shadow-2xl rounded-none p-6 
+              text-left text-yellow-100 
+              hover:bg-white/20 hover:shadow-yellow-500/40 
+              transition cursor-pointer
+            "
           >
             {/* Title */}
-            <h2 className="text-3xl border-b-2 font-bold text-pink-300 mb-3">
+            <h2 className="text-3xl border-b-2 border-yellow-500 font-bold text-yellow-300 mb-3">
               {ev.venue_name}
             </h2>
 
             {/* Event Type */}
             {ev.event_type && (
-              <p className="text-sm uppercase tracking-widest text-yellow-300 font-bold mb-3">
+              <p className="text-sm uppercase tracking-widest text-amber-300 font-bold mb-3">
                 {ev.event_type}
               </p>
             )}
 
             {/* Location */}
-            <div className="flex items-center gap-2 text-blue-200 font-medium mb-3">
-              <FaMapMarkerAlt />
+            <div className="flex items-center gap-2 text-yellow-200 font-medium mb-3">
+              <FaMapMarkerAlt className="text-yellow-300" />
               <a
                 href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
                   `${ev.venue_name} ${ev.address}, ${ev.city}, ${ev.state}`
@@ -217,8 +209,8 @@ export default function CapitalEvents() {
             </div>
 
             {/* Main Date */}
-            <p className="text-lg font-semibold text-purple-200 mb-3 flex items-center gap-2">
-              <FaCalendarAlt />
+            <p className="text-lg font-semibold text-yellow-200 mb-3 flex items-center gap-2">
+              <FaCalendarAlt className="text-yellow-300" />
               {ev.date
                 ? new Date(ev.date).toLocaleDateString("en-US", {
                     weekday: "long",
@@ -231,23 +223,25 @@ export default function CapitalEvents() {
                 : "Date TBD"}
             </p>
 
-            {/* Also occurs */}
+            {/* Also Occurs */}
             {ev.alsoOccurs?.length > 0 && (
-              <p className="text-md font-bold text-yellow-300 mb-3">
+              <p className="text-md font-bold text-amber-300 mb-3">
                 Also Occurs On:{" "}
-                <span className="text-white">{ev.alsoOccurs.join(", ")}</span>
+                <span className="text-yellow-100">
+                  {ev.alsoOccurs.join(", ")}
+                </span>
               </p>
             )}
 
             {/* Time */}
-            <div className="flex items-center gap-2 text-teal-200 font-medium mb-3">
-              <FaClock />
+            <div className="flex items-center gap-2 text-yellow-200 font-medium mb-3">
+              <FaClock className="text-yellow-300" />
               {formatTime(ev.start_time)} – {formatTime(ev.end_time)}
             </div>
 
-            {/* Notes with overflow */}
+            {/* Notes */}
             {ev.notes && (
-              <div className="max-h-32 overflow-y-auto pr-1 mb-4 text-gray-200 whitespace-pre-line">
+              <div className="max-h-32 overflow-y-auto pr-1 mb-4 text-yellow-100 whitespace-pre-line">
                 {renderNotes(ev.notes)}
               </div>
             )}
@@ -259,7 +253,7 @@ export default function CapitalEvents() {
                 onClick={(e) => e.stopPropagation()}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-pink-300 underline hover:text-pink-200"
+                className="inline-flex items-center gap-2 text-yellow-300 underline hover:text-yellow-200"
               >
                 Eventbrite Page <FaExternalLinkAlt />
               </a>

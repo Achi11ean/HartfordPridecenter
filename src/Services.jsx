@@ -5,19 +5,19 @@ export default function Services({
   contactPath = "/contact",
   services = [],
   theme = {
-    pageBg: "bg-gradient-to-b from-indigo-900 via-purple-900 to-teal-900",
-    cardBg: "bg-white/90",
-    cardHoverBg: "hover:bg-white",
-    primaryTextGrad: "bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500",
-    accentTextGrad: "bg-gradient-to-r from-fuchsia-400 via-pink-400 to-purple-400",
-    border: "border-white/20",
-    headingText: "text-white",
-    bodyText: "text-gray-800",
+    pageBg: "bg-gradient-to-b from-black via-amber-900 to-yellow-900",
+    cardBg: "bg-yellow-50/90",
+    cardHoverBg: "hover:bg-yellow-50",
+    primaryTextGrad: "bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500",
+    accentTextGrad: "bg-gradient-to-r from-yellow-300 via-amber-200 to-yellow-400",
+    border: "border-yellow-300/40",
+    headingText: "text-yellow-200",
+    bodyText: "text-gray-700",
   },
 }) {
   const [selectedService, setSelectedService] = useState(null);
 
-  // 🌟 Default Pride Center Services
+  // 🌟 Default Pride Center Services (unchanged)
   const defaultServices = services.length
     ? services
     : [
@@ -71,14 +71,14 @@ export default function Services({
         },
       ];
 
-  // 🌈 Reusable Contact Button
+  // 🌟 Yellow Themed Contact Button
   const ContactButton = () => (
     <div className="flex justify-center my-10">
       <Link to={contactPath}>
         <button
-          className={`px-10 py-2 rounded-full font-bold text-white shadow-lg transition-all duration-300 hover:scale-105 ${theme.accentTextGrad} border-4 border-pink-300/40 hover:border-pink-300`}
+          className={`px-10 py-2 rounded-full font-bold text-yellow-900 shadow-lg transition-all duration-300 hover:scale-105 ${theme.accentTextGrad} border-4 border-yellow-300/40 hover:border-yellow-300`}
         >
-          Get Involved 💜
+          Get Involved 💛
         </button>
       </Link>
     </div>
@@ -87,14 +87,14 @@ export default function Services({
   return (
     <div className={`min-h-screen ${theme.pageBg} pb-16`}>
       {/* Header */}
-      <div className="max-w-6xl mx-auto px-6 pt-12">
+      <div className="max-w-6xl mt-8 sm:mt-28 mx-auto px-6 pt-12">
         <div className="text-center">
           <h1
-            className={`text-3xl sm:text-4xl md:text-5xl font-extrabold border-b-4 border-pink-400 inline-block ${theme.headingText}`}
+            className={`text-3xl sm:text-4xl md:text-5xl font-extrabold border-b-4 border-yellow-400 inline-block ${theme.headingText}`}
           >
             Our Programs & Services
           </h1>
-          <p className="mt-4 text-white/90 max-w-2xl mx-auto text-lg">
+          <p className="mt-4 text-yellow-200/90 max-w-2xl mx-auto text-lg">
             Explore how we empower and support the LGBTQIA+ community through
             connection, advocacy, and creativity.
           </p>
@@ -143,8 +143,8 @@ export default function Services({
 
           {/* Modal Panel */}
           <div className="relative z-10 flex min-h-full items-center justify-center p-4">
-            <div className="w-full max-w-2xl overflow-hidden rounded-3xl shadow-2xl border border-white/10 bg-white/90 backdrop-blur-md animate-[fadeInUp_.3s_ease]">
-              {/* Header */}
+            <div className="w-full max-w-2xl overflow-hidden rounded-3xl shadow-2xl border border-yellow-300/30 bg-yellow-50/95 backdrop-blur-md animate-[fadeInUp_.3s_ease]">
+              {/* Header with Image */}
               <div className="relative">
                 {selectedService.image && (
                   <img
@@ -153,12 +153,11 @@ export default function Services({
                     className="h-56 w-full object-cover"
                   />
                 )}
-                <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-white to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-yellow-50 to-transparent" />
                 <button
                   onClick={() => setSelectedService(null)}
-                  className="absolute right-4 top-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-gray-700 shadow hover:bg-white transition"
+                  className="absolute right-4 top-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-yellow-100 text-gray-700 shadow hover:bg-white transition"
                   aria-label="Close"
-                  title="Close"
                 >
                   ✕
                 </button>
@@ -166,23 +165,23 @@ export default function Services({
 
               {/* Body */}
               <div className="p-6">
-                <h3 className="text-2xl font-extrabold tracking-tight text-gray-900">
+                <h3 className="text-2xl font-extrabold tracking-tight text-yellow-900">
                   {selectedService.title}
                 </h3>
-                <div className="mt-3 h-px bg-gradient-to-r from-transparent via-pink-400/30 to-transparent" />
-                <p className="mt-4 text-gray-700 leading-relaxed">
+                <div className="mt-3 h-px bg-gradient-to-r from-transparent via-yellow-400/50 to-transparent" />
+                <p className="mt-4 text-gray-800 leading-relaxed">
                   {selectedService.details}
                 </p>
               </div>
 
               {/* Footer */}
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-between border-t bg-white/80 px-6 py-4 backdrop-blur">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-between border-t bg-yellow-100/70 px-6 py-4 backdrop-blur">
                 <div className="w-full sm:w-auto">
                   <ContactButton />
                 </div>
                 <button
                   onClick={() => setSelectedService(null)}
-                  className="w-full sm:w-auto rounded-xl bg-gray-900 px-5 py-2.5 font-semibold text-white shadow hover:bg-gray-800 transition"
+                  className="w-full sm:w-auto rounded-xl bg-yellow-900 px-5 py-2.5 font-semibold text-white shadow hover:bg-black transition"
                 >
                   Close
                 </button>
@@ -190,7 +189,7 @@ export default function Services({
             </div>
           </div>
 
-          {/* Keyframes */}
+          {/* Animation */}
           <style>
             {`
               @keyframes fadeInUp {

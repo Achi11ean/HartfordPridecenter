@@ -31,18 +31,18 @@ export default function ContactPageTemplate() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-teal-900 text-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-black via-amber-900 to-yellow-900 text-yellow-50">
       {/* Banner */}
       <div
-        className="w-full h-80 md:h-96  bg-center relative shadow-2xl border-b-4 border-pink-400"
+        className="w-full h-80 md:h-96 bg-center relative shadow-2xl border-b-4 border-yellow-300"
         style={{
           backgroundImage:
             "url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvfksv1zCmXIN1zWk8CtRZs3HreW88vugB_w&s')",
           backgroundPosition: "center 45%",
         }}
       >
-        <div className="absolute sm:bottom-[-50px] bottom-[-40px] left-1/2 -translate-x-1/2 bg-white/20 backdrop-blur-md px-2 py-3  flex items-center gap-3 border-2 border-pink-300 shadow-xl">
-          <h2 className="text-3xl lg:text-5xl font-extrabold text-white  drop-shadow-lg">
+        <div className="absolute sm:bottom-[-50px] bottom-[-40px] left-1/2 -translate-x-1/2 bg-yellow-800/40 backdrop-blur-md px-4 py-3 flex items-center gap-3 border-2 border-yellow-300 shadow-xl">
+          <h2 className="text-3xl lg:text-5xl font-extrabold text-yellow-100 drop-shadow-lg">
             Contact Us
           </h2>
         </div>
@@ -50,39 +50,39 @@ export default function ContactPageTemplate() {
 
       {/* Content */}
       <section className="max-w-6xl mx-auto p-8 pt-16 space-y-6">
-        <p className="text-xl sm:text-3xl font-extrabold text-center border-b-2 border-pink-400 pb-3">
-          💌 We’d love to hear from you!
+        <p className="text-xl sm:text-3xl font-extrabold text-center border-b-2 border-yellow-300 pb-3">
+          💛 We’d love to hear from you!
         </p>
 
         {/* Contact Info Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
-          <div className="bg-white/90 p-6  shadow-lg hover:shadow-pink-400/50 transition">
-            <FaEnvelope size={36} className="mx-auto text-pink-600 mb-4" />
+          <div className="bg-white/90 p-6 shadow-lg hover:shadow-yellow-400/50 transition">
+            <FaEnvelope size={36} className="mx-auto text-yellow-600 mb-4" />
             <p className="text-lg font-bold text-gray-800">Email Us</p>
             <a
               href="mailto:info@Hartfordpridecenter.org"
-              className="text-pink-600 font-medium hover:underline"
+              className="text-yellow-700 font-medium hover:underline"
             >
-              info@Hartfordpridecenter.org
+              SouthHavenLGBTQAdvocacy@gmail.com
             </a>
           </div>
 
-          <div className="bg-white/90 p-6  shadow-lg hover:shadow-teal-400/50 transition">
-            <FaPhoneAlt size={36} className="mx-auto text-teal-600 mb-4" />
+          <div className="bg-white/90 p-6 shadow-lg hover:shadow-yellow-400/50 transition">
+            <FaPhoneAlt size={36} className="mx-auto text-yellow-600 mb-4" />
             <p className="text-lg font-bold text-gray-800">Call Us</p>
             <a
               href="tel:2038678884"
-              className="text-teal-600 font-medium hover:underline"
+              className="text-yellow-700 font-medium hover:underline"
             >
-              (203) 867-8884
+              (123) 456-7890
             </a>
           </div>
 
-          <div className="bg-white/90 p-6  shadow-lg hover:shadow-purple-400/50 transition">
-            <FaMapMarkerAlt size={36} className="mx-auto text-purple-600 mb-4" />
+          <div className="bg-white/90 p-6 shadow-lg hover:shadow-yellow-400/50 transition">
+            <FaMapMarkerAlt size={36} className="mx-auto text-yellow-600 mb-4" />
             <p className="text-lg font-bold text-gray-800">Visit Us</p>
-            <p className="text-purple-600 font-medium">
-              84 Orange Street • Hartford, CT
+            <p className="text-yellow-700 font-medium">
+              123 Orange Street • South Haven, MI
             </p>
           </div>
         </div>
@@ -92,28 +92,28 @@ export default function ContactPageTemplate() {
           onSubmit={handleSubmit}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white/10 border border-pink-400 p-4 shadow-2xl backdrop-blur-sm"
+          className="bg-black/40 border border-yellow-300 p-4 shadow-2xl backdrop-blur-sm"
         >
-          <h3 className="text-2xl font-extrabold text-center mb-2 text-pink-300 underline">
+          <h3 className="text-2xl font-extrabold text-center mb-2 text-yellow-300 underline">
             Send Us a Message
           </h3>
 
           {["Name", "Email"].map((label) => (
             <div key={label} className="mb-4">
-              <label className="block mb-1 text-pink-100 font-semibold">
+              <label className="block mb-1 text-yellow-200 font-semibold">
                 {label}
               </label>
               <input
                 type={label === "Email" ? "email" : "text"}
                 name={label.toLowerCase()}
                 required
-                className="w-full p-3  bg-purple-900/60 text-white border border-pink-400 focus:ring-2 focus:ring-pink-300"
+                className="w-full p-3 bg-yellow-900/40 text-yellow-50 border border-yellow-300 focus:ring-2 focus:ring-yellow-200"
               />
             </div>
           ))}
 
           <div className="mb-4">
-            <label className="block mb-1 text-pink-100 font-semibold">
+            <label className="block mb-1 text-yellow-200 font-semibold">
               Phone
             </label>
             <input
@@ -121,28 +121,28 @@ export default function ContactPageTemplate() {
               value={phone}
               onChange={handlePhoneChange}
               placeholder="(203) 867-8884"
-              className="w-full p-3  bg-purple-900/60 text-white border border-pink-400 focus:ring-2 focus:ring-teal-300"
+              className="w-full p-3 bg-yellow-900/40 text-yellow-50 border border-yellow-300 focus:ring-2 focus:ring-yellow-200"
             />
           </div>
 
           <div className="mb-4">
-            <label className="block mb-1 text-pink-100 font-semibold">
+            <label className="block mb-1 text-yellow-200 font-semibold">
               Message
             </label>
             <textarea
               name="message"
               rows="4"
               required
-              className="w-full p-3  bg-purple-900/60 text-white border border-pink-400 focus:ring-2 focus:ring-purple-300"
+              className="w-full p-3 bg-yellow-900/40 text-yellow-50 border border-yellow-300 focus:ring-2 focus:ring-yellow-200"
             />
           </div>
 
           {/* Terms */}
           <div className="mb-4 flex items-center gap-2">
-            <input type="checkbox" required className="w-4 h-4 accent-pink-500" />
+            <input type="checkbox" required className="w-4 h-4 accent-yellow-500" />
             <span
               onClick={() => setShowTerms(!showTerms)}
-              className="text-sm underline cursor-pointer hover:text-pink-200"
+              className="text-sm underline cursor-pointer hover:text-yellow-200"
             >
               I agree to the Terms and Conditions
             </span>
@@ -154,7 +154,7 @@ export default function ContactPageTemplate() {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
-                className="mb-4 text-sm text-pink-100 bg-purple-900/60 p-3 "
+                className="mb-4 text-sm text-yellow-100 bg-yellow-900/40 p-3"
               >
                 <p>
                   By submitting this form, you consent to the South Haven LGBTQIA+ Advocacy
@@ -170,7 +170,7 @@ export default function ContactPageTemplate() {
             disabled={isLoading}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="w-full py-3 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 hover:from-indigo-500 hover:via-purple-500 hover:to-pink-500 rounded-xl font-bold text-lg text-white shadow-lg transition"
+            className="w-full py-3 bg-gradient-to-r from-yellow-300 via-white to-yellow-300 hover:scale-105 rounded-xl font-bold text-lg text-black shadow-lg transition"
           >
             {isLoading ? "Sending..." : "Send Message"}
           </motion.button>
@@ -178,7 +178,7 @@ export default function ContactPageTemplate() {
           {status && (
             <p
               className={`mt-4 text-center font-semibold ${
-                status.includes("✅") ? "text-green-400" : "text-red-400"
+                status.includes("✅") ? "text-green-300" : "text-red-300"
               }`}
             >
               {status}
