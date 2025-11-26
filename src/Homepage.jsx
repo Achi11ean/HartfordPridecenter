@@ -105,7 +105,7 @@ export default function HomePage() {
           <hr className="border-t-4 border-blue-400 w-full " />
 
         <p className="text-gray-700 font-semibold text-lg leading-relaxed">
-  At the <span className="font-bold underline text-blue-700">Hartford Pride Center</span>, 
+  At the <span className="font-bold underline text-blue-700">South Haven LGBTQIA+ Advocacy</span>, 
   we believe every person deserves a space where they can feel seen, supported, and celebrated.  
   Our mission is to uplift LGBTQIA+ individuals through advocacy, education, and community connection.  
   From social programs and resource guides to special events and creative workshops — we’re here to empower, 
@@ -118,9 +118,8 @@ export default function HomePage() {
 </p>
 
 
-        {/* Hartford Pride Event 2026 Info */}
 <Link
-  to="/hartford-city-pride"
+  to="/South-haven-advocacy"
   className="
     text-white w-full text-center border-2 border-white px-1 py-2 rounded-none
     text-base sm:text-lg font-semibold shadow-md drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]
@@ -145,7 +144,7 @@ export default function HomePage() {
     {/* 🌟 Organization Info */}
     <div className="pr-0 lg:pr-6 text-center lg:text-left">
       <h3 className="text-2xl font-bold text-pink-400 border-b-2 border-pink-400 inline-block mb-2">
-        Hartford Pride Center 🌈
+       South Haven LGBTQIA+ Advocacy 🌈
       </h3>
       <p className="text-sm leading-relaxed font-bold text-white">
         Empowering the LGBTQ+ community through connection, creativity, and compassion.  

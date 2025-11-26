@@ -157,7 +157,7 @@ export default function ContactPageTemplate() {
                 className="mb-4 text-sm text-pink-100 bg-purple-900/60 p-3 "
               >
                 <p>
-                  By submitting this form, you consent to the Hartford Pride Center
+                  By submitting this form, you consent to the South Haven LGBTQIA+ Advocacy
                   contacting you using the information provided. Please do not
                   include sensitive or confidential data.
                 </p>

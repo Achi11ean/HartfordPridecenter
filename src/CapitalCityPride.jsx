@@ -259,7 +259,7 @@ export default function HartfordCityPride() {
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 divide-y lg:divide-y-0 lg:divide-x lg:divide-gray-700">
           <div className="text-center lg:text-left">
             <h3 className="text-2xl font-bold text-pink-400 border-b-2 border-pink-400 inline-block mb-2">
-              Hartford Pride Center 🌈
+              South Haven LGBTQIA+ Advocacy  🌈
             </h3>
             <p className="text-sm font-bold">
               Celebrating identity, community, and love
@@ -308,7 +308,7 @@ export default function HartfordCityPride() {
                 <FaInstagram />
               </a>
               <a
-                href="https://www.facebook.com/HartfordPrideCenter"
+                href="https://www.facebook.com/SouthHavenLGBTQAdvocacy/"
                 target="_blank"
                 rel="noopener noreferrer"
               >

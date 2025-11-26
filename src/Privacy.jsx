@@ -19,7 +19,7 @@ export default function Privacy() {
               1. Introduction
             </h2>
             <p>
-              Welcome to the <span className="text-pink-400 font-semibold">Hartford Pride Center</span>.  
+              Welcome to the <span className="text-pink-400 font-semibold">South Haven LGBTQIA+ Advocacy</span>.  
               Your privacy is important to us. This policy explains how we collect, use, and protect
               your personal information when you visit our website or participate in our programs.
             </p>

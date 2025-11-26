@@ -61,7 +61,7 @@ export default function Donate() {
         <p className="text-lg text-gray-200 leading-relaxed">
           Every dollar you give helps the{" "}
           <span className="font-semibold text-pink-400">
-            Hartford Pride Center
+            South Haven LGBTQIA+ Advocacy
           </span>{" "}
           continue providing critical programs, safe spaces, and resources for
           the LGBTQIA+ community in Connecticut. Together, we create lasting

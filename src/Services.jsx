@@ -65,7 +65,7 @@ export default function Services({
           title: "Volunteer & Outreach",
           desc: "Join our mission to make a difference locally and beyond.",
           details:
-            "Whether helping with events, mentorship, or advocacy, our volunteers are the heartbeat of the Hartford Pride Center — making every day a little brighter for all.",
+            "Whether helping with events, mentorship, or advocacy, our volunteers are the heartbeat of the South Haven LGBTQIA+ Advocacy — making every day a little brighter for all.",
           image:
             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIL-vhEVIFazkfJP97ZK7sT104xnLrmKVgJFo-SQPytI214UpryLt9PfJvhZC5EGRNTLU&usqp=CAU",
         },

@@ -101,7 +101,7 @@ export default function About() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: 'easeOut', delay: 0.15 }}
         >
-          The <span className="text-pink-300 font-semibold">Hartford Pride Center</span> is dedicated to uplifting
+          The <span className="text-pink-300 font-semibold">South Haven LGBTQIA+ Advocacy</span> is dedicated to uplifting
           and connecting the LGBTQIA+ community through advocacy, art, education, and celebration.  
           We provide inclusive programming, support services, and cultural events that amplify queer voices and promote equality.
         </motion.p>

@@ -85,7 +85,7 @@ export default function Volunteer() {
         <p className="text-lg bg-black/60  text-white border-b-2 leading-relaxed">
           Volunteers are the heartbeat of the{" "}
           <span className="font-semibold text-pink-400">
-            Hartford Pride Center
+            South Haven LGBTQIA+ Advocacy
           </span>. Your support creates connection, growth, and joy throughout
           our LGBTQIA+ community.
         </p>
