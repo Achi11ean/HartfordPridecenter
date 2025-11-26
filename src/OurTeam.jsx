@@ -26,40 +26,40 @@ const teamMembers = [
       "url('https://images.unsplash.com/photo-1563467743682-704cc8ccb9c6?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cHJldHR5JTIwZmxvd2Vyc3xlbnwwfHwwfHx8MA%3D%3D')",
   },
   {
-    name: "Remy Chen",
-    role: "Full‑Stack Developer",
-    image: "https://images.unsplash.com/photo-1502685104226-ee32379fefbe?q=80&w=800",
-    bio: `I build fast, accessible web apps with React on the front and Python/Node on the back.\n\n— —\n\nI care about performance, delightful micro‑interactions, and clean APIs. When not coding: mechanical keyboards and jazz piano.`,
+    name: "Jonathen Whitford",
+    role: "Social Media Marketing/Web Developer",
+    image: "/jonathen.jpeg",
+    bio: `My Name is Jonathen Whitford and i'm located in Connecticut serving as the marketing creator and in-house software engineer. I work closely with multiple pride groups in developing technology for the community and marketing to promote it as well as host karaoke, trivia, and DJ. I am also the creator and founder of both Karaoverse.com and JwhitProductions.com .  `,
     style: "border-blue-300 bg-blue-50 hover:shadow-blue-300/50",
     backgroundImage:
       "url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=2400')",
   },
   {
-    name: "Sloane Rivera",
-    role: "Content Strategist",
-    image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=800",
-    bio: `Words with purpose. I plan editorial calendars, UX copy, and SEO that actually reads like a human wrote it.\n\n— —\n\nI love crisp headlines, helpful CTAs, and brand voice guides. Side quests: pottery and street food adventures.`,
+    name: "Lindsey Merick",
+    role: "Administrative Assistant",
+    image: "/Lindsey.jpg",
+    bio: `My name is Lindsey Merick, and I currently serve as the Administrative Assistant for South Haven LGBTQ+ Advocacy and South Haven Pride Committee. I have been involved in planning South Haven pride since our first event in 2024. Mental-health disparities in the LGBTQ+ community are a major reason why I stay committed to this work. According to the Trevor Project, 41% of LGBTQ+ youth seriously considered suicide in the past year. This alarming statistic does not reflect identity, but the impact of stigma and discrimination. By doing my part, I hope to be able to show people that they are worthy, valued, and perfect just as they are. Furthermore, as a mother and an aunt, I want to send a message to my children and other young people that love always wins and hate has no place in our world. I am honored to serve in my role, behind the scenes and alongside our team, to build a more inclusive South Haven.`,
     style: "border-blue-300 bg-blue-50 hover:shadow-blue-300/50",
     backgroundImage:
       "url('https://images.unsplash.com/photo-1503264116251-35a269479413?q=80&w=2400')",
   },
   {
-    name: "Jules Patel",
+    name: "Gail Donnelly",
     role: "Product Designer",
-    image: "https://media.istockphoto.com/id/1289220545/photo/beautiful-woman-smiling-with-crossed-arms.jpg?s=612x612&w=0&k=20&c=qmOTkGstKj1qN0zPVWj-n28oRA6_BHQN8uVLIXg0TF8=",
-    bio: `Designing simple, elegant flows for complex problems.\n\n— —\n\nFigma fanatic, prototyping nerd, and accessibility advocate. Favorite things: microcopy, grids, and a good 8px rhythm.`,
+    image: "/Gail.jpg",
+    bio: `My name is Gail Donnelly Bader and I am one of the members of the initial board of directors of South Haven LGBT	Q+ Advocacy and also serve as secretary for the board. I am a retired attorney living in Alton, Illinois most of the year, but my husband and I spend our summers in South Haven (I was born and raised in Michigan) and I wanted to be a part of the community and volunteer my time in South Haven.  I have a child who is a member of the LGBTQ+ community, so I am an ally who wants to help advocate for issues important to the LGBTQ+ community and create safe spaces for members of that community.`,
     style: "border-blue-300 bg-blue-50 hover:shadow-blue-300/50",
     backgroundImage:
-      "url('https://media.istockphoto.com/id/1318629326/photo/a-beautiful-brown-horses-in-the-farm-during-the-sunrise.jpg?s=612x612&w=0&k=20&c=eTgB9Nvks_TN8jz_GxcSfsDTZd_J4XYf6qWXl1Vy5vI=')",
+      "url('https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExN2RoM2h2dDN4d2hjcmNhdWQ5c25iZWVmOWdzZnVwaTZwaTE1YzRoZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/U3qYN8S0j3bpK/giphy.gif')",
   },
   {
-    name: "Riley Quinn",
+    name: "Malissa Acosta",
     role: "Marketing Lead",
-    image: "https://images.unsplash.com/photo-1527980965255-d3b416303d12?q=80&w=800",
-    bio: `I connect products to people with positioning, lifecycle campaigns, and analytics.\n\n— —\n\nAsk me about launch playbooks, UTM hygiene, and delightful onboarding emails. Off the clock: cycling and bouldering.`,
+    image: "/Malissa.jpg",
+    bio: `Malissa is a dedicated advocate, educator, and community-builder with a strong commitment to supporting LGBTQ+ individuals and other vulnerable populations. With a background in Community & Human Services, she brings a trauma-informed, justice-centered approach to every space she serves. Malissa is heavily involved in school and community programs, particularly those designed to support our most at-risk community members, where she works to create safe, affirming, and empowering environments for youth and families. Through her combined experience in social services, education, and advocacy, she is devoted to amplifying marginalized voices and helping build a more inclusive, compassionate community for all`,
     style: "border-blue-300 bg-blue-50 hover:shadow-blue-300/50",
     backgroundImage:
-      "url('https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?q=80&w=2400')",
+      "url('https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExczZzeWk0ajl6aTVlNmc4dXlucnN4Z2hpY2V1a2M2Mnh0M2F6MXZpbiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/JjIjreqeHtfOoQb0QV/giphy.gif')",
   },
 ];
 
