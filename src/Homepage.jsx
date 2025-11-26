@@ -111,7 +111,7 @@ export default function HomePage() {
                 bg-[left_center]
               "
             >
-              Hartford Pride Event 2026
+              South Haven Pride Event 2026
             </Link>
 
           </div>
