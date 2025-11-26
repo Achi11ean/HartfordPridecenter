@@ -1,0 +1,22 @@
+{
+  "name": "Hartford Pride Center",
+  "short_name": "Pride Center",
+  "description": "Empowering the LGBTQ+ community through advocacy, support, and celebration.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#111827",
+  "theme_color": "#EC4899",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/PrideLogo.jpeg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/PrideLogo.jpeg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}
