@@ -88,9 +88,19 @@ const navigate = useNavigate();
                 ×
               </button>
 
-              <div className="p-1 sm:p-4">
-                <SponsorInvitationPage />
-              </div>
+   <div className="p-1 sm:p-4 relative">
+
+  {/* Extra Close Button INSIDE the modal */}
+  <button
+    onClick={() => setShowInvitation(false)}
+    className="absolute top-2 right-2 text-yellow-200 text-3xl font-bold hover:text-white z-50"
+  >
+    ×
+  </button>
+
+  <SponsorInvitationPage />
+</div>
+
             </motion.div>
           </motion.div>
         )}
@@ -166,14 +176,6 @@ const navigate = useNavigate();
           ))}
         </div>
 
-        <div className="text-center mt-12">
-          <Link
-            to="/contact"
-            className="inline-flex items-center gap-2 rounded-full border-2 border-yellow-300 bg-yellow-900/60 px-6 py-3 font-semibold hover:bg-yellow-700/70 hover:shadow-lg transition"
-          >
-            Become a Sponsor
-          </Link>
-        </div>
       </section>
 
       {/* ⭐ Modal */}
