@@ -9,15 +9,36 @@ export default function HomePage() {
   return (
     <div className="relative text-center min-h-screen">
 
-      <div
-        className="
-          relative 
-          bg-white 
-          bg-[url('https://i.fbcd.co/products/resized/resized-750-500/c1fbf67cf920869f26202d1f6be789e49254f27a1e99798bd357efd98f0de0bd.jpg')]
-          bg-cover bg-center bg-no-repeat
-          pb-20 mt-14 sm:mt-20
-        "
-      >
+<div
+  className="
+    relative 
+    bg-cover bg-center bg-no-repeat
+    pb-20 mt-14 sm:mt-20
+    fade-slideshow
+  "
+  style={{
+    animation: "fadeShow 25s infinite",
+  }}
+>
+<style>
+{`
+@keyframes fadeShow {
+  0%   { background-image: url('https://img.buzzfeed.com/buzzfeed-static/static/2019-05/29/16/asset/buzzfeed-prod-web-02/sub-buzz-24565-1559160365-1.jpg'); }
+  20%  { background-image: url('https://www.advocate.com/media-library/gay-lesbian-pride-parade.jpg?id=32448495&width=800&quality=65'); }
+
+  40%  { background-image: url('https://www.historians.org/wp-content/uploads/2024/06/Rivera-400x600.png'); }
+  60%  { background-image: url('https://media.newyorker.com/photos/5d150cfe372ce200087ed375/master/w_1600%2Cc_limit/Gessen-Stonewall_02.jpg'); }
+
+  80%  { background-image: url('https://www.advocate.com/media-library/gay-pride-day-1975.jpg?id=32448488&width=800&quality=65'); }
+  100% { background-image: url('https://img.buzzfeed.com/buzzfeed-static/static/2019-05/29/16/asset/buzzfeed-prod-web-02/sub-buzz-24565-1559160365-1.jpg'); }
+}
+
+.fade-slideshow {
+  transition: background-image 2s ease-in-out;
+}
+`}
+</style>
+
         <div className="absolute inset-0 bg-black/40"></div>
 
         {/* Photo Slider Section */}
