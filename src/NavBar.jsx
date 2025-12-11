@@ -19,11 +19,14 @@ const NavBar = () => {
   ];
 
   return (
-    <nav className="
-      fixed top-0 left-0 w-full z-50 
-      bg-gradient-to-br from-yellow-600 via-yellow-800 to-black 
-      border-b border-yellow-300/40 shadow-lg
-    ">
+<nav
+  className="
+    fixed top-0 left-0 w-full z-50 
+    bg-gradient-to-br from-[#18453B] via-[#0f2d25] to-black
+    border-b border-white/40 shadow-lg
+  "
+>
+
       <div className="max-w-7xl mx-auto px-4 mt-1 flex justify-between items-center">
         
         {/* 🌞 Golden Animated Border Logo */}

@@ -32,7 +32,7 @@ export default function HomePage() {
 
           {/* Overlapping Title */}
           <div className="
-              absolute lg:bottom-[-30px] bottom-[-80px]
+              absolute lg:bottom-[-60px] bottom-[-80px]
               animate-rainbow-wave 
               text-sm sm:text-xl
               border-2 border-yellow-400 
@@ -61,37 +61,48 @@ export default function HomePage() {
               { to: "/contact", label: "Contact" },
               { to: "/services", label: "Services" }
             ].map((btn, i) => (
-              <Link
-                key={i}
-                to={btn.to}
-                className="
-                  text-white w-full border-2 border-yellow-300 px-1 py-2 rounded-none
-                  text-base sm:text-lg font-semibold shadow-md
-                  drop-shadow-[0_0_10px_rgba(255,215,0,0.8)]
-                  transition-all duration-500 transform hover:scale-105
-                  bg-[length:200%_200%]
-                  bg-[linear-gradient(90deg,#facc15,#eab308,#ca8a04)]
-                  hover:bg-[right_center]
-                  bg-[left_center]
-                "
-              >
+<Link
+  key={i}
+  to={btn.to}
+  className="
+    text-white w-full 
+    border-2 border-white 
+    px-1 py-2 rounded-none
+    text-base sm:text-lg font-semibold shadow-md
+    drop-shadow-[0_0_10px_rgba(24,69,59,0.8)]
+    transition-all duration-500 transform hover:scale-105
+    bg-[length:200%_200%]
+    bg-[linear-gradient(90deg,#0F2D25,#18453B,#0F2D25)]
+    hover:bg-[right_center]
+    bg-[left_center]
+  "
+>
+
                 {btn.label}
               </Link>
             ))}
 
           </div>
 
-          {/* Info Section */}
-          <div className="bg-white/80 backdrop-blur-lg shadow-2xl p-2 border-yellow-400 border-4 mx-auto my-4 w-11/12 md:w-3/4 lg:w-1/2 text-center space-y-6 rounded-none">
+<div className="
+  bg-white/80 backdrop-blur-lg shadow-2xl p-2 
+  border-[#18453B] border-4 
+  mx-auto my-4 w-11/12 md:w-3/4 lg:w-1/2 
+  text-center space-y-6 rounded-none
+">
 
-            <h2 className="text-3xl sm:text-xl md:text-3xl lg:text-4xl xl:text-5xl font-serif text-yellow-600 font-bold leading-snug px-4">
-              Welcome!
-            </h2>
+  <h2 className="
+    text-3xl sm:text-xl md:text-3xl lg:text-4xl xl:text-5xl 
+    font-serif 
+    text-[#18453B] font-bold leading-snug px-4
+  ">
+    Welcome!
+  </h2>
 
-            <hr className="border-t-4 border-yellow-400 w-full" />
+            <hr className="border-t-4  border-[#18453B] w-full" />
 
             <p className="text-gray-800 font-semibold text-lg leading-relaxed">
-              At the <span className="font-bold underline text-yellow-600">South Haven LGBTQIA+ Advocacy</span>,  
+              At the <span className="font-bold underline     text-[#18453B] ">South Haven LGBTQIA+ Advocacy</span>,  
               we believe every person deserves a space where they feel seen, supported, and celebrated.  
               Our mission is to uplift LGBTQIA+ individuals through advocacy, education, and community connection.
             </p>
@@ -100,17 +111,20 @@ export default function HomePage() {
               Together, we’re building a more inclusive world — where authenticity shines and every voice matters. 🌈
             </p>
 
-            <Link
-              to="/South-haven-advocacy"
-              className="
-                text-white w-full border-2 border-yellow-300 px-1 py-2 rounded-none
-                text-base sm:text-lg font-semibold shadow-md
-                bg-[length:200%_200%]
-                bg-[linear-gradient(90deg,#facc15,#eab308,#ca8a04)]
-                hover:bg-[right_center]
-                bg-[left_center]
-              "
-            >
+<Link
+  to="/South-haven-advocacy"
+  className="
+    text-white w-full 
+    border-2 border-white 
+    px-1 py-2 rounded-none
+    text-base sm:text-lg font-semibold shadow-md
+    bg-[length:200%_200%]
+    bg-[linear-gradient(90deg,#0F2D25,#18453B,#0F2D25)]
+    hover:bg-[right_center]
+    bg-[left_center]
+  "
+>
+
               South Haven Pride Event 2026
             </Link>
 
@@ -120,14 +134,33 @@ export default function HomePage() {
       </div>
 
       {/* Footer */}
-      <section className="bg-gradient-to-br from-yellow-900 via-black to-yellow-800 text-gray-200 py-6 border-t-4 border-yellow-400">
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 divide-y divide-yellow-400 lg:divide-y-0 lg:divide-x lg:divide-yellow-700">
+<section className="
+  bg-gradient-to-br 
+  from-black 
+  via-[#0F2D25] 
+  to-[#18453B] 
+  text-white 
+  py-6 
+  border-t-4 border-[#18453B]
+">
+  <div className="
+    max-w-7xl mx-auto px-6 
+    grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 
+    gap-6 
+    divide-y divide-[#18453B] 
+    lg:divide-y-0 lg:divide-x lg:divide-[#0F2D25]
+  ">
 
-          {/* Organization Info */}
-          <div className="pr-0 lg:pr-6 text-center lg:text-left">
-            <h3 className="text-2xl font-bold text-yellow-400 border-b-2 border-yellow-400 inline-block mb-2">
-              South Haven LGBTQIA+ Advocacy 🌈
-            </h3>
+    {/* Organization Info */}
+    <div className="pr-0 lg:pr-6 text-center lg:text-left">
+      <h3 className="
+        text-2xl font-bold 
+        text-white 
+        border-b-2 border-white 
+        inline-block mb-2
+      ">
+        South Haven LGBTQIA+ Advocacy 🌈
+      </h3>
             <p className="text-sm leading-relaxed font-bold text-white">
               Empowering the LGBTQ+ community through support, creativity, and compassion.
             </p>

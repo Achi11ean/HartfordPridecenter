@@ -4,7 +4,18 @@ import { motion } from "framer-motion";
 
 export default function About() {
   return (
-    <div className="min-h-screen  pb-10 bg-gradient-to-br from-black via-amber-900 to-yellow-800 text-yellow-50">
+<div
+  className="
+    min-h-screen 
+    pb-10 
+    bg-gradient-to-br 
+    from-black 
+    via-[#0F2D25] 
+    to-[#18453B] 
+    text-white
+  "
+>
+
       
       {/* Banner */}
       <section className="relative w-full">

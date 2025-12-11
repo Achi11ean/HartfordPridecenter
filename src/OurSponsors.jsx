@@ -59,7 +59,14 @@ export default function OurSponsorsYellowTemplate() {
   const [showInvitation, setShowInvitation] = useState(false);
 const navigate = useNavigate();
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-amber-900 to-yellow-800 text-yellow-50">
+<div className="
+  min-h-screen 
+  bg-gradient-to-br 
+  from-black 
+  via-[#0F2D25] 
+  to-[#18453B] 
+  text-white
+">
 
       {/* ⭐ SPONSOR INVITATION MODAL */}
       <AnimatePresence>

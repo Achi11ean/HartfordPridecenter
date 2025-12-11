@@ -5,14 +5,14 @@ export default function Services({
   contactPath = "/contact",
   services = [],
   theme = {
-    pageBg: "bg-gradient-to-b from-black via-amber-900 to-yellow-900",
-    cardBg: "bg-yellow-50/90",
-    cardHoverBg: "hover:bg-yellow-50",
-    primaryTextGrad: "bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500",
-    accentTextGrad: "bg-gradient-to-r from-yellow-300 via-amber-200 to-yellow-400",
-    border: "border-yellow-300/40",
-    headingText: "text-yellow-200",
-    bodyText: "text-gray-700",
+   pageBg: "bg-gradient-to-b from-black via-[#0F2D25] to-[#18453B]",
+  cardBg: "bg-white/90",
+  cardHoverBg: "hover:bg-white",
+  primaryTextGrad: "bg-gradient-to-r from-[#0F2D25] via-[#18453B] to-white",
+  accentTextGrad: "bg-gradient-to-r from-[#18453B] via-white to-[#0F2D25]",
+  border: "border-[#18453B]/40",
+  headingText: "text-[#18453B]",
+  bodyText: "text-black",
   },
 }) {
   const [selectedService, setSelectedService] = useState(null);
@@ -76,7 +76,7 @@ export default function Services({
     <div className="flex justify-center my-10">
       <Link to={contactPath}>
         <button
-          className={`px-10 py-2 rounded-full font-bold text-yellow-900 shadow-lg transition-all duration-300 hover:scale-105 ${theme.accentTextGrad} border-4 border-yellow-300/40 hover:border-yellow-300`}
+          className={`px-10 py-2 rounded-full font-bold text-yellow-900 shadow-lg transition-all duration-300 hover:scale-105 bg-white border-4 border-yellow-300/40 hover:border-yellow-300`}
         >
           Get Involved 💛
         </button>
@@ -90,7 +90,7 @@ export default function Services({
       <div className="max-w-6xl mt-8 sm:mt-28 mx-auto px-6 pt-12">
         <div className="text-center">
           <h1
-            className={`text-3xl sm:text-4xl md:text-5xl font-extrabold border-b-4 border-yellow-400 inline-block ${theme.headingText}`}
+            className={`text-3xl sm:text-4xl md:text-5xl font-extrabold border-b-4 border-yellow-400 inline-block `}
           >
             Our Programs & Services
           </h1>

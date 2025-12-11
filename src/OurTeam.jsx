@@ -88,7 +88,16 @@ export default function OurTeamYellowTemplate() {
   const [selectedMember, setSelectedMember] = useState(null);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-amber-900 to-yellow-800 text-yellow-50">
+<div
+  className="
+    min-h-screen 
+    bg-gradient-to-br
+    from-black
+    via-[#0F2D25]
+    to-[#18453B]
+    text-white
+  "
+>
 
       {/* HERO */}
       <div
@@ -174,14 +183,15 @@ export default function OurTeamYellowTemplate() {
                       alt={m.name}
                       className="w-24 h-24 rounded-2xl object-cover shadow-md"
                     />
-                    <div className="mt-4">
-                      <h3 className="text-xl font-bold text-yellow-900">
-                        {m.name}
-                      </h3>
-                      <p className="text-sm font-medium text-yellow-800/80">
-                        {m.role}
-                      </p>
-                    </div>
+       <div className="mt-4">
+  <h3 className="text-xl border-b font-serif border-[#18453B] font-bold text-[#18453B]">
+    {m.name}
+  </h3>
+  <p className="text-sm font-medium text-[#0F2D25]/80">
+    {m.role}
+  </p>
+</div>
+
                     <p className="mt-4 text-yellow-900/90 bg-white/70 rounded-xl p-3 max-h-40 overflow-y-auto whitespace-pre-line">
                       {m.bio.replaceAll("— —", "—")}
                     </p>

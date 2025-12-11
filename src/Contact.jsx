@@ -31,17 +31,40 @@ export default function ContactPageTemplate() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-amber-900 to-yellow-900 text-yellow-50">
-      {/* Banner */}
-      <div
-        className="w-full h-80 md:h-96 bg-center relative shadow-2xl border-b-4 border-yellow-300"
-        style={{
-          backgroundImage:
-            "url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvfksv1zCmXIN1zWk8CtRZs3HreW88vugB_w&s')",
-          backgroundPosition: "center 45%",
-        }}
-      >
-        <div className="absolute sm:bottom-[-50px] bottom-[-40px] left-1/2 -translate-x-1/2 bg-yellow-800/40 backdrop-blur-md px-4 py-3 flex items-center gap-3 border-2 border-yellow-300 shadow-xl">
+<div className="
+  min-h-screen 
+  bg-gradient-to-br 
+  from-black 
+  via-[#0F2D25] 
+  to-[#18453B] 
+  text-white
+">
+  {/* Banner */}
+  <div
+    className="
+      w-full h-80 md:h-96 
+      bg-center relative 
+      shadow-2xl 
+      border-b-4 border-[#18453B]
+    "
+    style={{
+      backgroundImage:
+        "url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRvfksv1zCmXIN1zWk8CtRZs3HreW88vugB_w&s')",
+      backgroundPosition: "center 45%",
+    }}
+  >
+    <div className="
+      absolute 
+      sm:bottom-[-50px] bottom-[-40px] 
+      left-1/2 -translate-x-1/2 
+      bg-[#0F2D25]/40 
+      backdrop-blur-md 
+      px-4 py-3 
+      flex items-center gap-3 
+      border-2 border-[#18453B] 
+      shadow-xl
+    ">
+
           <h2 className="text-3xl lg:text-5xl font-extrabold text-yellow-100 drop-shadow-lg">
             Contact Us
           </h2>
