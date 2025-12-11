@@ -6,15 +6,23 @@ import OurSponsorsBlueTemplate from "./OurSponsors";
 
 // —— Team Data ——
 const teamMembers = [
-  {
-    name: "Avery Brooks",
-    role: "Creative Director",
-    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=800",
-    bio: `I lead branding and creative strategy across web, social, and print.\n\n— —\n\nI love turning fuzzy ideas into crisp visuals and customer moments. Outside of work: coffee tasting, indie films, and city photography.`,
-    style: "border-yellow-400 bg-yellow-50/70 hover:shadow-yellow-400/50",
-    backgroundImage:
-      "url('https://media.istockphoto.com/id/636208094/photo/tropical-jungle.jpg?s=612x612&w=0&k=20&c=3S-pXUxM-gWEPK9ocEPU-KG3clexrw6iIru-8QYEfl0=')",
-  },
+{
+  name: "Monique Madison",
+  role: "Drag Performer • Actress • Author",
+  image: "/monique.jpg", 
+  bio: `Monique Madison started doing drag in 1996. Beginning in Kalamazoo at the young age of 18, Monique has been lucky enough to perform all over the country with house cast positions in Chicago, Indianapolis, and Detroit.
+
+— —
+
+Monique just finished her first film role in "A Holiday I Do" and recently wrapped filming season one of a sitcom called *The Agency*, where she plays leading role Parker — scheduled for release Easter of 2025.
+
+Momo is also the author of *The Serial Showgirls Series,* available on Amazon and at Barnes & Noble.
+
+Monique created The Kunty Kittens in 2016 with the intention of creating that divalicious girl-group sensation that everyone loves, infused with the best drag personalities Michigan has to offer.`,
+  style: "border-pink-400 bg-pink-50/70 hover:shadow-pink-400/50",
+  backgroundImage:
+    "url('https://images.unsplash.com/photo-1524253482453-3fed8d2fe12b?w=1200&q=80')"
+},
   {
     name: "Kai Morgan",
     role: "Project Manager",
@@ -37,7 +45,9 @@ const teamMembers = [
     name: "Lindsey Merick",
     role: "Administrative Assistant",
     image: "/Lindsey.jpg",
-    bio: `My name is Lindsey Merick, and I currently serve as the Administrative Assistant for South Haven LGBTQ+ Advocacy and South Haven Pride Committee... (rest unchanged)`,
+    bio: `My name is Lindsey Merick, and I currently serve as the Administrative Assistant for South Haven LGBTQ+ Advocacy and South Haven Pride Committee. I have been involved in planning South Haven pride since our first event in 2024. Mental-health disparities in the LGBTQ+ community are a major reason why I stay committed to this work. According to the Trevor Project, 41% of LGBTQ+ youth seriously considered suicide in the past year. This alarming statistic does not reflect identity, but the impact of stigma and discrimination.
+
+By doing my part, I hope to be able to show people that they are worthy, valued, and perfect just as they are. Furthermore, as a mother and an aunt, I want to send a message to my children and other young people that love always wins and hate has no place in our world. I am honored to serve in my role, behind the scenes and alongside our team, to build a more inclusive South Haven.`,
     style: "border-yellow-400 bg-yellow-50/70 hover:shadow-yellow-400/50",
     backgroundImage:
       "url('https://images.unsplash.com/photo-1503264116251-35a269479413?q=80&w=2400')",
@@ -46,7 +56,14 @@ const teamMembers = [
     name: "Gail Donnelly",
     role: "Product Designer",
     image: "/Gail.jpg",
-    bio: `My name is Gail Donnelly Bader and I am one of the members of the initial board of directors... (rest unchanged)`,
+    bio: `My name is Gail Donnelly Bader and I am one of the members of the initial board
+of directors of South Haven LGBT Q+ Advocacy and also serve as secretary for
+the board. I am a retired attorney living in Alton, Illinois most of the year, but my
+husband and I spend our summers in South Haven (I was born and raised in Michigan)
+and I wanted to be a part of the community and volunteer my time in South Haven. I
+have a child who is a member of the LGBTQ+ community, so I am an ally who wants to
+help advocate for issues important to the LGBTQ+ community and create safe spaces
+for members of that community.`,
     style: "border-yellow-400 bg-yellow-50/70 hover:shadow-yellow-400/50",
     backgroundImage:
       "url('https://media4.giphy.com/media/U3qYN8S0j3bpK/giphy.gif')",
@@ -55,7 +72,7 @@ const teamMembers = [
     name: "Malissa Acosta",
     role: "Marketing Lead",
     image: "/Malissa.jpg",
-    bio: `Malissa is a dedicated advocate, educator, and community-builder... (rest unchanged)`,
+    bio: `Malissa is a dedicated advocate, educator, and community-builder with a strong commitment to supporting LGBTQ+ individuals and other vulnerable populations. With a background in Community & Human Services, she brings a trauma-informed, justice-centered approach to every space she serves. Malissa is heavily involved in school and community programs, particularly those designed to support our most at-risk community members, where she works to create safe, affirming, and empowering environments for youth and families. Through her combined experience in social services, education, and advocacy, she is devoted to amplifying marginalized voices and helping build a more inclusive, compassionate community for all.`,
     style: "border-yellow-400 bg-yellow-50/70 hover:shadow-yellow-400/50",
     backgroundImage:
       "url('https://media2.giphy.com/media/JjIjreqeHtfOoQb0QV/giphy.gif')",
