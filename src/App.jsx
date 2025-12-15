@@ -11,7 +11,12 @@ import Volunteer from "./Volunteer";
 import Donate from "./Donate";
 import Events from "./Events";
 import HartfordCityPride from "./CapitalCityPride";
-import AdminSubmissionsPage from "./AdminSubmissionsPage";
+import AdminSignup from "./AdminSignup";
+import Login from "./Login";
+import AdminDashboard from "./AdminDashboard";
+import StaffDashboard from "./StaffDashboard";
+import Signup from "./Signup";
+import OurSponsorYellowTemplate from "./OurSponsors";
 
 function App() {
   return (
@@ -28,9 +33,15 @@ function App() {
         <Route path="/volunteer" element={<Volunteer />} />
         <Route path="/donate" element={<Donate />} />
         <Route path="/events" element={<Events />} />
-        <Route path="/admin-submissions" element={<AdminSubmissionsPage />} />
         <Route path="/hartford-city-pride" element={<HartfordCityPride />} />
                 <Route path="/donate" element={<Donate />} />
+        <Route path="/admin-signup" element={<AdminSignup />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/staff-dashboard" element={<StaffDashboard />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/sponsors" element={<OurSponsorYellowTemplate />} />
+
 
       </Routes>
     </Router>

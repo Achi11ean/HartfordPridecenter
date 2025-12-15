@@ -100,30 +100,9 @@ const [activeTab, setActiveTab] = useState("tiers"); // "tiers" | "form"
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-amber-900 to-yellow-800 text-yellow-50">
+    <div className=" bg-gradient-to-br from-black via-amber-900 to-yellow-800 text-yellow-50">
 
       {/* 🌟 HERO SECTION */}
-      <section
-        className="relative h-80 md:h-96 bg-cover bg-center flex items-center justify-center border-b-4 border-yellow-400 shadow-2xl"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=2400')",
-          backgroundPosition: "center 40%",
-        }}
-      >
-        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="relative text-4xl md:text-5xl font-extrabold text-center 
-                     bg-gradient-to-r from-yellow-300 via-white to-yellow-200 
-                     bg-clip-text text-transparent drop-shadow-lg"
-        >
-          Become a Sponsor
-        </motion.h1>
-      </section>
 
       {/* 🌟 INTRO */}
       <section className="max-w-4xl mx-auto text-center py-6 px-2 space-y-6">
