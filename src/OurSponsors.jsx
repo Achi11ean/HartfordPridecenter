@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Sponsor from "./Sponsor.jsx";
+import SponsorInvitationPage from "./SponsorInvitationPage.jsx";
 const API = "https://singspacebackend.onrender.com";
 const PRIDE_ID = 1; // later: route param
 
@@ -12,7 +13,8 @@ export default function OurSponsorsYellowTemplate() {
   const [loading, setLoading] = useState(true);
   const [selectedSponsor, setSelectedSponsor] = useState(null);
   const [showInvitation, setShowInvitation] = useState(false);
-  
+  const [invitationMode, setInvitationMode] = useState("form");
+
   const navigate = useNavigate();
 const normalizeUrl = (url) =>
   url?.startsWith("http") ? url : `https://${url}`;
@@ -48,10 +50,8 @@ useEffect(() => {
   return (
 <div className="
   min-h-screen 
-  bg-gradient-to-br 
-  from-black 
-  via-[#0F2D25] 
-  to-[#18453B] 
+ bg-[#0B1F1A]
+
   text-white
 ">
 
@@ -91,7 +91,11 @@ useEffect(() => {
   >
     ×
   </button>
-              <Sponsor prideId={PRIDE_ID} />
+{invitationMode === "form" ? (
+  <Sponsor prideId={PRIDE_ID} />
+) : (
+  <SponsorInvitationPage />
+)}
 </div>
 
             </motion.div>
@@ -100,7 +104,7 @@ useEffect(() => {
       </AnimatePresence>
 
       {/* ⭐ Sponsor Intro Header */}
-     <section className="relative max-w-full pt-40 mx-auto px-4 pb-24">
+     <section className="relative max-w-full pt-40 mx-auto px-4 pb-8">
   {/* Glow Accent */}
   <div className="
     absolute inset-x-0 -top-10 h-24
@@ -128,133 +132,203 @@ useEffect(() => {
     </div>
 
     {/* Description */}
-    <p
-      className="
-        max-w-3xl mx-auto text-lg sm:text-xl leading-relaxed
-        text-yellow-100/90
-        bg-black/30 backdrop-blur-sm
-        px-6 py-4 rounded-2xl
-        border border-yellow-400/30
-        shadow-xl
-      "
-    >
-      We proudly honor and offer meaningful benefits to the partners who support
-      our mission, uplift our community, and help create safe, inclusive spaces
-      for everyone.
-    </p>
+  <p className="mt-6 text-lg text-yellow-100/80 leading-relaxed">
+    We proudly recognize the partners who support our mission and help create
+    safe, inclusive spaces for our community.
+  </p>
 
     {/* CTA Buttons */}
-    <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-6">
-      <button
-        onClick={() => setShowInvitation(true)}
-        className="
-          inline-flex items-center justify-center
-          px-8 py-3 text-lg font-extrabold tracking-wide
-          text-black
-          rounded-full
-          border-2 border-yellow-300
-          bg-gradient-to-br from-yellow-400 via-orange-400 to-yellow-600
-          hover:shadow-[0_0_30px_rgba(255,215,0,0.6)]
-          transition-all duration-300
-          neon-pulse
-        "
-      >
-        Become a Sponsor
-      </button>
-
-      <button
-        onClick={() => navigate("/donate")}
-        className="
-          inline-flex items-center justify-center
-          px-8 py-3 text-lg font-bold tracking-wide
-          text-yellow-900
-          rounded-full
-          border-2 border-yellow-300
-          bg-gradient-to-br from-yellow-200 via-yellow-400 to-yellow-500
-          hover:shadow-[0_0_24px_rgba(255,215,0,0.5)]
-          transition-all duration-300
-        "
-      >
-        Donate
-      </button>
-    </div>
-  </div>
-</section>
-
-<section>
-
-         {/* ⭐ Sponsor Grid */}
-{loading ? (
-  <p className="text-center text-yellow-300 mt-10">
-    Loading sponsors…
-  </p>
-) : sponsors.length === 0 ? (
-  <p className="text-center text-yellow-200 italic mt-10">
-    No sponsors have been announced yet.
-  </p>
-) : (
-  <div className="grid grid-cols-1 mt-8 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-    {sponsors.map((s) => (
-      <motion.button
-        key={s.id}
-        onClick={() => setSelectedSponsor(s)}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.99 }}
-        className="
-          text-left cursor-pointer rounded-3xl p-6
-          shadow-lg border-2 transition-all duration-300
-          border-yellow-400 bg-yellow-50 hover:shadow-yellow-400/50
-        "
-      >
-        {s.logo_url && (
-          <img
-            src={s.logo_url}
-            alt={s.organization}
-            className="w-24 h-24 rounded-2xl object-contain bg-white p-2 shadow-md"
-          />
-        )}
-
-        <div className="mt-4">
-          <h3 className="text-xl font-bold text-yellow-900">
-            {s.organization}
-          </h3>
-          <p className="text-sm font-medium text-yellow-800/80">
-            {s.tier}
-          </p>
-          {/* Booth */}
-<p
-  className={`mt-1 text-sm font-semibold ${
-    s.wants_booth ? "text-green-700" : "text-red-600"
-  }`}
+   {/* CTA Buttons */}
+<div
+  className="
+    mt-4
+    grid grid-cols-3
+    gap-3 sm:gap-4
+    max-w-xl mx-auto
+  "
 >
-  🏕 {s.wants_booth ? "Sponsor Booth: Yes" : "No Booth"}
-</p>
+  {/* Join Sponsors */}
+  <button
+    onClick={() => {
+      setInvitationMode("form");
+      setShowInvitation(true);
+    }}
+    className="
+      group
+      flex flex-col items-center justify-center
+      py-3 sm:py-3
+      rounded-none
+      bg-white
+      border-2 border-yellow-400
+      shadow-md
+      transition-all duration-300
+      hover:-translate-y-0.5
+      hover:shadow-yellow-400/40
+    "
+  >
+    <span className="text-sm sm:text-base font-semibold text-slate-900">
+      Join
+    </span>
+    <span className="text-[11px] sm:text-xs text-slate-500">
+      Sponsors
+    </span>
+  </button>
 
-{/* Website */}
-{s.website && (
-  <p className="mt-2 text-sm">
-    🌐{" "}
-    <a
-      href={normalizeUrl(s.website)}
-      target="_blank"
-      rel="noreferrer"
-      onClick={(e) => e.stopPropagation()}
-      className="underline text-yellow-700 hover:text-yellow-900"
-    >
-      Website
-    </a>
-  </p>
-)}
+  {/* View Tiers */}
+  <button
+    onClick={() => {
+      setInvitationMode("invite");
+      setShowInvitation(true);
+    }}
+    className="
+      group
+      flex flex-col items-center justify-center
+      py-3 sm:py-4
+      rounded-none
+      bg-white
+      border-2 border-slate-200
+      shadow-md
+      transition-all duration-300
+      hover:-translate-y-0.5
+      hover:border-yellow-400
+      hover:shadow-yellow-400/30
+    "
+  >
+    <span className="text-sm sm:text-base font-semibold text-slate-900">
+      View
+    </span>
+    <span className="text-[11px] sm:text-xs text-slate-500">
+      Tiers
+    </span>
+  </button>
 
-        </div>
+  {/* Donate */}
+  <button
+    onClick={() => navigate("/donate")}
+    className="
+      group
+      flex flex-col items-center justify-center
+      py-3 sm:py-4
+      rounded-none
+      bg-white
+      border-2 border-slate-200
+      shadow-md
+      transition-all duration-300
+      hover:-translate-y-0.5
+      hover:border-yellow-400
+      hover:shadow-yellow-400/30
+    "
+  >
+    <span className="text-sm sm:text-base font-semibold text-slate-900">
+      Donate
+    </span>
+    <span className="text-[11px] sm:text-xs text-slate-500">
+      Support
+    </span>
+  </button>
+</div>
 
-      </motion.button>
-    ))}
   </div>
-)}
+</section>
 
+<section className="">
+<h1 className="text-4xl font-serif text-yellow-400 font- border-b mb-6">Active Sponsors</h1>
+  {/* ⭐ Sponsor Grid */}
+  {loading ? (
+    <p className="text-center text-slate-500 mt-10 text-sm tracking-wide">
+      Loading sponsors…
+    </p>
+  ) : sponsors.length === 0 ? (
+    <p className="text-center text-slate-500 italic mt-10 text-sm">
+      No sponsors have been announced yet.
+    </p>
+  ) : (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+      {sponsors.map((s) => (
+        <motion.button
+          key={s.id}
+          onClick={() => setSelectedSponsor(s)}
+          whileHover={{ y: -3 }}
+          whileTap={{ scale: 0.98 }}
+          className="
+            group w-full text-left
+            rounded-none p-6 shadow-yellow-400 shadow-md
+            bg-white
+            border-2  border-yellow-400
+            hover:border-slate-300
+            transition-all duration-300
+          "
+        >
+          {/* Logo */}
+          {s.logo_url && (
+            <div className="flex justify-center">
+              <div className="
+                w-24 h-24
+                flex items-center justify-center
+                bg-slate-50
+                rounded-xl
+                 border-black border shadow-green-700 shadow-md
+              ">
+                <img
+                  src={s.logo_url}
+                  alt={s.organization}
+                  className="max-w-full max-h-full object-contain p-2"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Content */}
+          <div className="mt-5 text-center">
+            <h3 className="text-lg underline font-semibold text-slate-900 leading-tight">
+              {s.organization}
+            </h3>
+
+            <p className="mt-1 text-sm text-slate-500">
+              {s.tier}
+            </p>
+
+            {/* Divider */}
+            <div className="my-4 h-px bg-slate-200" />
+
+            {/* Booth */}
+            <p
+              className={`text-md font-medium ${
+                s.wants_booth
+                  ? "text-emerald-700"
+                  : "text-slate-500"
+              }`}
+            >
+              Booth: {s.wants_booth ? "Included" : "Not Included"}
+            </p>
+
+            {/* Website */}
+            {s.website && (
+              <p className="mt-3 text-sm">
+                <a
+                  href={normalizeUrl(s.website)}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="
+                    inline-flex items-center gap-1
+                    font-medium text-blue-700
+                    hover:text-slate-900
+                    underline underline-offset-4
+                  "
+                >
+                  Visit website
+                </a>
+              </p>
+            )}
+          </div>
+        </motion.button>
+      ))}
+    </div>
+  )}
 
 </section>
+
       {/* ⭐ Modal */}
      <AnimatePresence>
   {selectedSponsor && (
