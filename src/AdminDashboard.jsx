@@ -9,6 +9,7 @@ import Sponsor from "./Sponsor";
 import Staff from "./Staff"; // 👈 your new component
 import CreateProspect from "./CreateProspect";
 import ManageProspects from "./ManageProspects";
+import RequestEvent from "./RequestEvent";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -78,6 +79,11 @@ const [sponsorSubTab, setSponsorSubTab] = useState("add");
               active={activeTab === "sponsors"}
               onClick={() => setActiveTab("sponsors")}
             />
+<TabButton
+  label="Events"
+  active={activeTab === "events"}
+  onClick={() => setActiveTab("events")}
+/>
 
             <TabButton
               label="Settings"
@@ -127,6 +133,7 @@ const [sponsorSubTab, setSponsorSubTab] = useState("add");
 <div >
   {sponsorSubTab === "add" && <Sponsor />}
 
+
   {sponsorSubTab === "manage" && <Sponsors />}
 
   {sponsorSubTab === "add_prospect" && <CreateProspect />}
@@ -140,6 +147,10 @@ const [sponsorSubTab, setSponsorSubTab] = useState("add");
 </div>
 
 
+  </div>
+)}{activeTab === "events" && (
+  <div className="w-full">
+    <RequestEvent />
   </div>
 )}
           {activeTab === "admins" && <Admin />}

@@ -5,6 +5,8 @@ import {
   FaExternalLinkAlt,
   FaCalendarAlt,
 } from "react-icons/fa";
+const API = "https://singspacebackend.onrender.com";
+const PRIDE_ID = 1; // Hartford Pride Center (locked for now)
 
 export default function CapitalEvents() {
   const [events, setEvents] = useState([]);
@@ -110,46 +112,47 @@ export default function CapitalEvents() {
   };
 
   // ---------- Fetch Events ----------
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const res = await fetch(
-          "https://singspacebackend.onrender.com/karaokeevents/hartfordpridecenter"
-        );
+useEffect(() => {
+  const load = async () => {
+    try {
+      const res = await fetch(
+        `${API}/karaokeevents/pride/${PRIDE_ID}`
+      );
 
-        let data = await res.json();
+      const data = await res.json();
 
-        // Preprocess
-        const enriched = data.map((ev) => ({
-          ...ev,
-          alsoOccurs: extractAlsoOccursDays(ev.notes || ""),
-        }));
+      const enriched = data.map((ev) => ({
+        ...ev,
+        alsoOccurs: extractAlsoOccursDays(ev.notes || ""),
+      }));
 
-        setEvents(enriched);
-      } catch (err) {
-        console.error("Failed to load Hartford Pride Center events", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+      setEvents(enriched);
+    } catch (err) {
+      console.error("Failed to load Pride Center events", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    load();
-  }, []);
+  load();
+}, []);
+
 
   // ---------- UI ----------
-  if (loading)
-    return (
-      <div className="text-center text-yellow-300 py-10">
-        Loading Hartford Pride Center Events...
-      </div>
-    );
+if (loading)
+  return (
+    <div className="text-center text-yellow-300 py-10">
+      Loading Pride Center Events...
+    </div>
+  );
 
-  if (events.length === 0)
-    return (
-      <div className="text-center text-yellow-300 text-xl py-10">
-        ⭐ No Hartford Pride Center events found.
-      </div>
-    );
+if (events.length === 0)
+  return (
+    <div className="text-center text-yellow-300 text-xl py-10">
+      ⭐ No Pride Center events found yet.
+    </div>
+  );
+
 
   return (
     <div className="w-full max-w-5xl mt-12 mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">

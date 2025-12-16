@@ -83,6 +83,20 @@ export default function Services({
       </Link>
     </div>
   );
+// 🌟 Yellow Themed Resources Button
+const ResourcesButton = () => (
+  <div className="flex justify-center my-6">
+    <Link to="/resources">
+      <button
+        className="px-10 py-2 rounded-full font-bold text-yellow-900 shadow-lg 
+          transition-all duration-300 hover:scale-105 
+          bg-white border-4 border-yellow-300/40 hover:border-yellow-300"
+      >
+        Resources 📚
+      </button>
+    </Link>
+  </div>
+);
 
   return (
     <div className={`min-h-screen ${theme.pageBg} pb-16`}>
@@ -101,7 +115,29 @@ export default function Services({
         </div>
       </div>
 
-      <ContactButton />
+<div className="mt-10 grid grid-cols-2 gap-4 px-3 max-w-md mx-auto">
+  <Link to={contactPath} className="w-full">
+    <button
+      className="w-full px-6 py-2 rounded-full font-bold text-yellow-900 shadow-lg
+        transition-all duration-300 hover:scale-105
+        bg-white border-4 border-yellow-300/40 hover:border-yellow-300"
+    >
+      Get Involved
+    </button>
+  </Link>
+
+  <Link to="/resources" className="w-full">
+    <button
+      className="w-full px-6 py-2 rounded-full font-bold text-yellow-900 shadow-lg
+        transition-all duration-300 hover:scale-105
+        bg-white border-4 border-yellow-300/40 hover:border-yellow-300"
+    >
+      Resources
+    </button>
+  </Link>
+</div>
+
+
 
       {/* Services Grid */}
       <div className="max-w-6xl mx-auto px-6 mt-10">

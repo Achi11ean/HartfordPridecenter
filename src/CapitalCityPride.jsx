@@ -16,29 +16,23 @@ export default function HartfordCityPride() {
   const [showSponsorModal, setShowSponsorModal] = React.useState(false);
   const [prideEvent, setPrideEvent] = useState(null);
 
-  useEffect(() => {
-    axios
-      .get("https://singspacebackend.onrender.com/karaokeevents/hartfordcitypride")
-      .then((res) => {
-        const events = res.data || [];
-        if (events.length > 0) {
-          setPrideEvent(events[0]);
-        } else {
-          axios
-            .get("https://singspacebackend.onrender.com/karaokeevents/public-all")
-            .then((res2) => {
-              const allEvents = res2.data || [];
-              const match = allEvents.find(
-                (ev) =>
-                  ev.notes &&
-                  ev.notes.toLowerCase().includes("hartford city pride")
-              );
-              if (match) setPrideEvent(match);
-            });
-        }
-      })
-      .catch((err) => console.error("Error loading Hartford City Pride event:", err));
-  }, []);
+useEffect(() => {
+  axios
+    .get("https://singspacebackend.onrender.com/karaokeevents/pride/1")
+    .then((res) => {
+      const events = res.data || [];
+
+      if (!events.length) return;
+
+      // Prefer the next upcoming event with a date
+      const upcoming = events.find(e => e.date);
+
+      setPrideEvent(upcoming || events[0]);
+    })
+    .catch((err) =>
+      console.error("Error loading Pride Center events:", err)
+    );
+}, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-amber-900 to-yellow-900 text-white pt-24">

@@ -97,7 +97,7 @@ const navItems = [
             Login
           </Link>
           <Link
-            to="/pride-admin/signup"
+            to="/signup"
             className="block px-4 py-3 text-yellow-200 hover:bg-yellow-400 hover:text-black rounded-b-xl"
             onClick={() => setAdminOpen(false)}
           >
@@ -218,7 +218,7 @@ const navItems = [
       {isAuthenticated && isAdmin && (
         <>
           <Link
-            to="/pride-admin/dashboard"
+            to="/admin-dashboard"
             className="block px-4 py-3 text-yellow-200 hover:bg-yellow-400 hover:text-black rounded-t-xl"
             onClick={() => setAdminOpen(false)}
           >
@@ -239,7 +239,7 @@ const navItems = [
       {isAuthenticated && isStaff && (
         <>
           <Link
-            to="/pride-staff/dashboard"
+            to="/staff-dashboard"
             className="block px-4 py-3 text-yellow-200 hover:bg-yellow-400 hover:text-black rounded-t-xl"
             onClick={() => setAdminOpen(false)}
           >

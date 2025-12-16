@@ -17,6 +17,7 @@ import AdminDashboard from "./AdminDashboard";
 import StaffDashboard from "./StaffDashboard";
 import Signup from "./Signup";
 import OurSponsorYellowTemplate from "./OurSponsors";
+import Resources from "./Resources";
 
 function App() {
   return (
@@ -33,7 +34,7 @@ function App() {
         <Route path="/volunteer" element={<Volunteer />} />
         <Route path="/donate" element={<Donate />} />
         <Route path="/events" element={<Events />} />
-        <Route path="/hartford-city-pride" element={<HartfordCityPride />} />
+        <Route path="/pride" element={<HartfordCityPride />} />
                 <Route path="/donate" element={<Donate />} />
         <Route path="/admin-signup" element={<AdminSignup />} />
         <Route path="/login" element={<Login />} />
@@ -41,6 +42,8 @@ function App() {
         <Route path="/staff-dashboard" element={<StaffDashboard />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/sponsors" element={<OurSponsorYellowTemplate />} />
+        <Route path="/resources" element={<Resources />}/>
+        
 
 
       </Routes>

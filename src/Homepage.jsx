@@ -1,228 +1,284 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import PhotoSlider from "./PhotoSlider";
-import "./App.css";
-import Privacy from "./Privacy";
-import { FaInstagram, FaFacebook, FaEnvelope } from "react-icons/fa";
+import { motion } from "framer-motion";
+import { FaInstagram, FaFacebook, FaEnvelope, FaCalendarAlt, FaHandHoldingHeart, FaUsers } from "react-icons/fa";
 
 export default function HomePage() {
+  const year = new Date().getFullYear();
+
   return (
-    <div className="relative text-center min-h-screen">
+    <div className="min-h-screen bg-gradient-to-br from-[#0F2D25] via-black to-[#18453B] text-white">
+      {/* Top Hero */}
+      <header className="relative pt-28 pb-14 sm:pt-32 sm:pb-20 overflow-hidden">
+        {/* Background image */}
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage:
+              "url('https://images.pexels.com/photos/207142/pexels-photo-207142.jpeg?cs=srgb&dl=pexels-pixabay-207142.jpg&fm=jpg')",
+          }}
+        />
+        {/* Overlays */}
+        <div className="absolute inset-0 bg-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-[#0F2D25]" />
 
-<div
-  className="
-    relative 
-    bg-cover bg-center bg-no-repeat
-    pb-20 mt-14 sm:mt-20
-    fade-slideshow
-  "
-  style={{
-    backgroundImage: "url('https://images.pexels.com/photos/207142/pexels-photo-207142.jpeg?cs=srgb&dl=pexels-pixabay-207142.jpg&fm=jpg')",
-  }}
->
-
-
-        <div className="absolute inset-0 bg-black/40"></div>
-
-        {/* Photo Slider Section */}
-        <div className="relative z-10">
-          <div className="bg-black/40 border-b-2 sm:py-8 text-center border-yellow-400">
-            <img
+        <div className="relative z-10 max-w-7xl mx-auto px-6">
+          {/* Logo + Tag */}
+          <div className="flex flex-col items-center text-center gap-6">
+            <motion.img
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
               src="https://t4.ftcdn.net/jpg/06/96/89/13/360_F_696891328_utj80ZwXsdy8SloC9IBaFGDIcGNBrEze.jpg"
               alt="South Haven LGBTQIA+ Advocacy Logo"
-              className="mx-auto w-full sm:w-full md:w-96 mt-6 shadow-md shadow-yellow-500 transition-transform duration-700 ease-in-out"
+              className="w-full max-w-md sm:max-w-lg shadow-2xl border border-yellow-400/40"
             />
-          </div>
 
-          {/* Overlapping Title */}
-          <div className="
-              absolute lg:bottom-[-60px] bottom-[-80px]
-              animate-rainbow-wave 
-              text-sm sm:text-xl
-              border-2 border-yellow-400 
-              left-1/2 transform -translate-x-1/2
-              bg-gradient-to-r from-yellow-300/80 to-yellow-500/40
-              font-bold backdrop-blur-md 
-              px-2 sm:px-10 py-1 rounded-none shadow-xl 
-              w-11/12 sm:w-auto
-            "
-          >
-            <h3 className="capitalize">
-              Supporting & promoting LGBTQIA+ Safe Spaces & resources in & around Hartford, CT.
-            </h3>
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+              className="max-w-3xl"
+            >
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight">
+                South Haven LGBTQIA+ Advocacy
+              </h1>
+              <p className="mt-4 text-lg sm:text-xl text-yellow-100/90 font-semibold">
+                Supporting & promoting LGBTQIA+ safe spaces, resources, and community connection
+                in and around Hartford, CT.
+              </p>
+
+              {/* CTAs */}
+<div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+  {[
+    { to: "/events", label: "Events" },
+    { to: "/contact", label: "Contact" },
+    { to: "/volunteer", label: "Volunteer" },
+    { to: "/sponsor", label: "Sponsor", state: { openSponsors: true } },
+  ].map((btn, i) => (
+    <Link
+      key={i}
+      to={btn.to}
+      state={btn.state}
+      className="
+        h-full flex items-center justify-center text-center
+        px-6 py-2
+        font-extrabold uppercase tracking-wide
+        text-black
+        border border-white shadow-white
+        shadow-md
+        bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-500
+        hover:from-yellow-500 hover:via-amber-400 hover:to-yellow-300
+        transition-all duration-300
+      "
+    >
+      {btn.label}
+    </Link>
+  ))}
+</div>
+
+              {/* Sponsor / Donate */}
+
+            </motion.div>
           </div>
         </div>
+      </header>
 
-        {/* Content */}
-        <div className="pt-2">
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-6 pb-16">
+        {/* Mission + Impact Cards */}
+<section className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
+          {/* Mission */}
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="bg-white/10 backdrop-blur-md border border-yellow-400/25 shadow-2xl p-7"
+          >
+            <h2 className="text-3xl font-extrabold text-yellow-300">Welcome 👋</h2>
+            <div className="mt-3 h-[2px] w-full bg-gradient-to-r from-yellow-400/70 to-transparent" />
 
-          {/* Navigation Buttons */}
-          <div className="mt-20 grid grid-cols-3 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-8 px-4 text-center">
-
-            {/* Reusable Yellow Button Class */}
-            {[
-              { to: "/about", label: "About Us" },
-              { to: "/contact", label: "Contact" },
-              { to: "/services", label: "Services" }
-            ].map((btn, i) => (
-<Link
-  key={i}
-  to={btn.to}
-  className="
-    text-white w-full 
-    border-2 border-white 
-    px-1 py-2 rounded-none
-    text-base sm:text-lg font-semibold shadow-md
-    drop-shadow-[0_0_10px_rgba(24,69,59,0.8)]
-    transition-all duration-500 transform hover:scale-105
-    bg-[length:200%_200%]
-    bg-[linear-gradient(90deg,#0F2D25,#18453B,#0F2D25)]
-    hover:bg-[right_center]
-    bg-[left_center]
-  "
->
-
-                {btn.label}
-              </Link>
-            ))}
-
-          </div>
-
-<div className="
-  bg-white/80 backdrop-blur-lg shadow-2xl p-2 
-  border-[#18453B] border-4 
-  mx-auto my-4 w-11/12 md:w-3/4 lg:w-1/2 
-  text-center space-y-6 rounded-none
-">
-
-  <h2 className="
-    text-3xl sm:text-xl md:text-3xl lg:text-4xl xl:text-5xl 
-    font-serif 
-    text-[#18453B] font-bold leading-snug px-4
-  ">
-    Welcome!
-  </h2>
-
-            <hr className="border-t-4  border-[#18453B] w-full" />
-
-            <p className="text-gray-800 font-semibold text-lg leading-relaxed">
-              At the <span className="font-bold underline     text-[#18453B] ">South Haven LGBTQIA+ Advocacy</span>,  
-              we believe every person deserves a space where they feel seen, supported, and celebrated.  
+            <p className="mt-5 text-yellow-50/90 text-lg leading-relaxed font-semibold">
+              We believe every person deserves a space where they feel seen, supported, and celebrated.
               Our mission is to uplift LGBTQIA+ individuals through advocacy, education, and community connection.
             </p>
 
-            <p className="text-gray-800 pb-6 font-semibold text-lg leading-relaxed">
+            <p className="mt-4 text-yellow-50/90 text-lg leading-relaxed font-semibold">
               Together, we’re building a more inclusive world — where authenticity shines and every voice matters. 🌈
             </p>
 
-<Link
-  to="/South-haven-advocacy"
-  className="
-    text-white w-full 
-    border-2 border-white 
-    px-1 py-2 rounded-none
-    text-base sm:text-lg font-semibold shadow-md
-    bg-[length:200%_200%]
-    bg-[linear-gradient(90deg,#0F2D25,#18453B,#0F2D25)]
-    hover:bg-[right_center]
-    bg-[left_center]
-  "
->
+            <div className="mt-6 flex flex-col sm:flex-row gap-3">
+              <Link
+                to="/resources"
+                className="px-6 py-3 font-bold text-black border border-black shadow-lg
+                  bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-500
+                  hover:from-amber-500 hover:via-yellow-400 hover:to-yellow-300
+                  transition-all duration-300 text-center"
+              >
+                Explore Resources
+              </Link>
+              <Link
+                to="/about"
+                className="px-6 py-3 font-bold border border-white/20 shadow-lg
+                  bg-black/40 hover:bg-black/60 text-yellow-200
+                  transition-all duration-300 text-center"
+              >
+                About Us
+              </Link>
+            </div>
+          </motion.div>
 
-              South Haven Pride Event 2026
-            </Link>
+          {/* Impact / Highlights */}
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.05 }}
+            className="bg-black/40 border border-white/10 shadow-2xl p-7"
+          >
+            <h3 className="text-2xl font-extrabold text-yellow-300">What you can do here</h3>
+            <div className="mt-3 h-[2px] w-full bg-gradient-to-r from-yellow-400/70 to-transparent" />
 
-          </div>
+            <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <FeatureCard
+                icon={<FaCalendarAlt className="text-2xl text-yellow-300" />}
+                title="Find Events"
+                desc="See what’s happening next, updated regularly."
+                to="/events"
+              />
+              <FeatureCard
+                icon={<FaHandHoldingHeart className="text-2xl text-yellow-300" />}
+                title="Volunteer"
+                desc="Support the community with your time & talent."
+                to="/volunteer"
+              />
+              <FeatureCard
+                icon={<FaUsers className="text-2xl text-yellow-300" />}
+                title="Connect"
+                desc="Reach out for support, questions, or partnership."
+                to="/contact"
+              />
+            </div>
 
-        </div>
-      </div>
+            {/* Featured Link */}
+            <div className="mt-7 p-5 bg-white/10 border border-yellow-400/20 shadow-xl">
+              <p className="text-yellow-100 font-bold text-lg">
+                Featured:
+              </p>
+              <Link
+                to="/pride"
+                className="mt-3 inline-block w-full text-center px-6 py-3 font-extrabold text-white border border-white/20 shadow-lg
+                  bg-gradient-to-r from-[#0F2D25] via-[#18453B] to-[#0F2D25]
+                  hover:brightness-110 transition-all duration-300"
+              >
+                South Haven Pride Event 2026
+              </Link>
+            </div>
+          </motion.div>
+        </section>
+      </main>
 
       {/* Footer */}
-<section className="
-  bg-gradient-to-br 
-  from-black 
-  via-[#0F2D25] 
-  to-[#18453B] 
-  text-white 
-  py-6 
-  border-t-4 border-[#18453B]
-">
-  <div className="
-    max-w-7xl mx-auto px-6 
-    grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 
-    gap-6 
-    divide-y divide-[#18453B] 
-    lg:divide-y-0 lg:divide-x lg:divide-[#0F2D25]
-  ">
+      <footer className="border-t border-white/10 bg-black/60">
+        <div className="max-w-7xl mx-auto px-6 py-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Org */}
+            <div>
+              <h3 className="text-xl font-extrabold text-yellow-300">
+                South Haven LGBTQIA+ Advocacy 🌈
+              </h3>
+              <p className="mt-2 text-yellow-100/80 font-semibold">
+                Empowering the LGBTQ+ community through support, creativity, and compassion.
+              </p>
+              <p className="mt-3 text-sm text-yellow-100/70 font-semibold">
+                📍 Hartford, Connecticut
+              </p>
+            </div>
 
-    {/* Organization Info */}
-    <div className="pr-0 lg:pr-6 text-center lg:text-left">
-      <h3 className="
-        text-2xl font-bold 
-        text-white 
-        border-b-2 border-white 
-        inline-block mb-2
-      ">
-        South Haven LGBTQIA+ Advocacy 🌈
-      </h3>
-            <p className="text-sm leading-relaxed font-bold text-white">
-              Empowering the LGBTQ+ community through support, creativity, and compassion.
-            </p>
-          </div>
+            {/* Links */}
+            <div>
+              <h4 className="text-lg font-bold text-yellow-200">Quick Links</h4>
+              <ul className="mt-3 grid grid-cols-2 gap-2 text-sm font-semibold text-yellow-100/80">
+                <li><Link className="hover:text-yellow-300" to="/about">About</Link></li>
+                <li><Link className="hover:text-yellow-300" to="/services">Services</Link></li>
+                <li><Link className="hover:text-yellow-300" to="/events">Events</Link></li>
+                <li><Link className="hover:text-yellow-300" to="/volunteer">Volunteer</Link></li>
+                <li><Link className="hover:text-yellow-300" to="/resources">Resources</Link></li>
+                <li><Link className="hover:text-yellow-300" to="/contact">Contact</Link></li>
+                <li><Link className="hover:text-yellow-300" to="/donate">Donate</Link></li>
+                <li><Link className="hover:text-yellow-300" to="/privacy">Privacy</Link></li>
+              </ul>
+            </div>
 
-          {/* Quick Links */}
-          <div className="pt-4 sm:pt-0 lg:px-6 text-center lg:text-left">
-            <h4 className="text-lg font-semibold text-yellow-200 mb-3">Quick Links</h4>
-            <ul className="grid grid-cols-2 gap-2 text-sm">
-              {[
-                ["About", "/about"],
-                ["Services", "/services"],
-                ["Events", "/events"],
-                ["Volunteer", "/volunteer"],
-                ["Resources", "/resources"],
-                ["Contact", "/contact"],
-                ["Donate", "/donate"],
-                ["Hartford City Pride", "/hartford-city-pride"],
-                ["Privacy Policy", "/privacy"]
-              ].map(([label, link], i) => (
-                <li key={i}>
-                  <Link to={link} className="hover:text-yellow-300">{label}</Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+            {/* Contact */}
+            <div>
+              <h4 className="text-lg font-bold text-yellow-200">Get in Touch</h4>
+              <p className="mt-3 text-sm font-semibold">
+                📧{" "}
+                <a
+                  href="mailto:info@hartfordpridecenter.org"
+                  className="underline hover:text-yellow-300"
+                >
+                  info@hartfordpridecenter.org
+                </a>
+              </p>
 
-          {/* Contact Info */}
-          <div className="pt-6 sm:pt-0 lg:pl-6 text-center lg:text-left">
-            <h4 className="text-lg font-semibold text-yellow-200 mb-3">Get in Touch</h4>
-            <p className="text-sm">📍 Hartford, Connecticut</p>
-
-            <p className="text-sm mt-1">
-              📧{" "}
-              <a href="mailto:info@hartfordpridecenter.org" className="hover:text-yellow-300 underline">
-                info@hartfordpridecenter.org
-              </a>
-            </p>
-
-            <div className="flex justify-center lg:justify-start items-center space-x-4 mt-6 border-t-2 border-yellow-400 pt-3">
-              <a href="https://www.instagram.com/hartfordpride/" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-300">
-                <FaInstagram className="text-2xl" />
-              </a>
-              <a href="https://www.facebook.com/HartfordPrideCenter" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-300">
-                <FaFacebook className="text-2xl" />
-              </a>
-              <a href="mailto:info@hartfordpridecenter.org" className="hover:text-yellow-300">
-                <FaEnvelope className="text-2xl" />
-              </a>
+              <div className="mt-6 flex items-center gap-4 border-t border-yellow-400/30 pt-4">
+                <a
+                  href="https://www.instagram.com/hartfordpride/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-yellow-300"
+                  aria-label="Instagram"
+                >
+                  <FaInstagram className="text-2xl" />
+                </a>
+                <a
+                  href="https://www.facebook.com/HartfordPrideCenter"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-yellow-300"
+                  aria-label="Facebook"
+                >
+                  <FaFacebook className="text-2xl" />
+                </a>
+                <a
+                  href="mailto:info@hartfordpridecenter.org"
+                  className="hover:text-yellow-300"
+                  aria-label="Email"
+                >
+                  <FaEnvelope className="text-2xl" />
+                </a>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="mt-8 text-center text-xs text-gray-400">
-          <p>© {new Date().getFullYear()} Hartford Pride Center — All Rights Reserved.</p>
-          <Link to="/privacy" className="hover:text-yellow-300">Privacy Policy</Link>
+          <div className="mt-10 text-center text-xs text-white/50 font-semibold">
+            © {year} Hartford Pride Center — All Rights Reserved.{" "}
+            <Link to="/privacy" className="hover:text-yellow-300 underline">
+              Privacy Policy
+            </Link>
+          </div>
         </div>
-      </section>
+      </footer>
     </div>
+  );
+}
+
+function FeatureCard({ icon, title, desc, to }) {
+  return (
+    <Link
+      to={to}
+      className="block p-4 bg-black/40 border border-white/10 shadow-lg hover:bg-white/10 transition"
+    >
+      <div className="flex items-center gap-3">
+        <div className="p-2 bg-white/10 border border-yellow-400/20">{icon}</div>
+        <div>
+          <p className="font-extrabold text-yellow-200">{title}</p>
+          <p className="text-sm text-yellow-100/80 font-semibold">{desc}</p>
+        </div>
+      </div>
+    </Link>
   );
 }

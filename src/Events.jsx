@@ -5,20 +5,31 @@ import CapitalEvents from "./CapitalEvents";
 
 export default function Events() {
   return (
-    <div className="min-h-screen pt-32 bg-gradient-to-br from-black via-amber-900 to-yellow-800 text-white flex flex-col items-center justify-center px-6 text-center">
+    <div className="
+      min-h-screen pt-32
+      bg-gradient-to-br from-[#18453B] via-black to-[#0f2d25]
+      text-yellow-100
+      flex flex-col items-center justify-center
+      px-6 text-center
+    ">
 
       {/* Animated Header */}
       <motion.div
         initial={{ opacity: 0, y: -25 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="mb-8"
+        className="mb-10"
       >
         {/* Icon */}
-        <FaCalendarAlt className="text-yellow-400 text-6xl mx-auto mb-3 drop-shadow-md" />
+        <FaCalendarAlt className="text-yellow-300 text-6xl mx-auto mb-4 drop-shadow-lg" />
 
         {/* Title */}
-        <h1 className="text-4xl sm:text-5xl font-extrabold bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-500 bg-clip-text text-transparent drop-shadow-lg">
+        <h1 className="
+          text-4xl sm:text-5xl font-extrabold
+          bg-gradient-to-r from-yellow-300 via-yellow-300 to-yellow-400
+          bg-clip-text text-transparent
+          drop-shadow-lg
+        ">
           Upcoming Events
         </h1>
       </motion.div>
@@ -26,17 +37,17 @@ export default function Events() {
       {/* Events List */}
       <CapitalEvents />
 
-      {/* Footer Sparkle / Decoration */}
+      {/* Footer Decoration */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
-        className="mt-12 flex flex-col items-center space-y-2"
+        className="mt-16 flex flex-col items-center space-y-3"
       >
-        <FaRainbow className="text-4xl text-yellow-300 animate-pulse" />
+        <FaRainbow className="text-4xl text-green-400 animate-pulse" />
 
         <p className="text-sm text-yellow-200 italic">
-          "Pride never sleeps — and neither does our community!"
+          “Pride never sleeps — and neither does our community.”
         </p>
       </motion.div>
 

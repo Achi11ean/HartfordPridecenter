@@ -225,8 +225,8 @@ const handleSubmit = async (e) => {
         rounded-none shadow-2xl
         p-2
       ">
-        <h1 className="text-4xl font-extrabold text-center text-yellow-300 mb-2">
-          🏳️‍🌈 Pride Admin Signup
+        <h1 className="text-4xl border-b font-extrabold text-center text-yellow-300 mb-2">
+        Admin Signup
         </h1>
 
         <p className="text-center text-yellow-200 mb-8">
