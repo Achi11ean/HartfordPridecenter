@@ -6,6 +6,55 @@ import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
 
 const RequestEvent = ({ initialVenue = {} }) => {
+
+
+    const getAnnualPridePrefix = () =>
+  prideName ? `${prideName} Presents: Annual Pride Event` : "";
+
+const hasAnnualPridePrefix = (txt = "") => {
+  if (!prideName) return false;
+  const re = new RegExp(
+    `^\\s*${prideName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s+presents\\s*:\\s*annual pride event`,
+    "i"
+  );
+  return re.test(txt);
+};
+
+const stripAnnualPridePrefix = (txt = "") => {
+  if (!prideName) return txt;
+  const re = new RegExp(
+    `^\\s*${prideName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s+presents\\s*:\\s*annual pride event\\s*`,
+    "i"
+  );
+  return txt.replace(re, "").trimStart();
+};
+
+const toggleAnnualPridePrefix = () => {
+  if (!prideName) return;
+
+  setFormData((prev) => {
+    let desc = prev.description || "";
+
+    // Remove normal prefix if present (mutual exclusivity)
+    if (hasPridePrefix(desc)) {
+      desc = stripPridePrefix(desc);
+    }
+
+    if (hasAnnualPridePrefix(desc)) {
+      return {
+        ...prev,
+        description: stripAnnualPridePrefix(desc),
+      };
+    }
+
+    const next = `${getAnnualPridePrefix()} ${desc}`.trim();
+    return {
+      ...prev,
+      description: next.slice(0, 800),
+    };
+  });
+};
+
   // ---------- Core form state ----------
   const [formData, setFormData] = useState({
     venue_name: initialVenue?.venue_name || "",
@@ -1014,20 +1063,43 @@ setMonthlyWeekdayRules([]);
 Description 
 </h2>
 {prideName && (
-  <button
-    type="button"
-    onClick={togglePridePrefix}
-    className="
-      mt-2 px-4 py-2 rounded
-      bg-gradient-to-r from-pink-500 to-purple-600
-      text-white font-bold shadow
-      hover:brightness-110
-    "
-  >
-    {hasPridePrefix(formData.description)
-      ? `Remove ${prideName} Presents`
-      : `${prideName} Presents`}
-  </button>
+  <div className="flex flex-wrap gap-3 justify-center mt-2">
+    {/* Standard Pride Prefix */}
+    <button
+      type="button"
+      onClick={togglePridePrefix}
+      className={`
+        px-4 py-2 rounded font-bold shadow transition
+        ${
+          hasPridePrefix(formData.description)
+            ? "bg-red-500 text-white"
+            : "bg-gradient-to-r from-pink-500 to-purple-600 text-white"
+        }
+      `}
+    >
+      {hasPridePrefix(formData.description)
+        ? `Remove ${prideName} Presents`
+        : `${prideName} Presents`}
+    </button>
+
+    {/* Annual Pride Event Prefix */}
+    <button
+      type="button"
+      onClick={toggleAnnualPridePrefix}
+      className={`
+        px-4 py-2 rounded font-bold shadow transition
+        ${
+          hasAnnualPridePrefix(formData.description)
+            ? "bg-red-500 text-white"
+            : "bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 text-black"
+        }
+      `}
+    >
+      {hasAnnualPridePrefix(formData.description)
+        ? "Remove Annual Pride Event"
+        : "Annual Pride Event"}
+    </button>
+  </div>
 )}
 
 <textarea

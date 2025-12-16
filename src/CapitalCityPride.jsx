@@ -15,22 +15,23 @@ import SponsorInvitationPage from "./SponsorInvitationPage";
 export default function HartfordCityPride() {
   const [showSponsorModal, setShowSponsorModal] = React.useState(false);
   const [prideEvent, setPrideEvent] = useState(null);
+const [vendors, setVendors] = useState([]);
 
 useEffect(() => {
   axios
-    .get("https://singspacebackend.onrender.com/karaokeevents/pride/1")
-    .then((res) => {
-      const events = res.data || [];
-
-      if (!events.length) return;
-
-      // Prefer the next upcoming event with a date
-      const upcoming = events.find(e => e.date);
-
-      setPrideEvent(upcoming || events[0]);
-    })
+    .get("https://singspacebackend.onrender.com/karaokeevents/pride/1/annual")
+    .then((res) => setPrideEvent(res.data))
     .catch((err) =>
-      console.error("Error loading Pride Center events:", err)
+      console.error("Error loading Annual Pride event:", err)
+    );
+}, []);
+
+useEffect(() => {
+  axios
+    .get("https://singspacebackend.onrender.com/api/pride/1/vendors")
+    .then((res) => setVendors(res.data || []))
+    .catch((err) =>
+      console.error("Error loading Pride vendors:", err)
     );
 }, []);
 
@@ -152,6 +153,48 @@ useEffect(() => {
           </ul>
         </div>
       </section>
+{/* 🛍️ PRIDE VENDORS */}
+<section className="max-w-6xl mx-auto px-6 py-12">
+  <h2 className="text-3xl font-extrabold text-center text-yellow-300 mb-8">
+    🌈 Pride Vendors & Community Partners
+  </h2>
+
+  {vendors.length === 0 ? (
+    <p className="text-center text-yellow-200 italic">
+      Vendor list coming soon.
+    </p>
+  ) : (
+    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {vendors.map((v) => (
+        <div
+          key={v.id}
+          className="bg-black/60 border border-yellow-400/40 rounded-2xl p-5 shadow-xl"
+        >
+          <h3 className="text-xl font-bold text-yellow-300">
+            {v.company_name}
+          </h3>
+
+          <p className="text-sm italic text-yellow-100">
+            {v.vendor_type}
+          </p>
+
+          {v.website_url && (
+            <a
+              href={v.website_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block mt-3 text-sm font-bold text-black
+                bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-600
+                px-4 py-1 rounded shadow hover:brightness-110 transition"
+            >
+              Visit Website
+            </a>
+          )}
+        </div>
+      ))}
+    </div>
+  )}
+</section>
 
       {/* 🛍️ VENDOR / SPONSOR / VOLUNTEER */}
       <section className="max-w-5xl mx-auto px-6 py-10 space-y-16">

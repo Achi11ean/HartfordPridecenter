@@ -112,7 +112,7 @@ useEffect(() => {
       </AnimatePresence>
 
       {/* ⭐ Sponsor Intro Header */}
-     <section className="relative max-w-full pt-40 mx-auto px-4 pb-8">
+     <section className="relative max-w-full pt-32 mx-auto px-4 ">
   {/* Glow Accent */}
   <div className="
     absolute inset-x-0 -top-10 h-24
@@ -135,9 +135,7 @@ useEffect(() => {
     </h2>
 
     {/* Divider */}
-    <div className="mt-6 mb-6 flex justify-center">
-      <div className="h-1 w-32 bg-gradient-to-r from-yellow-300 via-yellow-500 to-yellow-300 rounded-full shadow-lg" />
-    </div>
+<hr className="rainbow-hr" />
 
     {/* Description */}
   <p className="mt-6 text-lg text-yellow-100/80 leading-relaxed">
@@ -239,102 +237,112 @@ useEffect(() => {
   </div>
 </section>
 
-<section>
-  <h1 className="text-4xl font-serif text-yellow-400 border-b mb-6">
-    Active Sponsors
-  </h1>
+<section className="py-24 ">
+  {/* Header */}
+  <div className="max-w-6xl mx-auto px-6 mb-6">
+    <h1 className="text-4xl font-semibold tracking-tight text-white">
+      Sponsors
+    </h1>
+    <p className="mt-3 max-w-xl font-bold text-sm text-neutral-400">
+      Organizations providing direct support for programming, infrastructure,
+      and community initiatives.
+    </p>
+    <div className="mt-6 h-px w-full bg-neutral-800" />
+  </div>
 
+  {/* States */}
   {loading ? (
-    <p className="text-center text-slate-400 mt-10 text-sm tracking-wide">
+    <p className="text-center text-neutral-500 text-sm">
       Loading sponsors…
     </p>
   ) : sponsors.length === 0 ? (
-    <p className="text-center text-slate-400 italic mt-10 text-sm">
-      No sponsors have been announced yet.
+    <p className="text-center text-neutral-500 text-sm italic">
+      No sponsors have been announced.
     </p>
   ) : (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-      {sponsors.map((s, index) => {
-        const gradient =
-          PASTEL_GRADIENTS[index % PASTEL_GRADIENTS.length];
-
-        return (
-          <motion.button
+    <div className="max-w-6xl mx-auto px-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {sponsors.map((s) => (
+          <button
             key={s.id}
             onClick={() => setSelectedSponsor(s)}
-            whileHover={{ y: -4 }}
-            whileTap={{ scale: 0.98 }}
-            className={`
-              group w-full text-left
-              rounded-2xl p-6
-              bg-gradient-to-br ${gradient}
-              border border-white/60
-              shadow-sm
-              hover:shadow-md
-              transition-all duration-300
-            `}
+            className="
+              w-full text-left
+              border border-neutral-800
+              rounded-xl
+              p-2
+              hover:border-neutral-700
+              transition-colors
+            "
           >
-            {/* Logo */}
-            {s.logo_url && (
-              <div className="flex justify-center">
-                <div className="
-                  w-24 h-24
-                  flex items-center justify-center
-                  bg-white/80
-                  rounded-xl
-                  shadow-sm
-                ">
+            <div className="flex gap-6 items-start">
+              {/* Logo */}
+              <div className="
+                w-20 h-20
+                flex items-center justify-center
+                border border-neutral-800
+                rounded-lg
+                shrink-0
+              ">
+                {s.logo_url ? (
                   <img
                     src={s.logo_url}
                     alt={s.organization}
                     className="max-w-full max-h-full object-contain p-2"
                   />
-                </div>
+                ) : (
+                  <span className="text-xs text-neutral-500">
+                    No logo
+                  </span>
+                )}
               </div>
-            )}
 
-            {/* Content */}
-            <div className="mt-5 text-center">
-              <h3 className="text-lg font-semibold text-slate-800">
-                {s.organization}
-              </h3>
+              {/* Info */}
+              <div className="flex-1">
+                <h3 className="text-lg font-bold font-serif text-white leading-tight">
+                  {s.organization}
+                </h3>
 
-              <p className="mt-1 text-sm text-slate-600">
-                {s.tier}
-              </p>
+                <p className="mt-1 text-sm text-neutral-400">
+                  Sponsorship Tier:{" "}
+                  <span className="text-neutral-300">
+                    {s.tier}
+                  </span>
+                </p>
 
-              <div className="my-4 h-px bg-white/70" />
+                <p className="mt-3 text-sm text-neutral-500">
+                  Booth Access:{" "}
+                  <span className="text-neutral-300">
+                    {s.wants_booth ? "Included" : "Not included"}
+                  </span>
+                </p>
 
-              <p
-                className={`text-sm font-medium ${
-                  s.wants_booth
-                    ? "text-emerald-700"
-                    : "text-slate-500"
-                }`}
-              >
-                Booth: {s.wants_booth ? "Included" : "Not Included"}
-              </p>
-
-              {s.website && (
-                <p className="mt-3 text-sm">
+                {s.website && (
                   <a
                     href={normalizeUrl(s.website)}
                     target="_blank"
                     rel="noreferrer"
                     onClick={(e) => e.stopPropagation()}
-                    className="font-medium text-blue-700 hover:text-blue-900 underline underline-offset-4"
+                    className="
+                      inline-block mt-4
+                      text-sm font-medium
+                      text-white
+                      underline underline-offset-4
+                      hover:text-neutral-300
+                    "
                   >
-                    Visit website
+                    Visit organization website
                   </a>
-                </p>
-              )}
+                )}
+              </div>
             </div>
-          </motion.button>
-        );
-      })}
+          </button>
+        ))}
+      </div>
     </div>
   )}
 </section>
+
 
 
       {/* ⭐ Modal */}

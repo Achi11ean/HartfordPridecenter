@@ -10,10 +10,16 @@ import Staff from "./Staff"; // 👈 your new component
 import CreateProspect from "./CreateProspect";
 import ManageProspects from "./ManageProspects";
 import RequestEvent from "./RequestEvent";
+import CreateServices from "./CreateServices";
+import ManageServices from "./ManageServices";
+import CreateVendor from "./CreateVendor";
+import ManageVendors from "./ManageVendors";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
   const { isAuthenticated, isAdmin, user, logout } = useAuth();
+const [servicesSubTab, setServicesSubTab] = useState("add");
+const [vendorsSubTab, setVendorsSubTab] = useState("add");
 
   const [activeTab, setActiveTab] = useState("staff");
 
@@ -79,17 +85,24 @@ const [sponsorSubTab, setSponsorSubTab] = useState("add");
               active={activeTab === "sponsors"}
               onClick={() => setActiveTab("sponsors")}
             />
+            <TabButton
+  label="Vendors"
+  active={activeTab === "vendors"}
+  onClick={() => setActiveTab("vendors")}
+/>
+
 <TabButton
   label="Events"
   active={activeTab === "events"}
   onClick={() => setActiveTab("events")}
 />
 
-            <TabButton
-              label="Settings"
-              active={activeTab === "settings"}
-              onClick={() => setActiveTab("settings")}
-            />
+<TabButton
+  label="Services"
+  active={activeTab === "services"}
+  onClick={() => setActiveTab("services")}
+/>
+
           </div>
         </aside>
 
@@ -99,30 +112,85 @@ const [sponsorSubTab, setSponsorSubTab] = useState("add");
           rounded-2xl p-6 justify-center items-center flex
           shadow-2xl min-h-[300px]
         ">
+            {activeTab === "vendors" && (
+  <div className="w-full space-y-6">
+
+    {/* Vendors Sub Tabs */}
+    <div className="flex gap-3 flex-wrap">
+      <SubTabButton
+        label="➕ Add Vendor"
+        active={vendorsSubTab === "add"}
+        onClick={() => setVendorsSubTab("add")}
+      />
+      <SubTabButton
+        label="🛠 Manage Vendors"
+        active={vendorsSubTab === "manage"}
+        onClick={() => setVendorsSubTab("manage")}
+      />
+    </div>
+
+    {/* Sub Tab Content */}
+    {vendorsSubTab === "add" && <CreateVendor />}
+
+    {vendorsSubTab === "manage" && (
+      <ManageVendors />
+      /* or Placeholder until ready:
+      <Placeholder title="Vendor Management" />
+      */
+    )}
+
+  </div>
+)}
+
           {activeTab === "staff" && <Staff />}
           {activeTab === "volunteers" && <Volunteers />}
+          {activeTab === "services" && (
+  <div className="w-full space-y-6">
+
+    {/* Services Sub Tabs */}
+    <div className="flex gap-3 flex-wrap">
+      <SubTabButton
+        label="➕ Add Service"
+        active={servicesSubTab === "add"}
+        onClick={() => setServicesSubTab("add")}
+      />
+      <SubTabButton
+        label="🛠 Manage Services"
+        active={servicesSubTab === "manage"}
+        onClick={() => setServicesSubTab("manage")}
+      />
+    </div>
+
+    {/* Sub Tab Content */}
+    {servicesSubTab === "add" && <CreateServices />}
+
+  {servicesSubTab === "manage" && <ManageServices />}
+
+  </div>
+)}
+
 {activeTab === "sponsors" && (
   <div className="space-y-6">
 
     {/* Sponsor Sub Tabs */}
 <div className="flex gap-3 flex-wrap">
   <SubTabButton
-    label="➕ Add Sponsor"
+    label="Add Sponsor"
     active={sponsorSubTab === "add"}
     onClick={() => setSponsorSubTab("add")}
   />
   <SubTabButton
-    label="🛠 Manage Sponsors"
+    label="Manage Sponsors"
     active={sponsorSubTab === "manage"}
     onClick={() => setSponsorSubTab("manage")}
   />
   <SubTabButton
-    label="🌱 Add Prospect"
+    label="Add Prospect"
     active={sponsorSubTab === "add_prospect"}
     onClick={() => setSponsorSubTab("add_prospect")}
   />
   <SubTabButton
-    label="📋 Manage Prospects"
+    label="Manage Prospects"
     active={sponsorSubTab === "manage_prospects"}
     onClick={() => setSponsorSubTab("manage_prospects")}
   />
@@ -148,7 +216,10 @@ const [sponsorSubTab, setSponsorSubTab] = useState("add");
 
 
   </div>
-)}{activeTab === "events" && (
+)}
+
+
+{activeTab === "events" && (
   <div className="w-full">
     <RequestEvent />
   </div>

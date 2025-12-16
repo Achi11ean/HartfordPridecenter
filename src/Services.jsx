@@ -1,239 +1,218 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
+
+const API = "https://singspacebackend.onrender.com";
 
 export default function Services({
+  prideId = 1,
   contactPath = "/contact",
-  services = [],
-  theme = {
-   pageBg: "bg-gradient-to-b from-black via-[#0F2D25] to-[#18453B]",
-  cardBg: "bg-white/90",
-  cardHoverBg: "hover:bg-white",
-  primaryTextGrad: "bg-gradient-to-r from-[#0F2D25] via-[#18453B] to-white",
-  accentTextGrad: "bg-gradient-to-r from-[#18453B] via-white to-[#0F2D25]",
-  border: "border-[#18453B]/40",
-  headingText: "text-[#18453B]",
-  bodyText: "text-black",
-  },
 }) {
+  const [services, setServices] = useState([]);
   const [selectedService, setSelectedService] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // 🌟 Default Pride Center Services (unchanged)
-  const defaultServices = services.length
-    ? services
-    : [
-        {
-          title: "Community Programs",
-          desc: "Engaging activities that bring the LGBTQIA+ community together.",
-          details:
-            "From youth and senior meetups to art showcases, open mics, and drag story hours — our programs celebrate diversity, inclusion, and joy in every form.",
-          image:
-            "https://www.cdph.ca.gov/Programs/CID/DOA/PublishingImages/Pages/Celebrate-Pride/CelebratePrideCropped.jpg",
-        },
-        {
-          title: "Advocacy & Education",
-          desc: "Empowering voices and creating awareness across Connecticut.",
-          details:
-            "We provide training, workshops, and educational initiatives to promote equality, inclusivity, and understanding in schools, workplaces, and local communities.",
-          image:
-            "https://media.licdn.com/dms/image/v2/C5612AQH9PUIENeYaKQ/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1588869753497?e=2147483647&v=beta&t=xB10s2-5w_JhfwG47_hiQ2d1RBWTzYdHwQQoE5lO758",
-        },
-        {
-          title: "Health & Wellness",
-          desc: "Supporting mind, body, and spirit with care and compassion.",
-          details:
-            "Our health programs offer resources on mental wellness, sexual health, HIV testing, and access to affirming care providers — because your wellbeing matters.",
-          image:
-            "https://www.inspirahealthnetwork.org/sites/default/files/2021-06/iStock-1221852877.jpg",
-        },
-        {
-          title: "Arts & Culture",
-          desc: "Celebrating creativity and expression within our community.",
-          details:
-            "We host film screenings, gallery nights, drag performances, and pride festivals that highlight queer art and storytelling from diverse voices.",
-          image:
-            "https://media-cldnry.s-nbcnews.com/image/upload/t_fit-560w,f_auto,q_auto:best/rockcms/2025-08/250812-queer-art-censorship-se-143p-0f7861.jpg",
-        },
-        {
-          title: "Support Services",
-          desc: "Here for you — no matter where you are on your journey.",
-          details:
-            "Our trained staff and volunteers offer peer support, coming-out resources, legal guidance, and safe connections for individuals and families in need.",
-          image:
-            "https://m.media-amazon.com/images/I/61fAp0SH+qL._UF1000,1000_QL80_.jpg",
-        },
-        {
-          title: "Volunteer & Outreach",
-          desc: "Join our mission to make a difference locally and beyond.",
-          details:
-            "Whether helping with events, mentorship, or advocacy, our volunteers are the heartbeat of the South Haven LGBTQIA+ Advocacy — making every day a little brighter for all.",
-          image:
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIL-vhEVIFazkfJP97ZK7sT104xnLrmKVgJFo-SQPytI214UpryLt9PfJvhZC5EGRNTLU&usqp=CAU",
-        },
-      ];
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const res = await axios.get(
+          `${API}/api/pride/${prideId}/services`
+        );
 
-  // 🌟 Yellow Themed Contact Button
-  const ContactButton = () => (
-    <div className="flex justify-center my-10">
-      <Link to={contactPath}>
-        <button
-          className={`px-10 py-2 rounded-full font-bold text-yellow-900 shadow-lg transition-all duration-300 hover:scale-105 bg-white border-4 border-yellow-300/40 hover:border-yellow-300`}
-        >
-          Get Involved 💛
-        </button>
-      </Link>
-    </div>
-  );
-// 🌟 Yellow Themed Resources Button
-const ResourcesButton = () => (
-  <div className="flex justify-center my-6">
-    <Link to="/resources">
-      <button
-        className="px-10 py-2 rounded-full font-bold text-yellow-900 shadow-lg 
-          transition-all duration-300 hover:scale-105 
-          bg-white border-4 border-yellow-300/40 hover:border-yellow-300"
-      >
-        Resources 📚
-      </button>
-    </Link>
-  </div>
-);
+        setServices(
+          (res.data || []).map((s) => ({
+            id: s.id,
+            title: s.title,
+            desc: s.description,
+            details: s.description,
+            image: s.image_url,
+            contact_name: s.contact_name,
+            contact_email: s.contact_email,
+            url: s.url,
+          }))
+        );
+      } catch (err) {
+        console.error("❌ Failed to load services", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchServices();
+  }, [prideId]);
 
   return (
-    <div className={`min-h-screen ${theme.pageBg} pb-16`}>
-      {/* Header */}
-      <div className="max-w-6xl mt-8 sm:mt-28 mx-auto px-6 pt-12">
-        <div className="text-center">
-          <h1
-            className={`text-3xl sm:text-4xl md:text-5xl font-extrabold border-b-4 border-yellow-400 inline-block `}
-          >
-            Our Programs & Services
-          </h1>
-          <p className="mt-4 text-yellow-200/90 max-w-2xl mx-auto text-lg">
-            Explore how we empower and support the LGBTQIA+ community through
-            connection, advocacy, and creativity.
-          </p>
+    <div className="min-h-screen bg-gradient-to-b from-black via-[#0F2D25] to-[#18453B] pb-20">
+
+      {/* ───────────────── Header ───────────────── */}
+      <header className="pt-32 px-6 text-center max-w-6xl mx-auto">
+        <h1 className="text-3xl font-serif md:text-5xl font-extrabold text-white">
+          Programs & Services
+        </h1>
+<hr className="rainbow-hr" />
+
+        {/* Rainbow Divider */}
+
+        <p className="text-yellow-200/90 max-w-2xl mx-auto text-lg">
+          Empowering, supporting, and celebrating the LGBTQIA+ community
+          through care, advocacy, and connection.
+        </p>
+
+        {/* CTA Buttons */}
+        <div className="mt-8 grid grid-cols-2 gap-4 max-w-md mx-auto">
+          <Link to={contactPath}>
+            <button className="w-full py-2 rounded-full font-bold
+              bg-white text-yellow-800 border-4 border-yellow-300/40
+              hover:scale-105 hover:shadow-lg transition">
+              Get Involved
+            </button>
+          </Link>
+          <Link to="/resources">
+            <button className="w-full py-2 rounded-full font-bold
+              bg-white text-yellow-800 border-4 border-yellow-300/40
+              hover:scale-105 hover:shadow-lg transition">
+              Resources
+            </button>
+          </Link>
         </div>
-      </div>
+      </header>
 
-<div className="mt-10 grid grid-cols-2 gap-4 px-3 max-w-md mx-auto">
-  <Link to={contactPath} className="w-full">
-    <button
-      className="w-full px-6 py-2 rounded-full font-bold text-yellow-900 shadow-lg
-        transition-all duration-300 hover:scale-105
-        bg-white border-4 border-yellow-300/40 hover:border-yellow-300"
-    >
-      Get Involved
-    </button>
-  </Link>
+      {/* ───────────────── Loading / Empty ───────────────── */}
+      {loading && (
+        <p className="text-center mt-20 text-yellow-200 animate-pulse">
+          Loading services…
+        </p>
+      )}
 
-  <Link to="/resources" className="w-full">
-    <button
-      className="w-full px-6 py-2 rounded-full font-bold text-yellow-900 shadow-lg
-        transition-all duration-300 hover:scale-105
-        bg-white border-4 border-yellow-300/40 hover:border-yellow-300"
-    >
-      Resources
-    </button>
-  </Link>
-</div>
+      {!loading && services.length === 0 && (
+        <p className="text-center mt-20 text-yellow-200 italic">
+          No services have been added yet.
+        </p>
+      )}
 
+      {/* ───────────────── Services Grid ───────────────── */}
+      {!loading && services.length > 0 && (
+        <section className="max-w-6xl mx-auto px-6 mt-16
+          grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
 
+          {services.map((s) => (
+<div className="rainbow-border hover:scale-[1.02] transition-transform duration-300">
+  <button
+    onClick={() => setSelectedService(s)}
+    className="
+      group text-left w-full h-full
+      rounded-3xl overflow-hidden
+      bg-white/90 backdrop-blur-md
+      shadow-xl transition-all duration-300
+      hover:-translate-y-1 hover:shadow-2xl
+    "
+  >
 
-      {/* Services Grid */}
-      <div className="max-w-6xl mx-auto px-6 mt-10">
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {defaultServices.map((s, i) => (
-            <button
-              key={i}
-              onClick={() => setSelectedService(s)}
-              className={`text-left rounded-2xl overflow-hidden shadow-xl border ${theme.border} transition transform hover:-translate-y-1 hover:shadow-2xl ${theme.cardBg} ${theme.cardHoverBg}`}
-            >
+              {/* Image */}
               {s.image && (
-                <img
-                  src={s.image}
-                  alt={s.title}
-                  className="w-full h-44 object-cover"
-                />
+                <div className="relative h-48 overflow-hidden">
+                  <img
+                    src={s.image}
+                    alt={s.title}
+                    className="h-full w-full object-cover
+                      transition-transform duration-500
+                      group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0
+                    bg-gradient-to-t from-black/50 to-transparent" />
+                </div>
               )}
-              <div className="p-5">
-                <h3
-                  className={`text-xl font-bold mb-2 text-transparent bg-clip-text ${theme.primaryTextGrad}`}
-                >
+
+              {/* Content */}
+              <div className="p-6">
+                <h3 className="
+                  text-xl font-extrabold mb-2
+                  bg-gradient-to-r from-[#0F2D25] via-[#18453B] to-black
+                  bg-clip-text text-transparent
+                ">
                   {s.title}
                 </h3>
-                <p className={`${theme.bodyText}`}>{s.desc}</p>
+
+                <p className="text-black/80 text-sm leading-relaxed">
+                  {s.desc}
+                </p>
+
+                <div className="mt-4 text-sm font-semibold text-yellow-700">
+                  Learn more →
+                </div>
               </div>
             </button>
+            </div>
           ))}
         </section>
-      </div>
+      )}
 
-      {/* Modal */}
+      {/* ───────────────── Modal ───────────────── */}
       {selectedService && (
-        <div className="fixed inset-0 z-50" aria-modal="true" role="dialog">
-          {/* Backdrop */}
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
             onClick={() => setSelectedService(null)}
             className="absolute inset-0 bg-black/70 backdrop-blur-sm"
           />
 
-          {/* Modal Panel */}
-          <div className="relative z-10 flex min-h-full items-center justify-center p-4">
-            <div className="w-full max-w-2xl overflow-hidden rounded-3xl shadow-2xl border border-yellow-300/30 bg-yellow-50/95 backdrop-blur-md animate-[fadeInUp_.3s_ease]">
-              {/* Header with Image */}
-              <div className="relative">
-                {selectedService.image && (
-                  <img
-                    src={selectedService.image}
-                    alt={selectedService.title}
-                    className="h-56 w-full object-cover"
-                  />
-                )}
-                <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-yellow-50 to-transparent" />
-                <button
-                  onClick={() => setSelectedService(null)}
-                  className="absolute right-4 top-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-yellow-100 text-gray-700 shadow hover:bg-white transition"
-                  aria-label="Close"
-                >
-                  ✕
-                </button>
-              </div>
+          <div className="relative z-10 w-full max-w-2xl
+            rounded-3xl overflow-hidden
+            bg-yellow-50 shadow-2xl border border-yellow-300/40">
 
-              {/* Body */}
-              <div className="p-6">
-                <h3 className="text-2xl font-extrabold tracking-tight text-yellow-900">
-                  {selectedService.title}
-                </h3>
-                <div className="mt-3 h-px bg-gradient-to-r from-transparent via-yellow-400/50 to-transparent" />
-                <p className="mt-4 text-gray-800 leading-relaxed">
-                  {selectedService.details}
-                </p>
-              </div>
+            {selectedService.image && (
+              <img
+                src={selectedService.image}
+                alt={selectedService.title}
+                className="h-56 w-full object-cover"
+              />
+            )}
 
-              {/* Footer */}
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-between border-t bg-yellow-100/70 px-6 py-4 backdrop-blur">
-                <div className="w-full sm:w-auto">
-                  <ContactButton />
-                </div>
-                <button
-                  onClick={() => setSelectedService(null)}
-                  className="w-full sm:w-auto rounded-xl bg-yellow-900 px-5 py-2.5 font-semibold text-white shadow hover:bg-black transition"
+            <div className="p-6">
+              <h3 className="text-2xl font-extrabold text-yellow-900">
+                {selectedService.title}
+              </h3>
+
+              <div className="h-px my-3
+                bg-gradient-to-r from-transparent via-yellow-400/60 to-transparent" />
+
+              <p className="text-gray-800 leading-relaxed">
+                {selectedService.details}
+              </p>
+
+              <p className="mt-4 text-sm text-gray-700">
+                <strong>Contact:</strong>{" "}
+                {selectedService.contact_name} ·{" "}
+                <a
+                  href={`mailto:${selectedService.contact_email}`}
+                  className="underline text-yellow-800"
                 >
-                  Close
-                </button>
-              </div>
+                  {selectedService.contact_email}
+                </a>
+              </p>
+
+              {selectedService.url && (
+                <a
+                  href={selectedService.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block mt-5 px-6 py-2 rounded-full
+                    bg-yellow-400 text-black font-bold shadow
+                    hover:brightness-110 transition"
+                >
+                  Visit Resource
+                </a>
+              )}
+            </div>
+
+            <div className="border-t bg-yellow-100/70 p-4 text-right">
+              <button
+                onClick={() => setSelectedService(null)}
+                className="px-5 py-2 rounded-xl bg-black text-white font-semibold"
+              >
+                Close
+              </button>
             </div>
           </div>
-
-          {/* Animation */}
-          <style>
-            {`
-              @keyframes fadeInUp {
-                from { opacity: 0; transform: translate3d(0, 15px, 0); }
-                to   { opacity: 1; transform: translate3d(0, 0, 0); }
-              }
-            `}
-          </style>
         </div>
       )}
     </div>

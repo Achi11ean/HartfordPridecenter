@@ -107,3 +107,81 @@
 .neon-pulse {
   animation: neonPulse 1.5s infinite ease-in-out;
 }
+
+@keyframes rainbow-flow {
+  0%   { background-position: 0% 50%; }
+  25%  { background-position: 75% 50%; }
+  50%  { background-position: 150% 50%; }
+  75%  { background-position: 225% 50%; }
+  100% { background-position: 300% 50%; }
+}
+.rainbow-hr {
+  height: 4px;
+  width: 100%;
+  border: none;
+  background-image: linear-gradient(
+    135deg,
+    #ff0000,
+    #ff7f00,
+    #ffff00,
+    #00ff00,
+    #00ffff,
+    #0000ff,
+    #8b00ff,
+    #0000ff,
+    #00ffff,
+    #00ff00,
+    #ffff00,
+    #ff7f00,
+    #ff0000
+  );
+  background-size: 300% 300%;
+  animation: rainbow-flow 18s linear infinite;
+}
+
+/* 🌈 Animated rainbow border */
+@keyframes rainbow-flow {
+  from { background-position:   0% 50%; }
+  to   { background-position: 300% 50%; }
+}
+
+/* 🌈 Border wrapper */
+.rainbow-border {
+  position: relative;
+  border-radius: 1.75rem;
+  padding: 2px;
+  background: linear-gradient(
+    135deg,
+    #ff0000,
+    #ff7f00,
+    #ffff00,
+    #00ff00,
+    #00ffff,
+    #0000ff,
+    #8b00ff,
+    #ff0000 /* loop-safe */
+  );
+  background-size: 300% 300%;
+  animation: rainbow-flow 14s linear infinite; /* 👈 slightly slower = silkier */
+}
+
+/* 🧱 Inner card isolation */
+.rainbow-border > * {
+  position: relative;
+  z-index: 1;
+  border-radius: calc(1.75rem - 2px);
+  background: rgba(255, 255, 255, 0.92);
+}
+
+/* ✨ Soft outer glow only */
+.rainbow-border::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+  background: inherit;
+  filter: blur(14px);
+  opacity: 0.18;
+  z-index: 0;
+  pointer-events: none;
+}

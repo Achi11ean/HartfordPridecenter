@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaInstagram, FaFacebook, FaEnvelope, FaCalendarAlt, FaHandHoldingHeart, FaUsers } from "react-icons/fa";
-
+import "./App.css"
 export default function HomePage() {
   const year = new Date().getFullYear();
 
@@ -49,40 +49,84 @@ export default function HomePage() {
               </p>
 
               {/* CTAs */}
-<div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-  {[
-    { to: "/events", label: "Events" },
-    { to: "/contact", label: "Contact" },
-    { to: "/volunteer", label: "Volunteer" },
-    { to: "/sponsor", label: "Sponsor", state: { openSponsors: true } },
-  ].map((btn, i) => (
-    <Link
-      key={i}
-      to={btn.to}
-      state={btn.state}
-      className="
-        h-full flex items-center justify-center text-center
-        px-6 py-2
-        font-extrabold uppercase tracking-wide
-        text-black
-        border border-white shadow-white
-        shadow-md
-        bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-500
-        hover:from-yellow-500 hover:via-amber-400 hover:to-yellow-300
-        transition-all duration-300
-      "
-    >
-      {btn.label}
-    </Link>
-  ))}
-</div>
+  <nav aria-label="Primary">
+          <div className="grid mt-12 grid-cols-3 gap-3 sm:gap-4">
+
+            {/* Contact */}
+            <Link
+              to="/contact"
+              className="block text-center px-6 py-3 font-semibold text-black border border-black shadow-lg 
+              bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-500 
+              hover:from-amber-500 hover:via-yellow-400 hover:to-yellow-300 
+              transition-all duration-300"
+            >
+              Contact
+            </Link>
+
+            {/* Events */}
+            <Link
+              to="/events"
+              className="block text-center px-6 py-3 font-semibold text-black border border-black shadow-lg 
+              bg-gradient-to-r from-amber-300 via-yellow-400 to-yellow-500 
+              hover:from-yellow-600 hover:via-yellow-400 hover:to-amber-300 
+              transition-all duration-300"
+            >
+              Events
+            </Link>
+
+            {/* Volunteer */}
+            <Link
+              to="/volunteer"
+              className="block text-center px-2 py-3 font-semibold text-black border border-black shadow-lg 
+              bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 
+              hover:from-yellow-600 hover:via-amber-500 hover:to-yellow-400
+              transition-all duration-300"
+            >
+              Volunteer
+            </Link>
+                      <Link
+            to="/sponsors"
+            state={{ openSponsors: true }}
+           className="block text-center px-6 py-3 font-semibold text-black border border-black shadow-lg 
+              bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 
+              hover:from-yellow-600 hover:via-amber-500 hover:to-yellow-400
+              transition-all duration-300"
+            >
+            Sponsor
+          </Link>
+                                <Link
+            to="/resources"
+            state={{ openSponsors: true }}
+           className="block text-center px- py-3 font-semibold text-black border border-black shadow-lg 
+              bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 
+              hover:from-yellow-600 hover:via-amber-500 hover:to-yellow-400
+              transition-all duration-300"
+            >
+            Resources
+          </Link>
+                                <Link
+            to="https://givebutter.com/lgbtqadvocacy"
+            state={{ openSponsors: true }}
+           className="block text-center px-6 py-3 font-semibold text-black border border-black shadow-lg 
+              bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 
+              hover:from-yellow-600 hover:via-amber-500 hover:to-yellow-400
+              transition-all duration-300"
+            >
+            Donate
+          </Link>
+          </div>
+        </nav>
 
               {/* Sponsor / Donate */}
 
             </motion.div>
           </div>
+          
         </div>
+        
       </header>
+<hr className="rainbow-hr" />
+
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 pb-16">
@@ -109,6 +153,15 @@ export default function HomePage() {
             </p>
 
             <div className="mt-6 flex flex-col sm:flex-row gap-3">
+
+                      <Link
+                to="/about"
+                className="px-6 py-3 font-bold border border-white/20 shadow-lg
+                  bg-black/40 hover:bg-black/60 text-yellow-200
+                  transition-all duration-300 text-center"
+              >
+                About Us
+              </Link>
               <Link
                 to="/resources"
                 className="px-6 py-3 font-bold text-black border border-black shadow-lg
@@ -118,14 +171,7 @@ export default function HomePage() {
               >
                 Explore Resources
               </Link>
-              <Link
-                to="/about"
-                className="px-6 py-3 font-bold border border-white/20 shadow-lg
-                  bg-black/40 hover:bg-black/60 text-yellow-200
-                  transition-all duration-300 text-center"
-              >
-                About Us
-              </Link>
+      
             </div>
           </motion.div>
 
@@ -178,6 +224,7 @@ export default function HomePage() {
           </motion.div>
         </section>
       </main>
+<hr className="rainbow-hr" />
 
       {/* Footer */}
       <footer className="border-t border-white/10 bg-black/60">
