@@ -113,7 +113,7 @@ const navItems = [
             className="block px-4 py-3 text-yellow-200 hover:bg-yellow-400 hover:text-black rounded-t-xl"
             onClick={() => setAdminOpen(false)}
           >
-            Admin Dashboard
+             Dashboard
           </Link>
           <button
             onClick={() => {
@@ -134,7 +134,7 @@ const navItems = [
             className="block px-4 py-3 text-yellow-200 hover:bg-yellow-400 hover:text-black rounded-t-xl"
             onClick={() => setAdminOpen(false)}
           >
-            Staff Dashboard
+             Dashboard
           </Link>
           <button
             onClick={() => {
@@ -206,7 +206,7 @@ const navItems = [
             Login
           </Link>
           <Link
-            to="/pride-admin/signup"
+            to="/signup"
             className="block px-4 py-3 text-yellow-200 hover:bg-yellow-400 hover:text-black rounded-b-xl"
             onClick={() => setAdminOpen(false)}
           >
@@ -222,7 +222,7 @@ const navItems = [
             className="block px-4 py-3 text-yellow-200 hover:bg-yellow-400 hover:text-black rounded-t-xl"
             onClick={() => setAdminOpen(false)}
           >
-            Admin Dashboard
+             Dashboard
           </Link>
           <button
             onClick={() => {
@@ -243,7 +243,7 @@ const navItems = [
             className="block px-4 py-3 text-yellow-200 hover:bg-yellow-400 hover:text-black rounded-t-xl"
             onClick={() => setAdminOpen(false)}
           >
-            Staff Dashboard
+             Dashboard
           </Link>
           <button
             onClick={() => {

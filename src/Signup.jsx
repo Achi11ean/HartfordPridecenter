@@ -9,17 +9,17 @@ export default function Signup() {
     <div className="
       min-h-screen flex items-center justify-center
       bg-gradient-to-br from-[#18453B] via-black to-[#0f2d25]
-      px-4 py-16
+       py-16
     ">
       <div className="
         w-full max-w-full mt-16
         bg-black/60 backdrop-blur-xl
         border border-yellow-500/40
-        rounded-3xl shadow-2xl
-        p-8
+        rounded-none shadow-2xl
+        p-1
       ">
         {/* Header */}
-        <h1 className="text-4xl font-extrabold text-center text-yellow-300 mb-6">
+        <h1 className="text-4xl border-b pb-2 mv-2 font-extrabold text-center text-yellow-300 mb-6">
           🏳️‍🌈 Pride Signup
         </h1>
 

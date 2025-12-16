@@ -10,12 +10,11 @@ const UPLOAD_PRESET = "karaoke";
 
 const STATUS_OPTIONS = [
   "pending",
-  "contacted",
+  "contacted", 
+  "Unpaid - Awaiting Payment",
   "approved",
   "declined",
-  "Unpaid - Awaiting Payment",
-  "paid",
-  "confirmed",
+
 ];
 
 export default function Sponsors() {
@@ -25,8 +24,27 @@ export default function Sponsors() {
       ([_, v]) => v !== "" && v !== null && v !== undefined
     )
   );
+
+  const SOCIAL_OPTIONS = {
+  facebook: "https://facebook.com/",
+  instagram: "https://instagram.com/",
+};
+
+const [socialInputs, setSocialInputs] = useState([]);
+
   const [selectedSponsor, setSelectedSponsor] = useState(null);
 const [searchTerm, setSearchTerm] = useState("");
+const [statusFilter, setStatusFilter] = useState("all");
+const statusColors = {
+  pending: "bg-yellow-400/20 border-yellow-400 text-yellow-200",
+  contacted: "bg-blue-400/20 border-blue-400 text-blue-200",
+  approved: "bg-green-400/20 border-green-400 text-green-200",
+  declined: "bg-red-400/20 border-red-400 text-red-200",
+  "Unpaid - Awaiting Payment":
+    "bg-orange-400/20 border-orange-400 text-orange-200",
+  paid: "bg-emerald-400/20 border-emerald-400 text-emerald-200",
+  confirmed: "bg-purple-400/20 border-purple-400 text-purple-200",
+};
 
   const { token, prideId, isAdmin } = useAuth();
 const normalizeImageUrl = (value) => {
@@ -90,13 +108,49 @@ useEffect(() => {
   // ───────────────────────────────
 const openEdit = (s) => {
   setEditingId(s.id);
+
+  // 🔗 Parse social links into inputs
+ const parsedSocials = (s.social_links || "")
+  .split(",")
+  .map((url) => url.trim())
+  .filter(Boolean)
+  .map((url) => {
+    if (url.includes("facebook.com/")) {
+      return {
+        platform: "facebook",
+        username: url
+          .split("facebook.com/")[1]
+          .replace(/^@/, "")
+          .replace(/\/.*$/, ""),
+      };
+    }
+    if (url.includes("instagram.com/")) {
+      return {
+        platform: "instagram",
+        username: url
+          .split("instagram.com/")[1]
+          .replace(/^@/, "")
+          .replace(/\/.*$/, ""),
+      };
+    }
+    return null;
+  })
+  .filter(Boolean);
+
+
+  setSocialInputs(parsedSocials);
+
   setEditForm({
-    organization: s.organization,
-    contact_name: s.contact_name,
-    email: s.email,
+    organization: s.organization || "",
+    contact_name: s.contact_name || "",
+    email: s.email || "",
     phone: s.phone || "",
-    tier: s.tier,
-    wants_booth: !!s.wants_booth,
+    tier: s.tier || "",
+    wants_booth:
+      s.wants_booth === true ||
+      s.wants_booth === 1 ||
+      s.wants_booth === "1" ||
+      s.wants_booth === "true",
     status: s.status || "pending",
     website: s.website || "",
     social_links: s.social_links || "",
@@ -108,14 +162,20 @@ const openEdit = (s) => {
 const filteredSponsors = sponsors.filter((s) => {
   const q = searchTerm.toLowerCase();
 
-  return (
-    s.organization?.toLowerCase().includes(q) ||
-    s.contact_name?.toLowerCase().includes(q) ||
-    s.email?.toLowerCase().includes(q) ||
-    s.tier?.toLowerCase().includes(q) ||
-    s.status?.toLowerCase().includes(q)
-  );
+  const matchesSearch =
+    (s.organization || "").toLowerCase().includes(q) ||
+    (s.contact_name || "").toLowerCase().includes(q) ||
+    (s.email || "").toLowerCase().includes(q) ||
+    (s.tier || "").toLowerCase().includes(q) ||
+    (s.status || "").toLowerCase().includes(q);
+
+  const matchesStatus =
+    statusFilter === "all" ||
+    (s.status || "") === statusFilter;
+
+  return matchesSearch && matchesStatus;
 });
+
 
 
 
@@ -161,9 +221,18 @@ const handleLogoUpload = async (e) => {
   // ───────────────────────────────
 const saveEdit = async () => {
   try {
+const social_links = socialInputs
+  .filter((s) => s.username)
+  .map(
+    (s) => `${SOCIAL_OPTIONS[s.platform]}${s.username}`
+  )
+  .join(",");
+
 const payload = {
   ...editForm,
+  social_links,
 };
+
 
     const res = await axios.patch(
       `${API}/api/sponsors/${editingId}`,
@@ -238,27 +307,48 @@ return (
     <h2 className="text-3xl font-extrabold text-yellow-300">
       💼 Sponsor Inquiries
     </h2>
-<input
-  type="text"
-  placeholder="🔍 Search sponsors by name, email, tier, or status…"
-  value={searchTerm}
-  onChange={(e) => setSearchTerm(e.target.value)}
-  className="
-    w-full md:w-1/2
-    p-3 rounded-xl
-    bg-black/40 border border-yellow-500/40
-    text-yellow-100
-    placeholder-yellow-300/60
-    focus:outline-none focus:border-yellow-400
-  "
-/>
+<div className="flex flex-col sm:flex-row gap-3">
+  <input
+    type="text"
+    placeholder="🔍 Search sponsors by name, email, tier, or status…"
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+    className="
+      w-full sm:w-1/2
+      p-3 rounded-xl
+      bg-black/40 border border-yellow-500/40
+      text-yellow-100
+      placeholder-yellow-300/60
+      focus:outline-none focus:border-yellow-400
+    "
+  />
+
+  <select
+    value={statusFilter}
+    onChange={(e) => setStatusFilter(e.target.value)}
+    className="
+      w-full sm:w-1/4
+      p-3 rounded-xl
+      bg-black/40 border border-yellow-500/40
+      text-yellow-100
+    "
+  >
+    <option value="all">All Statuses</option>
+    {STATUS_OPTIONS.map((opt) => (
+      <option key={opt} value={opt} className="text-black">
+        {opt.toUpperCase()}
+      </option>
+    ))}
+  </select>
+</div>
+
 
     {sponsors.length === 0 ? (
       <p className="text-yellow-200 italic">
         No sponsor inquiries yet.
       </p>
     ) : (
-      <div className="grid  grid-cols-2 gap-6">
+      <div className="grid  sm:grid-cols-2 gap-6">
 {filteredSponsors.map((s) => (
 <div
   key={s.id}
@@ -289,7 +379,6 @@ return (
                     "phone",
                     "tier",
                     "website",
-                    "social_links",
                   ].map((field) => (
                     <input
                       key={field}
@@ -324,6 +413,74 @@ return (
                   />
                   Booth Requested
                 </label>
+{/* Social Media */}
+  <label className="font-bold text-yellow-300">
+    Social Media
+  </label>
+<div className="space-y-2">
+
+
+  {socialInputs.map((item, idx) => (
+    <div key={idx} className="flex gap-2">
+      <select
+        value={item.platform}
+        disabled
+        className="p-2 rounded-xl bg-black/40 border border-yellow-500/40 text-yellow-100"
+      >
+        <option value={item.platform}>
+          {item.platform.toUpperCase()}
+        </option>
+      </select>
+
+      <div className="flex-1 flex items-center gap-1">
+        <span className="text-xs text-yellow-300">
+          {SOCIAL_OPTIONS[item.platform]}
+        </span>
+        <input
+          value={item.username}
+          onChange={(e) => {
+            const updated = [...socialInputs];
+            updated[idx].username = e.target.value;
+            setSocialInputs(updated);
+          }}
+          placeholder="username"
+          className="flex-1 p-2 rounded-xl bg-black/40 border border-yellow-500/40 text-yellow-100"
+        />
+      </div>
+
+      <button
+        onClick={() =>
+          setSocialInputs(
+            socialInputs.filter((_, i) => i !== idx)
+          )
+        }
+        className="px-3 rounded-xl bg-red-600 text-white font-bold"
+      >
+        ✕
+      </button>
+    </div>
+  ))}
+
+  {/* Add Social Media */}
+  {Object.keys(SOCIAL_OPTIONS)
+    .filter(
+      (p) => !socialInputs.some((s) => s.platform === p)
+    )
+    .map((platform) => (
+      <button
+        key={platform}
+        onClick={() =>
+          setSocialInputs([
+            ...socialInputs,
+            { platform, username: "" },
+          ])
+        }
+        className="text-sm ml-2 underline text-yellow-300 hover:text-yellow-200"
+      >
+         &nbsp; Add {platform.toUpperCase()}
+      </button>
+    ))}
+</div>
 
                 {/* Logo Upload / URL */}
                 <div>
@@ -415,56 +572,91 @@ return (
               </div>
             ) : (
               /* ===== VIEW MODE ===== */
-              <div className="space-y-3">
-                {s.logo_url && (
-                  <img
-                    src={s.logo_url}
-                    alt={`${s.organization} logo`}
-                    className="
-                      w-24 h-24 mx-auto object-contain
-                      bg-gradient-to-br from-slate-700 via-white to-slate-800 p-2 rounded-xl
-                      border border-yellow-400
-                      shadow-md shadow-yellow-400
-                    "
-                  />
-                )}
+            /* ===== VIEW MODE ===== */
+<div className="space-y-3 text-sm text-yellow-200">
 
-                <h3 className="text-xl font-serif border-b border-yellow-400 font-bold text-yellow-300 text-center">
-                  {s.organization}
-                </h3>
+  {/* Logo */}
+  {s.logo_url && (
+    <img
+      src={s.logo_url}
+      alt={`${s.organization} logo`}
+      className="
+        w-24 h-24 mx-auto object-contain
+        bg-gradient-to-br from-slate-700 via-white to-slate-800 p-2 rounded-xl
+        border border-yellow-400
+        shadow-md shadow-yellow-400
+      "
+    />
+  )}
 
-                <p className="text-sm text-yellow-200 text-center">
-                  {s.contact_name} • {s.email}
-                </p>
+  {/* Organization */}
+  <h3 className="text-xl font-serif font-bold text-yellow-300 text-center border-b border-yellow-400 pb-1">
+    {s.organization}
+  </h3>
 
-              
+  {/* Contact */}
+  <div className="text-center space-y-1">
+    <p>{s.contact_name}</p>
+    <p className="text-yellow-300">{s.email}</p>
+    {s.phone && <p>{s.phone}</p>}
+  </div>
 
-                {/* Message box */}
-             
+  {/* Status */}
+  <div className="flex justify-center">
+    <span
+      className={`
+        px-3 py-1 text-xs font-bold rounded-full
+        uppercase tracking-wide border
+        ${
+          statusColors[s.status] ||
+          "bg-yellow-400/20 border-yellow-400 text-yellow-200"
+        }
+      `}
+    >
+      {s.status || "pending"}
+    </span>
+  </div>
 
-                <div className="flex gap-3 pt-3">
-<button
-  onClick={(e) => {
-    e.stopPropagation();
-    openEdit(s);
-  }}
-  className="flex-1  rounded-xl bg-blue-500 text-white font-bold"
->
-  Edit
-</button>
+  {/* Info Grid */}
+  <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs mt-2">
+    <p><strong>Tier:</strong> {s.tier || "—"}</p>
+    <p>
+      <strong>Booth:</strong>{" "}
+      {s.wants_booth ? "Yes" : "No"}
+    </p>
+  </div>
 
-<button
-  onClick={(e) => {
-    e.stopPropagation();
-    deleteSponsor(s.id);
-  }}
-  className="flex-1  rounded-xl bg-red-600 text-white font-bold"
->
-  Delete
-</button>
 
-                </div>
-              </div>
+  {/* Message */}
+  {s.message && (
+    <div className="mt-2 p-3 bg-black/40 rounded-xl text-xs leading-relaxed max-h-32 overflow-auto">
+      {s.message}
+    </div>
+  )}
+
+  {/* Actions */}
+  <div className="flex gap-3 pt-3">
+    <button
+      onClick={(e) => {
+        e.stopPropagation();
+        openEdit(s);
+      }}
+      className="flex-1 rounded-xl bg-blue-500 text-white font-bold py-2"
+    >
+      Edit
+    </button>
+
+    <button
+      onClick={(e) => {
+        e.stopPropagation();
+        deleteSponsor(s.id);
+      }}
+      className="flex-1 rounded-xl bg-red-600 text-white font-bold py-2"
+    >
+      Delete
+    </button>
+  </div>
+</div>
             )}
           </div>
         ))}

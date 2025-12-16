@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import Select from "react-select";
 
 const API = "https://singspacebackend.onrender.com";
 
@@ -31,6 +32,11 @@ const STAFF_ROLES = [
   "Volunteer",
   "Support Staff",
 ];
+const STAFF_ROLE_OPTIONS = STAFF_ROLES.map(r => ({
+  value: r,
+  label: r,
+}));
+
 // ---- Cloudinary Config ----
 const CLOUD_NAME = "dcw0wqlse";
 const UPLOAD_PRESET = "karaoke";
@@ -38,6 +44,55 @@ const [uploadStatus, setUploadStatus] = useState("");
 // ────────────────────────────────────────────────
 // Cloudinary Manual Upload
 // ────────────────────────────────────────────────
+const formatPhoneNumber = (value) => {
+  if (!value) return "";
+
+  // Remove all non-digits
+  const digits = value.replace(/\D/g, "").slice(0, 10);
+
+  const len = digits.length;
+
+  if (len < 4) return digits;
+  if (len < 7) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+
+  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+};
+
+const generateStaffBio = async () => {
+  if (!form.first_name || !form.role) {
+    toast.error("Add name and role first");
+    return;
+  }
+
+  try {
+    const keyPoints = `
+Name: ${form.first_name} ${form.last_name}
+Role: ${form.role}
+
+User-written notes to include:
+${form.bio || "(none provided)"}
+`;
+
+    const res = await axios.post(
+      `${API}/api/pride/generate-bio`,
+      {
+        key_points: keyPoints,
+        role_type: "Pride Staff Member",
+      }
+    );
+
+    setForm(prev => ({
+      ...prev,
+      bio: res.data.bio,
+    }));
+
+    toast.success("Bio generated ✨");
+  } catch {
+    toast.error("Failed to generate bio");
+  }
+};
+
+
 const uploadToCloudinary = async (file) => {
   const fd = new FormData();
   fd.append("file", file);
@@ -73,16 +128,18 @@ const uploadToCloudinary = async (file) => {
 };
 
 
-  const [form, setForm] = useState({
-    pride_id: "",
-    first_name: "",
-    last_name: "",
-    role: "",
-    username: "",
-    pin: "",
-    bio: "",
-    image_url: "",
-  });
+const [form, setForm] = useState({
+  pride_id: "",
+  first_name: "",
+  last_name: "",
+  role: "",
+  email: "",     // ✅ NEW
+  phone: "",     // ✅ NEW
+  username: "",
+  pin: "",
+  bio: "",
+  image_url: "",
+});
 
   // ───────────────────────────────
   // Load Pride Centers (auto-select first)
@@ -123,16 +180,21 @@ const uploadToCloudinary = async (file) => {
     setLoading(true);
 
     try {
-      const res = await axios.post(`${API}/api/pride-staff`, {
-        pride_id: form.pride_id,
-        first_name: form.first_name,
-        last_name: form.last_name,
-        role: form.role,
-        username: form.username,
-        pin: form.pin,
-        bio: form.bio || null,
-        image_url: form.image_url || null,
-      });
+     const res = await axios.post(`${API}/api/pride-staff`, {
+  pride_id: form.pride_id,
+  first_name: form.first_name,
+  last_name: form.last_name,
+  role: form.role,
+
+  // 🆕 Optional contact info
+  email: form.email || null,
+  phone: form.phone || null,
+
+  username: form.username,
+  pin: form.pin,
+  bio: form.bio || null,
+  image_url: form.image_url || null,
+});
 
       const staff = res.data.staff;
 
@@ -145,16 +207,19 @@ const uploadToCloudinary = async (file) => {
 
       toast.success("Pride staff account created 🎉");
 
-      setForm({
-        pride_id: form.pride_id,
-        first_name: "",
-        last_name: "",
-        role: "",
-        username: "",
-        pin: "",
-        bio: "",
-        image_url: "",
-      });
+     setForm({
+  pride_id: form.pride_id,
+  first_name: "",
+  last_name: "",
+  role: "",
+  email: "",      // ✅
+  phone: "",      // ✅
+  username: "",
+  pin: "",
+  bio: "",
+  image_url: "",
+});
+
     } catch (err) {
       toast.error(err.response?.data?.error || "Failed to create staff");
     } finally {
@@ -170,19 +235,16 @@ const uploadToCloudinary = async (file) => {
       min-h-screen w-full
       bg-gradient-to-br from-[#18453B] via-black to-[#0f2d25]
       flex items-center justify-center
-      px-4 
+      
     ">
       <div className="
         w-full max-w-full
         bg-black/60 backdrop-blur-xl
         border border-yellow-500/40
-        rounded-3xl shadow-2xl
+        rounded-none shadow-2xl
         p-4
       ">
-        <h1 className="text-4xl font-extrabold text-center text-yellow-300 mb-2">
-          🏳️‍🌈 Pride Staff Signup
-        </h1>
-
+    
         <p className="text-center text-yellow-200 mb-8">
           Staff account for:
           <span className="block mt-1 text-yellow-400 font-bold">
@@ -230,29 +292,41 @@ const uploadToCloudinary = async (file) => {
             required
             className="w-full p-3 rounded-xl bg-black/40 border border-yellow-500/40 text-yellow-100"
           />
-<select
-  name="role"
-  value={form.role}
+
+<input
+  type="email"
+  name="email"
+  placeholder="Email (optional)"
+  value={form.email}
   onChange={handleChange}
-  required
   className="
     w-full p-3 rounded-xl
     bg-black/40 border border-yellow-500/40
     text-yellow-100
-    focus:outline-none focus:ring-2 focus:ring-yellow-400
   "
->
-  <option value="">Select Staff Role</option>
+/>
 
-  {STAFF_ROLES.map((role) => (
-    <option key={role} value={role}>
-      {role}
-    </option>
-  ))}
-</select>
+<input
+  type="tel"
+  name="phone"
+  placeholder="Phone (optional)"
+  value={form.phone}
+  onChange={(e) =>
+    setForm({
+      ...form,
+      phone: formatPhoneNumber(e.target.value),
+    })
+  }
+  inputMode="numeric"
+  className="
+    w-full p-3 rounded-xl
+    bg-black/40 border border-yellow-500/40
+    text-yellow-100
+  "
+/>
 
 
-          <input
+ <input
             type="text"
             name="username"
             placeholder="Username"
@@ -274,6 +348,69 @@ const uploadToCloudinary = async (file) => {
             className="w-full p-3 rounded-xl bg-black/40 border border-yellow-500/40 text-yellow-100"
           />
 
+
+<label className="block text-yellow-300 font-semibold">
+  Staff Role(s)
+</label>
+
+<Select
+  isMulti
+  options={STAFF_ROLE_OPTIONS}
+  placeholder="Search or select staff roles…"
+  value={
+    form.role
+      ? form.role.split(",").map(r => ({
+          value: r.trim(),
+          label: r.trim(),
+        }))
+      : []
+  }
+  onChange={(selected) => {
+    const rolesString = selected
+      .map(opt => opt.value)
+      .join(", ");
+
+    setForm(prev => ({
+      ...prev,
+      role: rolesString,
+    }));
+  }}
+  className="react-select-container"
+  classNamePrefix="react-select"
+  styles={{
+    control: (base) => ({
+      ...base,
+      backgroundColor: "rgba(0,0,0,0.4)",
+      borderColor: "rgba(234,179,8,0.4)",
+      borderRadius: "12px",
+      padding: "4px",
+    }),
+    menu: (base) => ({
+      ...base,
+      backgroundColor: "#000",
+      color: "#fde68a",
+    }),
+    option: (base, state) => ({
+      ...base,
+      backgroundColor: state.isFocused
+        ? "rgba(234,179,8,0.2)"
+        : "transparent",
+      color: "#fde68a",
+    }),
+    multiValue: (base) => ({
+      ...base,
+      backgroundColor: "rgba(234,179,8,0.25)",
+    }),
+    multiValueLabel: (base) => ({
+      ...base,
+      color: "#fde68a",
+      fontWeight: "bold",
+    }),
+  }}
+/>
+
+
+         
           <textarea
             name="bio"
             placeholder="Short Bio (optional)"
@@ -281,6 +418,19 @@ const uploadToCloudinary = async (file) => {
             onChange={handleChange}
             className="w-full p-3 h-24 rounded-xl bg-black/40 border border-yellow-500/40 text-yellow-100"
           />
+<div className="flex justify-end">
+  <button
+    type="button"
+    onClick={generateStaffBio}
+    className="
+      mt-2 px-4 py-2 rounded-xl
+      bg-purple-500 text-black font-bold
+      hover:bg-purple-600 transition
+    "
+  >
+    ✨ Generate Bio
+  </button>
+</div>
 
 {/* PROFILE IMAGE */}
 <div>
@@ -379,6 +529,18 @@ const uploadToCloudinary = async (file) => {
               <p className="text-yellow-200">
                 <strong>Username:</strong> {successData.username}
               </p>
+              {staff.email && (
+  <p className="text-yellow-200">
+    <strong>Email:</strong> {staff.email}
+  </p>
+)}
+
+{staff.phone && (
+  <p className="text-yellow-200">
+    <strong>Phone:</strong> {staff.phone}
+  </p>
+)}
+
               <p className="text-yellow-200">
                 <strong>Role:</strong> {successData.role}
               </p>

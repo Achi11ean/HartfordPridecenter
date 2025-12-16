@@ -10,6 +10,60 @@ export default function OurTeamYellowTemplate() {
   const [teamMembers, setTeamMembers] = useState([]);
   const [loadingTeam, setLoadingTeam] = useState(true);
   const [selectedMember, setSelectedMember] = useState(null);
+const linkifyText = (text) => {
+  if (!text) return null;
+
+  const urlRegex =
+    /https?:\/\/[^\s]+|(?:www\.)?[a-zA-Z0-9-]+\.(com|net|org|io|co|edu|gov)(\/[^\s]*)?/gi;
+
+  const elements = [];
+  let lastIndex = 0;
+
+  for (const match of text.matchAll(urlRegex)) {
+    const start = match.index;
+    const end = start + match[0].length;
+
+    // Push text before the link
+    if (start > lastIndex) {
+      elements.push(
+        <span key={lastIndex}>
+          {text.slice(lastIndex, start)}
+        </span>
+      );
+    }
+
+    const url = match[0];
+    const href = url.startsWith("http") ? url : `https://${url}`;
+
+    // Push the link
+    elements.push(
+      <a
+        key={start}
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-blue-600 underline hover:text-blue-800 break-words"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {url}
+      </a>
+    );
+
+    lastIndex = end;
+  }
+
+  // Push remaining text
+  if (lastIndex < text.length) {
+    elements.push(
+      <span key={lastIndex}>
+        {text.slice(lastIndex)}
+      </span>
+    );
+  }
+
+  return elements;
+};
+
 
   // ───────────────────────────────
   // Fetch Admins + Staff
@@ -22,16 +76,24 @@ export default function OurTeamYellowTemplate() {
           axios.get(`${API}/api/pride/${PRIDE_ID}/staff`)
         ]);
 
-        const admins = (adminsRes.data || []).map(a => ({
-          id: `admin-${a.id}`,
-          name: a.name,
-          role: "Administrator",
-          image: "https://cdn-icons-png.flaticon.com/512/847/847969.png",
-          bio: `Administrator for this Pride organization.\n\nContact: ${a.email}`,
-          style: "border-yellow-400 bg-yellow-50/70 hover:shadow-yellow-400/50",
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=2400')"
-        }));
+const admins = (adminsRes.data || []).map(a => ({
+  id: `admin-${a.id}`,
+  name: a.name,
+  role: a.other_roles
+    ? `Administrator • ${a.other_roles}`
+    : "Administrator",
+  image: a.image_url || "https://cdn-icons-png.flaticon.com/512/847/847969.png",
+
+  // ✅ USE REAL BIO FROM DB
+  bio:
+    a.bio ||
+    "This administrator has not added a public bio yet.",
+
+  style: "border-yellow-400 bg-yellow-50/70 hover:shadow-yellow-400/50",
+  backgroundImage:
+    "url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=2400')",
+}));
+
 
         const staff = (staffRes.data || []).map(s => ({
           id: `staff-${s.id}`,
@@ -69,24 +131,19 @@ export default function OurTeamYellowTemplate() {
 
       {/* HERO */}
       <div
-        className="w-full border-b-4 h-80 md:h-96 bg-cover bg-center relative shadow-2xl"
+        className="w-full border-b-4 h-[600px]  bg-cover bg-center relative shadow-2xl"
         style={{
           backgroundImage:
-            "url('https://rare-gallery.com/uploads/posts/349940-4k-wallpaper.jpg')",
-          backgroundPosition: "center 70%",
+            "url('https://www.bu.edu/files/2023/06/iStock-1356068586-feat-crop-copy.jpg')",
+          backgroundPosition: "center 40%",
         }}
       >
-        <div className="absolute -bottom-8 left-1/2 -translate-x-1/2">
-          <div className="flex items-center gap-3 rounded-full border-2 border-yellow-300/80 bg-yellow-900/60 backdrop-blur px-6 py-3 shadow-xl">
-            <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight">
-              Our Team
-            </h1>
-          </div>
-        </div>
+
       </div>
 
       {/* TEAM */}
-      <section className="max-w-6xl mx-auto px-4 pt-20 pb-20">
+      <section className="max-w-6xl mx-auto px-4 pt-10 pb-20">
+        <h1 className="text-3xl font-serif border-b">Our Team</h1>
         <p className="text-yellow-200/90 text-center max-w-3xl mx-auto mb-10 leading-relaxed">
           Meet the people who support, organize, and build this Pride community.
         </p>
@@ -122,9 +179,10 @@ export default function OurTeamYellowTemplate() {
                   </p>
                 </div>
 
-                <p className="mt-4 text-yellow-900/90 bg-white/70 rounded-xl p-3 max-h-40 overflow-y-auto whitespace-pre-line">
-                  {m.bio}
-                </p>
+        <p className="mt-4 text-yellow-900/90 bg-white/70 rounded-xl p-3 max-h-40 overflow-y-auto whitespace-pre-line">
+  {linkifyText(m.bio)}
+</p>
+
               </motion.button>
             ))}
           </div>
@@ -181,9 +239,9 @@ export default function OurTeamYellowTemplate() {
                   </div>
                 </div>
 
-                <div className="mt-6 max-h-64 overflow-y-auto rounded-2xl bg-white/90 p-4 text-yellow-900 leading-7 whitespace-pre-line">
-                  {selectedMember.bio}
-                </div>
+          <div className="mt-6 max-h-64 overflow-y-auto rounded-2xl bg-white/90 p-4 text-yellow-900 leading-7 whitespace-pre-line">
+  {linkifyText(selectedMember.bio)}
+</div>
 
                 <div className="mt-6 flex justify-end">
                   <button

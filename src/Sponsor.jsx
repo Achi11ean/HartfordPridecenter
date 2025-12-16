@@ -79,6 +79,28 @@ const handleSocialChange = (platform, value) => {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(null);
+useEffect(() => {
+  const stored = localStorage.getItem("pendingSponsorProspect");
+  if (!stored) return;
+
+  try {
+    const prospect = JSON.parse(stored);
+
+    setForm((prev) => ({
+      ...prev,
+      organization: prospect.organization || "",
+      contact_name: prospect.contact_name || "",
+      email: prospect.email || "",
+      phone: prospect.phone || "",
+      message: prospect.message || "",
+    }));
+
+    // 🔥 Important: clear it so it only autofills once
+    localStorage.removeItem("pendingSponsorProspect");
+  } catch (err) {
+    console.error("Failed to parse pending sponsor prospect", err);
+  }
+}, []);
 
   // ───────────────────────────────
   // Form Change

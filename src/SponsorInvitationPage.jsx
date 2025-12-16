@@ -1,6 +1,6 @@
-// SponsorInvitationPage.jsx
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import CreateProspect from "./CreateProspect";
 
 const SPONSOR_TIERS = [
   {
@@ -54,6 +54,9 @@ const SPONSOR_TIERS = [
 ];
 
 export default function SponsorInvitationPage() {
+
+    const [showConsultation, setShowConsultation] = useState(false);
+
   return (
     <div className="bg-gradient-to-br from-black via-slate-900 to-slate-800 text-white">
 
@@ -68,6 +71,24 @@ export default function SponsorInvitationPage() {
           Each sponsorship tier offers meaningful visibility and direct impact.
         </p>
       </section>
+<footer className="text-center text-slate-400 pb-12 space-y-4">
+  <p className="text-sm">
+    Interested in sponsoring? Click below to start the conversation.
+  </p>
+
+  <button
+    onClick={() => setShowConsultation(true)}
+    className="
+      px-6 py-3 rounded-2xl
+      bg-yellow-400 text-black font-extrabold
+      hover:bg-yellow-300
+      transition
+      shadow-lg shadow-yellow-400/30
+    "
+  >
+    📞 Contact Us for a Consultation
+  </button>
+</footer>
 
       {/* 🌟 Tiers Grid */}
       <section className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-4 pb-16">
@@ -116,9 +137,35 @@ export default function SponsorInvitationPage() {
       </section>
 
       {/* Footer Note */}
-      <footer className="text-center text-slate-400 pb-10 text-sm">
-        Interested in sponsoring? Click “Become a Sponsor” to start the conversation.
-      </footer>
+<AnimatePresence>
+  {showConsultation && (
+    <motion.div
+      className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={() => setShowConsultation(false)}
+    >
+      <motion.div
+        initial={{ scale: 0.95, y: 30 }}
+        animate={{ scale: 1, y: 0 }}
+        exit={{ scale: 0.95, y: 30 }}
+        transition={{ duration: 0.25 }}
+        onClick={(e) => e.stopPropagation()}
+        className="
+          max-w-2xl w-full
+          bg-slate-900 border border-yellow-400
+          rounded-3xl p-6
+          text-white
+          max-h-[90vh] overflow-y-auto
+        "
+      >
+        <CreateProspect onClose={() => setShowConsultation(false)} />
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
+
     </div>
   );
 }

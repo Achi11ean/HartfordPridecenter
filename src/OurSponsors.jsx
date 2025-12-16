@@ -7,6 +7,14 @@ import Sponsor from "./Sponsor.jsx";
 import SponsorInvitationPage from "./SponsorInvitationPage.jsx";
 const API = "https://singspacebackend.onrender.com";
 const PRIDE_ID = 1; // later: route param
+const PASTEL_GRADIENTS = [
+  "from-pink-100 via-rose-100 to-amber-100",
+  "from-purple-100 via-indigo-100 to-blue-100",
+  "from-emerald-100 via-teal-100 to-cyan-100",
+  "from-yellow-100 via-amber-100 to-orange-100",
+  "from-sky-100 via-blue-100 to-indigo-100",
+  "from-fuchsia-100 via-pink-100 to-rose-100",
+];
 
 export default function OurSponsorsYellowTemplate() {
   const [sponsors, setSponsors] = useState([]);
@@ -231,103 +239,103 @@ useEffect(() => {
   </div>
 </section>
 
-<section className="">
-<h1 className="text-4xl font-serif text-yellow-400 font- border-b mb-6">Active Sponsors</h1>
-  {/* ⭐ Sponsor Grid */}
+<section>
+  <h1 className="text-4xl font-serif text-yellow-400 border-b mb-6">
+    Active Sponsors
+  </h1>
+
   {loading ? (
-    <p className="text-center text-slate-500 mt-10 text-sm tracking-wide">
+    <p className="text-center text-slate-400 mt-10 text-sm tracking-wide">
       Loading sponsors…
     </p>
   ) : sponsors.length === 0 ? (
-    <p className="text-center text-slate-500 italic mt-10 text-sm">
+    <p className="text-center text-slate-400 italic mt-10 text-sm">
       No sponsors have been announced yet.
     </p>
   ) : (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-      {sponsors.map((s) => (
-        <motion.button
-          key={s.id}
-          onClick={() => setSelectedSponsor(s)}
-          whileHover={{ y: -3 }}
-          whileTap={{ scale: 0.98 }}
-          className="
-            group w-full text-left
-            rounded-none p-6 shadow-yellow-400 shadow-md
-            bg-white
-            border-2  border-yellow-400
-            hover:border-slate-300
-            transition-all duration-300
-          "
-        >
-          {/* Logo */}
-          {s.logo_url && (
-            <div className="flex justify-center">
-              <div className="
-                w-24 h-24
-                flex items-center justify-center
-                bg-slate-50
-                rounded-xl
-                 border-black border shadow-green-700 shadow-md
-              ">
-                <img
-                  src={s.logo_url}
-                  alt={s.organization}
-                  className="max-w-full max-h-full object-contain p-2"
-                />
+      {sponsors.map((s, index) => {
+        const gradient =
+          PASTEL_GRADIENTS[index % PASTEL_GRADIENTS.length];
+
+        return (
+          <motion.button
+            key={s.id}
+            onClick={() => setSelectedSponsor(s)}
+            whileHover={{ y: -4 }}
+            whileTap={{ scale: 0.98 }}
+            className={`
+              group w-full text-left
+              rounded-2xl p-6
+              bg-gradient-to-br ${gradient}
+              border border-white/60
+              shadow-sm
+              hover:shadow-md
+              transition-all duration-300
+            `}
+          >
+            {/* Logo */}
+            {s.logo_url && (
+              <div className="flex justify-center">
+                <div className="
+                  w-24 h-24
+                  flex items-center justify-center
+                  bg-white/80
+                  rounded-xl
+                  shadow-sm
+                ">
+                  <img
+                    src={s.logo_url}
+                    alt={s.organization}
+                    className="max-w-full max-h-full object-contain p-2"
+                  />
+                </div>
               </div>
-            </div>
-          )}
-
-          {/* Content */}
-          <div className="mt-5 text-center">
-            <h3 className="text-lg underline font-semibold text-slate-900 leading-tight">
-              {s.organization}
-            </h3>
-
-            <p className="mt-1 text-sm text-slate-500">
-              {s.tier}
-            </p>
-
-            {/* Divider */}
-            <div className="my-4 h-px bg-slate-200" />
-
-            {/* Booth */}
-            <p
-              className={`text-md font-medium ${
-                s.wants_booth
-                  ? "text-emerald-700"
-                  : "text-slate-500"
-              }`}
-            >
-              Booth: {s.wants_booth ? "Included" : "Not Included"}
-            </p>
-
-            {/* Website */}
-            {s.website && (
-              <p className="mt-3 text-sm">
-                <a
-                  href={normalizeUrl(s.website)}
-                  target="_blank"
-                  rel="noreferrer"
-                  onClick={(e) => e.stopPropagation()}
-                  className="
-                    inline-flex items-center gap-1
-                    font-medium text-blue-700
-                    hover:text-slate-900
-                    underline underline-offset-4
-                  "
-                >
-                  Visit website
-                </a>
-              </p>
             )}
-          </div>
-        </motion.button>
-      ))}
+
+            {/* Content */}
+            <div className="mt-5 text-center">
+              <h3 className="text-lg font-semibold text-slate-800">
+                {s.organization}
+              </h3>
+
+              <p className="mt-1 text-sm text-slate-600">
+                {s.tier}
+              </p>
+
+              <div className="my-4 h-px bg-white/70" />
+
+              <p
+                className={`text-sm font-medium ${
+                  s.wants_booth
+                    ? "text-emerald-700"
+                    : "text-slate-500"
+                }`}
+              >
+                Booth: {s.wants_booth ? "Included" : "Not Included"}
+              </p>
+
+              {s.website && (
+                <p className="mt-3 text-sm">
+                  <a
+                    href={normalizeUrl(s.website)}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="font-medium text-blue-700 hover:text-blue-900 underline underline-offset-4"
+                  >
+                    Visit website
+                  </a>
+                </p>
+              )}
+            </div>
+          </motion.button>
+        );
+      })}
     </div>
   )}
-
 </section>
+
 
       {/* ⭐ Modal */}
      <AnimatePresence>

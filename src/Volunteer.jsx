@@ -25,6 +25,17 @@ const API_BASE = "https://singspacebackend.onrender.com";
 const PRIDE_ID = 1;
 
 export default function Volunteer() {
+  const formatPhone = (value) => {
+  if (!value) return "";
+
+  const digits = value.replace(/\D/g, "").slice(0, 10);
+  const len = digits.length;
+
+  if (len < 4) return digits;
+  if (len < 7) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+};
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -37,8 +48,15 @@ export default function Volunteer() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+const handleChange = (e) => {
+  const { name, value } = e.target;
+
+  setFormData({
+    ...formData,
+    [name]: name === "phone" ? formatPhone(value) : value,
+  });
+};
+
 
 const handleSubmit = async (e) => {
   e.preventDefault();
@@ -73,7 +91,7 @@ const handleSubmit = async (e) => {
 };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-teal-900 text-white">
+<div className="min-h-screen bg-gradient-to-br from-[#18453B] via-black to-[#0f2d25] text-emerald-100">
 
       {/* ——————— YOUR UI IS UNCHANGED BELOW ——————— */}
 

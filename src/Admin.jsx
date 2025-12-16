@@ -3,8 +3,23 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useAuth } from "./AuthContext";
+import Select from "react-select";
 
 const API = "https://singspacebackend.onrender.com";
+const CLOUD_NAME = "dcw0wqlse";
+const UPLOAD_PRESET = "karaoke";
+
+const ROLE_OPTIONS = [
+  "Admin",
+  "Director",
+  "Coordinator",
+  "Event Lead",
+  "Volunteer Manager",
+  "Social Media & Marketing",
+  "Web Developer",
+  "Finance",
+  "Community Outreach",
+];
 
 export default function Admin() {
   const { token, prideId, isAdmin } = useAuth();
@@ -13,12 +28,15 @@ export default function Admin() {
   const [loading, setLoading] = useState(true);
 
   const [editingAdmin, setEditingAdmin] = useState(null);
-  const [editForm, setEditForm] = useState({
-    name: "",
-    email: "",
-    username: "",
-    pin: "",
-  });
+const [editForm, setEditForm] = useState({
+  name: "",
+  email: "",
+  username: "",
+  pin: "",
+  roles: ["Admin"],
+  image_url: "",
+  bio: "", // ✍️ NEW
+});
 
   // ───────────────────────────────
   // Fetch Admins
@@ -67,28 +85,102 @@ export default function Admin() {
   // ───────────────────────────────
   // Open Edit Modal
   // ───────────────────────────────
-  const openEdit = (admin) => {
-    setEditingAdmin(admin);
-    setEditForm({
-      name: admin.name,
-      email: admin.email,
-      username: admin.username,
-      pin: "",
-    });
-  };
+const openEdit = (admin) => {
+  const extraRoles = admin.other_roles
+    ? admin.other_roles
+        .split(",")
+        .map(r => r.trim())
+        .filter(r => r && r !== "Admin")
+    : [];
+
+  setEditingAdmin(admin);
+  setEditForm({
+    name: admin.name || "",
+    email: admin.email || "",
+    username: admin.username || "",
+    pin: "",
+    image_url: admin.image_url || "",
+    bio: admin.bio || "", // ✅ load bio
+    roles: ["Admin", ...extraRoles],
+  });
+};
+
+const handleImageUpload = async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const data = new FormData();
+  data.append("file", file);
+  data.append("upload_preset", UPLOAD_PRESET);
+
+  try {
+    const res = await axios.post(
+      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+      data
+    );
+
+    setEditForm((prev) => ({
+      ...prev,
+      image_url: res.data.secure_url,
+    }));
+  } catch {
+    toast.error("Image upload failed");
+  }
+};
+
+const generateAdminBio = async () => {
+  if (!editForm.name) {
+    toast.error("Name is required to generate a bio");
+    return;
+  }
+
+  try {
+    const keyPoints = `
+Name: ${editForm.name}
+Roles: ${editForm.roles.join(", ")}
+
+User-written notes to include:
+${editForm.bio || "(none provided)"}
+`;
+
+    const res = await axios.post(
+      `${API}/api/pride/generate-bio`,
+      {
+        key_points: keyPoints,
+        role_type: "Pride Administrator",
+      },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    setEditForm((prev) => ({
+      ...prev,
+      bio: res.data.bio,
+    }));
+
+    toast.success("Bio generated ✨");
+  } catch (err) {
+    toast.error("Failed to generate bio");
+  }
+};
+
 
   // ───────────────────────────────
   // Save Edit (FULL PATCH ROUTE)
   // ───────────────────────────────
 const saveEdit = async () => {
   try {
-    const payload = {
-      name: editForm.name,
-      email: editForm.email,
-      username: editForm.username,
-    };
+    const otherRoles = editForm.roles.filter(r => r !== "Admin");
 
-    // ✅ only include pin if user typed one
+const payload = {
+  name: editForm.name,
+  email: editForm.email,
+  username: editForm.username,
+  image_url: editForm.image_url || null,
+  bio: editForm.bio || null, // ✍️ NEW
+  other_roles: otherRoles.length ? otherRoles.join(", ") : null,
+};
+
+
     if (editForm.pin.trim()) {
       payload.pin = editForm.pin;
     }
@@ -99,10 +191,8 @@ const saveEdit = async () => {
       { headers: { Authorization: `Bearer ${token}` } }
     );
 
-    setAdmins((prev) =>
-      prev.map((a) =>
-        a.id === editingAdmin.id ? res.data.admin : a
-      )
+    setAdmins(prev =>
+      prev.map(a => a.id === editingAdmin.id ? res.data.admin : a)
     );
 
     toast.success("Admin updated");
@@ -111,6 +201,7 @@ const saveEdit = async () => {
     toast.error(err.response?.data?.error || "Update failed");
   }
 };
+
 
   // ───────────────────────────────
   // Delete Admin
@@ -149,6 +240,12 @@ const saveEdit = async () => {
             <p className="text-xl font-bold text-yellow-300">{admin.name}</p>
             <p className="text-sm text-yellow-200">@{admin.username}</p>
             <p className="text-xs text-yellow-400">{admin.email}</p>
+            {admin.other_roles && (
+  <p className="text-xs text-yellow-300 mt-1">
+    Roles: Admin, {admin.other_roles}
+  </p>
+)}
+
           </div>
 
           <div className="flex gap-3">
@@ -200,6 +297,156 @@ const saveEdit = async () => {
                 className="w-full mb-3 p-3 rounded-xl bg-black/40 border border-yellow-500/40 text-yellow-100"
               />
             ))}
+{/* Profile Image */}
+<div className="mb-4">
+  <label className="block text-yellow-300 font-semibold mb-2">
+    Profile Image
+  </label>
+
+  {editForm.image_url && (
+    <img
+      src={editForm.image_url}
+      alt="Admin"
+      className="w-24 h-24 rounded-full object-cover mb-2 border border-yellow-400"
+    />
+  )}
+
+  <input
+    type="file"
+    accept="image/*"
+    onChange={handleImageUpload}
+    className="block w-full text-sm text-yellow-200
+               file:mr-4 file:py-2 file:px-4
+               file:rounded-xl file:border-0
+               file:bg-yellow-400 file:text-black file:font-bold
+               hover:file:bg-yellow-500"
+  />
+</div>
+
+
+<div className="mb-4">
+  <label className="block text-yellow-300 font-semibold mb-2">
+    Additional Roles (Admin is default)
+  </label>
+
+  <Select
+    isMulti
+    isSearchable
+    options={ROLE_OPTIONS
+      .filter(r => r !== "Admin")
+      .map(r => ({ value: r, label: r }))
+    }
+    value={editForm.roles
+      .filter(r => r !== "Admin")
+      .map(r => ({ value: r, label: r }))
+    }
+    onChange={(selected) => {
+      const selectedRoles = selected
+        ? selected.map(opt => opt.value)
+        : [];
+
+      setEditForm(prev => ({
+        ...prev,
+        roles: ["Admin", ...selectedRoles],
+      }));
+    }}
+    placeholder="Search & select additional roles…"
+    className="react-select-container"
+    classNamePrefix="react-select"
+    styles={{
+      control: (base) => ({
+        ...base,
+        backgroundColor: "rgba(0,0,0,0.4)",
+        borderColor: "#EAB308",
+        borderRadius: "0.75rem",
+        minHeight: "48px",
+      }),
+      menu: (base) => ({
+        ...base,
+        backgroundColor: "#0f2d25",
+        border: "1px solid #EAB308",
+      }),
+      option: (base, state) => ({
+        ...base,
+        backgroundColor: state.isFocused ? "#EAB308" : "transparent",
+        color: state.isFocused ? "#000" : "#FDE68A",
+        cursor: "pointer",
+      }),
+      multiValue: (base) => ({
+        ...base,
+        backgroundColor: "#EAB308",
+        borderRadius: "9999px",
+      }),
+      multiValueLabel: (base) => ({
+        ...base,
+        color: "#000",
+        fontWeight: "bold",
+      }),
+      multiValueRemove: (base) => ({
+        ...base,
+        color: "#000",
+        ":hover": {
+          backgroundColor: "#F59E0B",
+          color: "#000",
+        },
+      }),
+      placeholder: (base) => ({
+        ...base,
+        color: "#FDE68A",
+      }),
+      input: (base) => ({
+        ...base,
+        color: "#FDE68A",
+      }),
+      singleValue: (base) => ({
+        ...base,
+        color: "#FDE68A",
+      }),
+    }}
+  />
+
+  <p className="text-xs text-yellow-400 mt-1">
+    Admin role is permanent and cannot be removed
+  </p>
+</div>
+<div className="mb-4">
+  <label className="block text-yellow-300 font-semibold mb-2">
+    Bio (public)
+  </label>
+
+  <textarea
+    rows={4}
+    placeholder="Tell the community about this admin…"
+    value={editForm.bio}
+    onChange={(e) =>
+      setEditForm({ ...editForm, bio: e.target.value })
+    }
+    className="
+      w-full p-3 rounded-xl
+      bg-black/40 border border-yellow-500/40
+      text-yellow-100 resize-none
+      placeholder-yellow-300/60
+    "
+  />
+
+  <p className="text-xs text-yellow-400 mt-1">
+    Shown on the public “Our Team” page
+  </p>
+</div>
+<div className="flex justify-end mt-2">
+  <button
+    type="button"
+    onClick={generateAdminBio}
+    className="
+      px-4 py-2 rounded-xl
+      bg-purple-500 text-black font-bold
+      hover:bg-purple-600 transition
+    "
+  >
+    ✨ Generate Bio
+  </button>
+</div>
+
 
             <div className="flex gap-3 mt-4">
               <button

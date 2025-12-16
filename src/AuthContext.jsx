@@ -4,16 +4,12 @@ import { jwtDecode } from "jwt-decode";
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [token, setToken] = useState(
-    localStorage.getItem("prideToken")
-  );
+  const [token, setToken] = useState(localStorage.getItem("prideToken"));
   const [user, setUser] = useState(null);
-  const [role, setRole] = useState(
-    localStorage.getItem("prideRole")
-  );
+  const [role, setRole] = useState(localStorage.getItem("prideRole"));
   const [prideId, setPrideId] = useState(null);
 
-  // 🔓 Decode token whenever it changes
+  // 🔓 Decode token (auth + role only)
   useEffect(() => {
     if (!token) {
       setUser(null);
@@ -24,20 +20,28 @@ export function AuthProvider({ children }) {
 
     try {
       const decoded = jwtDecode(token);
-
       setPrideId(decoded.pride_id || null);
 
-      if (decoded.is_pride_admin) {
-        setRole("admin");
-      } else if (decoded.is_pride_staff) {
-        setRole("staff");
-      }
+      if (decoded.is_pride_admin) setRole("admin");
+      else if (decoded.is_pride_staff) setRole("staff");
 
     } catch (err) {
       console.error("Invalid token", err);
       logout();
     }
   }, [token]);
+
+  // 👤 Rehydrate user profile from storage
+  useEffect(() => {
+    const storedUser = localStorage.getItem("prideUser");
+    if (storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch {
+        setUser(null);
+      }
+    }
+  }, []);
 
   // 🔐 Login
   const login = ({ token, role, user }) => {
