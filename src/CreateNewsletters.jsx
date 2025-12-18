@@ -185,68 +185,133 @@ const submitNewsletter = async () => {
 
   // ---------------- REVIEW VIEW ----------------
   if (reviewMode) {
-    return (
-      <div className="space-y-6 w-full">
-        <h2 className="text-3xl font-bold text-yellow-300 text-center">
+  return (
+    <div className="w-full max-w-5xl mx-auto space-y-12 py-6">
+
+      {/* HEADER */}
+      <div className="text-center space-y-1">
+        <h2 className="text-4xl font-extrabold text-yellow-300 tracking-wide">
           📄 Review Newsletter
         </h2>
+        <p className="text-yellow-200 text-sm opacity-75">
+          Preview how your recipients will see this email.
+        </p>
+      </div>
 
-        <div className="bg-black/60 border border-yellow-500/30 rounded-xl p-6 shadow-xl text-yellow-100">
+      {/* EMAIL PREVIEW WRAPPER */}
+      <div className="rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-yellow-500/30 bg-gradient-to-b from-black/80 to-black/60">
 
-          <h3 className="text-3xl text-yellow-300 font-bold mb-4">{title}</h3>
+        {/* HEADER TITLE BAR */}
+        <div className="w-full bg-black/90 py-8 px-6 text-center border-b border-yellow-500/20">
+          <h3 className="text-4xl font-extrabold text-yellow-300 uppercase tracking-wide drop-shadow-lg">
+            {title || "Untitled Newsletter"}
+          </h3>
+        </div>
 
+        {/* EMAIL CONTENT */}
+        <div className="px-8 py-10 text-yellow-100 space-y-8">
+
+          {/* IMAGE PREVIEW */}
           {imageUrl && (
-            <img
-              src={imageUrl}
-              alt="newsletter banner"
-              className="w-full rounded-lg shadow-xl mb-6"
-            />
+            <div className="flex justify-center">
+              <img
+                src={imageUrl}
+                alt="Newsletter banner"
+                className="rounded-xl shadow-2xl w-full max-w-3xl border border-yellow-500/20"
+              />
+            </div>
           )}
 
-          <p className="whitespace-pre-line">{description}</p>
+          {/* BODY */}
+          <div className="whitespace-pre-line text-lg leading-8 tracking-wide opacity-90">
+            {description}
+          </div>
 
-          <div className="mt-8 space-y-1 text-sm opacity-70">
-            <p>
-              <strong>Subscribers:</strong> {subscriberTypes.join(", ")}
-            </p>
+          {/* CONTACT DETAILS BLOCK */}
+          {(contactName || contactEmail || contactPhone) && (
+            <div className="bg-white/5 p-6 rounded-xl border border-yellow-500/10 space-y-2 text-base">
+              <h4 className="text-yellow-300 font-bold uppercase text-sm tracking-wide">
+                Contact Information Included:
+              </h4>
 
-            {contactName && <p>Contact: {contactName}</p>}
-            {contactEmail && <p>Email: {contactEmail}</p>}
-            {contactPhone && <p>Phone: {contactPhone}</p>}
+              {contactName && (
+                <p>
+                  <span className="text-yellow-200 opacity-80">Name:</span>{" "}
+                  {contactName}
+                </p>
+              )}
+
+              {contactEmail && (
+                <p>
+                  <span className="text-yellow-200 opacity-80">Email:</span>{" "}
+                  {contactEmail}
+                </p>
+              )}
+
+              {contactPhone && (
+                <p>
+                  <span className="text-yellow-200 opacity-80">Phone:</span>{" "}
+                  {contactPhone}
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* AUDIENCE */}
+          <div className="text-sm text-yellow-100 opacity-60 pt-4">
+            <strong className="text-yellow-300">Audience Groups:</strong>{" "}
+            {subscriberTypes.length > 0
+              ? subscriberTypes.join(", ")
+              : "No selection"}
           </div>
         </div>
 
-        <div className="flex gap-4">
-          <button
-            onClick={() => setReviewMode(false)}
-            className="w-1/2 py-3 bg-black text-yellow-300 border border-yellow-300 rounded-lg"
-          >
-            ⬅️ Edit
-          </button>
-
-          <button
-            onClick={submitNewsletter}
-            disabled={loading}
-            className="w-1/2 py-3 bg-yellow-300 text-black font-bold rounded-lg"
-          >
-            {loading ? "Sending..." : "Send Newsletter"}
-          </button>
+        {/* FOOTER */}
+        <div className="bg-black/40 py-10 text-center border-t border-yellow-500/20 text-yellow-800/50 text-xs tracking-wide">
+          Preview Mode — This is a visual rendering of the outgoing email.
         </div>
-
-        {status === "success" && (
-          <p className="text-green-400 text-center font-bold">
-            Newsletter sent & saved!
-          </p>
-        )}
-
-        {status === "error" && (
-          <p className="text-red-400 font-bold text-center">
-            Sending failed. Check configuration.
-          </p>
-        )}
       </div>
-    );
-  }
+
+      {/* BUTTONS */}
+      <div className="flex gap-6 justify-between w-full">
+
+        {/* EDIT */}
+        <button
+          onClick={() => setReviewMode(false)}
+          className="w-1/2 py-4 rounded-xl border border-yellow-400 text-yellow-300 bg-black/60
+                     font-bold hover:bg-black/80 transition shadow-lg"
+        >
+          ⬅️ Back to Editing
+        </button>
+
+        {/* SEND */}
+        <button
+          onClick={submitNewsletter}
+          disabled={loading}
+          className="w-1/2 py-4 rounded-xl bg-yellow-300 text-black font-extrabold tracking-widest
+                     shadow-[0_0_20px_rgba(255,255,0,0.2)]
+                     hover:brightness-110 transition"
+        >
+          {loading ? "Sending…" : "Send Newsletter →"}
+        </button>
+      </div>
+
+      {/* STATUS MESSAGES */}
+      {status === "success" && (
+        <p className="text-green-400 font-bold text-center text-lg drop-shadow-lg">
+          🎉 Newsletter sent & saved successfully!
+        </p>
+      )}
+
+      {status === "error" && (
+        <p className="text-red-400 font-bold text-center text-lg drop-shadow-lg">
+          ❌ Sending failed — check template configuration.
+        </p>
+      )}
+
+    </div>
+  );
+}
 
   // ---------------- CREATE FORM ----------------
   return (
