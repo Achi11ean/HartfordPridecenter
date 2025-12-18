@@ -14,12 +14,17 @@ import CreateServices from "./CreateServices";
 import ManageServices from "./ManageServices";
 import CreateVendor from "./CreateVendor";
 import ManageVendors from "./ManageVendors";
-
+import ManageContacts from "./ManageContacts";
+import AdminMessaging from "./AdminMessaging";
+import ManageSubscribers from "./ManageSubscribers";
+import CreateNewsletters from "./CreateNewsletters";
+import PastNewsletters from "./PastNewsletters";
 export default function AdminDashboard() {
   const navigate = useNavigate();
   const { isAuthenticated, isAdmin, user, logout } = useAuth();
 const [servicesSubTab, setServicesSubTab] = useState("add");
 const [vendorsSubTab, setVendorsSubTab] = useState("add");
+const [newsletterSubTab, setNewsletterSubTab] = useState("subscribers");
 
   const [activeTab, setActiveTab] = useState("staff");
 
@@ -102,6 +107,22 @@ const [sponsorSubTab, setSponsorSubTab] = useState("add");
   active={activeTab === "services"}
   onClick={() => setActiveTab("services")}
 />
+<TabButton
+  label="Contacts"
+  active={activeTab === "contacts"}
+  onClick={() => setActiveTab("contacts")}
+/>
+<TabButton
+  label="Messaging"
+  active={activeTab === "messaging"}
+  onClick={() => setActiveTab("messaging")}
+/>
+<TabButton
+  label="Newsletters"
+  active={activeTab === "newsletters"}
+  onClick={() => setActiveTab("newsletters")}
+/>
+
 
           </div>
         </aside>
@@ -141,6 +162,7 @@ const [sponsorSubTab, setSponsorSubTab] = useState("add");
 
   </div>
 )}
+{activeTab === "messaging" && <AdminMessaging />}
 
           {activeTab === "staff" && <Staff />}
           {activeTab === "volunteers" && <Volunteers />}
@@ -165,6 +187,43 @@ const [sponsorSubTab, setSponsorSubTab] = useState("add");
     {servicesSubTab === "add" && <CreateServices />}
 
   {servicesSubTab === "manage" && <ManageServices />}
+
+  </div>
+)}
+{activeTab === "newsletters" && (
+  <div className="w-full space-y-6">
+
+    {/* Newsletter Sub Tabs */}
+    <div className="flex gap-3 flex-wrap">
+      <SubTabButton
+        label="Subscribers"
+        active={newsletterSubTab === "subscribers"}
+        onClick={() => setNewsletterSubTab("subscribers")}
+      />
+
+      <SubTabButton
+        label="Create"
+        active={newsletterSubTab === "create"}
+        onClick={() => setNewsletterSubTab("create")}
+      />
+            <SubTabButton
+        label="Past Letters"
+        active={newsletterSubTab === "past"}
+        onClick={() => setNewsletterSubTab("past")}
+      />
+    </div>
+
+    {/* Sub Tab Content */}
+    {newsletterSubTab === "subscribers" && (
+      <ManageSubscribers prideId={1} />
+    )}
+
+    {newsletterSubTab === "create" && (
+<CreateNewsletters prideId={1} />
+    )}
+    {newsletterSubTab === "past" && (
+<PastNewsletters prideId={user?.pride_id} />
+)}
 
   </div>
 )}
@@ -218,6 +277,7 @@ const [sponsorSubTab, setSponsorSubTab] = useState("add");
   </div>
 )}
 
+{activeTab === "contacts" && <ManageContacts />}
 
 {activeTab === "events" && (
   <div className="w-full">

@@ -42,7 +42,7 @@ export default function Services({
   }, [prideId]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-[#0F2D25] to-[#18453B] pb-20">
+    <div className="min-h-screen bg-gradient-to-b from-black via-[#92400E] to-[#FACC15] pb-20">
 
       {/* ───────────────── Header ───────────────── */}
       <header className="pt-32 px-6 text-center max-w-6xl mx-auto">

@@ -15,10 +15,34 @@ const PASTEL_GRADIENTS = [
   "from-sky-100 via-blue-100 to-indigo-100",
   "from-fuchsia-100 via-pink-100 to-rose-100",
 ];
+const MAIN_BANNER_IMAGE =
+  "https://www.plannedgiving.com/wp-content/uploads/2023/09/sponsorship.jpg"; // 👈 you will add this
+
+
 
 export default function OurSponsorsYellowTemplate() {
   const [sponsors, setSponsors] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [bannerImages, setBannerImages] = useState([]);
+const [bannerIndex, setBannerIndex] = useState(0);
+
+useEffect(() => {
+  const logos = sponsors
+    .map(s => s.logo_url)
+    .filter(Boolean);
+
+  setBannerImages([MAIN_BANNER_IMAGE, ...logos]);
+}, [sponsors]);
+
+useEffect(() => {
+  if (bannerImages.length === 0) return;
+
+  const interval = setInterval(() => {
+    setBannerIndex(i => (i + 1) % bannerImages.length);
+  }, 4000);
+
+  return () => clearInterval(interval);
+}, [bannerImages]);
   const [selectedSponsor, setSelectedSponsor] = useState(null);
   const [showInvitation, setShowInvitation] = useState(false);
   const [invitationMode, setInvitationMode] = useState("form");
@@ -58,7 +82,7 @@ useEffect(() => {
   return (
 <div className="
   min-h-screen 
- bg-[#0B1F1A]
+bg-gradient-to-br from-indigo-950 via-black to-indigo-800
 
   text-white
 ">
@@ -116,9 +140,46 @@ useEffect(() => {
   {/* Glow Accent */}
   <div className="
     absolute inset-x-0 -top-10 h-24
-    bg-gradient-to-r from-transparent via-yellow-400/30 to-transparent
-    blur-2xl pointer-events-none
+    bg-gradient-to-br  from-transparent via-yellow-400/30 to-transparent
+    blur-2xl pointer-events-none 
   " />
+{/* ⭐ Rotating Sponsor Banner */}
+{bannerImages.length > 0 && (
+  <div className="relative w-full mb-6 shadow-md shadow-white h-[280px] sm:h-[360px] overflow-hidden">
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={bannerIndex}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 1 }}
+        className="absolute inset-0 flex items-center justify-center"
+      >
+        <img
+          src={bannerImages[bannerIndex]}
+          alt="Sponsor banner"
+          className="
+            max-h-full  max-w-full
+            object-contain
+            drop-shadow-2xl
+          "
+        />
+      </motion.div>
+    </AnimatePresence>
+
+    {/* Indigo overlay */}
+    <div
+      className="
+        absolute inset-0
+        bg-gradient-to-br
+        from-slate-700/70
+        via-slate-400/10
+        to-slate-900/80
+        pointer-events-none
+      "
+    />
+  </div>
+)}
 
   {/* Header Content */}
   <div className="relative max-w-5xl mx-auto text-center">
@@ -208,30 +269,32 @@ useEffect(() => {
     </span>
   </button>
 
-  {/* Donate */}
-  <button
-    onClick={() => navigate("/donate")}
-    className="
-      group
-      flex flex-col items-center justify-center
-      py-3 sm:py-4
-      rounded-none
-      bg-white
-      border-2 border-slate-200
-      shadow-md
-      transition-all duration-300
-      hover:-translate-y-0.5
-      hover:border-yellow-400
-      hover:shadow-yellow-400/30
-    "
-  >
-    <span className="text-sm sm:text-base font-semibold text-slate-900">
-      Donate
-    </span>
-    <span className="text-[11px] sm:text-xs text-slate-500">
-      Support
-    </span>
-  </button>
+<a
+  href="https://givebutter.com/lgbtqadvocacy"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="
+    group
+    flex flex-col items-center justify-center
+    py-3 sm:py-4
+    rounded-none
+    bg-white
+    border-2 border-slate-200
+    shadow-md
+    transition-all duration-300
+    hover:-translate-y-0.5
+    hover:border-yellow-400
+    hover:shadow-yellow-400/30
+  "
+>
+  <span className="text-sm sm:text-base font-semibold text-slate-900">
+    Donate
+  </span>
+  <span className="text-[11px] sm:text-xs text-slate-500">
+    Support
+  </span>
+</a>
+
 </div>
 
   </div>
@@ -239,16 +302,7 @@ useEffect(() => {
 
 <section className="py-24 ">
   {/* Header */}
-  <div className="max-w-6xl mx-auto px-6 mb-6">
-    <h1 className="text-4xl font-semibold tracking-tight text-white">
-      Sponsors
-    </h1>
-    <p className="mt-3 max-w-xl font-bold text-sm text-neutral-400">
-      Organizations providing direct support for programming, infrastructure,
-      and community initiatives.
-    </p>
-    <div className="mt-6 h-px w-full bg-neutral-800" />
-  </div>
+
 
   {/* States */}
   {loading ? (
@@ -269,7 +323,7 @@ useEffect(() => {
             className="
               w-full text-left
               border border-neutral-800
-              rounded-xl
+              rounded-xl bg-white
               p-2
               hover:border-neutral-700
               transition-colors
@@ -299,41 +353,43 @@ useEffect(() => {
 
               {/* Info */}
               <div className="flex-1">
-                <h3 className="text-lg font-bold font-serif text-white leading-tight">
+                <h3 className="text-lg font-bold font-serif text-black leading-tight">
                   {s.organization}
                 </h3>
 
-                <p className="mt-1 text-sm text-neutral-400">
-                  Sponsorship Tier:{" "}
-                  <span className="text-neutral-300">
+                <p className="mt-1 text-sm font-bold text-black">
+                  Sponsors Tier:{" "} <br/>
+                  <span className="text-red-800 font-semibold font-serif">
                     {s.tier}
                   </span>
                 </p>
 
-                <p className="mt-3 text-sm text-neutral-500">
+                <p className="mt-3 font-bold text-sm text-black">
                   Booth Access:{" "}
-                  <span className="text-neutral-300">
+                  <span className="text-green-700">
                     {s.wants_booth ? "Included" : "Not included"}
                   </span>
                 </p>
 
-                {s.website && (
-                  <a
-                    href={normalizeUrl(s.website)}
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    className="
-                      inline-block mt-4
-                      text-sm font-medium
-                      text-white
-                      underline underline-offset-4
-                      hover:text-neutral-300
-                    "
-                  >
-                    Visit organization website
-                  </a>
-                )}
+              {s.website && (
+  <a
+    href={normalizeUrl(s.website)}
+    target="_blank"
+    rel="noreferrer"
+    onClick={(e) => e.stopPropagation()}
+    className="
+      inline-flex items-center gap-1
+      mt-1
+      text-sm font-semibold
+      text-indigo-700
+      hover:text-indigo-900
+      transition-colors
+    "
+  >
+    Visit Website <span aria-hidden>→</span>
+  </a>
+)}
+
               </div>
             </div>
           </button>

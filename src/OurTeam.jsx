@@ -122,10 +122,11 @@ const admins = (adminsRes.data || []).map(a => ({
   return (
     <div className="
       min-h-screen 
-      bg-gradient-to-br
-      from-black
-      via-[#0F2D25]
-      to-[#18453B]
+     bg-gradient-to-br
+from-black
+via-[#0A2540]
+to-[#1D4ED8]
+
       text-white
     ">
 

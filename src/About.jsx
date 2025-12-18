@@ -9,9 +9,10 @@ export default function About() {
     min-h-screen 
     pb-10 
     bg-gradient-to-br 
-    from-black 
-    via-[#0F2D25] 
-    to-[#18453B] 
+from-black 
+via-[#7C2D12] 
+to-[#EA580C]
+
     text-white
   "
 >
@@ -51,7 +52,7 @@ export default function About() {
 <hr className="rainbow-hr" />
 
       {/* Main Content */}
-      <main className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 md:pt-32">
+      <main className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 md:pt-12">
 
         {/* Quick Links */}
 

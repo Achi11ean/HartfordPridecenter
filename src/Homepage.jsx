@@ -3,11 +3,13 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaInstagram, FaFacebook, FaEnvelope, FaCalendarAlt, FaHandHoldingHeart, FaUsers } from "react-icons/fa";
 import "./App.css"
+import EmailSubscribe from "./EmailSubscribe";
+
 export default function HomePage() {
   const year = new Date().getFullYear();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0F2D25] via-black to-[#18453B] text-white">
+    <div className="min-h-screen bg-gradient-to-br from-[#3B0A0A] via-black to-[#7A1C1C] text-white">
       {/* Top Hero */}
       <header className="relative pt-28 pb-14 sm:pt-32 sm:pb-20 overflow-hidden">
         {/* Background image */}
@@ -20,7 +22,8 @@ export default function HomePage() {
         />
         {/* Overlays */}
         <div className="absolute inset-0 bg-black/60" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-[#0F2D25]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#3B0A0A]/50 via-black/60 to-[#7A1C1C]/60
+" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6">
           {/* Logo + Tag */}
@@ -223,6 +226,8 @@ export default function HomePage() {
             </div>
           </motion.div>
         </section>
+        <EmailSubscribe prideId={1} />
+
       </main>
 <hr className="rainbow-hr" />
 
@@ -254,6 +259,26 @@ export default function HomePage() {
                 <li><Link className="hover:text-yellow-300" to="/resources">Resources</Link></li>
                 <li><Link className="hover:text-yellow-300" to="/contact">Contact</Link></li>
                 <li><Link className="hover:text-yellow-300" to="/donate">Donate</Link></li>
+                <li>
+  <a
+    href="https://givebutter.com/lgbtqadvocacy"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="hover:text-yellow-300"
+  >
+    Donate
+  </a>
+</li>
+<li>
+  <Link
+    to="/sponsors"
+    className="hover:text-yellow-300"
+  >
+    Sponsors
+  </Link>
+</li>
+
+
                 <li><Link className="hover:text-yellow-300" to="/privacy">Privacy</Link></li>
               </ul>
             </div>
