@@ -76,6 +76,8 @@ const handleLogoUrlChange = (e) => {
     social_links: "",
     message: "",
      logo_url: "",
+     additional_notes: "",
+
   });
 
   // ───────────────────────────────
@@ -156,6 +158,7 @@ const openEdit = (s) => {
     social_links: s.social_links || "",
     message: s.message || "",
     logo_url: s.logo_url || "",
+      additional_notes: s.additional_notes || "", 
   });
 };
 
@@ -231,6 +234,8 @@ const social_links = socialInputs
 const payload = {
   ...editForm,
   social_links,
+    additional_notes: editForm.additional_notes?.trim() || null, // ⭐ NEW
+
 };
 
 
@@ -535,6 +540,23 @@ return (
                     text-yellow-100
                   "
                 />
+{/* Additional Notes */}
+<textarea
+  value={editForm.additional_notes || ""}
+  onChange={(e) =>
+    setEditForm({
+      ...editForm,
+      additional_notes: e.target.value,
+    })
+  }
+  placeholder="Additional Notes"
+  rows={3}
+  className="
+    w-full p-3 rounded-xl
+    bg-black/40 border border-yellow-500/40
+    text-yellow-100
+  "
+/>
 
                 {/* Status */}
                 <select
@@ -633,6 +655,11 @@ return (
       {s.message}
     </div>
   )}
+{s.additional_notes && (
+  <div className="mt-2 p-2 bg-black/40 rounded-xl text-xs leading-relaxed max-h-20 overflow-auto">
+    <strong>Notes:</strong> {s.additional_notes}
+  </div>
+)}
 
   {/* Actions */}
   <div className="flex gap-3 pt-3">
@@ -722,6 +749,13 @@ return (
             {selectedSponsor.message}
           </div>
         )}
+{selectedSponsor.additional_notes && (
+  <div className="mt-4 p-3 bg-black/40 rounded-xl text-yellow-200">
+    <strong>Additional Notes:</strong>
+    <br />
+    {selectedSponsor.additional_notes}
+  </div>
+)}
 
         <button
           onClick={() => setSelectedSponsor(null)}

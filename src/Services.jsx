@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { motion } from "framer-motion";
 
 const API = "https://singspacebackend.onrender.com";
 
@@ -29,6 +30,8 @@ export default function Services({
             contact_name: s.contact_name,
             contact_email: s.contact_email,
             url: s.url,
+            service_url: s.service_url,
+
           }))
         );
       } catch (err) {
@@ -41,180 +44,244 @@ export default function Services({
     fetchServices();
   }, [prideId]);
 
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-[#92400E] to-[#FACC15] pb-20">
 
-      {/* ───────────────── Header ───────────────── */}
-      <header className="pt-32 px-6 text-center max-w-6xl mx-auto">
-        <h1 className="text-3xl font-serif md:text-5xl font-extrabold text-white">
-          Programs & Services
-        </h1>
-<hr className="rainbow-hr" />
+  const [carouselIndex, setCarouselIndex] = useState(0);
 
-        {/* Rainbow Divider */}
 
-        <p className="text-yellow-200/90 max-w-2xl mx-auto text-lg">
-          Empowering, supporting, and celebrating the LGBTQIA+ community
-          through care, advocacy, and connection.
-        </p>
 
-        {/* CTA Buttons */}
-        <div className="mt-8 grid grid-cols-2 gap-4 max-w-md mx-auto">
-          <Link to={contactPath}>
-            <button className="w-full py-2 rounded-full font-bold
-              bg-white text-yellow-800 border-4 border-yellow-300/40
-              hover:scale-105 hover:shadow-lg transition">
-              Get Involved
-            </button>
-          </Link>
-          <Link to="/resources">
-            <button className="w-full py-2 rounded-full font-bold
-              bg-white text-yellow-800 border-4 border-yellow-300/40
-              hover:scale-105 hover:shadow-lg transition">
-              Resources
-            </button>
-          </Link>
-        </div>
-      </header>
+// Hardcoded banner image to always include
+const staticBanner = "https://www.garlandcounty.org/ImageRepository/Document?documentId=260";
 
-      {/* ───────────────── Loading / Empty ───────────────── */}
-      {loading && (
-        <p className="text-center mt-20 text-yellow-200 animate-pulse">
-          Loading services…
-        </p>
-      )}
+// Build final array:
+const carouselImages = [
+  staticBanner,
+  ...services.map((s) => s.image).filter(Boolean),
+];
 
-      {!loading && services.length === 0 && (
-        <p className="text-center mt-20 text-yellow-200 italic">
-          No services have been added yet.
-        </p>
-      )}
+useEffect(() => {
+  if (!carouselImages.length) return;
 
-      {/* ───────────────── Services Grid ───────────────── */}
-      {!loading && services.length > 0 && (
-        <section className="max-w-6xl mx-auto px-6 mt-16
-          grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+  const id = setInterval(() => {
+    setCarouselIndex((i) => (i + 1) % carouselImages.length);
+  }, 5500);
 
-          {services.map((s) => (
-<div className="rainbow-border hover:scale-[1.02] transition-transform duration-300">
-  <button
-    onClick={() => setSelectedService(s)}
+  return () => clearInterval(id);
+}, [carouselImages.length]);
+
+
+
+return (
+  <div
     className="
-      group text-left w-full h-full
-      rounded-3xl overflow-hidden
-      bg-white/90 backdrop-blur-md
-      shadow-xl transition-all duration-300
-      hover:-translate-y-1 hover:shadow-2xl
+      min-h-screen w-full overflow-x-hidden
+      bg-gradient-to-b
+      from-[#FFF9D6] via-[#FFE87C] to-[#FACC15]
+      text-[#5A4400]
     "
   >
 
-              {/* Image */}
-              {s.image && (
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={s.image}
-                    alt={s.title}
-                    className="h-full w-full object-cover
-                      transition-transform duration-500
-                      group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0
-                    bg-gradient-to-t from-black/50 to-transparent" />
-                </div>
-              )}
+  {/* ========================= HERO: IMAGE CAROUSEL ========================= */}
+{/* ========================= HERO: IMAGE CAROUSEL ========================= */}
+<section
+  className="
+    relative w-full h-[60vh]
+    overflow-hidden shadow-2xl
+    mt-14
+  "
+>
+  {/* Wrapper */}
+  <div
+    className="absolute inset-0 flex transition-transform duration-[1200ms] ease-in-out"
+    style={{
+      width: `${carouselImages.length * 100}%`,
+      transform: `translateX(-${carouselIndex * (100 / carouselImages.length)}%)`,
+    }}
+  >
+    {carouselImages.map((src, index) => (
+      <div
+        key={index}
+        className="w-full h-full flex-shrink-0"
+        style={{ width: `${100 / carouselImages.length}%` }}
+      >
+        <img
+          src={src}
+          alt="slide"
+          className="w-full h-full object-cover"
+        />
+      </div>
+    ))}
+  </div>
 
-              {/* Content */}
-              <div className="p-6">
-                <h3 className="
-                  text-xl font-extrabold mb-2
-                  bg-gradient-to-r from-[#0F2D25] via-[#18453B] to-black
-                  bg-clip-text text-transparent
-                ">
-                  {s.title}
-                </h3>
 
-                <p className="text-black/80 text-sm leading-relaxed">
-                  {s.desc}
-                </p>
+  {/* DARK OVERLAY FOR LEGIBILITY */}
+  <div className="absolute inset-0 bg-black/40" />
 
-                <div className="mt-4 text-sm font-semibold text-yellow-700">
-                  Learn more →
-                </div>
+
+  {/* GRADIENT BLEND (top lighter / bottom slightly darker) */}
+  <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/60" />
+
+
+
+  {/* TEXT */}
+  <div
+    className="
+      absolute bottom-12 w-full text-center px-6
+      flex flex-col items-center justify-center
+      text-white z-10
+    "
+  >
+    <h1
+      className="
+        text-4xl sm:text-6xl md:text-7xl font-black
+        drop-shadow-2xl
+      "
+    >
+      Community Programs & Services
+    </h1>
+
+    <p
+      className="
+        max-w-3xl font-semibold mt-6
+        text-base sm:text-xl md:text-2xl
+        drop-shadow-xl
+      "
+    >
+      Grow your voice, find support, build community —
+      powered through the Karaoverse platform.
+    </p>
+  </div>
+</section>
+
+
+    {/* ========================= INTRO TEXT ========================= */}
+
+
+
+    {/* ========================= SERVICE GRID ========================= */}
+    {!loading && services.length > 0 && (
+      <section
+        className="
+          max-w-7xl mx-auto px-6 mt-8
+          grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-14
+        "
+      >
+
+       
+  
+        {services.map((s) => (
+          <button
+            key={s.id}
+            onClick={() => setSelectedService(s)}
+            className="
+              group w-full text-left overflow-hidden rounded-3xl
+              bg-gradient-to-br from-white to-yellow-50
+              border-[6px] border-yellow-400 shadow-[0_8px_25px_rgba(0,0,0,0.25)]
+              hover:shadow-[0_20px_35px_rgba(0,0,0,0.35)]
+              hover:scale-[1.03] transition-all duration-500
+            "
+          >
+
+            {/* IMAGE */}
+            {s.image && (
+              <div className="relative h-56 w-full overflow-hidden">
+                <img
+                  src={s.image}
+                  alt={s.title}
+                  className="
+                    w-full h-full object-cover
+                    group-hover:scale-110
+                    transition-transform duration-[1600ms]
+                  "
+                />
+                <div
+                  className="
+                    absolute inset-0 bg-gradient-to-t
+                    from-black/60 to-transparent
+                  "
+                />
               </div>
-            </button>
-            </div>
-          ))}
-        </section>
-      )}
-
-      {/* ───────────────── Modal ───────────────── */}
-      {selectedService && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div
-            onClick={() => setSelectedService(null)}
-            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-          />
-
-          <div className="relative z-10 w-full max-w-2xl
-            rounded-3xl overflow-hidden
-            bg-yellow-50 shadow-2xl border border-yellow-300/40">
-
-            {selectedService.image && (
-              <img
-                src={selectedService.image}
-                alt={selectedService.title}
-                className="h-56 w-full object-cover"
-              />
             )}
 
-            <div className="p-6">
-              <h3 className="text-2xl font-extrabold text-yellow-900">
-                {selectedService.title}
+            {/* TEXT */}
+            <div className="p-7">
+              <h3
+                className="
+                  text-3xl font-black tracking-tight
+                  bg-gradient-to-r from-yellow-800 to-yellow-600
+                  bg-clip-text text-transparent
+                  drop-shadow
+                "
+              >
+                {s.title}
               </h3>
 
-              <div className="h-px my-3
-                bg-gradient-to-r from-transparent via-yellow-400/60 to-transparent" />
-
-              <p className="text-gray-800 leading-relaxed">
-                {selectedService.details}
-              </p>
-
-              <p className="mt-4 text-sm text-gray-700">
-                <strong>Contact:</strong>{" "}
-                {selectedService.contact_name} ·{" "}
-                <a
-                  href={`mailto:${selectedService.contact_email}`}
-                  className="underline text-yellow-800"
-                >
-                  {selectedService.contact_email}
-                </a>
-              </p>
-
-              {selectedService.url && (
-                <a
-                  href={selectedService.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block mt-5 px-6 py-2 rounded-full
-                    bg-yellow-400 text-black font-bold shadow
-                    hover:brightness-110 transition"
-                >
-                  Visit Resource
-                </a>
-              )}
-            </div>
-
-            <div className="border-t bg-yellow-100/70 p-4 text-right">
-              <button
-                onClick={() => setSelectedService(null)}
-                className="px-5 py-2 rounded-xl bg-black text-white font-semibold"
+              <p
+                className="
+                  mt-4 text-[#5A4400]/90 font-medium leading-relaxed
+                  min-h-[65px]
+                "
               >
-                Close
-              </button>
+                {s.desc}
+              </p>
+
+              <p
+                className="
+                  mt-6 pr-2 text-right font-extrabold uppercase text-sm
+                  bg-gradient-to-r from-black to-yellow-700
+                  bg-clip-text text-transparent tracking-widest
+                "
+              >
+                Learn more →
+              </p>
             </div>
-          </div>
-        </div>
-      )}
+          </button>
+        ))}
+      </section>
+    )}
+
+
+    {/* ========================= NO DATA ========================= */}
+    {!loading && services.length === 0 && (
+      <p
+        className="
+          text-center text-2xl mt-40 font-bold
+          text-black/60 italic
+        "
+      >
+        ⭐️ No programs published yet — come back soon!
+      </p>
+    )}
+
+    {/* ========================= LOADING ========================= */}
+    {loading && (
+      <div className="text-center mt-32 animate-pulse text-xl text-black/70">
+        Loading programs…
+      </div>
+    )}
+
+
+    {/* ========================= FOOTER QUOTE ========================= */}
+    <div className="mt-32 pb-28 text-center px-6">
+      <p
+        className="
+          text-xl md:text-2xl font-black
+          bg-gradient-to-r from-black to-yellow-900
+          bg-clip-text text-transparent
+        "
+      >
+        “Community isn’t a concept — it’s a lifeline.”
+      </p>
+
+      <p
+        className="
+          mt-3 text-md md:text-lg font-semibold
+          text-[#503B00]/80
+        "
+      >
+        Every profile. Every voice. Every story adds strength.
+      </p>
     </div>
-  );
+  </div>
+);
+
 }

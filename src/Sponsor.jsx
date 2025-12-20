@@ -54,6 +54,8 @@ const formatPhoneNumber = (value) => {
     social_links: "",
     logo_url: "",
     message: "",
+      additional_notes: "",    // ⭐ NEW
+
   });
 
 const [socialInputs, setSocialInputs] = useState({});
@@ -196,6 +198,8 @@ website: form.website
     logo_url: form.logo_url || null,
     status: "pending",
     message: form.message || null,
+        additional_notes: form.additional_notes?.trim() || null, // ⭐ NEW
+
   },
   { headers: { "Content-Type": "application/json" } }
 );
@@ -227,6 +231,8 @@ useEffect(() => {
       social_links: "",
       logo_url: "",
       message: "",
+        additional_notes: "",    // ⭐ NEW
+
     });
 
     setSocialInputs({});
@@ -480,6 +486,22 @@ useEffect(() => {
                 className="w-full p-4 bg-purple-900/70 border border-yellow-400 text-white"
               />
             </div>
+{/* Additional Notes */}
+<div>
+  <label className="block mb-1 font-bold text-yellow-300">
+    Additional Notes (optional)
+  </label>
+
+  <textarea
+    name="additional_notes"
+    rows={3}
+    maxLength={500}
+    placeholder="Anything else we should know?"
+    value={form.additional_notes}
+    onChange={handleChange}
+    className="w-full p-4 bg-purple-900/70 border border-yellow-400 text-white"
+  />
+</div>
 
             {error && (
               <p className="text-red-300 text-center font-semibold">

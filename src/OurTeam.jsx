@@ -141,11 +141,29 @@ to-[#1D4ED8]
       >
 
       </div>
+      <hr className="rainbow-hr" />
+
+<h2
+  className="
+    pt-4 text-7xl lg:text-8xl
+    font-extrabold font-[Aspire] tracking-tight text-center
+    relative
+    bg-gradient-to-r from-blue-700 via-blue-400 to-blue-900
+text-white
+    drop-shadow-[0_4px_10px_rgba(0,0,0,0.9)]
+    border-b-2 border-white/70
+    shadow-[inset_0_2px_4px_rgba(255,255,255,0.35)]
+  "
+>
+Our Team 
+
+</h2>
+<hr className="rainbow-hr" />
 
       {/* TEAM */}
       <section className="max-w-6xl mx-auto px-4 pt-10 pb-20">
-        <h1 className="text-3xl font-serif border-b">Our Team</h1>
-        <p className="text-yellow-200/90 text-center max-w-3xl mx-auto mb-10 leading-relaxed">
+
+        <p className="text-yellow-400 border-2 text-center bg-black/60 max-w-6xl mx-auto mb-10 text-2xl font-bold font-[sans] md:text-5xl leading-relaxed">
           Meet the people who support, organize, and build this Pride community.
         </p>
 
@@ -163,7 +181,7 @@ to-[#1D4ED8]
                 onClick={() => setSelectedMember(m)}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.99 }}
-                className={`text-left cursor-pointer rounded-3xl p-6 shadow-lg border-2 transition-all duration-300 ${m.style}`}
+                className={`text-left cursor-pointer shadow-yellow-300 shadow-md rounded-3xl p-6 shadow-lg border-2 transition-all duration-300 ${m.style}`}
               >
                 <img
                   src={m.image}

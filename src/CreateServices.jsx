@@ -19,6 +19,7 @@ export default function CreateServices() {
     contact_email: "",
     url: "",
     image_url: "",
+    service_url: "",
   });
 
   const [uploading, setUploading] = useState(false);
@@ -81,6 +82,8 @@ export default function CreateServices() {
         contact_email: "",
         url: "",
         image_url: "",
+        service_url: "",
+
       });
     } catch (err) {
       console.error(err);
@@ -141,6 +144,13 @@ export default function CreateServices() {
           required
           className="w-full px-4 py-2 rounded bg-black text-yellow-100 border border-yellow-400/40"
         />
+<input
+  name="service_url"
+  value={form.service_url}
+  onChange={handleChange}
+  placeholder="Resource URL "
+  className="w-full px-4 py-2 rounded bg-black text-yellow-100 border border-yellow-400/40"
+/>
 
         {/* Optional URL */}
         <input

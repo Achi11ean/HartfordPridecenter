@@ -26,6 +26,87 @@ export default function OurSponsorsYellowTemplate() {
   const [bannerImages, setBannerImages] = useState([]);
 const [bannerIndex, setBannerIndex] = useState(0);
 
+const tierStyle = (tier) => {
+  switch (tier) {
+
+    case "Platinum Sponsor":
+      return `
+        bg-gradient-to-br
+        from-slate-200
+        via-slate-300
+        to-slate-400
+        text-black
+        border border-slate-500
+        shadow-xl
+      `;
+
+    case "Gold Sponsor":
+      return `
+        bg-gradient-to-br
+        from-yellow-500
+        via-yellow-400
+        to-yellow-600
+        text-black
+        shadow-lg
+        border border-yellow-500
+      `;
+
+    case "Silver Sponsor":
+      return `
+        bg-gradient-to-br
+        from-gray-300
+        via-gray-100
+        to-gray-400
+        text-black
+        border border-gray-400
+      `;
+
+    case "Bronze Sponsor":
+      return `
+        bg-gradient-to-br
+        from-amber-700
+        via-amber-600
+        to-amber-800
+        text-white
+        border border-amber-700
+      `;
+
+    case "Community Supporter":
+      return `
+        bg-gradient-to-br
+        from-green-700
+        via-green-600
+        to-green-800
+        text-white
+        border border-green-700
+      `;
+
+    case "In-Kind Sponsor":
+      return `
+        bg-gradient-to-br
+        from-pink-700
+        via-pink-600
+        to-pink-900
+        text-white
+        border border-pink-700
+      `;
+
+    case "Customized Tier":
+      return `
+        bg-gradient-to-br
+        from-purple-300
+        via-purple-200
+        to-purple-300
+        text-white
+        border border-purple-700
+      `;
+
+    default:
+      return "bg-white text-black";
+  }
+};
+
+
 useEffect(() => {
   const logos = sponsors
     .map(s => s.logo_url)
@@ -317,24 +398,29 @@ bg-gradient-to-br from-indigo-950 via-black to-indigo-800
     <div className="max-w-6xl mx-auto px-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {sponsors.map((s) => (
-          <button
-            key={s.id}
-            onClick={() => setSelectedSponsor(s)}
-            className="
-              w-full text-left
-              border border-neutral-800
-              rounded-xl bg-white
-              p-2
-              hover:border-neutral-700
-              transition-colors
-            "
-          >
+<button
+  key={s.id}
+  onClick={() => setSelectedSponsor(s)}
+  className={`
+    relative w-full text-left rounded-xl p-3
+    transition-all duration-300 hover:scale-[1.02]
+    border-4
+    ${
+      selectedSponsor?.id === s.id
+        ? "scale-[1.03] border-yellow-500 shadow-2xl"
+        : "border-black/40"
+    }
+    ${tierStyle(s.tier)}
+  `}
+>
+
+
             <div className="flex gap-6 items-start">
               {/* Logo */}
               <div className="
                 w-20 h-20
                 flex items-center justify-center
-                border border-neutral-800
+                
                 rounded-lg
                 shrink-0
               ">
@@ -364,31 +450,8 @@ bg-gradient-to-br from-indigo-950 via-black to-indigo-800
                   </span>
                 </p>
 
-                <p className="mt-3 font-bold text-sm text-black">
-                  Booth Access:{" "}
-                  <span className="text-green-700">
-                    {s.wants_booth ? "Included" : "Not included"}
-                  </span>
-                </p>
+               
 
-              {s.website && (
-  <a
-    href={normalizeUrl(s.website)}
-    target="_blank"
-    rel="noreferrer"
-    onClick={(e) => e.stopPropagation()}
-    className="
-      inline-flex items-center gap-1
-      mt-1
-      text-sm font-semibold
-      text-indigo-700
-      hover:text-indigo-900
-      transition-colors
-    "
-  >
-    Visit Website <span aria-hidden>→</span>
-  </a>
-)}
 
               </div>
             </div>
@@ -402,7 +465,7 @@ bg-gradient-to-br from-indigo-950 via-black to-indigo-800
 
 
       {/* ⭐ Modal */}
-     <AnimatePresence>
+ <AnimatePresence>
   {selectedSponsor && (
     <motion.div
       className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4"
@@ -410,66 +473,114 @@ bg-gradient-to-br from-indigo-950 via-black to-indigo-800
     >
       <motion.div
         onClick={(e) => e.stopPropagation()}
-        className="bg-gradient-to-br from-slate-700 via-black to-slate-500 rounded-3xl p-8 border border-yellow-300 max-w-2xl w-full"
+       className={`
+  max-w-2xl w-full rounded-3xl p-[2px]
+  border-4
+  ${
+    selectedSponsor.tier === "Gold Sponsor"
+      ? "bg-[linear-gradient(135deg,#d4af37,#f7e27e,#b8860b)] text-black border-yellow-500"
+    : selectedSponsor.tier === "Silver Sponsor"
+      ? "bg-[linear-gradient(135deg,#ececec,#fbfbfb,#b4b4b4)] text-black border-gray-300"
+    : selectedSponsor.tier === "Bronze Sponsor"
+      ? "bg-[linear-gradient(135deg,#cd7f32,#e3a36b,#8b5a2b)] border-orange-500"
+    : selectedSponsor.tier === "Platinum Sponsor"
+      ? "rainbow-border"
+    : "bg-gradient-to-br from-slate-700 via-white to-slate-500 border text-black  border-yellow-300"
+  }
+`}
+
       >
-        {selectedSponsor.logo_url && (
-          <img
-            src={selectedSponsor.logo_url}
-            alt={selectedSponsor.organization}
-            className="w-28 h-28 object-contain bg-white p-2 rounded-xl mb-4"
-          />
-        )}
+        <div
+          className={`
+            rounded-3xl p-8
+            ${selectedSponsor.tier === "Platinum Sponsor"
+              ? "bg-white/95 text-black"
+              : "bg-transparent"
+            }
+          `}
+        >
 
-        <h3 className="text-3xl font-extrabold">
-          {selectedSponsor.organization}
-        </h3>
+          {selectedSponsor.logo_url && (
+            <img
+              src={selectedSponsor.logo_url}
+              alt={selectedSponsor.organization}
+              className="w-28 h-28 object-contain bg-slate-500 border-black border-2 p-2 rounded-xl mb-4 mx-auto"
+            />
+          )}
 
-        <p className="text-yellow-200">{selectedSponsor.tier}</p>
-{/* Booth */}
-<p
-  className={`mt-2 font-semibold ${
-    selectedSponsor.wants_booth ? "text-green-400" : "text-red-400"
-  }`}
->
-  🏕 Booth: {selectedSponsor.wants_booth ? "Has Booth" : "No Booth"}
-</p>
+          <h3 className=" font-extrabold font-[Aspire] text-6xl text-center">
+            {selectedSponsor.organization}
+          </h3>
 
-{/* Website */}
+          <p className="text-xl mt-1 text-center font-bold text-black">
+            {selectedSponsor.tier}
+          </p>
+
+          {/* Booth */}
+          <p
+            className={`mt-4 text-center font-semibold ${
+              selectedSponsor.wants_booth
+                ? "text-green-900"
+                : "text-red-900"
+            }`}
+          >
+            🏕 Booth:{" "}
+            {selectedSponsor.wants_booth ? "Yes" : "No"}
+          </p>
+{selectedSponsor.message && (
+  <div className="
+    mt-6 p-4 rounded-xl
+    bg-black/60 text-white text-sm
+    leading-relaxed
+    max-h-56 overflow-y-auto
+    border border-white/20
+    shadow-inner
+  ">
+    <h4 className="text-lg font-bold mb-2 text-yellow-300">
+      Sponsor Message
+    </h4>
+    {selectedSponsor.message}
+  </div>
+)}
+
+          {/* Website */}
 {selectedSponsor.website && (
-  <p className="mt-3">
+  <p className="mt-4 text-center">
     🌐{" "}
     <a
       href={normalizeUrl(selectedSponsor.website)}
       target="_blank"
       rel="noreferrer"
-      className="underline text-yellow-300 hover:text-white"
+      className="underline text-blue-800 hover:text-white font-semibold tracking-wide"
     >
-      {selectedSponsor.website}
+      Visit Website →
     </a>
   </p>
 )}
 
-{/* Social Links */}
-{selectedSponsor.social_links && (
-  <div className="mt-3">
-    <p className="font-semibold text-yellow-200">Social</p>
-    <ul className="list-disc list-inside space-y-1">
-      {splitLinks(selectedSponsor.social_links).map((link, i) => (
-        <li key={i}>
-          <a
-            href={normalizeUrl(link)}
-            target="_blank"
-            rel="noreferrer"
-            className="underline text-yellow-300 hover:text-white"
-          >
-            {link}
-          </a>
-        </li>
-      ))}
-    </ul>
-  </div>
-)}
-
+          {/* Social Links */}
+          {selectedSponsor.social_links && (
+            <div className="mt-6 text-center">
+              <p className="font-semibold text-yellow-200 mb-1">
+                Social Links
+              </p>
+              <ul className="space-y-1 text-sm">
+                {splitLinks(selectedSponsor.social_links).map((link, i) => (
+                  <li key={i}>
+                    <a
+                      href={normalizeUrl(link)}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="underline text-blue-800 hover:text-white"
+                    >
+                      {link}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
       </motion.div>
     </motion.div>
   )}

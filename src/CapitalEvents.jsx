@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
 import {
+  EVENT_TYPE_LABEL_MAP,
+  EVENT_TYPE_STYLES,
+  parseEventTypes,
+} from "./eventTypes";
+
+import {
   FaMapMarkerAlt,
   FaClock,
   FaExternalLinkAlt,
@@ -154,116 +160,165 @@ if (events.length === 0)
   );
 
 
-  return (
-    <div className="w-full max-w-5xl mt-12 mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
-      {events.map((ev) => {
-        const detectedEventbrite =
-          ev.eventbrite_url && EVENTBRITE_RE.test(ev.eventbrite_url)
-            ? ev.eventbrite_url
-            : null;
+return (
+  <div className="w-full max-w-6xl mt-14 mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
 
-        return (
-          <div
-            key={ev.id}
-            onClick={() => {
-              if (
-                window.confirm(
-                  "You’re being redirected to the full event page on Karaoverse!\n\nContinue?"
-                )
-              ) {
-                window.location.href = `https://karaoverse.com/events/${ev.slug}`;
-              }
-            }}
+    {events.map((ev) => {
+      const detectedEventbrite =
+        ev.eventbrite_url && EVENTBRITE_RE.test(ev.eventbrite_url)
+          ? ev.eventbrite_url
+          : null;
+
+      return (
+        <div
+          key={ev.id}
+          onClick={() => {
+            if (
+              window.confirm(
+                "You’re being redirected to the full event page on Karaoverse!\n\nContinue?"
+              )
+            ) {
+              window.location.href = `https://karaoverse.com/events/${ev.slug}`;
+            }
+          }}
+          className="
+            group cursor-pointer 
+            bg-white/70 backdrop-blur-xl
+            text-green-900 
+            border border-emerald-700/30 
+            shadow-xl rounded-xl p-6 
+
+            hover:border-emerald-600 
+            hover:shadow-emerald-300/40
+            hover:bg-white 
+            transition-all duration-300
+          "
+        >
+
+          {/* Title */}
+          <h2
             className="
-              bg-white/10 backdrop-blur-md 
-              border border-yellow-400 
-              shadow-2xl rounded-none p-6 
-              text-left text-yellow-100 
-              hover:bg-white/20 hover:shadow-yellow-500/40 
-              transition cursor-pointer
+              text-2xl md:text-3xl font-extrabold tracking-tight 
+              text-emerald-900 pb-2 mb-4 
+              border-b border-emerald-600/30
+              group-hover:text-emerald-700 transition
             "
           >
-            {/* Title */}
-            <h2 className="text-3xl border-b-2 border-yellow-500 font-bold text-yellow-300 mb-3">
-              {ev.venue_name}
-            </h2>
+            {ev.venue_name}
+          </h2>
 
-            {/* Event Type */}
-            {ev.event_type && (
-              <p className="text-sm uppercase tracking-widest text-amber-300 font-bold mb-3">
-                {ev.event_type}
-              </p>
-            )}
+          {/* Event Type */}
+       {/* 🌈 Event Type Badges */}
+{parseEventTypes(ev.event_type).length > 0 && (
+  <div className="flex flex-wrap gap-2 mb-4">
 
-            {/* Location */}
-            <div className="flex items-center gap-2 text-yellow-200 font-medium mb-3">
-              <FaMapMarkerAlt className="text-yellow-300" />
-              <a
-                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                  `${ev.venue_name} ${ev.address}, ${ev.city}, ${ev.state}`
-                )}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
-                className="underline hover:text-yellow-300"
-              >
-                {ev.address}, {ev.city}, {ev.state}
-              </a>
-            </div>
+    {parseEventTypes(ev.event_type).map((t) => {
+      const label = EVENT_TYPE_LABEL_MAP[t] || t;
+      const style =
+        EVENT_TYPE_STYLES[t] ||
+        EVENT_TYPE_STYLES.other;
 
-            {/* Main Date */}
-            <p className="text-lg font-semibold text-yellow-200 mb-3 flex items-center gap-2">
-              <FaCalendarAlt className="text-yellow-300" />
-              {ev.date
-                ? new Date(ev.date).toLocaleDateString("en-US", {
-                    weekday: "long",
-                    month: "long",
-                    day: "numeric",
-                    year: "numeric",
-                  })
-                : ev.recurring_day
-                ? `${ev.recurring_day} (Recurring)`
-                : "Date TBD"}
-            </p>
+      return (
+        <span
+          key={t}
+          className={`
+            inline-flex items-center
+            px-3 py-1 text-xs font-bold
+            border rounded-full shadow 
+            whitespace-nowrap
+            ${style}
+          `}
+        >
+          {label}
+        </span>
+      );
+    })}
+  </div>
+)}
 
-            {/* Also Occurs */}
-            {ev.alsoOccurs?.length > 0 && (
-              <p className="text-md font-bold text-amber-300 mb-3">
-                Also Occurs On:{" "}
-                <span className="text-yellow-100">
-                  {ev.alsoOccurs.join(", ")}
-                </span>
-              </p>
-            )}
+          {/* Address */}
+          <div className="flex items-center gap-2 mb-3 text-emerald-900 font-semibold">
+            <FaMapMarkerAlt className="text-emerald-800" />
 
-            {/* Time */}
-            <div className="flex items-center gap-2 text-yellow-200 font-medium mb-3">
-              <FaClock className="text-yellow-300" />
-              {formatTime(ev.start_time)} – {formatTime(ev.end_time)}
-            </div>
-
-            {/* Notes */}
-            {ev.notes && (
-              <div className="max-h-32 overflow-y-auto pr-1 mb-4 text-yellow-100 whitespace-pre-line">
-                {renderNotes(ev.notes)}
-              </div>
-            )}
-
-            {/* Eventbrite */}
-            {detectedEventbrite && (
-              <a
-                href={detectedEventbrite}
-                onClick={(e) => e.stopPropagation()}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-yellow-300 underline hover:text-yellow-200"
-              >
-                Eventbrite Page <FaExternalLinkAlt />
-              </a>
-            )}
+            <a
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                `${ev.venue_name} ${ev.address}, ${ev.city}, ${ev.state}`
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="underline hover:text-emerald-700 transition"
+            >
+              {ev.address}, {ev.city}, {ev.state}
+            </a>
           </div>
-        );
-      })}
-    </div>
-  );
+
+          {/* Date */}
+          <div className="flex items-center gap-2 text-emerald-900 font-semibold mb-3">
+            <FaCalendarAlt className="text-emerald-800" />
+
+            {ev.date
+              ? new Date(ev.date).toLocaleDateString("en-US", {
+                  weekday: "long",
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                })
+              : ev.recurring_day
+              ? `${ev.recurring_day} (Recurring)`
+              : "Date TBD"}
+          </div>
+
+          {/* Also Occurs */}
+          {ev.alsoOccurs?.length > 0 && (
+            <p className="text-md font-bold text-emerald-800 mb-3">
+              Also Occurs On:{" "}
+              <span className="font-medium text-emerald-900">
+                {ev.alsoOccurs.join(", ")}
+              </span>
+            </p>
+          )}
+
+          {/* Time */}
+          <div className="flex items-center gap-2 text-emerald-900 font-semibold mb-3">
+            <FaClock className="text-emerald-800" />
+            {formatTime(ev.start_time)} – {formatTime(ev.end_time)}
+          </div>
+
+          {/* Notes */}
+          {ev.notes && (
+            <div
+              className="
+                max-h-32 overflow-y-auto pr-1 mb-4
+                text-emerald-900/90 leading-relaxed 
+                whitespace-pre-line
+              "
+            >
+              {renderNotes(ev.notes)}
+            </div>
+          )}
+
+          {/* Eventbrite */}
+          {detectedEventbrite && (
+            <a
+              href={detectedEventbrite}
+              onClick={(e) => e.stopPropagation()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="
+                inline-flex items-center gap-2 
+                text-emerald-700 font-bold underline 
+                hover:text-emerald-900 transition
+              "
+            >
+              Eventbrite Page <FaExternalLinkAlt />
+            </a>
+          )}
+
+        </div>
+      );
+    })}
+  </div>
+);
+
 }

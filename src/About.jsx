@@ -60,7 +60,7 @@ to-[#EA580C]
         {/* Headline */}
         <motion.p
           className="mt-2 text-center text-xl sm:text-2xl md:text-3xl font-extrabold 
-                     border-y-2 border-yellow-400 py-3 text-yellow-200"
+                      text-yellow-200"
           initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
@@ -134,6 +134,33 @@ to-[#EA580C]
           </Link>
           </div>
         </nav>
+{/* Our Team Button */}
+<div className="mt-3 mb-6 flex justify-center">
+  <Link
+    to="/ourteam"
+    className="
+      w-full md:w-5/6 
+      text-center 
+       
+      font-bold 
+      text-black 
+      rounded-none 
+      border border-black 
+      shadow-lg
+      bg-gradient-to-r 
+      from-yellow-400 
+      via-amber-500 
+      to-yellow-600 
+      hover:from-yellow-600 
+      hover:via-amber-500 
+      hover:to-yellow-300 
+      transition-all duration-300
+      text-xl
+    "
+  >
+    Meet Our Team 🧑‍🧑‍🧒‍🧒
+  </Link>
+</div>
 
         {/* Mission + Values */}
         <section className="mt-10 md:mt-14 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
