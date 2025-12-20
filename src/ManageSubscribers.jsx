@@ -1,31 +1,46 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 
-export default function ManageSubscribers({ prideId }) {
+export default function ManageSubscribers() {
   const [subs, setSubs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filterActive, setFilterActive] = useState("all");
   const [search, setSearch] = useState("");
 
-  const API = `https://singspacebackend.onrender.com/api/pride/${prideId}`;
+  const apiUrl = "https://singspacebackend.onrender.com/api/pride/2";
 
-  const fetchSubscribers = async () => {
-    setLoading(true);
-    try {
-      const url = `${API}/subscriptions${search ? `?email=${search}` : ""}`;
-      const res = await axios.get(url);
-      setSubs(res.data);
-    } catch {
-      setSubs([]);
-    }
-    setLoading(false);
-  };
+const listUrl = useMemo(() => {
+  return `${apiUrl}/subscriptions${search ? `?email=${search}` : ""}`;
+}, [apiUrl, search]);
+
+const fetchSubscribers = async () => {
+  console.log("📡 Fetching subscribers...");
+
+  console.log("➡️ API URL:", listUrl);
+
+  setLoading(true);
+  try {
+    const res = await axios.get(listUrl);
+
+    console.log("📥 RAW RESPONSE:", res);
+    console.log("📥 DATA RECEIVED:", res.data);
+
+    setSubs(res.data || []);
+  } catch (err) {
+    console.error("❌ ERROR FETCHING SUBSCRIBERS:", err);
+    setSubs([]);
+  }
+
+  setLoading(false);
+  console.log("✔️ FINISHED LOADING");
+};
+
 
   const deleteSub = async (id) => {
     if (!window.confirm("Delete this subscriber permanently?")) return;
     try {
-      await axios.delete(`${API}/subscription/${id}`);
+      await axios.delete(`${apiUrl}/subscription/${id}`);
       fetchSubscribers();
     } catch {}
   };
@@ -33,29 +48,40 @@ export default function ManageSubscribers({ prideId }) {
   const toggleStatus = async (sub) => {
     try {
       if (sub.is_active) {
-        await axios.patch(`${API}/unsubscribe-email`, { email: sub.email });
+        await axios.patch(`${apiUrl}/unsubscribe-email`, {
+          email: sub.email,
+        });
       } else {
-        await axios.post(`${API}/subscribe`, {
+        await axios.post(`${apiUrl}/subscribe`, {
           first_name: sub.first_name,
           last_name: sub.last_name,
           email: sub.email,
-          subscription_types: sub.subscription_types,
+          subscription_types: sub.subscription_types.map((t) =>
+            t.toLowerCase()
+          ),
         });
       }
       fetchSubscribers();
     } catch {}
   };
 
-  useEffect(() => {
-    fetchSubscribers();
-  }, [search]);
-
   const filtered =
     filterActive === "active"
-      ? subs.filter(s => s.is_active)
+      ? subs.filter((s) => s.is_active)
       : filterActive === "inactive"
-      ? subs.filter(s => !s.is_active)
+      ? subs.filter((s) => !s.is_active)
       : subs;
+
+// fetch on mount
+useEffect(() => {
+  fetchSubscribers();
+}, []);
+
+// fetch when search changes
+useEffect(() => {
+  fetchSubscribers();
+}, [search]);
+
 
   return (
     <div className="mt-10 max-w-6xl mx-auto text-white">

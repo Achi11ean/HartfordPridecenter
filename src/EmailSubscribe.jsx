@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function EmailSubscribe({ prideId = 1 }) {
+export default function EmailSubscribe({ prideId = 2 }) {
   const [form, setForm] = useState({
     first_name: "",
     last_name: "",
@@ -42,10 +42,16 @@ export default function EmailSubscribe({ prideId = 1 }) {
     });
   };
 
-  const submit = async (e) => {
+   const submit = async (e) => {
     e.preventDefault();
     setStatus("");
     setLoading(true);
+
+    console.log("📨 SUBMITTING TO:", 
+      `https://singspacebackend.onrender.com/api/pride/${prideId}/subscribe`
+    );
+
+    console.log("📦 FORM DATA:", form);
 
     try {
       const res = await axios.post(
@@ -53,7 +59,10 @@ export default function EmailSubscribe({ prideId = 1 }) {
         form
       );
 
+      console.log("📨 RESPONSE:", res.status, res.data);
+
       if (res.status === 201 || res.status === 200) {
+        console.log("🎉 SUCCESS — subscriber created!");
         setStatus("success");
         setForm({
           first_name: "",
@@ -63,12 +72,12 @@ export default function EmailSubscribe({ prideId = 1 }) {
         });
       }
     } catch (err) {
+      console.error("❌ ERROR SUBSCRIBING:", err);
       setStatus("error");
     }
 
     setLoading(false);
   };
-
   // 🔥 NEW: Unsubscribe logic
   const unsubscribe = async (e) => {
     e.preventDefault();
@@ -81,13 +90,15 @@ export default function EmailSubscribe({ prideId = 1 }) {
         `https://singspacebackend.onrender.com/api/pride/${prideId}/subscriptions?email=${unsubscribeEmail.toLowerCase()}`
       );
 
-      if (!lookup.data || !lookup.data.id) {
-        setUnsubscribeStatus("not_found");
-        setUnsubLoading(false);
-        return;
-      }
+const results = lookup.data;
+if (!results.length) {
+  setUnsubscribeStatus("not_found");
+  return;
+}
 
-      const sub_id = lookup.data.id;
+const sub_id = results[0].id;
+
+
 
       // 2️⃣ Patch to deactivate subscription
       await axios.patch(

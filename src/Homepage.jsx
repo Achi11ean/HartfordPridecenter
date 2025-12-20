@@ -226,7 +226,7 @@ export default function HomePage() {
             </div>
           </motion.div>
         </section>
-        <EmailSubscribe prideId={1} />
+        <EmailSubscribe prideId={2} />
 
       </main>
 <hr className="rainbow-hr" />

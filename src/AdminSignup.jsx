@@ -13,6 +13,7 @@ const ROLE_OPTIONS = [
   "Coordinator",
   "Event Lead",
   "Volunteer Manager",
+  "Software Engineer",
   "Marketing",
   "Finance",
   "Community Outreach",
@@ -20,6 +21,7 @@ const ROLE_OPTIONS = [
   "Program Director",
   "Operations Manager",
   "Volunteer Coordinator",
+  "Web Designer",
   "Community Outreach Coordinator",
   "Events Coordinator",
   "Fundraising Manager",
@@ -41,7 +43,7 @@ export default function AdminSignup() {
 const [successData, setSuccessData] = useState(null);
 
 const [form, setForm] = useState({
-  pride_id: "",
+pride_id: 2,
   name: "",
   email: "",
   username: "",
@@ -127,27 +129,7 @@ const roleOptions = ROLE_OPTIONS.map((role) => ({
   // ───────────────────────────────
   // Load Pride Centers (auto-select first)
   // ───────────────────────────────
-  useEffect(() => {
-    fetchPrides();
-  }, []);
 
-  const fetchPrides = async () => {
-    try {
-      const res = await axios.get(`${API}/api/pride/active`);
-      const list = res.data || [];
-      setPrides(list);
-
-      if (list.length > 0) {
-        // ✅ Auto-lock to first Pride Center
-        setForm((prev) => ({
-          ...prev,
-          pride_id: list[0].id,
-        }));
-      }
-    } catch (err) {
-      toast.error("Failed to load Pride Centers");
-    }
-  };
 
   // ───────────────────────────────
   // Form Handlers
@@ -155,8 +137,8 @@ const roleOptions = ROLE_OPTIONS.map((role) => ({
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-  const prideName =
-    prides.find((p) => p.id === form.pride_id)?.name || "Loading…";
+ const prideName = "Hartford Pride Center";
+
 
 const handleSubmit = async (e) => {
   e.preventDefault();
@@ -164,7 +146,7 @@ const handleSubmit = async (e) => {
 
   try {
    const res = await axios.post(
-  `${API}/api/pride/${form.pride_id}/admins`,
+`${API}/api/pride/2/admins`,
   {
     name: form.name,
     email: form.email,

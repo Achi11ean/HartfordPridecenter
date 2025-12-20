@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 const API = "https://singspacebackend.onrender.com";
 
 export default function Services({
-  prideId = 1,
+  prideId = 2,
   contactPath = "/contact",
 }) {
   const [services, setServices] = useState([]);
