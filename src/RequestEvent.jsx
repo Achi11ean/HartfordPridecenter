@@ -4,6 +4,12 @@ import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
+import {
+  EVENT_TYPES,
+  normalizeEventType,
+  parseEventTypes,
+} from "./eventTypes";
+
 
 const RequestEvent = ({ initialVenue = {} }) => {
 
@@ -210,37 +216,8 @@ useEffect(() => {
 }, []);
 
   // ---------- Misc helpers ----------
-  const eventTypeOptions = [
-    { value: "karaoke", label: "🎤 Karaoke" },
-    { value: "open_mic", label: "🎶 Open Mic" },
-    { value: "drag", label: "👠 Drag Show" },
-    { value: "live_music", label: "🎸 Live Music" },
-    { value: "trivia", label: "🧠 Trivia" },
-    { value: "theatre", label: "🎭 Theatre Production" },
-    { value: "audition", label: "🎬 Auditions" },
-      { value: "paint_sip", label: "🎨🍷 Paint & Sip" },
+const eventTypeOptions = EVENT_TYPES;
 
-    { value: "lgbtqia_plus", label: "🌈 LGBTQIA+" },
-    { value: "poetry_slam", label: "📝 Poetry Slam" },
-    { value: "comedy", label: "🤡 Comedy Shows" },
-    { value: "fireworks", label: "🎆 Fireworks" },
-    { value: "halloween", label: "🎃 Halloween" },
-    { value: "dancing", label: "💃 Dancing" },
-    { value: "art", label: "🎨 Art" },
-    { value: "fair", label: "🎪 Fair" },
-    { value: "concert", label: "🎟️ Concert" },
-    { value: "new_years_eve", label: "🎊 New Year’s Eve" },
-    { value: "new_years_day", label: "🥂 New Year’s Day" },
-    { value: "st_patricks_day", label: "☘️ St. Patrick’s Day" },
-    { value: "thanksgiving", label: "🦃 Thanksgiving" },
-    { value: "christmas", label: "🎄 Christmas" },
-    { value: "other", label: "🌀 Other" },
-  ];
-
-  const options = filteredBands.map((band) => ({
-    value: band.id,
-    label: band.artist_name,
-  }));
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -800,12 +777,17 @@ setMonthlyWeekdayRules([]);
                 value={eventTypeOptions.filter((opt) =>
                   formData.event_type.includes(opt.value)
                 )}
-                onChange={(selectedOptions) => {
-                  setFormData((prev) => ({
-                    ...prev,
-                    event_type: selectedOptions.map((opt) => opt.value),
-                  }));
-                }}
+              onChange={(selectedOptions) => {
+  const values = selectedOptions.map((opt) =>
+    normalizeEventType(opt.value)
+  );
+
+  setFormData((prev) => ({
+    ...prev,
+    event_type: values,
+  }));
+}}
+
                 className="text-md font-bold text-black z-20 text-center"
                 classNamePrefix="react-select"
                 placeholder="Select one or more event types..."
