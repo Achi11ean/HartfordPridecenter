@@ -32,7 +32,7 @@ export default function HomePage() {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              src="https://t4.ftcdn.net/jpg/06/96/89/13/360_F_696891328_utj80ZwXsdy8SloC9IBaFGDIcGNBrEze.jpg"
+              src="/PrideLogo3.jpg"
               alt="Hartford Pride Center Logo"
               className="w-full max-w-md sm:max-w-lg shadow-2xl border border-yellow-400/40"
             />
