@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { useAuth } from "./AuthContext";
+import { useLocation } from "react-router-dom";
 
 const NavBar = () => {
   const { isAuthenticated, isAdmin, isStaff, logout } = useAuth();
@@ -13,6 +14,28 @@ const NavBar = () => {
 
   const toggleMenu = () => setMenuOpen((prev) => !prev);
   const toggleAdmin = () => setAdminOpen((prev) => !prev);
+const location = useLocation();
+
+const gradientMap = {
+  "/": "from-red-900 via-red-800 to-black",
+  "/about": "from-orange-900 via-orange-800 to-black",
+  "/services": "from-yellow-900 via-yellow-700 to-black",
+  "/events": "from-green-900 via-green-800 to-black",
+  "/ourteam": "from-blue-900 via-blue-800 to-black",
+  "/sponsors": "from-indigo-900 via-indigo-800 to-black",
+  "/contact": "from-violet-900 via-violet-800 to-black",
+};
+
+// rainbow fallback
+const adminGradient =
+  "from-red-800 via-orange-700 via-yellow-600 via-green-600 via-blue-700 via-purple-800 to-red-800";
+
+// determine base gradient
+let navbarGradient = gradientMap[location.pathname] || gradientMap["/"];
+
+if (location.pathname.includes("admin") || location.pathname.includes("staff")) {
+  navbarGradient = adminGradient;
+}
 
 const navItems = [
   { name: "Home", path: "/" },
@@ -26,11 +49,14 @@ const navItems = [
 
 
   return (
-    <nav className="
-      fixed top-0 left-0 w-full z-50 
-      bg-gradient-to-br from-[#18453B] via-[#0f2d25] to-black
-      border-b border-white/40 shadow-lg
-    ">
+<nav
+  className={`
+    fixed top-0 left-0 w-full z-50
+    bg-gradient-to-br ${navbarGradient}
+    border-b border-white/40 shadow-lg
+  `}
+>
+
       <div className="max-w-7xl mx-auto px-4 mt-1 flex justify-between items-center">
 
         {/* LOGO */}

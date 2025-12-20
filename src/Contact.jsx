@@ -98,54 +98,59 @@ export default function ContactPageTemplate() {
   };
 
   return (
-    <div
-      className="
-        min-h-screen
-        bg-[conic-gradient(at_top_left,_red,_orange,_yellow,_green,_blue,_indigo,_violet,_red)]
-        text-white bg-fixed relative
-      "
-    >
+<div
+  className="
+    min-h-screen
+    bg-[conic-gradient(at_top_left,_#2e1065,_#4c1d95,_#6d28d9,_#4c1d95,_#2e1065)]
+    text-white bg-fixed relative
+  "
+>
+
       {/* DARK OVERLAY */}
-      <div className="absolute inset-0 bg-black/70" />
+      <div className="absolute inset-0 bg-black/40" />
 
       {/* --- PAGE CONTENT WRAPPER --- */}
       <div className="relative z-10">
 
         {/* Banner */}
-        <div
-          className="
-            w-full h-80 md:h-96
-            bg-center bg-cover
-            relative shadow-2xl
-            border-b-4 border-slate-700
-          "
-          style={{
-            backgroundImage:
-              "url('https://images.pexels.com/photos/207142/pexels-photo-207142.jpeg?cs=srgb&dl=pexels-pixabay-207142.jpg&fm=jpg')",
-            backgroundPosition: "center 45%",
-          }}
-        >
-          <div
-            className="
-              absolute inset-0
-              bg-gradient-to-r
-              from-red-600/10 via-yellow-300/10 to-blue-600/10
-            "
-          />
+{/* Banner */}
+<div
+  className="
+    w-full h-80 md:h-96
+    bg-center bg-contain bg-no-repeat
+    relative shadow-2xl
+    border-b-4 border-slate-700
+    mt-24 sm:mt-28  /* 👈 ADD THIS LINE */
+  "
+  style={{
+    backgroundImage: "url('/PrideLogo3.jpg')",
+  }}
+>
+  <div
+    className="
+      absolute inset-0
+      bg-gradient-to-r
+      from-red-600/10 via-yellow-300/10 to-blue-600/10
+    "
+  />
 
-          <div
-            className="
-              absolute sm:bottom-[-50px] bottom-[-40px]
-              left-1/2 -translate-x-1/2
-              px-6 py-4 rounded-xl shadow-xl
-              bg-black/60 border border-slate-600 backdrop-blur-md
-            "
-          >
-            <h2 className="text-4xl lg:text-5xl font-extrabold text-white">
-              Contact Us
-            </h2>
-          </div>
-        </div>
+
+</div>
+<h2
+  className="
+    pt-4 text-7xl lg:text-8xl
+    font-extrabold font-[Aspire] tracking-tight text-center
+    relative
+    bg-gradient-to-r from-violet-700 via-violet-400 to-violet-900
+text-white
+    drop-shadow-[0_4px_10px_rgba(0,0,0,0.9)]
+    border-b-2 border-white/70
+    shadow-[inset_0_2px_4px_rgba(255,255,255,0.35)]
+  "
+>
+Contact Us  
+
+</h2>
 
         {/* Content Section */}
         <section className="max-w-6xl mx-auto p-8 pt-24 space-y-6">
@@ -167,7 +172,7 @@ export default function ContactPageTemplate() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             className="
-              bg-slate-900/70
+              bg-black/70
               border border-slate-700
               rounded-xl p-6 shadow-xl backdrop-blur-sm
             "
@@ -186,9 +191,9 @@ export default function ContactPageTemplate() {
                   onChange={handleChange}
                   required
                   className="
-                    w-full p-3 rounded-lg
-                    bg-slate-800 border border-slate-600
-                    text-white placeholder-slate-400
+                    w-full p-3 rounded-none
+                    bg-white border border-slate-600
+                    text-black placeholder-slate-400
                     focus:ring-2 focus:ring-indigo-400
                   "
                 />
@@ -206,8 +211,8 @@ export default function ContactPageTemplate() {
                 onChange={handlePhoneChange}
                 className="
                   w-full p-3 rounded-lg
-                  bg-slate-800 border border-slate-600
-                  text-white placeholder-slate-400
+                  bg-white border border-slate-600
+                  text-black placeholder-slate-400
                   focus:ring-2 focus:ring-indigo-400
                 "
               />
@@ -226,8 +231,8 @@ export default function ContactPageTemplate() {
                 required
                 className="
                   w-full p-3 rounded-lg
-                  bg-slate-800 border border-slate-600
-                  text-white placeholder-slate-400
+                  bg-white  border border-slate-600
+                  text-black placeholder-slate-400
                   focus:ring-2 focus:ring-indigo-400
                 "
               />
