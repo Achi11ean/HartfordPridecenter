@@ -22,7 +22,7 @@ const interests = [
 const API_BASE = "https://singspacebackend.onrender.com";
 
 // 🔑 TEMP: set pride ID here OR pass as prop later
-const PRIDE_ID = 1;
+const PRIDE_ID = 2;
 
 export default function Volunteer() {
   const formatPhone = (value) => {

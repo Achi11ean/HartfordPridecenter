@@ -40,7 +40,7 @@ export default function Privacy() {
             <p className="text-yellow-100 leading-relaxed">
               Welcome to the{" "}
               <span className="text-yellow-300 font-semibold">
-                South Haven LGBTQIA+ Advocacy
+                Hartford Pride Center
               </span>.
               Your privacy is important to us. This policy explains how we collect,
               use, and protect your personal information when you visit our website

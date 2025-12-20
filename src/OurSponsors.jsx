@@ -6,7 +6,7 @@ import axios from "axios";
 import Sponsor from "./Sponsor.jsx";
 import SponsorInvitationPage from "./SponsorInvitationPage.jsx";
 const API = "https://singspacebackend.onrender.com";
-const PRIDE_ID = 1; // later: route param
+const PRIDE_ID = 2; // later: route param
 const PASTEL_GRADIENTS = [
   "from-pink-100 via-rose-100 to-amber-100",
   "from-purple-100 via-indigo-100 to-blue-100",

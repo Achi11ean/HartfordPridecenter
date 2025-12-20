@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 const API = "https://singspacebackend.onrender.com";
-const PRIDE_ID = 1; // later: route param
+const PRIDE_ID = 2; // later: route param
 
 export default function OurTeamYellowTemplate() {
   const [teamMembers, setTeamMembers] = useState([]);

@@ -33,7 +33,7 @@ export default function HomePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
               src="https://t4.ftcdn.net/jpg/06/96/89/13/360_F_696891328_utj80ZwXsdy8SloC9IBaFGDIcGNBrEze.jpg"
-              alt="South Haven LGBTQIA+ Advocacy Logo"
+              alt="Hartford Pride Center Logo"
               className="w-full max-w-md sm:max-w-lg shadow-2xl border border-yellow-400/40"
             />
 
@@ -44,7 +44,7 @@ export default function HomePage() {
               className="max-w-3xl"
             >
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight">
-                South Haven LGBTQIA+ Advocacy
+                Hartford Pride Center
               </h1>
               <p className="mt-4 text-lg sm:text-xl text-yellow-100/90 font-semibold">
                 Supporting & promoting LGBTQIA+ safe spaces, resources, and community connection
@@ -221,7 +221,7 @@ export default function HomePage() {
                   bg-gradient-to-r from-[#0F2D25] via-[#18453B] to-[#0F2D25]
                   hover:brightness-110 transition-all duration-300"
               >
-                South Haven Pride Event 2026
+                Hartford Pride Event 2026
               </Link>
             </div>
           </motion.div>
@@ -238,7 +238,7 @@ export default function HomePage() {
             {/* Org */}
             <div>
               <h3 className="text-xl font-extrabold text-yellow-300">
-                South Haven LGBTQIA+ Advocacy 🌈
+                Hartford Pride Center 🌈
               </h3>
               <p className="mt-2 text-yellow-100/80 font-semibold">
                 Empowering the LGBTQ+ community through support, creativity, and compassion.

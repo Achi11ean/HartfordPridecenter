@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import axios from "axios";
 
     const API_BASE = "https://singspacebackend.onrender.com";
-const PRIDE_ID = 1;
+const PRIDE_ID = 2;
 
 // 🔐 Cloudinary (same pattern as before)
 const CLOUD_NAME = "dcw0wqlse";

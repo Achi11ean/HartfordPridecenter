@@ -199,7 +199,7 @@ const togglePridePrefix = () => {
 useEffect(() => {
   async function fetchPride() {
     try {
-      const res = await axios.get(`${API}/api/pride/1`);
+      const res = await axios.get(`${API}/api/pride/2`);
       setPrideName(res.data?.name || "");
     } catch (err) {
       console.error("Failed to load Pride Center");

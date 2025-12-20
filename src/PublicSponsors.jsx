@@ -5,7 +5,7 @@ import Sponsor from "./Sponsor";
 import SponsorInvitationPage from "./SponsorInvitationPage";
 
 const API = "https://singspacebackend.onrender.com";
-const PRIDE_ID = 1; // TODO: make dynamic later
+const PRIDE_ID = 2; // TODO: make dynamic later
 
 export default function PublicSponsors() {
   const [tab, setTab] = useState("sponsors"); // sponsors | tiers | join

@@ -12,7 +12,7 @@ import {
   FaCalendarAlt,
 } from "react-icons/fa";
 const API = "https://singspacebackend.onrender.com";
-const PRIDE_ID = 1; // Hartford Pride Center (locked for now)
+const PRIDE_ID = 2; // Hartford Pride Center (locked for now)
 
 export default function CapitalEvents() {
   const [events, setEvents] = useState([]);

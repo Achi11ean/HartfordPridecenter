@@ -19,7 +19,7 @@ const [vendors, setVendors] = useState([]);
 
 useEffect(() => {
   axios
-    .get("https://singspacebackend.onrender.com/karaokeevents/pride/1/annual")
+    .get("https://singspacebackend.onrender.com/karaokeevents/pride/2/annual")
     .then((res) => setPrideEvent(res.data))
     .catch((err) =>
       console.error("Error loading Annual Pride event:", err)
@@ -28,7 +28,7 @@ useEffect(() => {
 
 useEffect(() => {
   axios
-    .get("https://singspacebackend.onrender.com/api/pride/1/vendors")
+    .get("https://singspacebackend.onrender.com/api/pride/2/vendors")
     .then((res) => setVendors(res.data || []))
     .catch((err) =>
       console.error("Error loading Pride vendors:", err)
@@ -91,7 +91,7 @@ useEffect(() => {
                 • {prideEvent.city}, {prideEvent.state}
               </>
             ) : (
-              "🌟 June 2025 • Downtown Hartford"
+              "🌟 June 2026 •  Pride Event"
             )}
           </div>
         </div>
@@ -296,7 +296,7 @@ useEffect(() => {
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 divide-y lg:divide-y-0 lg:divide-x lg:divide-yellow-700">
           <div className="text-center lg:text-left">
             <h3 className="text-2xl font-bold text-yellow-400 border-b-2 border-yellow-400 inline-block mb-2">
-              South Haven LGBTQIA+ Advocacy 🌟
+              Hartford Pride Center 🌟
             </h3>
             <p className="text-sm font-bold">
               Celebrating identity, community, and love
