@@ -296,6 +296,15 @@ const handleSubmit = async (e) => {
       className="mt-3 w-24 h-24 object-cover rounded-xl border border-yellow-400"
     />
   )}
+  {form.image_url && (
+  <input
+    type="text"
+    readOnly
+    value={form.image_url}
+    className="mt-2 w-full p-2 bg-black/20 text-yellow-200 border border-yellow-500/40 rounded"
+  />
+)}
+
 </div>
 
 <div className="mb-4">
