@@ -110,7 +110,7 @@ to-[#EA580C]
               hover:from-yellow-600 hover:via-amber-500 hover:to-yellow-400
               transition-all duration-300"
             >
-            Sponsor
+            Sponsors
           </Link>
                                 <Link
             to="/resources"

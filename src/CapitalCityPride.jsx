@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import SponsorSlider from "./SponsorSlider";
 
 import {
   FaInstagram,
@@ -16,6 +18,7 @@ export default function HartfordCityPride() {
   const [showSponsorModal, setShowSponsorModal] = React.useState(false);
   const [prideEvent, setPrideEvent] = useState(null);
 const [vendors, setVendors] = useState([]);
+const navigate = useNavigate();
 
 useEffect(() => {
   axios
@@ -95,7 +98,8 @@ useEffect(() => {
             )}
           </div>
         </div>
-      </section>
+      </section>               <hr className="rainbow-hr" />
+
 
       {/* 🟡 EVENT OVERVIEW */}
       <section className="max-w-4xl mx-auto text-center px-6 py-10">
@@ -154,10 +158,15 @@ useEffect(() => {
         </div>
       </section>
 {/* 🛍️ PRIDE VENDORS */}
-<section className="max-w-6xl mx-auto px-6 py-12">
-  <h2 className="text-3xl font-extrabold text-center text-yellow-300 mb-8">
-    🌈 Pride Vendors & Community Partners
+<section className="max-w-full bg-black/60 mx-auto px-6 py-12">
+  <h2 className="text-3xl font-extrabold text-center  text-yellow-300 mb-8">
+    🌈 Pride Sponsors, Vendors & Community Partners!
   </h2>
+
+  <h3 className="text-6xl font-[Aspire]"> Sponsors</h3>
+  <SponsorSlider />
+                 <hr className=" my-6" />
+  <h3 className="text-6xl font-[Aspire]"> Vendors</h3>
 
   {vendors.length === 0 ? (
     <p className="text-center text-yellow-200 italic">
@@ -195,7 +204,6 @@ useEffect(() => {
     </div>
   )}
 </section>
-
       {/* 🛍️ VENDOR / SPONSOR / VOLUNTEER */}
       <section className="max-w-5xl mx-auto px-6 py-10 space-y-16">
 
@@ -230,12 +238,20 @@ useEffect(() => {
             features, and VIP options.
           </p>
 
-          <button
-            onClick={() => setShowSponsorModal(true)}
-            className="inline-block px-8 py-3 rounded-none bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 font-bold text-black border-2 border-white shadow-lg hover:scale-105 transition"
-          >
-            View Sponsorship Options
-          </button>
+<button
+  onClick={() => navigate("/sponsorinvitation")}
+  className="
+    inline-block px-8 py-3 rounded-none
+    bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600
+    font-bold text-black
+    border-2 border-white
+    shadow-lg
+    hover:scale-105 transition
+  "
+>
+  View Sponsorship Options
+</button>
+
         </div>
 
         {/* 🟡 Volunteer */}
@@ -276,20 +292,80 @@ useEffect(() => {
       )}
 
       {/* 📍 MAP */}
-      <section className="max-w-4xl mx-auto px-6 pb-16">
-        <h2 className="text-3xl font-bold text-center text-yellow-300 mb-4">
-          Festival Location
-        </h2>
+<section className="max-w-4xl mx-auto px-6 pb-16">
+  <h2 className="text-3xl font-bold text-center text-white mb-4">
+    Festival Location
+  </h2>
+               <hr className="rainbow-hr my-4" />
 
-        <div className="relative w-full pt-[56.25%] rounded-2xl overflow-hidden shadow-2xl border-2 border-yellow-500/40">
-          <iframe
-            className="absolute top-0 left-0 w-full h-full"
-            src="https://www.google.com/maps/embed?pb=!1m18..."
-            allowFullScreen=""
-            loading="lazy"
-          ></iframe>
-        </div>
-      </section>
+  <div className="relative w-full pt-[56.25%] rounded-2xl overflow-hidden shadow-2xl border-4 border-pink-400">
+    <iframe
+      className="absolute top-0 left-0 w-full h-full"
+      src="https://www.google.com/maps?q=Pratt+Street,+Hartford,+CT&z=17&output=embed"
+      allowFullScreen
+      loading="lazy"
+      referrerPolicy="no-referrer-when-downgrade"
+    />
+  </div>
+</section>
+<section className="max-w-4xl mx-auto px-6 pb-16">
+  <h2 className="text-3xl font-bold text-center text-white mb-4">
+    Pride Parade Route
+  </h2>
+
+  <hr className="rainbow-hr my-4" />
+
+  <div className="bg-black/70 border-4 border-purple-400 rounded-2xl shadow-2xl p-6 text-white">
+    <p className="text-center text-lg font-semibold text-pink-300 mb-4">
+      🌈 Celebrate Loud. March Proud. Love Out Loud.
+    </p>
+
+    <p className="text-sm leading-relaxed mb-4 text-white/90">
+      The Hartford Pride Parade traditionally travels through the heart of
+      downtown, showcasing the city’s vibrant energy and historic streets.
+      Below is a sample route based on previous years and is provided for
+      general guidance.
+    </p>
+
+    <ul className="space-y-3 text-sm">
+      <li>
+        <span className="font-bold text-yellow-300">📍 Parade Line-Up:</span>{" "}
+        Downtown Hartford staging area near{" "}
+        <span className="italic">Trumbull Street</span>
+      </li>
+
+      <li>
+        <span className="font-bold text-yellow-300">🚦 Step-Off:</span>{" "}
+        Parade begins heading toward Main Street
+      </li>
+
+      <li>
+        <span className="font-bold text-yellow-300">🏙️ Route:</span>{" "}
+        March proceeds down <strong>Main Street</strong>, passing City Hall
+        and downtown landmarks
+      </li>
+
+      <li>
+        <span className="font-bold text-yellow-300">🎉 Turn & Finish:</span>{" "}
+        Parade turns toward <strong>Pratt Street</strong>, leading directly
+        into the festival area
+      </li>
+
+      <li>
+        <span className="font-bold text-yellow-300">🏁 Parade Ends:</span>{" "}
+        Pratt Street Festival Grounds
+      </li>
+    </ul>
+
+    <div className="mt-6 bg-gradient-to-r from-pink-500/20 via-purple-500/20 to-indigo-500/20 border border-pink-400 rounded-lg p-4">
+      <p className="text-xs text-center text-white/80 italic">
+        ⚠️ Route details are subject to change based on city coordination,
+        safety planning, and permits. Please check back closer to the event
+        date for official confirmation.
+      </p>
+    </div>
+  </div>
+</section>
 
       {/* ⭐ FOOTER — YELLOW THEME */}
       <section className="bg-gradient-to-br from-yellow-900 via-black to-amber-900 text-yellow-200 py-6 border-t-4 border-yellow-500">
@@ -361,7 +437,7 @@ useEffect(() => {
         </div>
 
         <div className="mt-6 text-center text-xs text-yellow-500">
-          © {new Date().getFullYear()} Hartford Pride Center — All Rights Reserved.
+          © {new Date().getFullYear()} Hartford Pride Center - Non Profit Organization.
         </div>
       </section>
     </div>

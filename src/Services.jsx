@@ -280,7 +280,88 @@ return (
       >
         Every profile. Every voice. Every story adds strength.
       </p>
+    </div>{selectedService && (
+  <div
+    className="
+      fixed inset-0 bg-black/70 backdrop-blur-sm z-50
+      flex items-center justify-center p-6
+    "
+    onClick={() => setSelectedService(null)}
+  >
+    <div
+      className="
+        max-w-3xl w-full bg-white rounded-3xl
+        shadow-2xl overflow-hidden relative
+      "
+      onClick={(e) => e.stopPropagation()}
+    >
+      {/* CLOSE BUTTON */}
+      <button
+        className="
+          absolute top-3 right-3 bg-black/80 text-white
+          rounded-full w-10 h-10 text-xl font-bold shadow-lg
+          hover:bg-black/60 transition
+        "
+        onClick={() => setSelectedService(null)}
+      >
+        ✕
+      </button>
+
+      {/* IMAGE */}
+      {selectedService.image && (
+        <img
+          src={selectedService.image}
+          alt={selectedService.title}
+          className="w-full h-64 object-cover"
+        />
+      )}
+
+      <div className="p-8 text-[#503B00]">
+        <h2 className="text-4xl font-black bg-gradient-to-r from-yellow-800 to-yellow-600 bg-clip-text text-transparent">
+          {selectedService.title}
+        </h2>
+
+        <p className="mt-6 leading-relaxed text-lg whitespace-pre-line">
+          {selectedService.details}
+        </p>
+
+        {/* CONTACT INFO */}
+        <div className="mt-8 space-y-2 text-sm">
+          <p><strong>Contact Name:</strong> {selectedService.contact_name}</p>
+          <p><strong>Email:</strong> {selectedService.contact_email}</p>
+        </div>
+
+        {/* BUTTON LINKS */}
+        <div className="flex-col gap-4 mt-10">
+          {selectedService.service_url && (
+            <a
+              href={selectedService.service_url}
+              target="_blank"
+              rel="noreferrer"
+              className="
+                px-6 py-3 rounded-xl font-bold text-white text-center
+                bg-yellow-600 hover:bg-yellow-500 transition
+              "
+            >
+              Visit Service Page
+            </a>
+          )}
+
+          <Link
+            to={contactPath}
+            className="
+              px-6 py-3 rounded-xl font-bold text-black text-center
+              bg-yellow-300 hover:bg-yellow-200 transition
+            "
+          >
+            Contact Us
+          </Link>
+        </div>
+      </div>
     </div>
+  </div>
+)}
+
   </div>
 );
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import CommitteesPublic from "./CommitteesPublic";
 
 const API = "https://singspacebackend.onrender.com";
 const PRIDE_ID = 2; // later: route param
@@ -10,6 +11,8 @@ export default function OurTeamYellowTemplate() {
   const [teamMembers, setTeamMembers] = useState([]);
   const [loadingTeam, setLoadingTeam] = useState(true);
   const [selectedMember, setSelectedMember] = useState(null);
+  const [view, setView] = useState("team"); // "team" | "committees"
+
 const linkifyText = (text) => {
   if (!text) return null;
 
@@ -124,8 +127,8 @@ const admins = (adminsRes.data || []).map(a => ({
       min-h-screen 
      bg-gradient-to-br
 from-black
-via-[#0A2540]
-to-[#1D4ED8]
+via-[#1D4ED8]
+to-black
 
       text-white
     ">
@@ -148,7 +151,7 @@ to-[#1D4ED8]
     pt-4 text-7xl lg:text-8xl
     font-extrabold font-[Aspire] tracking-tight text-center
     relative
-    bg-gradient-to-r from-blue-700 via-blue-400 to-blue-900
+    bg-gradient-to-br from-blue-700 via-blue-400 to-blue-900
 text-white
     drop-shadow-[0_4px_10px_rgba(0,0,0,0.9)]
     border-b-2 border-white/70
@@ -161,11 +164,44 @@ Our Team
 <hr className="rainbow-hr" />
 
       {/* TEAM */}
-      <section className="max-w-6xl mx-auto px-4 pt-10 pb-20">
+      <section className="max-w-6xl mx-auto px-4 pt-4 pb-20">
 
-        <p className="text-yellow-400 border-2 text-center bg-black/60 max-w-6xl mx-auto mb-10 text-2xl font-bold font-[sans] md:text-5xl leading-relaxed">
-          Meet the people who support, organize, and build this Pride community.
+        <p className="text-yellow-400  text-center max-w-6xl  mx-auto mb-4 text-lg font-bold font-[sans] md:text-2xl leading-relaxed">
+          Meet the people who support, organize, and build the Hartford Pride Center.
         </p>
+{/* VIEW TOGGLE */}
+<div className="flex justify-center gap-4 mt-6 mb-10">
+  <button
+    onClick={() => setView("team")}
+    className={`
+      px-6 py-2 rounded-full font-bold transition
+      ${
+        view === "team"
+          ? "bg-blue-500 text-white shadow-lg"
+          : "bg-black/40 text-blue-200 border border-blue-400/40 hover:bg-blue-900/40"
+      }
+    `}
+  >
+    👥 Team
+  </button>
+
+  <button
+    onClick={() => setView("committees")}
+    className={`
+      px-6 py-2 rounded-full font-bold transition
+      ${
+        view === "committees"
+          ? "bg-blue-500 text-white shadow-lg"
+          : "bg-black/40 text-blue-200 border border-blue-400/40 hover:bg-blue-900/40"
+      }
+    `}
+  >
+    🧩 Committees
+  </button>
+</div>
+{/* TEAM VIEW */}
+{view === "team" && (
+  <section className="max-w-6xl mx-auto px-4 pt-4 pb-20">
 
         {loadingTeam ? (
           <p className="text-center text-yellow-300">Loading team…</p>
@@ -215,6 +251,15 @@ Our Team
             Talk to our team
           </Link>
         </div>
+          </section>
+)}
+{/* COMMITTEES VIEW */}
+{view === "committees" && (
+  <section className="">
+    <CommitteesPublic />
+  </section>
+)}
+
       </section>
 
       {/* MODAL */}

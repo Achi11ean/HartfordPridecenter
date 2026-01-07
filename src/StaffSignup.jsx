@@ -9,6 +9,8 @@ export default function StaffSignup() {
   const [prides, setPrides] = useState([]);
   const [loading, setLoading] = useState(false);
   const [successData, setSuccessData] = useState(null);
+  const FIXED_PRIDE_ID = 2;
+
 const STAFF_ROLES = [
   "Executive Director",
   "Program Director",
@@ -28,6 +30,7 @@ const STAFF_ROLES = [
   "Finance Manager",
   "Office Administrator",
   "Board Member",
+  "Software Engineer (Web Designer)",
   "Intern",
   "Volunteer",
   "Support Staff",
@@ -129,7 +132,7 @@ const uploadToCloudinary = async (file) => {
 
 
 const [form, setForm] = useState({
-  pride_id: "",
+  pride_id: FIXED_PRIDE_ID,
   first_name: "",
   last_name: "",
   role: "",
@@ -145,25 +148,33 @@ const [form, setForm] = useState({
   // Load Pride Centers (auto-select first)
   // ───────────────────────────────
   useEffect(() => {
-    fetchPrides();
+    fetchPride();
   }, []);
 
-  const fetchPrides = async () => {
-    try {
-      const res = await axios.get(`${API}/api/pride/active`);
-      const list = res.data || [];
-      setPrides(list);
 
-      if (list.length > 0) {
-        setForm((prev) => ({
-          ...prev,
-          pride_id: list[0].id,
-        }));
-      }
-    } catch {
-      toast.error("Failed to load Pride Centers");
+const fetchPride = async () => {
+  try {
+    const res = await axios.get(`${API}/api/pride/2`);
+
+    const pride = res.data;
+
+    if (!pride || pride.id !== 2) {
+      toast.error("Pride Center ID 2 not found");
+      return;
     }
-  };
+
+    setPrides([pride]); // keep existing UI logic happy
+
+    setForm(prev => ({
+      ...prev,
+      pride_id: 2,
+    }));
+  } catch (err) {
+    console.error(err);
+    toast.error("Failed to load Pride Center");
+  }
+};
+
 
   const prideName =
     prides.find((p) => p.id === form.pride_id)?.name || "Loading…";
@@ -198,12 +209,15 @@ const [form, setForm] = useState({
 
       const staff = res.data.staff;
 
-      setSuccessData({
-        prideName,
-        name: `${staff.first_name} ${staff.last_name}`,
-        username: staff.username,
-        role: staff.role,
-      });
+setSuccessData({
+  prideName,
+  name: `${staff.first_name} ${staff.last_name}`,
+  username: staff.username,
+  role: staff.role,
+  email: staff.email,
+  phone: staff.phone,
+});
+
 
       toast.success("Pride staff account created 🎉");
 
@@ -529,17 +543,18 @@ const [form, setForm] = useState({
               <p className="text-yellow-200">
                 <strong>Username:</strong> {successData.username}
               </p>
-              {staff.email && (
+{successData.email && (
   <p className="text-yellow-200">
-    <strong>Email:</strong> {staff.email}
+    <strong>Email:</strong> {successData.email}
   </p>
 )}
 
-{staff.phone && (
+{successData.phone && (
   <p className="text-yellow-200">
-    <strong>Phone:</strong> {staff.phone}
+    <strong>Phone:</strong> {successData.phone}
   </p>
 )}
+
 
               <p className="text-yellow-200">
                 <strong>Role:</strong> {successData.role}

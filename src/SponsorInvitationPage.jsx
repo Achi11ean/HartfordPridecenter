@@ -4,7 +4,7 @@ import CreateProspect from "./CreateProspect";
 
 const SPONSOR_TIERS = [
   {
-    name: "Platinum Sponsor",
+    name: "Platinum ",
     price: "$1,500+",
     perks: [
       "Business card-size ad in brochure",
@@ -17,10 +17,10 @@ const SPONSOR_TIERS = [
       "Press release inclusion",
       "Opportunity to speak during the event",
     ],
-    gradient: "from-yellow-300 via-amber-300 to-yellow-500",
+    gradient: "from-gray-300 via-slate-400 to-gray-300",
   },
   {
-    name: "Gold Sponsor",
+    name: "Gold ",
     price: "$1,000",
     perks: [
       "Logo ad in brochure (½ card size)",
@@ -30,10 +30,10 @@ const SPONSOR_TIERS = [
       "1 booth space",
       "1 reserved parking space",
     ],
-    gradient: "from-amber-300 via-yellow-400 to-amber-500",
+    gradient: "from-orange-400 via-yellow-400 to-amber-600",
   },
   {
-    name: "Silver Sponsor",
+    name: "Silver ",
     price: "$500",
     perks: [
       "Business name listed in brochure",
@@ -42,14 +42,14 @@ const SPONSOR_TIERS = [
     gradient: "from-slate-200 via-slate-300 to-slate-400",
   },
   {
-    name: "Custom Sponsorship",
+    name: "Custom  ",
     price: "Flexible",
     perks: [
       "Custom-built sponsorship package",
       "Align support with your brand values",
       "Ideal for unique or in-kind partnerships",
     ],
-    gradient: "from-purple-300 via-indigo-300 to-purple-500",
+    gradient: " from-amber-700 via-amber-600 to-amber-800",
   },
 ];
 
@@ -58,114 +58,161 @@ export default function SponsorInvitationPage() {
     const [showConsultation, setShowConsultation] = useState(false);
 
   return (
-    <div className="bg-gradient-to-br from-black via-slate-900 to-slate-800 text-white">
+  <div className="min-h-screen bg-gradient-to-br from-black via-slate-900 to-slate-800 text-white">
 
-      {/* 🌟 Intro */}
-      <section className="max-w-4xl mx-auto text-center py-10 px-4 space-y-6">
-        <h2 className="text-3xl sm:text-4xl font-extrabold text-yellow-300">
-          Sponsorship Opportunities
-        </h2>
+    {/* 🌈 HERO BANNER */}
+    <section className="relative mt-24 w-full h-[340px] sm:h-[420px] overflow-hidden">
+      <img
+        src="https://www.plannedgiving.com/wp-content/uploads/2023/09/sponsorship.jpg"
+        alt="Pride sponsorship"
+        className="absolute inset-0 w-full h-full object-cover"
+      />
 
-        <p className="text-lg text-slate-200 leading-relaxed">
-          Partner with us to support inclusive, community-driven Pride events.
-          Each sponsorship tier offers meaningful visibility and direct impact.
-        </p>
-      </section>
-<footer className="text-center text-slate-400 pb-12 space-y-4">
-  <p className="text-sm">
-    Interested in sponsoring? Click below to start the conversation.
-  </p>
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-slate-900" />
 
-  <button
-    onClick={() => setShowConsultation(true)}
-    className="
-      px-6 py-3 rounded-2xl
-      bg-yellow-400 text-black font-extrabold
-      hover:bg-yellow-300
-      transition
-      shadow-lg shadow-yellow-400/30
-    "
-  >
-    📞 Contact Us for a Consultation
-  </button>
-</footer>
+      {/* Hero Content */}
+      <div className="relative z-10 h-full flex items-center justify-center px-6">
+        <div className="max-w-4xl text-center space-y-6">
+          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-yellow-300 drop-shadow">
+            Become a Pride Community Sponsor
+          </h1>
 
-      {/* 🌟 Tiers Grid */}
-      <section className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-4 pb-16">
-        {SPONSOR_TIERS.map((tier, i) => (
-          <motion.div
-            key={tier.name}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: i * 0.08 }}
-            viewport={{ once: true }}
+          <p className="text-lg sm:text-xl text-slate-200 leading-relaxed">
+            Join us in uplifting LGBTQ+ voices, creating safe spaces,
+            and celebrating Pride through inclusive, community-driven events.
+          </p>
+
+          <button
+            onClick={() => setShowConsultation(true)}
             className="
-              rounded-3xl
-              bg-white/5
-              border border-yellow-400/40
-              shadow-xl
-              overflow-hidden
+              inline-flex items-center gap-2
+              px-8 py-4 rounded-2xl
+              bg-yellow-400 text-black font-extrabold
+              hover:bg-yellow-300
+              transition
+              shadow-xl shadow-yellow-400/30
             "
           >
-            {/* Header */}
-            <div
-              className={`
-                text-center py-4 font-extrabold text-lg
-                text-black
-                bg-gradient-to-br ${tier.gradient}
-              `}
-            >
-              {tier.name}
-            </div>
+            🤝 Start a Sponsorship Conversation
+          </button>
+        </div>
+      </div>
+    </section>
 
-            {/* Price */}
-            <p className="text-center text-yellow-300 font-semibold mt-3">
+    {/* 🌟 INTRO COPY */}
+    <section className="max-w-4xl mx-auto text-center py-16 px-4 space-y-6">
+      <h2 className="text-3xl sm:text-4xl font-extrabold text-yellow-300">
+        Sponsorship Opportunities
+      </h2>
+
+      <p className="text-lg text-slate-200 leading-relaxed">
+        Our sponsorship tiers are designed to create meaningful partnerships.
+        Whether you’re a local business or a community organization,
+        your support directly fuels Pride programming, outreach,
+        and visibility.
+      </p>
+    </section>
+
+    {/* 🌟 TIERS – STACKED, ELEGANT */}
+    <section className="max-w-4xl mx-auto px-4 pb-20 space-y-10">
+      {SPONSOR_TIERS.map((tier, i) => (
+        <motion.div
+          key={tier.name}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, delay: i * 0.08 }}
+          viewport={{ once: true }}
+          className="
+            rounded-3xl
+            bg-white/5
+            border border-yellow-400/40
+            shadow-2xl
+            overflow-hidden
+          "
+        >
+          {/* Tier Header */}
+          <div
+            className={`
+              text-center py-6 font-extrabold text-xl sm:text-2xl
+              text-black
+              bg-gradient-to-br ${tier.gradient}
+            `}
+          >
+            {tier.name}
+          </div>
+
+          {/* Tier Body */}
+          <div className="p-6 sm:p-8 space-y-6">
+            <p className="text-center text-yellow-300 font-semibold text-lg">
               {tier.price}
             </p>
 
-            {/* Perks */}
-            <ul className="mt-4 px-5 pb-6 space-y-2 text-sm text-slate-200">
+            <ul className="space-y-3 text-sm sm:text-base text-slate-200">
               {tier.perks.map((perk) => (
-                <li key={perk} className="flex gap-2">
-                  <span className="text-yellow-400">•</span>
+                <li key={perk} className="flex gap-3">
+                  <span className="text-yellow-400 mt-0.5">✔</span>
                   <span>{perk}</span>
                 </li>
               ))}
             </ul>
-          </motion.div>
-        ))}
-      </section>
+          </div>
+        </motion.div>
+      ))}
+    </section>
 
-      {/* Footer Note */}
-<AnimatePresence>
-  {showConsultation && (
-    <motion.div
-      className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      onClick={() => setShowConsultation(false)}
-    >
-      <motion.div
-        initial={{ scale: 0.95, y: 30 }}
-        animate={{ scale: 1, y: 0 }}
-        exit={{ scale: 0.95, y: 30 }}
-        transition={{ duration: 0.25 }}
-        onClick={(e) => e.stopPropagation()}
+    {/* 🌟 FINAL CTA */}
+    <footer className="text-center pb-20 px-6 space-y-6">
+      <p className="text-slate-300 max-w-2xl mx-auto">
+        Interested in partnering with us or creating a custom sponsorship?
+        We’d love to collaborate.
+      </p>
+
+      <button
+        onClick={() => setShowConsultation(true)}
         className="
-          max-w-2xl w-full
-          bg-slate-900 border border-yellow-400
-          rounded-3xl p-6
-          text-white
-          max-h-[90vh] overflow-y-auto
+          px-8 py-4 rounded-2xl
+          bg-yellow-400 text-black font-extrabold
+          hover:bg-yellow-300
+          transition
+          shadow-xl shadow-yellow-400/30
         "
       >
-        <CreateProspect onClose={() => setShowConsultation(false)} />
-      </motion.div>
-    </motion.div>
-  )}
-</AnimatePresence>
+        📞 Contact Us for a Consultation
+      </button>
+    </footer>
 
-    </div>
-  );
+    {/* 🌟 CONSULTATION MODAL */}
+    <AnimatePresence>
+      {showConsultation && (
+        <motion.div
+          className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={() => setShowConsultation(false)}
+        >
+          <motion.div
+            initial={{ scale: 0.95, y: 30 }}
+            animate={{ scale: 1, y: 0 }}
+            exit={{ scale: 0.95, y: 30 }}
+            transition={{ duration: 0.25 }}
+            onClick={(e) => e.stopPropagation()}
+            className="
+              max-w-2xl w-full
+              bg-slate-900 border border-yellow-400
+              rounded-3xl p-6
+              text-white
+              max-h-[90vh] overflow-y-auto
+            "
+          >
+            <CreateProspect onClose={() => setShowConsultation(false)} />
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+
+  </div>
+);
+
 }

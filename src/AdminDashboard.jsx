@@ -18,13 +18,17 @@ import ManageContacts from "./ManageContacts";
 import AdminMessaging from "./AdminMessaging";
 import ManageSubscribers from "./ManageSubscribers";
 import CreateNewsletters from "./CreateNewsletters";
+import CreateCommittee from "./CreateCommittee";
+import ManageCommittee from "./ManageCommittee";
 import PastNewsletters from "./PastNewsletters";
+import CommitteesPublic from "./CommitteesPublic";
 export default function AdminDashboard() {
   const navigate = useNavigate();
   const { isAuthenticated, isAdmin, user, logout } = useAuth();
 const [servicesSubTab, setServicesSubTab] = useState("add");
 const [vendorsSubTab, setVendorsSubTab] = useState("add");
 const [newsletterSubTab, setNewsletterSubTab] = useState("subscribers");
+const [committeesSubTab, setCommitteesSubTab] = useState("create");
 
   const [activeTab, setActiveTab] = useState("staff");
 
@@ -40,13 +44,13 @@ const [newsletterSubTab, setNewsletterSubTab] = useState("subscribers");
     navigate("/login");
   };
   console.log("AUTH USER:", user);
-const [sponsorSubTab, setSponsorSubTab] = useState("add");
+const [sponsorSubTab, setSponsorSubTab] = useState("add_prospect");
 
 
 
  return (
   <div className="min-h-screen bg-gradient-to-br from-[#18453B] via-black to-[#0f2d25] text-yellow-100 pb-16 pt-24">
-    <div className="max-w-7xl mx-auto px">
+    <div className="max-w-full px-1 mx-auto px">
 
       {/* Header */}
       <div className="mb-10 mt-16 text-center sm:text-left">
@@ -69,7 +73,7 @@ const [sponsorSubTab, setSponsorSubTab] = useState("add");
         ">
  
 
-          <div className="grid grid-cols-3 gap-3">
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
                         <TabButton
               label="Admins"
               active={activeTab === "admins"}
@@ -80,6 +84,12 @@ const [sponsorSubTab, setSponsorSubTab] = useState("add");
               active={activeTab === "staff"}
               onClick={() => setActiveTab("staff")}
             />
+            <TabButton
+  label="Committees"
+  active={activeTab === "committees"}
+  onClick={() => setActiveTab("committees")}
+/>
+
             <TabButton
               label="Volunteers"
               active={activeTab === "volunteers"}
@@ -129,8 +139,8 @@ const [sponsorSubTab, setSponsorSubTab] = useState("add");
 
         {/* RIGHT COLUMN — Content */}
         <section className="
-          bg-black/40 border border-yellow-500/20
-          rounded-2xl p-6 justify-center items-center flex
+          bg-black/40 border border-white w-full
+          rounded-none mt-6 p-6 justify-center items-center flex
           shadow-2xl min-h-[300px]
         ">
             {activeTab === "vendors" && (
@@ -155,13 +165,46 @@ const [sponsorSubTab, setSponsorSubTab] = useState("add");
 
     {vendorsSubTab === "manage" && (
       <ManageVendors />
-      /* or Placeholder until ready:
-      <Placeholder title="Vendor Management" />
-      */
+
     )}
 
   </div>
 )}
+
+
+{activeTab === "committees" && (
+  <div className="w-full space-y-6">
+
+    {/* Committees Sub Tabs */}
+    <div className="flex gap-3 flex-wrap">
+      <SubTabButton
+        label="➕ Create"
+        active={committeesSubTab === "create"}
+        onClick={() => setCommitteesSubTab("create")}
+      />
+      <SubTabButton
+        label="🛠 Manage"
+        active={committeesSubTab === "manage"}
+        onClick={() => setCommitteesSubTab("manage")}
+      />
+      <SubTabButton
+        label="👁 View"
+        active={committeesSubTab === "view"}
+        onClick={() => setCommitteesSubTab("view")}
+      />
+    </div>
+
+    {/* Sub Tab Content */}
+    {committeesSubTab === "create" && <CreateCommittee />}
+    {committeesSubTab === "manage" && <ManageCommittee />}
+    {committeesSubTab === "view" && <CommitteesPublic />}
+
+
+
+  </div>
+)}
+
+
 {activeTab === "messaging" && <AdminMessaging />}
 
           {activeTab === "staff" && <Staff />}
@@ -233,6 +276,19 @@ const [sponsorSubTab, setSponsorSubTab] = useState("add");
 
     {/* Sponsor Sub Tabs */}
 <div className="flex gap-3 flex-wrap">
+   <SubTabButton
+    label="Add Prospect"
+    active={sponsorSubTab === "add_prospect"}
+    onClick={() => setSponsorSubTab("add_prospect")}
+  />
+  <SubTabButton
+    label="Manage Prospects"
+    active={sponsorSubTab === "manage_prospects"}
+    onClick={() => setSponsorSubTab("manage_prospects")}
+  />
+ 
+ 
+ 
   <SubTabButton
     label="Add Sponsor"
     active={sponsorSubTab === "add"}
@@ -243,16 +299,7 @@ const [sponsorSubTab, setSponsorSubTab] = useState("add");
     active={sponsorSubTab === "manage"}
     onClick={() => setSponsorSubTab("manage")}
   />
-  <SubTabButton
-    label="Add Prospect"
-    active={sponsorSubTab === "add_prospect"}
-    onClick={() => setSponsorSubTab("add_prospect")}
-  />
-  <SubTabButton
-    label="Manage Prospects"
-    active={sponsorSubTab === "manage_prospects"}
-    onClick={() => setSponsorSubTab("manage_prospects")}
-  />
+
 </div>
 
 
@@ -306,7 +353,7 @@ function TabButton({ label, active, onClick }) {
     <button
       onClick={onClick}
       className={`
-        w-full py-3 rounded-xl font-semibold transition text-sm
+        w-full py-3 rounded-none font-semibold transition text-xl
         ${
           active
             ? "bg-yellow-400 text-black shadow-md"

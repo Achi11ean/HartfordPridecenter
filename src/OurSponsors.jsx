@@ -15,6 +15,16 @@ const PASTEL_GRADIENTS = [
   "from-sky-100 via-blue-100 to-indigo-100",
   "from-fuchsia-100 via-pink-100 to-rose-100",
 ];
+const TIER_ORDER = {
+  "Platinum Sponsor": 1,
+  "Gold Sponsor": 2,
+  "Silver Sponsor": 3,
+  "Bronze Sponsor": 4,
+  "Community Supporter": 5,
+  "In-Kind Sponsor": 6,
+  "Customized Tier": 7,
+};
+
 const MAIN_BANNER_IMAGE =
   "https://www.plannedgiving.com/wp-content/uploads/2023/09/sponsorship.jpg"; // 👈 you will add this
 
@@ -32,10 +42,11 @@ const tierStyle = (tier) => {
     case "Platinum Sponsor":
       return `
         bg-gradient-to-br
-        from-slate-200
-        via-slate-300
-        to-slate-400
+        from-gray-300
+        via-slate-100
+        to-gray-300
         text-black
+        shadow-white
         border border-slate-500
         shadow-xl
       `;
@@ -43,11 +54,11 @@ const tierStyle = (tier) => {
     case "Gold Sponsor":
       return `
         bg-gradient-to-br
-        from-yellow-500
+        from-orange-500
         via-yellow-400
-        to-yellow-600
-        text-black
-        shadow-lg
+        to-orange-600
+        text-black 
+shadow-md shadow-amber-700
         border border-yellow-500
       `;
 
@@ -93,12 +104,9 @@ const tierStyle = (tier) => {
 
     case "Customized Tier":
       return `
-        bg-gradient-to-br
-        from-purple-300
-        via-purple-200
-        to-purple-300
-        text-white
-        border border-purple-700
+        bg-gradient-to-br from-pink-700 via-white to-pink-800
+        text-white 
+        border border-yellow-900 
       `;
 
     default:
@@ -159,6 +167,35 @@ useEffect(() => {
 
   fetchSponsors();
 }, []);
+
+
+const platinumSponsors = sponsors.filter(
+  (s) => s.tier === "Platinum Sponsor"
+);
+
+const goldSponsors = sponsors.filter(
+  (s) => s.tier === "Gold Sponsor"
+);
+
+const silverSponsors = sponsors.filter(
+  (s) => s.tier === "Silver Sponsor"
+);
+
+const bronzeSponsors = sponsors.filter(
+  (s) => s.tier === "Customized Tier"
+);
+
+const communitySponsors = sponsors.filter(
+  (s) => s.tier === "Community Supporter"
+);
+
+const inKindSponsors = sponsors.filter(
+  (s) => s.tier === "In-Kind Sponsor"
+);
+
+const customSponsors = sponsors.filter(
+  (s) => s.tier === "Customized Tier"
+);
 
   return (
 <div className="
@@ -259,7 +296,9 @@ bg-gradient-to-br from-indigo-950 via-black to-indigo-800
         pointer-events-none
       "
     />
+    
   </div>
+  
 )}
 
   {/* Header Content */}
@@ -277,13 +316,13 @@ bg-gradient-to-br from-indigo-950 via-black to-indigo-800
     </h2>
 
     {/* Divider */}
-<hr className="rainbow-hr" />
 
     {/* Description */}
-  <p className="mt-6 text-lg text-yellow-100/80 leading-relaxed">
+  <p className="mt- text-lg text-yellow-100/80 leading-relaxed">
     We proudly recognize the partners who support our mission and help create
     safe, inclusive spaces for our community.
   </p>
+<hr className="rainbow-hr" />
 
     {/* CTA Buttons */}
    {/* CTA Buttons */}
@@ -323,32 +362,30 @@ bg-gradient-to-br from-indigo-950 via-black to-indigo-800
   </button>
 
   {/* View Tiers */}
-  <button
-    onClick={() => {
-      setInvitationMode("invite");
-      setShowInvitation(true);
-    }}
-    className="
-      group
-      flex flex-col items-center justify-center
-      py-3 sm:py-4
-      rounded-none
-      bg-white
-      border-2 border-slate-200
-      shadow-md
-      transition-all duration-300
-      hover:-translate-y-0.5
-      hover:border-yellow-400
-      hover:shadow-yellow-400/30
-    "
-  >
-    <span className="text-sm sm:text-base font-semibold text-slate-900">
-      View
-    </span>
-    <span className="text-[11px] sm:text-xs text-slate-500">
-      Tiers
-    </span>
-  </button>
+<button
+  onClick={() => navigate("/sponsorinvitation")}
+  className="
+    group
+    flex flex-col items-center justify-center
+    py-3 sm:py-4
+    rounded-none
+    bg-white
+    border-2 border-slate-200
+    shadow-md
+    transition-all duration-300
+    hover:-translate-y-0.5
+    hover:border-yellow-400
+    hover:shadow-yellow-400/30
+  "
+>
+  <span className="text-sm sm:text-base font-semibold text-slate-900">
+    View
+  </span>
+  <span className="text-[11px] sm:text-xs text-slate-500">
+    Tiers
+  </span>
+</button>
+
 
 <a
   href="https://givebutter.com/lgbtqadvocacy"
@@ -396,69 +433,234 @@ bg-gradient-to-br from-indigo-950 via-black to-indigo-800
     </p>
   ) : (
     <div className="max-w-6xl mx-auto px-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {sponsors.map((s) => (
-<button
-  key={s.id}
-  onClick={() => setSelectedSponsor(s)}
-  className={`
-    relative w-full text-left rounded-xl p-3
-    transition-all duration-300 hover:scale-[1.02]
-    border-4
-    ${
-      selectedSponsor?.id === s.id
-        ? "scale-[1.03] border-yellow-500 shadow-2xl"
-        : "border-black/40"
-    }
-    ${tierStyle(s.tier)}
-  `}
->
 
+{platinumSponsors.length > 0 && (
+  <section className="mb-32">
+    <h3 className="text-center text-5xl font-extrabold text-white mb-4">
+      💎 Platinum Sponsors
+    </h3>
+    <p className="text-center text-yellow-200 mb-12">
+      Premier partners powering Pride at the highest level
+    </p>
 
-            <div className="flex gap-6 items-start">
-              {/* Logo */}
-              <div className="
-                w-20 h-20
-                flex items-center justify-center
-                
-                rounded-lg
-                shrink-0
-              ">
-                {s.logo_url ? (
-                  <img
-                    src={s.logo_url}
-                    alt={s.organization}
-                    className="max-w-full max-h-full object-contain p-2"
-                  />
-                ) : (
-                  <span className="text-xs text-neutral-500">
-                    No logo
-                  </span>
-                )}
-              </div>
+    <div className="grid grid-cols-1 md:grid-cols-1 gap-10">
+      {platinumSponsors.map((s) => (
+        <button
+          key={s.id}
+          onClick={() => setSelectedSponsor(s)}
+          className="
+            relative p-6 rounded-3xl
+            bg-gradient-to-br from-white via-slate-100 to-gray-200
+            border-4 border-white
+            shadow-[0_0_40px_rgba(255,255,255,0.45)]
+            hover:scale-[1.04] transition
+          "
+        >
+<div className="flex gap-6 items-center">
+  {/* Logo */}
+  <div className="w-24 h-24 flex items-center justify-center rounded-xl bg-white/70 border border-black/10 shrink-0">
+    {s.logo_url ? (
+      <img
+        src={s.logo_url}
+        alt={s.organization}
+        className="max-w-full max-h-full object-contain p-2"
+      />
+    ) : (
+      <span className="text-xs text-neutral-500">No logo</span>
+    )}
+  </div>
 
-              {/* Info */}
-              <div className="flex-1">
-                <h3 className="text-lg font-bold font-serif text-black leading-tight">
-                  {s.organization}
-                </h3>
+  {/* Info */}
+  <div className="flex-1">
+    <h4 className="text-2xl font-extrabold text-black leading-tight">
+      {s.organization}
+    </h4>
 
-                <p className="mt-1 text-sm font-bold text-black">
-                  Sponsors Tier:{" "} <br/>
-                  <span className="text-red-800 font-semibold font-serif">
-                    {s.tier}
-                  </span>
-                </p>
+    <p className="mt-1 text-sm font-semibold text-black/70">
+      {s.tier}
+    </p>
 
-               
-
-
-              </div>
-            </div>
-          </button>
-        ))}
-      </div>
+    {s.message && (
+      <p className="mt-2 text-sm text-black/80 line-clamp-2">
+        {s.message}
+      </p>
+    )}
+  </div>
+</div>
+        </button>
+      ))}
     </div>
+  </section>
+)}
+
+
+{goldSponsors.length > 0 && (
+  <section className="mb-24">
+    <h3 className="text-center text-4xl font-extrabold text-black-400 mb-10">
+      ⭐ Gold Sponsors
+    </h3>
+
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {goldSponsors.map((s) => (
+        <button
+          key={s.id}
+          onClick={() => setSelectedSponsor(s)}
+          className="
+            p-4 rounded-2xl
+            bg-gradient-to-br from-yellow-400 via-amber-400 to-yellow-500
+            border-2 border-yellow-500
+            shadow-xl
+            hover:scale-[1.03] transition
+          "
+        >
+<div className="flex gap-6 items-center">
+  {/* Logo */}
+  <div className="w-24 h-24 flex items-center justify-center rounded-xl bg-white/70 border border-black/10 shrink-0">
+    {s.logo_url ? (
+      <img
+        src={s.logo_url}
+        alt={s.organization}
+        className="max-w-full max-h-full object-contain p-2"
+      />
+    ) : (
+      <span className="text-xs text-neutral-500">No logo</span>
+    )}
+  </div>
+
+  {/* Info */}
+  <div className="flex-1">
+    <h4 className="text-2xl font-extrabold text-black leading-tight">
+      {s.organization}
+    </h4>
+
+    <p className="mt-1 text-sm font-semibold text-black/70">
+      {s.tier}
+    </p>
+
+    {s.message && (
+      <p className="mt-2 text-sm text-black/80 line-clamp-2">
+        {s.message}
+      </p>
+    )}
+  </div>
+</div>
+        </button>
+      ))}
+    </div>
+  </section>
+)}
+{silverSponsors.length > 0 && (
+  <section className="mb-20">
+    <h3 className="text-center text-3xl font-bold text-slate-200 mb-8">
+      🤍 Silver Sponsors
+    </h3>
+
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {silverSponsors.map((s) => (
+        <button
+          key={s.id}
+          onClick={() => setSelectedSponsor(s)}
+          className="
+            p-4 rounded-xl
+            bg-gradient-to-br from-slate-200 via-slate-100 to-gray-300
+            border border-gray-400
+            hover:scale-[1.02] transition
+          "
+        >
+<div className="flex gap-6 items-center">
+  {/* Logo */}
+  <div className="w-24 h-24 flex items-center justify-center rounded-xl bg-white/70 border border-black/10 shrink-0">
+    {s.logo_url ? (
+      <img
+        src={s.logo_url}
+        alt={s.organization}
+        className="max-w-full max-h-full object-contain p-2"
+      />
+    ) : (
+      <span className="text-xs text-neutral-500">No logo</span>
+    )}
+  </div>
+
+  {/* Info */}
+  <div className="flex-1">
+    <h4 className="text-2xl font-extrabold text-black leading-tight">
+      {s.organization}
+    </h4>
+
+    <p className="mt-1 text-sm font-semibold text-black/70">
+      {s.tier}
+    </p>
+
+    {s.message && (
+      <p className="mt-2 text-sm text-black/80 line-clamp-2">
+        {s.message}
+      </p>
+    )}
+  </div>
+</div>
+        </button>
+      ))}
+    </div>
+  </section>
+)}
+
+{bronzeSponsors.length > 0 && (
+  <section className="mb-16">
+    <h3 className="text-center text-2xl font-bold text-amber-400 mb-6">
+      🟤 Bronze Sponsors
+    </h3>
+
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {bronzeSponsors.map((s) => (
+        <button
+          key={s.id}
+          onClick={() => setSelectedSponsor(s)}
+          className="
+            p-3 rounded-xl
+            bg-gradient-to-br from-amber-700 via-amber-600 to-amber-800
+            text-white
+            border border-amber-700
+          "
+        >
+<div className="flex gap-6 items-center">
+  {/* Logo */}
+  <div className="w-24 h-24 flex items-center justify-center rounded-xl bg-white/70 border border-black/10 shrink-0">
+    {s.logo_url ? (
+      <img
+        src={s.logo_url}
+        alt={s.organization}
+        className="max-w-full max-h-full object-contain p-2"
+      />
+    ) : (
+      <span className="text-xs text-neutral-500">No logo</span>
+    )}
+  </div>
+
+  {/* Info */}
+  <div className="flex-1">
+    <h4 className="text-2xl font-extrabold text-black leading-tight">
+      {s.organization}
+    </h4>
+
+    <p className="mt-1 text-sm font-semibold text-black/70">
+      {s.tier}
+    </p>
+
+    {s.message && (
+      <p className="mt-2 text-sm text-black/80 line-clamp-2">
+        {s.message}
+      </p>
+    )}
+  </div>
+</div>
+        </button>
+      ))}
+    </div>
+  </section>
+)}
+
+
+      </div>
   )}
 </section>
 

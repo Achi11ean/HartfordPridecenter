@@ -18,7 +18,7 @@ import StaffDashboard from "./StaffDashboard";
 import Signup from "./Signup";
 import OurSponsorYellowTemplate from "./OurSponsors";
 import Resources from "./Resources";
-
+import SponsorInvitationPage from "./SponsorInvitationPage";
 function App() {
   return (
     <Router>
@@ -43,7 +43,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/sponsors" element={<OurSponsorYellowTemplate />} />
         <Route path="/resources" element={<Resources />}/>
-        
+        <Route path="/sponsorinvitation" element={<SponsorInvitationPage/>}/>
 
 
       </Routes>

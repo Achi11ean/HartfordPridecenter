@@ -136,6 +136,8 @@ export default function ContactPageTemplate() {
 
 
 </div>
+      <hr className="rainbow-hr" />
+
 <h2
   className="
     pt-4 text-7xl lg:text-8xl
@@ -151,6 +153,7 @@ text-white
 Contact Us  
 
 </h2>
+      <hr className="rainbow-hr" />
 
         {/* Content Section */}
         <section className="max-w-6xl mx-auto p-8 pt-24 space-y-6">
@@ -255,7 +258,7 @@ Contact Us
             </div>
 
             {/* Expandable Terms */}
-            <AnimatePresence>
+          <AnimatePresence>
               {showTerms && (
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
@@ -264,10 +267,10 @@ Contact Us
                   className="mb-4 text-sm text-yellow-200 bg-slate-800 p-3 rounded-md"
                 >
                   <p>
-                    You consent to being contacted using your info.
+                    You consent to being contacted  regarding your inquiry using the information submitted.
                   </p>
                   <p className="mt-2 font-semibold text-red-300">
-                    Hate, harassment, or threats will lock this device immediately.
+                    Hate, harassment, or threats will lock this device immediately and submit IP address for a possible report to authorities.
                   </p>
                 </motion.div>
               )}

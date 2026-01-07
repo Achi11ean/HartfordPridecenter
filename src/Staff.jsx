@@ -60,6 +60,27 @@ const formatPhoneNumber = (value) => {
     fetchStaff();
   }, []);
 
+
+  const deleteStaff = async (id, name) => {
+  const confirmed = window.confirm(
+    `⚠️ PERMANENT DELETE\n\nThis will permanently remove ${name}.\n\nThis action CANNOT be undone.\n\nAre you sure?`
+  );
+
+  if (!confirmed) return;
+
+  try {
+    await axios.delete(
+      `${API}/api/pride-staff/${id}`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    toast.success("Staff member permanently deleted");
+    fetchStaff();
+  } catch {
+    toast.error("Failed to delete staff member");
+  }
+};
+
   const fetchStaff = async () => {
     try {
       const res = await axios.get(
@@ -118,6 +139,20 @@ ${editing.bio || "(none provided)"}
     toast.success("Bio generated ✨");
   } catch {
     toast.error("Failed to generate bio");
+  }
+};
+const activateStaff = async (id) => {
+  if (!window.confirm("Activate this staff member?")) return;
+  try {
+    await axios.patch(
+      `${API}/api/pride-staff/${id}`,
+      { is_active: true },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    toast.success("Staff activated");
+    fetchStaff();
+  } catch {
+    toast.error("Failed to activate staff");
   }
 };
 
@@ -217,28 +252,47 @@ const filtered = useMemo(() => {
             </p>
           )}
 
-          <div className="flex gap-3 mt-4">
-            <button
-onClick={() =>
-  setEditing({
-    ...s,
-    role: s.role || "",
-  })
-}
-              className="px-4 py-1 rounded-lg bg-yellow-400 text-black font-bold"
-            >
-               Edit
-            </button>
+     <div className="flex gap-3 mt-4 flex-wrap">
+  <button
+    onClick={() =>
+      setEditing({
+        ...s,
+        role: s.role || "",
+      })
+    }
+    className="px-4 py-1 rounded-lg bg-yellow-400 text-black font-bold"
+  >
+    Edit
+  </button>
 
-            {s.is_active && (
-              <button
-                onClick={() => deactivateStaff(s.id)}
-                className="px-4 py-1 rounded-lg bg-red-600 text-white font-bold"
-              >
-                 Deactivate
-              </button>
-            )}
-          </div>
+  {s.is_active ? (
+    <button
+      onClick={() => deactivateStaff(s.id)}
+      className="px-4 py-1 rounded-lg bg-red-600 text-white font-bold"
+    >
+      Deactivate
+    </button>
+  ) : (
+    <button
+      onClick={() => activateStaff(s.id)}
+      className="px-4 py-1 rounded-lg bg-green-600 text-white font-bold"
+    >
+      Activate
+    </button>
+  )}
+
+  {/* 🔥 HARD DELETE */}
+  <button
+    onClick={() =>
+      deleteStaff(s.id, `${s.first_name} ${s.last_name}`)
+    }
+    className="px-4 py-1 rounded-lg bg-black border border-red-500 text-red-400 font-bold hover:bg-red-600 hover:text-white transition"
+  >
+    Delete
+  </button>
+</div>
+
+
         </div>
       </div>
     </div>

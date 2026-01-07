@@ -5,10 +5,9 @@ import { toast } from "react-toastify";
 import { useAuth } from "./AuthContext";
 
 const API = "https://singspacebackend.onrender.com";
-const CODEWORD = "HPC2025"; // 🔑 required by backend
 
 export default function Volunteers() {
-  const { token, prideId, isAdmin } = useAuth();
+const { prideId, role, isAdmin, isStaff } = useAuth();
 
   const [volunteers, setVolunteers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -22,33 +21,48 @@ export default function Volunteers() {
     message: "",
   });
 
-  // ───────────────────────────────
+  // ─────────────────────────────────────────────
   // Fetch Volunteers
-  // ───────────────────────────────
+  // ─────────────────────────────────────────────
   const fetchVolunteers = async () => {
-    if (!prideId) return;
+    if (!prideId) {
+      console.warn("[Volunteers] No prideId, abort fetch");
+      return;
+    }
+
+    console.log("[Volunteers] Fetching for prideId:", prideId);
 
     try {
       const res = await axios.get(
-        `${API}/api/pride/${prideId}/volunteers`,
-        { headers: { Authorization: `Bearer ${token}` } }
+        `${API}/api/pride/${prideId}/volunteers`
       );
+
+      console.log("[Volunteers] Fetch response:", res.data);
       setVolunteers(res.data || []);
-    } catch {
+    } catch (err) {
+      console.error("[Volunteers] Fetch error:", err);
       toast.error("Failed to load volunteers");
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    if (isAdmin) fetchVolunteers();
-  }, [prideId, isAdmin]);
+useEffect(() => {
+  console.log("🔥 Volunteers mounted", {
+    prideId,
+    role,
+  });
 
-  // ───────────────────────────────
+  if (prideId) fetchVolunteers();
+}, [prideId]);
+
+
+  // ─────────────────────────────────────────────
   // Open Edit
-  // ───────────────────────────────
+  // ─────────────────────────────────────────────
   const openEdit = (v) => {
+    console.log("[Volunteers] Open edit:", v);
+
     setEditingId(v.id);
     setEditForm({
       name: v.name,
@@ -59,18 +73,24 @@ export default function Volunteers() {
     });
   };
 
-  // ───────────────────────────────
-  // Save Edit
-  // ───────────────────────────────
+  // ─────────────────────────────────────────────
+  // Save Edit (PATCH)
+  // ─────────────────────────────────────────────
   const saveEdit = async () => {
+    console.log("[Volunteers] Saving edit:", {
+      id: editingId,
+      payload: editForm,
+    });
+
     try {
       const res = await axios.patch(
         `${API}/volunteers/${editingId}`,
         {
           ...editForm,
-          codeword: CODEWORD,
         }
       );
+
+      console.log("[Volunteers] PATCH response:", res.data);
 
       setVolunteers((prev) =>
         prev.map((v) =>
@@ -81,36 +101,41 @@ export default function Volunteers() {
       toast.success("Volunteer updated");
       setEditingId(null);
     } catch (err) {
+      console.error("[Volunteers] PATCH error:", err);
       toast.error(err.response?.data?.error || "Update failed");
     }
   };
 
+  // ─────────────────────────────────────────────
+  // Delete Volunteer (DELETE)
+  // ─────────────────────────────────────────────
+  const deleteVolunteer = async (vid) => {
+    if (!window.confirm("Delete this volunteer submission?")) return;
 
-  // ───────────────────────────────
-// Delete Volunteer
-// ───────────────────────────────
-const deleteVolunteer = async (vid) => {
-  if (!window.confirm("Delete this volunteer submission?")) return;
+    console.log("[Volunteers] Deleting volunteer:", vid);
 
-  try {
-    await axios.delete(
-      `${API}/volunteers/${vid}`,
-      {
-        data: { codeword: CODEWORD }, // 🔑 backend requires this
-      }
-    );
+    try {
+      await axios.delete(
+        `${API}/volunteers/${vid}`,
+  
+      );
 
-    setVolunteers((prev) =>
-      prev.filter((v) => v.id !== vid)
-    );
+      console.log("[Volunteers] Delete success:", vid);
 
-    toast.success("Volunteer submission deleted");
-  } catch (err) {
-    toast.error(err.response?.data?.error || "Delete failed");
-  }
-};
+      setVolunteers((prev) =>
+        prev.filter((v) => v.id !== vid)
+      );
 
+      toast.success("Volunteer submission deleted");
+    } catch (err) {
+      console.error("[Volunteers] DELETE error:", err);
+      toast.error(err.response?.data?.error || "Delete failed");
+    }
+  };
 
+  // ─────────────────────────────────────────────
+  // Render
+  // ─────────────────────────────────────────────
   if (loading) {
     return (
       <div className="text-center text-yellow-300 py-10">
@@ -142,10 +167,10 @@ const deleteVolunteer = async (vid) => {
                     key={field}
                     value={editForm[field]}
                     onChange={(e) =>
-                      setEditForm({
-                        ...editForm,
+                      setEditForm((prev) => ({
+                        ...prev,
                         [field]: e.target.value,
-                      })
+                      }))
                     }
                     placeholder={field.toUpperCase()}
                     className="w-full mb-3 p-3 rounded-xl bg-black/40 border border-yellow-500/40 text-yellow-100"
@@ -155,10 +180,10 @@ const deleteVolunteer = async (vid) => {
                 <textarea
                   value={editForm.message}
                   onChange={(e) =>
-                    setEditForm({
-                      ...editForm,
+                    setEditForm((prev) => ({
+                      ...prev,
                       message: e.target.value,
-                    })
+                    }))
                   }
                   rows={3}
                   placeholder="Message"
@@ -186,33 +211,36 @@ const deleteVolunteer = async (vid) => {
                   {v.name}
                 </p>
                 <p className="text-sm text-yellow-200">{v.email}</p>
+
                 {v.phone && (
                   <p className="text-sm text-yellow-400">{v.phone}</p>
                 )}
+
                 <p className="mt-2 text-yellow-200">
                   <strong>Interest:</strong> {v.interest}
                 </p>
+
                 {v.message && (
                   <p className="mt-2 text-sm italic text-yellow-300">
                     “{v.message}”
                   </p>
                 )}
-<div className="flex gap-3 mt-4">
-  <button
-    onClick={() => openEdit(v)}
-    className="px-4 py-2 rounded-xl bg-blue-500 text-black font-bold hover:bg-blue-600"
-  >
-    Edit
-  </button>
 
-  <button
-    onClick={() => deleteVolunteer(v.id)}
-    className="px-4 py-2 rounded-xl bg-red-600 text-white font-bold hover:bg-red-700"
-  >
-    Delete
-  </button>
-</div>
+                <div className="flex gap-3 mt-4">
+                  <button
+                    onClick={() => openEdit(v)}
+                    className="px-4 py-2 rounded-xl bg-blue-500 text-black font-bold hover:bg-blue-600"
+                  >
+                    Edit
+                  </button>
 
+                  <button
+                    onClick={() => deleteVolunteer(v.id)}
+                    className="px-4 py-2 rounded-xl bg-red-600 text-white font-bold hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
+                </div>
               </>
             )}
           </div>

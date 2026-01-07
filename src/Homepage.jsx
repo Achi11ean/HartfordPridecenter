@@ -36,6 +36,7 @@ export default function HomePage() {
               alt="Hartford Pride Center Logo"
               className="w-full max-w-md sm:max-w-lg shadow-2xl border border-yellow-400/40"
             />
+<hr className="rainbow-hr" />
 
             <motion.div
               initial={{ opacity: 0, y: 14 }}
@@ -50,10 +51,17 @@ export default function HomePage() {
                 Supporting & promoting LGBTQIA+ safe spaces, resources, and community connection
                 in and around Hartford, CT.
               </p>
-
+ <Link
+                to="/pride"
+                className="mt-3 inline-block w-full text-center px-6 py-3 font-extrabold text-white border border-white/20 shadow-lg
+                  bg-gradient-to-r from-[#0F2D25] via-[#18453B] to-[#0F2D25]
+                  hover:brightness-110 transition-all duration-300"
+              >
+                Hartford Pride Event 2026
+              </Link>
               {/* CTAs */}
   <nav aria-label="Primary">
-          <div className="grid mt-12 grid-cols-3 gap-3 sm:gap-4">
+          <div className="grid mt-6 grid-cols-3 gap-3 sm:gap-4">
 
             {/* Contact */}
             <Link
@@ -215,14 +223,39 @@ export default function HomePage() {
               <p className="text-yellow-100 font-bold text-lg">
                 Featured:
               </p>
-              <Link
-                to="/pride"
-                className="mt-3 inline-block w-full text-center px-6 py-3 font-extrabold text-white border border-white/20 shadow-lg
-                  bg-gradient-to-r from-[#0F2D25] via-[#18453B] to-[#0F2D25]
-                  hover:brightness-110 transition-all duration-300"
-              >
-                Hartford Pride Event 2026
-              </Link>
+<video
+  src="/Video2.mp4"
+  autoPlay
+  loop
+  muted
+  playsInline
+  className="
+    w-[100%]
+    max-w-[420px]
+    sm:max-w-[600px]
+    drop-shadow-2xl 
+    border-b-4 border-t border-l border-r
+    rounded-none
+  "
+>
+  <img
+    src="/karaoversebanner.jpeg"
+    alt="Karaoverse Logo Fallback"
+  />
+</video>
+
+             <a
+  href="https://karaoverse.com"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="mt-3 inline-block w-full text-center px-6 py-3 font-extrabold text-white  border border-white/20 shadow-lg
+    bg-gradient-to-br from-red-500 via-black to-red-800
+    hover:brightness-110 transition-all duration-300"
+>
+Karaoverse.com
+<br/> <span className="text-[11px] ">Local Events, Artist, Hosts & Venues</span>
+</a>
+
             </div>
           </motion.div>
         </section>
