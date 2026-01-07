@@ -7,11 +7,129 @@ const PRIDE_ID = 2;
 
 export default function ContactPageTemplate() {
   const [status, setStatus] = useState("");
+  const [committees, setCommittees] = useState([]);
+
   const [isLoading, setIsLoading] = useState(false);
   const [phone, setPhone] = useState("");
   const [showTerms, setShowTerms] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [admins, setAdmins] = useState([]);
+const [staff, setStaff] = useState([]);
+
   const [localBlocked, setLocalBlocked] = useState(false);
+const [services, setServices] = useState([]);
+const [selectedTopic, setSelectedTopic] = useState("");
+useEffect(() => {
+  const fetchAllContactTargets = async () => {
+    try {
+      const [
+        servicesRes,
+        committeesRes,
+        adminsRes,
+        staffRes
+      ] = await Promise.all([
+        axios.get(`${API}/api/pride/${PRIDE_ID}/services`),
+        axios.get(`${API}/api/pride-committees/pride/${PRIDE_ID}`),
+        axios.get(`${API}/api/pride/${PRIDE_ID}/admins`),
+        axios.get(`${API}/api/pride/${PRIDE_ID}/staff`)
+      ]);
+
+      setServices(servicesRes.data || []);
+      setCommittees((committeesRes.data || []).filter(c => c.is_active));
+      setAdmins((adminsRes.data || []).filter(a => a.is_active));
+      setStaff((staffRes.data || []).filter(s => s.is_active));
+
+      console.log("📦 Contact targets loaded");
+    } catch (err) {
+      console.error("❌ Failed to fetch Pride contact targets:", err);
+    }
+  };
+
+  fetchAllContactTargets();
+}, []);
+
+useEffect(() => {
+  const fetchServicesAndCommittees = async () => {
+    try {
+      const [servicesRes, committeesRes] = await Promise.all([
+        axios.get(`${API}/api/pride/${PRIDE_ID}/services`),
+        axios.get(`${API}/api/pride-committees/pride/${PRIDE_ID}`)
+      ]);
+
+      console.log("🧩 Pride services:", servicesRes.data);
+      console.log("🧭 Pride committees:", committeesRes.data);
+
+      setServices(servicesRes.data || []);
+      setCommittees(
+        (committeesRes.data || []).filter(c => c.is_active)
+      );
+    } catch (err) {
+      console.error("❌ Failed to fetch Pride data:", err);
+    }
+  };
+
+  fetchServicesAndCommittees();
+}, []);
+
+useEffect(() => {
+  const fetchServices = async () => {
+  try {
+    const res = await axios.get(
+      `${API}/api/pride/${PRIDE_ID}/services`
+    );
+
+    console.log("🧩 Pride services response:", res.data);
+
+    setServices(res.data || []);
+  } catch (err) {
+    console.error("❌ Failed to fetch Pride services:", err);
+  }
+};
+
+
+  fetchServices();
+}, []);
+
+
+const handleTopicSelect = (e) => {
+  const value = e.target.value;
+  setSelectedTopic(value);
+
+  if (!value) return;
+
+  const service = services.find(s => s.title === value);
+  const committee = committees.find(c => c.name === value);
+  const admin = admins.find(a => a.id === Number(value));
+  const staffMember = staff.find(s => s.id === Number(value));
+
+  let finalTopic = value;
+
+  if (service) {
+    finalTopic = `${service.title} Services`;
+  } else if (committee) {
+    finalTopic = `${committee.name} Committee`;
+  } else if (admin) {
+    finalTopic = `I would like to connect with ${admin.name} (Admin)`;
+  } else if (staffMember) {
+    finalTopic = `I would like to connect with ${staffMember.first_name} ${staffMember.last_name} (${staffMember.role})`;
+  }
+
+  const prefix = `${finalTopic}\n\n`;
+
+  setForm((prev) => {
+    const cleanedMessage = prev.message.replace(
+      /^[\s\S]*?\n\n/,
+      ""
+    );
+
+    return {
+      ...prev,
+      message: prefix + cleanedMessage,
+    };
+  });
+};
+
+
 
   // read block on load
   useEffect(() => {
@@ -88,6 +206,8 @@ export default function ContactPageTemplate() {
       setStatus("✅ Thank you! Our team will reach out shortly.");
       setForm({ name: "", email: "", message: "" });
       setPhone("");
+      setSelectedTopic(""); // 👈 ADD THIS
+
 
     } catch (err) {
       console.error(err);
@@ -220,6 +340,78 @@ Contact Us
                 "
               />
             </div>
+{/* TOPIC / INTEREST */}
+<div className="mb-4">
+  <label className="block mb-1 font-semibold text-slate-200">
+    TOPIC / INTEREST
+  </label>
+
+ <select
+  value={selectedTopic}
+  onChange={handleTopicSelect}
+  className="
+    w-full p-3 rounded-lg
+    bg-white border border-slate-600
+    text-black
+    focus:ring-2 focus:ring-indigo-400
+  "
+>
+  <option value="">Select a topic…</option>
+
+  {/* General */}
+  <optgroup label="General">
+    <option value="I want to be a vendor">I want to be a vendor</option>
+    <option value="I want to volunteer">I want to volunteer</option>
+    <option value="I want to sponsor">I want to sponsor</option>
+  </optgroup>
+
+  {/* Services */}
+  {services.length > 0 && (
+    <optgroup label="Pride Services">
+      {services.map(service => (
+        <option key={service.id} value={service.title}>
+          {service.title}
+        </option>
+      ))}
+    </optgroup>
+  )}
+
+  {/* Committees */}
+  {committees.length > 0 && (
+    <optgroup label="Pride Committees">
+      {committees.map(committee => (
+        <option key={committee.id} value={committee.name}>
+          {committee.name} Committee
+        </option>
+      ))}
+    </optgroup>
+  )}
+
+  {/* Admins */}
+  {admins.length > 0 && (
+    <optgroup label="Pride Admins">
+      {admins.map(admin => (
+        <option key={admin.id} value={admin.id}>
+          {admin.name}
+        </option>
+      ))}
+    </optgroup>
+  )}
+
+  {/* Staff */}
+  {staff.length > 0 && (
+    <optgroup label="Pride Staff">
+      {staff.map(member => (
+        <option key={member.id} value={member.id}>
+          {member.first_name} {member.last_name} — {member.role}
+        </option>
+      ))}
+    </optgroup>
+  )}
+</select>
+
+
+</div>
 
             {/* MESSAGE */}
             <div className="mb-6">
