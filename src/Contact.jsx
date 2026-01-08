@@ -360,9 +360,8 @@ Contact Us
 
   {/* General */}
   <optgroup label="General">
-    <option value="I want to be a vendor">I want to be a vendor</option>
     <option value="I want to volunteer">I want to volunteer</option>
-    <option value="I want to sponsor">I want to sponsor</option>
+    <option value="I want to Partner">I want to Partner</option>
   </optgroup>
 
   {/* Services */}
@@ -381,7 +380,7 @@ Contact Us
     <optgroup label="Pride Committees">
       {committees.map(committee => (
         <option key={committee.id} value={committee.name}>
-          {committee.name} Committee
+          {committee.name} 
         </option>
       ))}
     </optgroup>

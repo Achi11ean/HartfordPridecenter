@@ -34,7 +34,7 @@ export default function HomePage() {
               transition={{ duration: 0.6 }}
               src="/PrideLogo3.jpg"
               alt="Hartford Pride Center Logo"
-              className="w-full max-w-md sm:max-w-lg shadow-2xl border border-yellow-400/40"
+              className="w-full max-w-md sm:max-w-lg shadow-2xl border-4 border-red-400"
             />
 <hr className="rainbow-hr" />
 
@@ -57,7 +57,7 @@ export default function HomePage() {
                   bg-gradient-to-r from-[#0F2D25] via-[#18453B] to-[#0F2D25]
                   hover:brightness-110 transition-all duration-300"
               >
-                Hartford Pride Event 2026
+                Capital City Pride 2026
               </Link>
               {/* CTAs */}
   <nav aria-label="Primary">
@@ -74,57 +74,32 @@ export default function HomePage() {
               Contact
             </Link>
 
-            {/* Events */}
-            <Link
-              to="/events"
-              className="block text-center px-6 py-3 font-semibold text-black border border-black shadow-lg 
-              bg-gradient-to-r from-amber-300 via-yellow-400 to-yellow-500 
-              hover:from-yellow-600 hover:via-yellow-400 hover:to-amber-300 
-              transition-all duration-300"
-            >
-              Events
-            </Link>
+<a
+  href="https://karaoverse.com/events"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="block text-center px-6 py-3 font-semibold text-black border border-black shadow-lg 
+    bg-gradient-to-r from-amber-300 via-yellow-400 to-yellow-500 
+    hover:from-yellow-600 hover:via-yellow-400 hover:to-amber-300 
+    transition-all duration-300"
+>
+  Events
+</a>
 
             {/* Volunteer */}
             <Link
-              to="/volunteer"
+              to="/funders"
               className="block text-center px-2 py-3 font-semibold text-black border border-black shadow-lg 
               bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 
               hover:from-yellow-600 hover:via-amber-500 hover:to-yellow-400
               transition-all duration-300"
             >
-              Volunteer
+              Funders
             </Link>
-                      <Link
-            to="/sponsors"
-            state={{ openSponsors: true }}
-           className="block text-center px-6 py-3 font-semibold text-black border border-black shadow-lg 
-              bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 
-              hover:from-yellow-600 hover:via-amber-500 hover:to-yellow-400
-              transition-all duration-300"
-            >
-            Sponsor
-          </Link>
-                                <Link
-            to="/resources"
-            state={{ openSponsors: true }}
-           className="block text-center px- py-3 font-semibold text-black border border-black shadow-lg 
-              bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 
-              hover:from-yellow-600 hover:via-amber-500 hover:to-yellow-400
-              transition-all duration-300"
-            >
-            Resources
-          </Link>
-                                <Link
-            to="https://givebutter.com/lgbtqadvocacy"
-            state={{ openSponsors: true }}
-           className="block text-center px-6 py-3 font-semibold text-black border border-black shadow-lg 
-              bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 
-              hover:from-yellow-600 hover:via-amber-500 hover:to-yellow-400
-              transition-all duration-300"
-            >
-            Donate
-          </Link>
+
+
+
+
           </div>
         </nav>
 
@@ -180,9 +155,28 @@ export default function HomePage() {
                   hover:from-amber-500 hover:via-yellow-400 hover:to-yellow-300
                   transition-all duration-300 text-center"
               >
-                Explore Resources
+                 Resources
               </Link>
-      
+                                      <Link
+            to="https://givebutter.com/lgbtqadvocacy"
+            state={{ openSponsors: true }}
+           className="block text-center px-6 py-3 font-semibold text-black border border-black shadow-lg 
+              bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 
+              hover:from-yellow-600 hover:via-amber-500 hover:to-yellow-400
+              transition-all duration-300"
+            >
+            Donate
+          </Link>
+                      <Link
+            to="/sponsors"
+            state={{ openSponsors: true }}
+           className="block text-center px-6 py-3 font-semibold text-black border border-black shadow-lg 
+              bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 
+              hover:from-yellow-600 hover:via-amber-500 hover:to-yellow-400
+              transition-all duration-300"
+            >
+            Sponsors
+          </Link>
             </div>
           </motion.div>
 
@@ -198,12 +192,13 @@ export default function HomePage() {
             <div className="mt-3 h-[2px] w-full bg-gradient-to-r from-yellow-400/70 to-transparent" />
 
             <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <FeatureCard
-                icon={<FaCalendarAlt className="text-2xl text-yellow-300" />}
-                title="Find Events"
-                desc="See what’s happening next, updated regularly."
-                to="/events"
-              />
+<FeatureCard
+  icon={<FaCalendarAlt className="text-2xl text-yellow-300" />}
+  title="Find Events"
+  desc="See what’s happening next, updated regularly."
+  href="https://karaoverse.com/events"
+/>
+
               <FeatureCard
                 icon={<FaHandHoldingHeart className="text-2xl text-yellow-300" />}
                 title="Volunteer"
@@ -322,10 +317,10 @@ Karaoverse.com
               <p className="mt-3 text-sm font-semibold">
                 📧{" "}
                 <a
-                  href="mailto:info@hartfordpridecenter.org"
+                  href="mailto:david@hartfordpridecenter.org"
                   className="underline hover:text-yellow-300"
                 >
-                  info@hartfordpridecenter.org
+                  david@hartfordpridecenter.org
                 </a>
               </p>
 
@@ -349,7 +344,7 @@ Karaoverse.com
                   <FaFacebook className="text-2xl" />
                 </a>
                 <a
-                  href="mailto:info@hartfordpridecenter.org"
+                  href="mailto:david@hartfordpridecenter.org"
                   className="hover:text-yellow-300"
                   aria-label="Email"
                 >

@@ -103,10 +103,10 @@ export default function Privacy() {
               You have the right to request access, correction, or deletion of your
               data at any time. Please contact us at{" "}
               <a
-                href="mailto:info@hartfordpridecenter.org"
+                href="mailto:david@hartfordpridecenter.org"
                 className="text-yellow-300 underline hover:text-white"
               >
-                info@hartfordpridecenter.org
+                david@hartfordpridecenter.org
               </a>{" "}
               for any privacy-related inquiries.
             </p>

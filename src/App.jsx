@@ -19,6 +19,8 @@ import Signup from "./Signup";
 import OurSponsorYellowTemplate from "./OurSponsors";
 import Resources from "./Resources";
 import SponsorInvitationPage from "./SponsorInvitationPage";
+import PrideServicePage from "./PrideServicePage";
+import FundersPage from "./FundersPage";
 function App() {
   return (
     <Router>
@@ -44,6 +46,8 @@ function App() {
         <Route path="/sponsors" element={<OurSponsorYellowTemplate />} />
         <Route path="/resources" element={<Resources />}/>
         <Route path="/sponsorinvitation" element={<SponsorInvitationPage/>}/>
+<Route path="/services/:slug" element={<PrideServicePage />} />
+<Route path="/funders" element={<FundersPage />} />
 
 
       </Routes>

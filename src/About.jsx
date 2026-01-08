@@ -82,15 +82,18 @@ to-[#EA580C]
             </Link>
 
             {/* Events */}
-            <Link
-              to="/events"
-              className="block text-center px-6 py-3 font-semibold text-black border border-black shadow-lg 
-              bg-gradient-to-r from-amber-300 via-yellow-400 to-yellow-500 
-              hover:from-yellow-600 hover:via-yellow-400 hover:to-amber-300 
-              transition-all duration-300"
-            >
-              Events
-            </Link>
+<a
+  href="https://karaoverse.com/events"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="block text-center px-6 py-3 font-semibold text-black border border-black shadow-lg 
+    bg-gradient-to-r from-amber-300 via-yellow-400 to-yellow-500 
+    hover:from-yellow-600 hover:via-yellow-400 hover:to-amber-300 
+    transition-all duration-300"
+>
+  Events
+</a>
+
 
             {/* Volunteer */}
             <Link

@@ -8,9 +8,9 @@ export default function Events() {
     <div className="
       min-h-screen 
       bg-gradient-to-br 
-      from-[#5cdc6b] 
+      from-green-700
       via-[#b7eadc] 
-      to-[#5fbb7c]
+      to-emerald-700
       text-green-900
         pt-2  ">
 
@@ -63,7 +63,7 @@ export default function Events() {
 
     <p
       className="
-        mt-5 text-lg sm:text-xl md:text-2xl text-green-900 font-semibold
+        mt-5 text-lg sm:text-xl md:text-2xl border-b text-green-900 font-semibold
         leading-relaxed drop-shadow-md
       "
     >
@@ -79,29 +79,7 @@ export default function Events() {
 
 
       {/* ───────────────── Header ───────────────── */}
-      <motion.div
-        initial={{ opacity: 0, y: -25 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="mt-10 text-center px-6"
-      >
-        <FaCalendarAlt className="text-green-600 text-6xl mx-auto mb-4 drop-shadow-sm" />
 
-        <h1
-          className="
-          text-4xl sm:text-5xl font-extrabold
-          bg-white
-          bg-clip-text text-transparent
-          drop-shadow-md
-        "
-        >
-          Upcoming Events
-        </h1>
-
-        <p className="mt-3 text-lg sm:text-xl text-green-700 font-semibold">
-          Celebrate, Connect, and Belong 🌈✨
-        </p>
-      </motion.div>
 
       {/* ───────────────── Event List ───────────────── */}
       <div className="mt-16 px-4 pb-32 max-w-6xl mx-auto">

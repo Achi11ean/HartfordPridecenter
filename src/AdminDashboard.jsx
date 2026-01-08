@@ -22,6 +22,8 @@ import CreateCommittee from "./CreateCommittee";
 import ManageCommittee from "./ManageCommittee";
 import PastNewsletters from "./PastNewsletters";
 import CommitteesPublic from "./CommitteesPublic";
+import CreateFunder from "./CreateFunder";
+import ManageFunders from "./ManageFunders";
 export default function AdminDashboard() {
   const navigate = useNavigate();
   const { isAuthenticated, isAdmin, user, logout } = useAuth();
@@ -29,6 +31,8 @@ const [servicesSubTab, setServicesSubTab] = useState("add");
 const [vendorsSubTab, setVendorsSubTab] = useState("add");
 const [newsletterSubTab, setNewsletterSubTab] = useState("subscribers");
 const [committeesSubTab, setCommitteesSubTab] = useState("create");
+const [fundersSubTab, setFundersSubTab] = useState("create");
+
 
   const [activeTab, setActiveTab] = useState("staff");
 
@@ -105,6 +109,11 @@ const [sponsorSubTab, setSponsorSubTab] = useState("add_prospect");
   active={activeTab === "vendors"}
   onClick={() => setActiveTab("vendors")}
 />
+<TabButton
+  label="Funders"
+  active={activeTab === "funders"}
+  onClick={() => setActiveTab("funders")}
+/>
 
 <TabButton
   label="Events"
@@ -171,6 +180,29 @@ const [sponsorSubTab, setSponsorSubTab] = useState("add_prospect");
   </div>
 )}
 
+{activeTab === "funders" && (
+  <div className="w-full space-y-6">
+
+    {/* Funders Sub Tabs */}
+    <div className="flex gap-3 flex-wrap">
+      <SubTabButton
+        label="➕ Create"
+        active={fundersSubTab === "create"}
+        onClick={() => setFundersSubTab("create")}
+      />
+      <SubTabButton
+        label="🛠 Manage"
+        active={fundersSubTab === "manage"}
+        onClick={() => setFundersSubTab("manage")}
+      />
+    </div>
+
+    {/* Sub Tab Content */}
+    {fundersSubTab === "create" && <CreateFunder />}
+    {fundersSubTab === "manage" && <ManageFunders />}
+
+  </div>
+)}
 
 {activeTab === "committees" && (
   <div className="w-full space-y-6">

@@ -170,35 +170,7 @@ Our Team
           Meet the people who support, organize, and build the Hartford Pride Center.
         </p>
 {/* VIEW TOGGLE */}
-<div className="flex justify-center gap-4 mt-6 mb-10">
-  <button
-    onClick={() => setView("team")}
-    className={`
-      px-6 py-2 rounded-full font-bold transition
-      ${
-        view === "team"
-          ? "bg-blue-500 text-white shadow-lg"
-          : "bg-black/40 text-blue-200 border border-blue-400/40 hover:bg-blue-900/40"
-      }
-    `}
-  >
-    👥 Team
-  </button>
 
-  <button
-    onClick={() => setView("committees")}
-    className={`
-      px-6 py-2 rounded-full font-bold transition
-      ${
-        view === "committees"
-          ? "bg-blue-500 text-white shadow-lg"
-          : "bg-black/40 text-blue-200 border border-blue-400/40 hover:bg-blue-900/40"
-      }
-    `}
-  >
-    🧩 Committees
-  </button>
-</div>
 {/* TEAM VIEW */}
 {view === "team" && (
   <section className="max-w-6xl mx-auto px-4 pt-4 pb-20">

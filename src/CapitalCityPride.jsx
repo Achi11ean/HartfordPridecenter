@@ -54,7 +54,7 @@ useEffect(() => {
 
         <div className="relative z-10 px-6">
           <h1 className="text-4xl sm:text-6xl font-extrabold drop-shadow-lg">
-            Hartford <span className="text-yellow-300">City Pride</span>
+            Capital <span className="text-yellow-300">City Pride</span>
           </h1>
           <p className="mt-3 text-lg sm:text-xl text-yellow-200 font-semibold">
             The Official Pride Celebration of Hartford, Connecticut
@@ -116,46 +116,45 @@ useEffect(() => {
       </section>
 
       {/* 🎭 MAIN FEATURES */}
-      <section className="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 px-6 py-10">
-        <div className="bg-black/60 p-6 rounded-2xl border border-yellow-400/40 shadow-lg">
-          <FaCalendarAlt className="text-4xl text-yellow-300 mb-3 mx-auto" />
-          <h3 className="text-xl font-bold text-yellow-300 mb-2">
-            Festival Highlights
-          </h3>
-          <ul className="text-yellow-100 text-sm space-y-2">
-            <li>• Live performances & drag showcases</li>
-            <li>• DJ stages & dance areas</li>
-            <li>• 100+ vendors</li>
-            <li>• Pride Family Zone</li>
-            <li>• Local community orgs & outreach</li>
-          </ul>
-        </div>
+      <section className="max-w-6xl mx-auto grid md:grid-cols-1 gap-8 px-6 py-10">
+
 
         <div className="bg-black/60 p-6 rounded-2xl border border-yellow-500/40 shadow-lg">
           <FaMapMarkerAlt className="text-4xl text-yellow-300 mb-3 mx-auto" />
-          <h3 className="text-xl font-bold text-yellow-300 mb-2">
-            Pride Parade
+          <h3 className="text-xl font-bold text-yellow-300 mb-">
+            Pride Itinerary
           </h3>
           <ul className="text-yellow-100 text-sm space-y-2">
-            <li>• Downtown Hartford route</li>
-            <li>• Floats, performers & community groups</li>
-            <li>• Accessible viewing zones</li>
-            <li>• Parade lineup announced in May</li>
+            <li>• Pride on Pratt: 11-5pm | Pop up Drag | Street Artists | Signature cocktails | </li>
+            <li>• Pride Fest & Concert 5-9pm | On the river front | Neon Dance Party | Food Trucks | Liquor | Live Entertainment</li>
+<li>
+  • Official After Party: Hosted By{" "}
+  <a
+    href="https://www.instagram.com/therobinfierce"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="underline text-pink-400 hover:text-pink-300 transition font-semibold"
+  >
+    Robin Fierce
+  </a>{" "}
+  @{" "}
+  <a
+    href="https://www.google.com/maps/search/?api=1&query=Chez%20Est%2C%20458%20Wethersfield%20Ave%2C%20Hartford%2C%20CT"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="underline text-blue-400 hover:text-blue-300 transition font-semibold"
+  >
+    Chez Est
+  </a>{" "}
+  10p – 2am
+</li>
+
           </ul>
+          <br/>
+          <p className="font-[sans] text-xl">In collaboration with: <br/>Pratt St Merchant association </p>
         </div>
 
-        <div className="bg-black/60 p-6 rounded-2xl border border-yellow-300/40 shadow-lg">
-          <FaCalendarAlt className="text-4xl text-yellow-300 mb-3 mx-auto" />
-          <h3 className="text-xl font-bold text-yellow-300 mb-2">
-            Special Events
-          </h3>
-          <ul className="text-yellow-100 text-sm space-y-2">
-            <li>• Pride Kickoff Party</li>
-            <li>• Youth Pride Celebration</li>
-            <li>• Trans Pride Night</li>
-            <li>• Pride After Dark Club Events</li>
-          </ul>
-        </div>
+       
       </section>
 {/* 🛍️ PRIDE VENDORS */}
 <section className="max-w-full bg-black/60 mx-auto px-6 py-12">
@@ -208,23 +207,7 @@ useEffect(() => {
       <section className="max-w-5xl mx-auto px-6 py-10 space-y-16">
 
         {/* 🟡 Vendor */}
-        <div className="text-center bg-black/40 rounded-xl p-6 border-2 border-yellow-400/60 shadow-xl">
-          <h2 className="text-3xl font-bold text-yellow-300 mb-3">
-            Become a Vendor
-          </h2>
-
-          <p className="text-yellow-100 text-lg mb-6">
-            Sell products, food, art, or showcase your organization at one of
-            the most attended Pride events in Connecticut.
-          </p>
-
-          <Link
-            to="/contact"
-            className="inline-block px-8 py-3 rounded-none bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-600 font-bold text-black border-2 border-white shadow-lg hover:scale-105 transition"
-          >
-            Apply to Be a Vendor
-          </Link>
-        </div>
+      
 
         {/* 🟡 Sponsor */}
         <div className="text-center bg-black/40 rounded-xl p-6 border-2 border-yellow-400/60 shadow-xl">
@@ -308,64 +291,7 @@ useEffect(() => {
     />
   </div>
 </section>
-<section className="max-w-4xl mx-auto px-6 pb-16">
-  <h2 className="text-3xl font-bold text-center text-white mb-4">
-    Pride Parade Route
-  </h2>
 
-  <hr className="rainbow-hr my-4" />
-
-  <div className="bg-black/70 border-4 border-purple-400 rounded-2xl shadow-2xl p-6 text-white">
-    <p className="text-center text-lg font-semibold text-pink-300 mb-4">
-      🌈 Celebrate Loud. March Proud. Love Out Loud.
-    </p>
-
-    <p className="text-sm leading-relaxed mb-4 text-white/90">
-      The Hartford Pride Parade traditionally travels through the heart of
-      downtown, showcasing the city’s vibrant energy and historic streets.
-      Below is a sample route based on previous years and is provided for
-      general guidance.
-    </p>
-
-    <ul className="space-y-3 text-sm">
-      <li>
-        <span className="font-bold text-yellow-300">📍 Parade Line-Up:</span>{" "}
-        Downtown Hartford staging area near{" "}
-        <span className="italic">Trumbull Street</span>
-      </li>
-
-      <li>
-        <span className="font-bold text-yellow-300">🚦 Step-Off:</span>{" "}
-        Parade begins heading toward Main Street
-      </li>
-
-      <li>
-        <span className="font-bold text-yellow-300">🏙️ Route:</span>{" "}
-        March proceeds down <strong>Main Street</strong>, passing City Hall
-        and downtown landmarks
-      </li>
-
-      <li>
-        <span className="font-bold text-yellow-300">🎉 Turn & Finish:</span>{" "}
-        Parade turns toward <strong>Pratt Street</strong>, leading directly
-        into the festival area
-      </li>
-
-      <li>
-        <span className="font-bold text-yellow-300">🏁 Parade Ends:</span>{" "}
-        Pratt Street Festival Grounds
-      </li>
-    </ul>
-
-    <div className="mt-6 bg-gradient-to-r from-pink-500/20 via-purple-500/20 to-indigo-500/20 border border-pink-400 rounded-lg p-4">
-      <p className="text-xs text-center text-white/80 italic">
-        ⚠️ Route details are subject to change based on city coordination,
-        safety planning, and permits. Please check back closer to the event
-        date for official confirmation.
-      </p>
-    </div>
-  </div>
-</section>
 
       {/* ⭐ FOOTER — YELLOW THEME */}
       <section className="bg-gradient-to-br from-yellow-900 via-black to-amber-900 text-yellow-200 py-6 border-t-4 border-yellow-500">
@@ -429,7 +355,7 @@ useEffect(() => {
               >
                 <FaFacebook />
               </a>
-              <a href="mailto:info@hartfordpridecenter.org" className="hover:text-yellow-300">
+              <a href="mailto:david@hartfordpridecenter.org" className="hover:text-yellow-300">
                 <FaEnvelope />
               </a>
             </div>

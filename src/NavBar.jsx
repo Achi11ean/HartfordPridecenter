@@ -24,6 +24,8 @@ const gradientMap = {
   "/ourteam": "from-blue-900 via-blue-800 to-black",
   "/sponsors": "from-indigo-900 via-indigo-800 to-black",
   "/contact": "from-violet-900 via-violet-800 to-black",
+    "/funders": "from-yellow-900 via-yellow-800 to-black",
+
 };
 
 // rainbow fallback
@@ -41,9 +43,13 @@ const navItems = [
   { name: "Home", path: "/" },
   { name: "About", path: "/about" },
   { name: "Services", path: "/services" },
-  { name: "Events", path: "/events" },
-  { name: "Staff", path: "/ourteam" },
-  { name: "Sponsors", path: "/sponsors" },
+  { name: "Funders", path: "/funders" },
+  {
+    name: "Events",
+    path: "https://karaoverse.com/events",
+    external: true,
+  },  { name: "Staff", path: "/ourteam" },
+  { name: "Pride", path: "/pride" },
   { name: "Contact", path: "/contact" },
 ];
 
@@ -82,15 +88,27 @@ const navItems = [
         {/* DESKTOP NAV */}
         <ul className="hidden md:flex items-center font-serif space-x-4 text-2xl font-bold text-white">
           {navItems.map((item) => (
-            <li key={item.name}>
-              <Link
-                to={item.path}
-                className="hover:underline underline hover:text-yellow-200 transition"
-              >
-                {item.name}
-              </Link>
-            </li>
-          ))}
+  <li key={item.name}>
+    {item.external ? (
+      <a
+        href={item.path}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="hover:underline underline hover:text-yellow-200 transition"
+      >
+        {item.name}
+      </a>
+    ) : (
+      <Link
+        to={item.path}
+        className="hover:underline underline hover:text-yellow-200 transition"
+      >
+        {item.name}
+      </Link>
+    )}
+  </li>
+))}
+
 
           {/* ADMIN DROPDOWN */}
      {/* AUTH DROPDOWN */}
@@ -189,17 +207,30 @@ const navItems = [
         ">
           <ul className="grid grid-cols-2 gap-3 text-lg font-semibold text-center text-white">
 
-            {navItems.map((item) => (
-              <li key={item.name}>
-                <Link
-                  to={item.path}
-                  onClick={toggleMenu}
-                  className="block py-2 rounded bg-yellow-500 text-black font-bold"
-                >
-                  {item.name}
-                </Link>
-              </li>
-            ))}
+          {navItems.map((item) => (
+  <li key={item.name}>
+    {item.external ? (
+      <a
+        href={item.path}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={toggleMenu}
+        className="block py-2 rounded bg-yellow-500 text-black font-bold"
+      >
+        {item.name}
+      </a>
+    ) : (
+      <Link
+        to={item.path}
+        onClick={toggleMenu}
+        className="block py-2 rounded bg-yellow-500 text-black font-bold"
+      >
+        {item.name}
+      </Link>
+    )}
+  </li>
+))}
+
 
             {/* ADMIN DROPDOWN (MOBILE) */}
      {/* AUTH DROPDOWN */}

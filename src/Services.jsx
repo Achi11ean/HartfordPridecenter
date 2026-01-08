@@ -23,6 +23,8 @@ export default function Services({
         setServices(
           (res.data || []).map((s) => ({
             id: s.id,
+                slug: s.slug,          // ✅ REQUIRED
+
             title: s.title,
             desc: s.description,
             details: s.description,
@@ -169,17 +171,19 @@ return (
        
   
         {services.map((s) => (
-          <button
-            key={s.id}
-            onClick={() => setSelectedService(s)}
-            className="
-              group w-full text-left overflow-hidden rounded-3xl
-              bg-gradient-to-br from-white to-yellow-50
-              border-[6px] border-yellow-400 shadow-[0_8px_25px_rgba(0,0,0,0.25)]
-              hover:shadow-[0_20px_35px_rgba(0,0,0,0.35)]
-              hover:scale-[1.03] transition-all duration-500
-            "
-          >
+<Link
+  key={s.id}
+  to={`/services/${s.slug}`}
+  className="
+    group block w-full text-left overflow-hidden rounded-3xl
+    bg-gradient-to-br from-white to-yellow-50
+    border-[6px] border-yellow-400
+    shadow-[0_8px_25px_rgba(0,0,0,0.25)]
+    hover:shadow-[0_20px_35px_rgba(0,0,0,0.35)]
+    hover:scale-[1.03]
+    transition-all duration-500
+  "
+>
 
             {/* IMAGE */}
             {s.image && (
@@ -234,8 +238,7 @@ return (
                 Learn more →
               </p>
             </div>
-          </button>
-        ))}
+</Link>        ))}
       </section>
     )}
 
