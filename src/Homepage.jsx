@@ -138,13 +138,17 @@ export default function HomePage() {
               Together, we’re building a more inclusive world — where authenticity shines and every voice matters. 🌈
             </p>
 
-            <div className="mt-6 flex flex-col sm:flex-row gap-3">
+<div className="
+  mt-6
+  flex flex-wrap justify-center
+  gap-3
+">
 
                       <Link
                 to="/about"
                 className="px-6 py-3 font-bold border border-white/20 shadow-lg
                   bg-black/40 hover:bg-black/60 text-yellow-200
-                  transition-all duration-300 text-center"
+                  transition-all duration-300 text-center "
               >
                 About Us
               </Link>
@@ -167,6 +171,16 @@ export default function HomePage() {
             >
             Donate
           </Link>
+
+   <Link
+              to="/volunteer"
+              className="block text-center px-2 py-3 font-semibold text-black border border-black shadow-lg 
+              bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 
+              hover:from-yellow-600 hover:via-amber-500 hover:to-yellow-400
+              transition-all duration-300"
+            >
+              Volunteer
+            </Link>
                       <Link
             to="/sponsors"
             state={{ openSponsors: true }}
@@ -177,6 +191,8 @@ export default function HomePage() {
             >
             Sponsors
           </Link>
+
+
             </div>
           </motion.div>
 

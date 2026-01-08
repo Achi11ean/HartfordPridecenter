@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import CommitteesPublic from "./CommitteesPublic";
+import SpotlightPublic from "./SpotlightPublic";
+
 
 const API = "https://singspacebackend.onrender.com";
 const PRIDE_ID = 2; // later: route param
@@ -214,6 +216,7 @@ Our Team
             ))}
           </div>
         )}
+<SpotlightPublic />
 
         <div className="text-center mt-12">
           <Link

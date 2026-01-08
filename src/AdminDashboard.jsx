@@ -24,6 +24,9 @@ import PastNewsletters from "./PastNewsletters";
 import CommitteesPublic from "./CommitteesPublic";
 import CreateFunder from "./CreateFunder";
 import ManageFunders from "./ManageFunders";
+import CreateSpotlight from "./CreateSpotlight";
+import ManageSpotlights from "./ManageSpotlight";
+
 export default function AdminDashboard() {
   const navigate = useNavigate();
   const { isAuthenticated, isAdmin, user, logout } = useAuth();
@@ -32,6 +35,7 @@ const [vendorsSubTab, setVendorsSubTab] = useState("add");
 const [newsletterSubTab, setNewsletterSubTab] = useState("subscribers");
 const [committeesSubTab, setCommitteesSubTab] = useState("create");
 const [fundersSubTab, setFundersSubTab] = useState("create");
+const [volunteerSubTab, setVolunteerSubTab] = useState("create_spotlight");
 
 
   const [activeTab, setActiveTab] = useState("staff");
@@ -240,7 +244,41 @@ const [sponsorSubTab, setSponsorSubTab] = useState("add_prospect");
 {activeTab === "messaging" && <AdminMessaging />}
 
           {activeTab === "staff" && <Staff />}
-          {activeTab === "volunteers" && <Volunteers />}
+
+
+{activeTab === "volunteers" && (
+  <div className="w-full space-y-6">
+
+    {/* Volunteer Sub Tabs */}
+    <div className="flex gap-3 flex-wrap">
+      <SubTabButton
+        label="📥 Submissions"
+        active={volunteerSubTab === "submissions"}
+        onClick={() => setVolunteerSubTab("submissions")}
+      />
+      <SubTabButton
+        label="🌟 Create Spotlight"
+        active={volunteerSubTab === "create_spotlight"}
+        onClick={() => setVolunteerSubTab("create_spotlight")}
+      />
+      <SubTabButton
+        label="🛠 Manage Spotlights"
+        active={volunteerSubTab === "manage_spotlights"}
+        onClick={() => setVolunteerSubTab("manage_spotlights")}
+      />
+    </div>
+
+    {/* Sub Tab Content */}
+    {volunteerSubTab === "submissions" && <Volunteers />}
+
+    {volunteerSubTab === "create_spotlight" && <CreateSpotlight />}
+
+    {volunteerSubTab === "manage_spotlights" && <ManageSpotlights />}
+
+  </div>
+)}
+
+
           {activeTab === "services" && (
   <div className="w-full space-y-6">
 
