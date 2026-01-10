@@ -11,6 +11,20 @@ export default function AnnualPrideEventDetails() {
   const [artists, setArtists] = useState([]);
   const [loading, setLoading] = useState(true);
   const [eventHosts, setEventHosts] = useState([]);
+const formatTime12 = (time) => {
+  if (!time) return null;
+
+  // Handles "HH:mm" or "HH:mm:ss"
+  const [hour, minute] = time.split(":");
+  const date = new Date();
+  date.setHours(hour, minute);
+
+  return date.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+};
 
 
   useEffect(() => {
@@ -97,37 +111,93 @@ setEventHosts(hostsRes.data?.event_hosts || []);
   }
 
   return (
-    <section className="max-w-6xl mx-auto px-6 py-14">
-      <div className="bg-black/60 border border-yellow-400/40 rounded-3xl p-8 shadow-2xl">
-        <h2 className="text-4xl font-extrabold text-yellow-300 mb-6 text-center">
-          🌟 Annual Pride Festival
-        </h2>
+    <section className="max-w-6xl mx-auto px-2 py-4">
+      <div className=" px-1 shadow-2xl">
 
+  {eventHosts.length > 0 && (
+  <div className="mb-8 bg-black/50 border border-pink-400/40 rounded-2xl p-5">
+<h3 className="text-2xl font-extrabold text-pink-300 mb-3 text-center shadow-[0_6px_10px_-6px_rgba(255,255,255,0.8)]">
+      🌈 Pride in Karaoverse
+
+    </h3>
+
+    {eventHosts.map((host) => (
+      <div
+        key={host.id}
+        className="flex flex-col sm:flex-row items-center justify-between gap-4
+                  rounded-xl p-4"
+      >
+        {/* INFO */}
+        <div className="text-center sm:text-left">
+          <p className="text-lg font-bold text-pink-200">
+            {host.event_name || "Pride Event Host"}
+          </p>
+
+          <p className="text-sm text-pink-100 opacity-80">
+            {host.city}, {host.state}
+          </p>
+
+          {host.notes && (
+            <p className="mt-2 text-sm text-pink-100 italic max-w-xl">
+              {host.notes}
+            </p>
+          )}
+          <p className="text-center font-bold shadow-white shadow-md rounded-full p-3 mt-4 border-t text-pink-100 mb-6 max-w-3xl mx-auto text-sm sm:text-base">
+
+  Performer applications & performer profiles are managed directly through Karaoverse.
+</p>
+ 
+        </div>
+
+        {/* BUTTON */}
+<a
+  href={`https://karaoverse.com/event/${host.slug}`}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="
+    px-6 py-3 rounded-xl
+    bg-gradient-to-r from-pink-500 via-fuchsia-600 to-purple-600
+    text-white font-extrabold
+    shadow-lg
+    hover:scale-105 hover:brightness-110
+    transition
+  "
+>
+  🎤 View Page
+</a>
+
+      </div>
+    ))}
+  </div>
+)}
         <div className="grid md:grid-cols-2 gap-8 text-yellow-100">
           {/* LEFT */}
           <div className="space-y-4">
-            <p className="flex items-center gap-3 text-lg">
-              <FaCalendarAlt className="text-yellow-300" />
-              {event.date
-                ? new Date(event.date).toLocaleDateString("en-US", {
-                    weekday: "long",
-                    month: "long",
-                    day: "numeric",
-                    year: "numeric",
-                  })
-                : "Date TBA"}
-              {event.start_time && (
-                <>
-                  {" "}
-                  • {event.start_time}
-                  {event.end_time && ` – ${event.end_time}`}
-                </>
-              )}
-            </p>
+          <p className="flex items-center gap-3 text-lg">
+  <FaCalendarAlt className="text-yellow-300" />
+
+  {event.date
+    ? new Date(event.date).toLocaleDateString("en-US", {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      })
+    : "Date TBA"}
+<br/>
+  {event.start_time && (
+    <>
+      {" "}
+      • {formatTime12(event.start_time)}
+      {event.end_time && ` – ${formatTime12(event.end_time)}`}
+    </>
+  )}
+</p>
+
 
             <p className="flex items-center gap-3 text-lg">
               <FaMapMarkerAlt className="text-yellow-300" />
-              {event.venue_name}, {event.city}, {event.state}
+              {event.address}, {event.city}, {event.state}
             </p>
 
             {event.notes && (
@@ -194,61 +264,7 @@ setEventHosts(hostsRes.data?.event_hosts || []);
          
 
         </div>
-         {eventHosts.length > 0 && (
-  <div className="mt-8 bg-black/50 border border-pink-400/40 rounded-2xl p-5">
-    <h3 className="text-2xl font-extrabold text-pink-300 mb-3 text-center">
-      🌈 Pride in Karaoverse
-    </h3>
-
-    {eventHosts.map((host) => (
-      <div
-        key={host.id}
-        className="flex flex-col sm:flex-row items-center justify-between gap-4
-                   bg-black/40 border border-pink-400/30 rounded-xl p-4"
-      >
-        {/* INFO */}
-        <div className="text-center sm:text-left">
-          <p className="text-lg font-bold text-pink-200">
-            {host.event_name || "Pride Event Host"}
-          </p>
-
-          <p className="text-sm text-pink-100 opacity-80">
-            {host.city}, {host.state}
-          </p>
-
-          {host.notes && (
-            <p className="mt-2 text-sm text-pink-100 italic max-w-xl">
-              {host.notes}
-            </p>
-          )}
-          <p className="text-center border-t text-pink-100 mb-6 max-w-3xl mx-auto text-sm sm:text-base">
-
-  Opportunities, applications, and performer details are managed directly through Karaoverse.
-</p>
- 
-        </div>
-
-        {/* BUTTON */}
-<a
-  href={`https://karaoverse.com/event/${host.slug}`}
-  target="_blank"
-  rel="noopener noreferrer"
-  className="
-    px-6 py-3 rounded-xl
-    bg-gradient-to-r from-pink-500 via-fuchsia-600 to-purple-600
-    text-white font-extrabold
-    shadow-lg
-    hover:scale-105 hover:brightness-110
-    transition
-  "
->
-  🎤 View Page
-</a>
-
-      </div>
-    ))}
-  </div>
-)}
+       
       </div>
     </section>
   );

@@ -30,7 +30,24 @@ useEffect(() => {
       console.error("Error loading Annual Pride event:", err)
     );
 }, []);
+const SectionHeader = ({ icon, title, subtitle }) => (
+  <div className="text-center mb-10">
+    <h3 className="text-5xl sm:text-6xl font-[Aspire] text-yellow-300 drop-shadow-lg">
+      {icon} {title}
+    </h3>
+    <p className="mt-2 text-yellow-100 font-semibold tracking-wide">
+      {subtitle}
+    </p>
+  </div>
+);
 
+const RainbowDivider = () => (
+  <div className="my-16 h-1 w-full rounded-full bg-gradient-to-r 
+    from-red-500 via-orange-400 via-yellow-300 via-green-400 
+    via-blue-400 via-purple-500 to-pink-500
+    shadow-[0_0_20px_rgba(255,255,255,0.35)]
+  " />
+);
 
 
   return (
@@ -97,9 +114,9 @@ useEffect(() => {
 
 
       {/* 🟡 EVENT OVERVIEW */}
-      <section className="max-w-4xl mx-auto text-center px-6 py-10">
+      <section className="max-w-4xl mx-auto text-center px-2 py-2">
         <h2 className="text-3xl font-bold text-yellow-300 mb-4">
-          The Biggest Pride Event in Hartford
+          The Biggest Pride Event <br/> in Hartford
         </h2>
 
         <p className="text-yellow-100 leading-relaxed text-lg">
@@ -109,13 +126,12 @@ useEffect(() => {
           parade, and a celebration that lights up the city.
         </p>
       </section>
-<AnnualPrideEventDetails />
 
       {/* 🎭 MAIN FEATURES */}
-      <section className="max-w-6xl mx-auto grid md:grid-cols-1 gap-8 px-6 py-10">
+      <section className="max-w-6xl mx-auto grid md:grid-cols-1 gap-8 px-2 py-2">
 
 
-        <div className="bg-black/60 p-6 rounded-2xl border border-yellow-500/40 shadow-lg">
+        <div className="bg-black/60 p-2 rounded-2xl border border-yellow-500/40 shadow-lg">
           <FaMapMarkerAlt className="text-4xl text-yellow-300 mb-3 mx-auto" />
           <h3 className="text-xl font-bold text-yellow-300 mb-">
             Pride Itinerary
@@ -152,24 +168,114 @@ useEffect(() => {
 
        
       </section>
-{/* 🛍️ PRIDE VENDORS */}
-<section className="max-w-full  mx-auto px-6 py-12">
-  <h2 className="text-3xl font-extrabold text-center  text-yellow-300 mb-8">
-    🌈 Pride Sponsors, Vendors & Community Partners!
+
+      <AnnualPrideEventDetails />
+{/* 🌈 PRIDE PARTNERS SHOWCASE */}
+<section className="relative w-full px-2 py-2 overflow-hidden">
+
+  {/* 🌈 Ambient Pride Glow */}
+  <div className="absolute inset-0 pointer-events-none">
+    <div className="absolute top-10 left-10 w-72 h-72 bg-pink-500/20 blur-3xl rounded-full" />
+    <div className="absolute bottom-10 right-10 w-96 h-96 bg-yellow-400/20 blur-3xl rounded-full" />
+    <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-purple-500/20 blur-3xl rounded-full" />
+  </div>
+
+  <div className="relative max-w-7xl mx-auto">
+
+    {/* 🌈 MAIN HEADER */}
+    <div className="text-center mb-16">
+      <h2 className="
+        text-4xl sm:text-5xl md:text-6xl
+        font-extrabold
+        bg-gradient-to-r from-pink-400 via-yellow-300 to-purple-400
+        bg-clip-text text-transparent
+        drop-shadow-lg
+        mb-4
+      ">
+         Pride  <br/> Sponsors, Vendors & Community Partners
+      </h2>
+
+      <p className="max-w-3xl mx-auto text-yellow-100 text-lg font-semibold">
+        Powered by the incredible businesses, creators, and organizations
+        who make Pride celebrations possible.
+      </p>
+    </div>
+<div className="text-center mb-4 bg-black/40 rounded-xl p-4 border-2 border-yellow-400/60 shadow-xl">
+
+  {/* 📸 VOLUNTEER IMAGE */}
+  <img
+    src="https://main-stream.org/wp-content/uploads/2024/05/call-for-Pride-volunteers-cover-image-770x434-1.jpg"
+    alt="Pride event volunteer helping at the festival"
+    className="
+      w-full max-w-xl mx-auto mb-4
+      rounded-xl
+      border-2 border-yellow-300
+      shadow-lg
+      object-cover
+    "
+  />
+
+  <h2 className="text-3xl font-bold text-yellow-300 mb-3">
+    Become a Volunteer
   </h2>
 
-  <h3 className="text-6xl font-[Aspire]"> Sponsors</h3>
-  <SponsorSlider />
-                 <hr className=" my-6" />
-                   <h3 className="text-6xl font-[Aspire]"> Vendors</h3>
+  <p className="text-yellow-100 text-lg mb-6">
+    Support Capital City Pride by lending a helping hand!
+  </p>
 
-                 <VendorSlider />
-                 <hr className=" my-6" />
-  <h3 className="text-6xl font-[Aspire]"> Funders</h3>
+  <button
+    onClick={() => navigate("/contact")}
+    className="
+      inline-block px-8 py-3 rounded-xl
+      bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600
+      font-bold text-black
+      border-2 border-white
+      shadow-lg
+      hover:scale-105 transition
+    "
+  >
+    Contact Us
+  </button>
 
-                 <PublicFundersSection />
+</div>
 
+    {/* 🏆 SPONSORS */}
+    <div className="mb-20">
+      <SectionHeader
+        icon="🏆"
+        title="Sponsors"
+        subtitle="Supporting Pride at the highest level"
+      />
+      <SponsorSlider />
+    </div>
+
+    <RainbowDivider />
+
+    {/* 🛍️ VENDORS */}
+    <div className="my-20">
+      <SectionHeader
+        icon="🛍️"
+        title="Vendors"
+        subtitle="Local businesses bringing the magic"
+      />
+      <VendorSlider />
+    </div>
+
+    <RainbowDivider />
+
+    {/* 💖 FUNDERS */}
+    <div className="mt-20">
+      <SectionHeader
+        icon="💖"
+        title="Funders"
+        subtitle="Community champions making it happen"
+      />
+      <PublicFundersSection />
+    </div>
+
+  </div>
 </section>
+
       {/* 🛍️ VENDOR / SPONSOR / VOLUNTEER */}
 
       {/* ⭐ Sponsor Modal */}
