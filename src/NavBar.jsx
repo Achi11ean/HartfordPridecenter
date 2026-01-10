@@ -48,7 +48,7 @@ const navItems = [
     name: "Events",
     path: "https://karaoverse.com/events",
     external: true,
-  },  { name: "Staff", path: "/ourteam" },
+  },  { name: "Team", path: "/ourteam" },
   { name: "Pride", path: "/pride" },
   { name: "Contact", path: "/contact" },
 ];

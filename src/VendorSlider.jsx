@@ -2,45 +2,53 @@ import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaTimes, FaGlobe } from "react-icons/fa";
-
+import { Link } from "react-router-dom";
 const API = "https://singspacebackend.onrender.com";
 const PRIDE_ID = 2; // 🔒 hard-coded (global Pride)
 
-export default function SponsorSlider() {
-  const [sponsors, setSponsors] = useState([]);
+export default function VendorSlider() {
+  const [vendors, setVendors] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeSponsor, setActiveSponsor] = useState(null);
+  const [activeVendor, setActiveVendor] = useState(null);
   const sliderRef = useRef(null);
 
   useEffect(() => {
-    const fetchSponsors = async () => {
+    const fetchVendors = async () => {
       try {
         const res = await axios.get(
-          `${API}/api/pride/${PRIDE_ID}/sponsors/approved`
+          `${API}/api/pride/${PRIDE_ID}/vendors`
         );
-        setSponsors(res.data || []);
+
+        // show only active + approved/confirmed vendors
+        setVendors(
+          (res.data || []).filter(
+            (v) =>
+              v.is_active &&
+              ["approved", "confirmed"].includes(v.status)
+          )
+        );
       } catch (err) {
-        console.error("[SponsorSlider] Failed to load sponsors", err);
+        console.error("[VendorSlider] Failed to load vendors", err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchSponsors();
+    fetchVendors();
   }, []);
 
   if (loading) {
     return (
       <p className="text-center text-sm text-neutral-400">
-        Loading sponsors…
+        Loading vendors…
       </p>
     );
   }
 
-  if (sponsors.length === 0) {
+  if (vendors.length === 0) {
     return (
       <p className="text-center text-sm text-neutral-400 italic">
-        No sponsors announced yet.
+        Vendor list coming soon.
       </p>
     );
   }
@@ -56,14 +64,14 @@ export default function SponsorSlider() {
           dragConstraints={{ left: -1000, right: 0 }}
           whileTap={{ scale: 0.98 }}
         >
-          {sponsors.map((s) => (
+          {vendors.map((v) => (
             <motion.button
-              key={s.id}
+              key={v.id}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
-              onClick={() => setActiveSponsor(s)}
+              onClick={() => setActiveVendor(v)}
               className="
-                min-w-[160px] sm:min-w-[200px]
+                min-w-[180px] sm:min-w-[220px]
                 bg-white/90
                 border border-yellow-300
                 rounded-xl
@@ -73,24 +81,24 @@ export default function SponsorSlider() {
                 flex flex-col items-center justify-center
               "
             >
-              {s.logo_url ? (
+              {v.image_url ? (
                 <img
-                  src={s.logo_url}
-                  alt={s.organization}
-                  className="h-16 w-auto object-contain mb-2"
+                  src={v.image_url}
+                  alt={v.company_name}
+                  className="h-20 w-auto object-contain mb-2 rounded"
                 />
               ) : (
-                <div className="h-16 flex items-center text-xs text-neutral-500">
-                  No Logo
+                <div className="h-20 flex items-center text-xs text-neutral-500 px-2">
+                  {v.company_name}
                 </div>
               )}
 
               <p className="text-sm font-bold text-black leading-tight">
-                {s.organization}
+                {v.company_name}
               </p>
 
-              <p className="text-[11px] text-neutral-600 mt-1">
-                {s.tier}
+              <p className="text-[11px] text-neutral-600 mt-1 italic">
+                {v.vendor_type}
               </p>
             </motion.button>
           ))}
@@ -99,36 +107,27 @@ export default function SponsorSlider() {
         <div className="mt-2 text-center text-[11px] text-neutral-400">
           ← swipe to see more →
         </div>
-          <div className="text-center mt-4 bg-black/40 rounded-xl p-2 border-2 border-yellow-400/60 shadow-xl">
-          <h2 className="text-3xl font-bold text-yellow-300 mb-3">
-            Become a Sponsor
-          </h2>
-
-          <p className="text-yellow-100 text-lg mb-6">
-            Support Hartford City Pride while gaining powerful brand visibility.
-          </p>
-
-<button
-  onClick={() => navigate("/sponsorinvitation")}
-  className="
-    inline-block px-8 py-3 rounded-xl
-    bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600
-    font-bold text-black
-    border-2 border-white
-    shadow-lg
-    hover:scale-105 transition
-  "
->
-  Sponsorship Options
-</button>
-
-        </div>
-
+                <div className="text-center mt-4 bg-black/40 rounded-xl p-2 border-2 border-yellow-400/60 shadow-xl">
+                  <h2 className="text-3xl font-bold text-yellow-300 mb-3">
+                    Become a Vendor
+                  </h2>
+        
+                  <p className="text-yellow-100 text-lg mb-6">
+                    Help us craft a unique, exciting , and inclusive Pride experience!
+                  </p>
+        
+                  <Link
+                    to="/volunteer"
+                    className="inline-block px-8 py-3 rounded-xl bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 font-bold text-black border-2 border-white shadow-lg hover:scale-105 transition"
+                  >
+                   Contact us
+                  </Link>
+                </div>
       </div>
 
       {/* ================= MODAL ================= */}
       <AnimatePresence>
-        {activeSponsor && (
+        {activeVendor && (
           <motion.div
             className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
             initial={{ opacity: 0 }}
@@ -151,53 +150,60 @@ export default function SponsorSlider() {
             >
               {/* CLOSE */}
               <button
-                onClick={() => setActiveSponsor(null)}
+                onClick={() => setActiveVendor(null)}
                 className="absolute top-3 right-3 text-yellow-300 hover:text-white transition"
               >
                 <FaTimes size={22} />
               </button>
 
-              {/* LOGO */}
+              {/* IMAGE */}
               <div className="flex justify-center mb-6">
-                {activeSponsor.logo_url ? (
+                {activeVendor.image_url ? (
                   <img
-                    src={activeSponsor.logo_url}
-                    alt={activeSponsor.organization}
-                    className="max-h-32 object-contain rounded-xl bg-white p-4"
+                    src={activeVendor.image_url}
+                    alt={activeVendor.company_name}
+                    className="max-h-40 object-cover rounded-xl bg-white p-2"
                   />
                 ) : (
                   <div className="px-6 py-4 bg-white text-black font-black rounded-xl">
-                    {activeSponsor.organization}
+                    {activeVendor.company_name}
                   </div>
                 )}
               </div>
 
               {/* NAME */}
               <h2 className="text-3xl font-black text-center mb-1">
-                {activeSponsor.organization}
+                {activeVendor.company_name}
               </h2>
 
-              {/* TIER */}
-              <p className="text-center text-lg font-bold text-yellow-300 mb-4">
-                {activeSponsor.tier} Sponsor
+              {/* TYPE */}
+              <p className="text-center text-lg font-semibold text-yellow-300 mb-4">
+                {activeVendor.vendor_type}
               </p>
 
-              {/* MESSAGE / NOTES */}
-              {(activeSponsor.message ||
-                activeSponsor.additional_notes) && (
-                <div className="bg-black/50 border border-yellow-400/40 rounded-xl p-4 mb-5">
-                  <p className="text-sm leading-relaxed whitespace-pre-line">
-                    {activeSponsor.message ||
-                      activeSponsor.additional_notes}
-                  </p>
-                </div>
+              {/* TIME (optional) */}
+              {(activeVendor.start_time || activeVendor.end_time) && (
+                <p className="text-center text-sm text-yellow-100 mb-4">
+                  {activeVendor.start_time && "Starts: "}
+                  {activeVendor.start_time &&
+                    new Date(activeVendor.start_time).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  {activeVendor.end_time && " • Ends: "}
+                  {activeVendor.end_time &&
+                    new Date(activeVendor.end_time).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                </p>
               )}
 
-              {/* LINKS */}
-              <div className="flex flex-wrap justify-center gap-3">
-                {activeSponsor.website && (
+              {/* WEBSITE */}
+              {activeVendor.website_url && (
+                <div className="flex justify-center">
                   <a
-                    href={activeSponsor.website}
+                    href={activeVendor.website_url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="
@@ -210,28 +216,8 @@ export default function SponsorSlider() {
                   >
                     <FaGlobe /> Visit Website
                   </a>
-                )}
-
-                {activeSponsor.social_links &&
-                  activeSponsor.social_links
-                    .split(",")
-                    .map((link, i) => (
-                      <a
-                        key={i}
-                        href={link.trim()}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="
-                          px-4 py-2 rounded-xl
-                          border border-yellow-400
-                          text-yellow-200
-                          hover:bg-yellow-400/20 transition
-                        "
-                      >
-                        Social Link
-                      </a>
-                    ))}
-              </div>
+                </div>
+              )}
             </motion.div>
           </motion.div>
         )}

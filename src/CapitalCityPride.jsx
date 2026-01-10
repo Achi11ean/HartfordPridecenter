@@ -3,7 +3,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import SponsorSlider from "./SponsorSlider";
-
+import PublicFundersSection from "./PublicFundersSection";
+import VendorSlider from "./VendorSlider";
+import AnnualPrideEventDetails from "./AnnualPrideEventDetails";
 import {
   FaInstagram,
   FaFacebook,
@@ -29,14 +31,7 @@ useEffect(() => {
     );
 }, []);
 
-useEffect(() => {
-  axios
-    .get("https://singspacebackend.onrender.com/api/pride/2/vendors")
-    .then((res) => setVendors(res.data || []))
-    .catch((err) =>
-      console.error("Error loading Pride vendors:", err)
-    );
-}, []);
+
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-amber-900 to-yellow-900 text-white pt-24">
@@ -114,6 +109,7 @@ useEffect(() => {
           parade, and a celebration that lights up the city.
         </p>
       </section>
+<AnnualPrideEventDetails />
 
       {/* 🎭 MAIN FEATURES */}
       <section className="max-w-6xl mx-auto grid md:grid-cols-1 gap-8 px-6 py-10">
@@ -157,7 +153,7 @@ useEffect(() => {
        
       </section>
 {/* 🛍️ PRIDE VENDORS */}
-<section className="max-w-full bg-black/60 mx-auto px-6 py-12">
+<section className="max-w-full  mx-auto px-6 py-12">
   <h2 className="text-3xl font-extrabold text-center  text-yellow-300 mb-8">
     🌈 Pride Sponsors, Vendors & Community Partners!
   </h2>
@@ -165,96 +161,16 @@ useEffect(() => {
   <h3 className="text-6xl font-[Aspire]"> Sponsors</h3>
   <SponsorSlider />
                  <hr className=" my-6" />
-  <h3 className="text-6xl font-[Aspire]"> Vendors</h3>
+                   <h3 className="text-6xl font-[Aspire]"> Vendors</h3>
 
-  {vendors.length === 0 ? (
-    <p className="text-center text-yellow-200 italic">
-      Vendor list coming soon.
-    </p>
-  ) : (
-    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {vendors.map((v) => (
-        <div
-          key={v.id}
-          className="bg-black/60 border border-yellow-400/40 rounded-2xl p-5 shadow-xl"
-        >
-          <h3 className="text-xl font-bold text-yellow-300">
-            {v.company_name}
-          </h3>
+                 <VendorSlider />
+                 <hr className=" my-6" />
+  <h3 className="text-6xl font-[Aspire]"> Funders</h3>
 
-          <p className="text-sm italic text-yellow-100">
-            {v.vendor_type}
-          </p>
+                 <PublicFundersSection />
 
-          {v.website_url && (
-            <a
-              href={v.website_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block mt-3 text-sm font-bold text-black
-                bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-600
-                px-4 py-1 rounded shadow hover:brightness-110 transition"
-            >
-              Visit Website
-            </a>
-          )}
-        </div>
-      ))}
-    </div>
-  )}
 </section>
       {/* 🛍️ VENDOR / SPONSOR / VOLUNTEER */}
-      <section className="max-w-5xl mx-auto px-6 py-10 space-y-16">
-
-        {/* 🟡 Vendor */}
-      
-
-        {/* 🟡 Sponsor */}
-        <div className="text-center bg-black/40 rounded-xl p-6 border-2 border-yellow-400/60 shadow-xl">
-          <h2 className="text-3xl font-bold text-yellow-300 mb-3">
-            Become a Sponsor
-          </h2>
-
-          <p className="text-yellow-100 text-lg mb-6">
-            Support Hartford City Pride while gaining powerful brand visibility.
-            Sponsorship levels include logo placements, stage mentions, parade
-            features, and VIP options.
-          </p>
-
-<button
-  onClick={() => navigate("/sponsorinvitation")}
-  className="
-    inline-block px-8 py-3 rounded-none
-    bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600
-    font-bold text-black
-    border-2 border-white
-    shadow-lg
-    hover:scale-105 transition
-  "
->
-  View Sponsorship Options
-</button>
-
-        </div>
-
-        {/* 🟡 Volunteer */}
-        <div className="text-center bg-black/40 rounded-xl p-6 border-2 border-yellow-400/60 shadow-xl">
-          <h2 className="text-3xl font-bold text-yellow-300 mb-3">
-            Become a Volunteer
-          </h2>
-
-          <p className="text-yellow-100 text-lg mb-6">
-            Help us create a safe, joyful, and inclusive Pride experience!
-          </p>
-
-          <Link
-            to="/volunteer"
-            className="inline-block px-8 py-3 rounded-none bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 font-bold text-black border-2 border-white shadow-lg hover:scale-105 transition"
-          >
-            Sign Up to Volunteer
-          </Link>
-        </div>
-      </section>
 
       {/* ⭐ Sponsor Modal */}
       {showSponsorModal && (

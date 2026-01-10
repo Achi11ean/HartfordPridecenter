@@ -173,44 +173,41 @@ const createSpotlight = async () => {
       </div>
 
       {/* ---------- FORM ---------- */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <input
-          placeholder="Name"
-          value={form.name}
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
-          className="input"
-        />
-        <input
-          placeholder="Email"
-          value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-          className="input"
-        />
-        <input
-          placeholder="Phone"
-          value={form.phone}
-          onChange={(e) => setForm({ ...form, phone: e.target.value })}
-          className="input"
-        />
-        <input
-          placeholder="Role"
-          value={form.role}
-          onChange={(e) => setForm({ ...form, role: e.target.value })}
-          className="input"
-        />
-        <input
-          type="number"
-          placeholder="Years of Service"
-          value={form.years_of_service}
-          onChange={(e) =>
-            setForm({ ...form, years_of_service: e.target.value })
-          }
-          className="input"
-        />
-      </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
+  {[
+    { label: "Name", key: "name", type: "text" },
+    { label: "Email", key: "email", type: "email" },
+    { label: "Phone", key: "phone", type: "tel" },
+    { label: "Role", key: "role", type: "text" },
+    { label: "Years of Service", key: "years_of_service", type: "number" },
+  ].map(({ label, key, type }) => (
+    <div key={key} className="relative group">
+      <input
+        type={type}
+        value={form[key] || ""}
+        onChange={(e) => setForm({ ...form, [key]: e.target.value })}
+        className="
+          peer w-full bg-black/40 text-white
+          border border-white/20 rounded-xl
+          px-4 pt-6 pb-2
+          focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/30
+          outline-none transition
+        "
+        placeholder=" "
+      />
+      <label
+        className="
+          absolute left-4 top-2 text-xs text-white/50
+          peer-focus:text-emerald-300 transition
+        "
+      >
+        {label}
+      </label>
+    </div>
+  ))}
+</div>
 
-      {/* ---------- IMAGE UPLOAD / URL ---------- */}
-   {/* ---------- IMAGE UPLOAD / URL ---------- */}
+{/* ---------- IMAGE UPLOAD / URL ---------- */}
 <div className="mb-6 space-y-3">
   <div className="flex flex-col sm:flex-row gap-3">
     {/* File upload */}
@@ -259,7 +256,6 @@ const createSpotlight = async () => {
         className="w-full p-4 rounded-xl bg-black/60 border border-white/20 mb-6"
       />
 
-      {/* ---------- ACTIONS ---------- */}
      {/* ---------- ACTION ---------- */}
 <div className="flex justify-center">
   <button

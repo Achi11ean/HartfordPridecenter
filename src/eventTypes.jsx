@@ -11,6 +11,8 @@ export const EVENT_TYPES = [
   { value: "theatre", label: "🎭 Theatre Production" },
   { value: "audition", label: "🎬 Auditions" },
   { value: "lgbtqia_plus", label: "🌈 LGBTQIA+" },
+  { value: "pride", label: "🌈 Pride Festival" },
+
   { value: "poetry_slam", label: "📝 Poetry Slam" },
   { value: "comedy", label: "🤡 Comedy Show" },
 
@@ -53,6 +55,7 @@ export const EVENT_TYPE_STYLES = {
 
   open_mic:
     "bg-gradient-to-r from-green-600 to-green-400 border-green-700 text-white",
+    
 
   live_music:
     "bg-gradient-to-r from-lime-400 to-lime-200 border-lime-600 text-lime-900",
@@ -63,6 +66,9 @@ export const EVENT_TYPE_STYLES = {
   /* 🌈 COMMUNITY & IDENTITY */
   lgbtqia_plus:
     "bg-gradient-to-r from-purple-700 via-pink-600 to-yellow-400 border-purple-800 text-white",
+    pride:
+  "bg-gradient-to-r from-pink-600 via-yellow-400 to-cyan-400 border-pink-700 text-white",
+
 
   audition:
     "bg-gradient-to-r from-indigo-600 to-blue-500 border-indigo-700 text-white",
@@ -127,6 +133,9 @@ export const EVENT_TYPE_DESCRIPTION_MAP = {
     "Enjoy bands and musicians performing live sets.",
   drag:
     "Fabulous queens and kings serving glamour, talent, and sass!",
+      pride:
+    "Large-scale Pride celebrations featuring parades, festivals, live entertainment, vendors, and community resources.",
+
   trivia:
     "Test your knowledge in a fun team-based competition.",
   theatre:
@@ -241,6 +250,12 @@ speed_dating: [
   "https://res.cloudinary.com/jerrick/image/upload/v1620921242/609d4b97218235001cf4d7a6.jpg",
   "https://cdn2.stylecraze.com/wp-content/uploads/2022/09/A-young-couple-in-love-walking-in-park-in-autumn-time-.jpg.webp"
 ],
+pride: [
+  "https://media.gettyimages.com/id/1140717310/photo/pride-parade.jpg?s=612x612&w=0&k=20&c=fdc8UEDs1lE9I-eKh-NN6FyycHLT4e5qZyQm5a_sJ3c=",
+  "https://media.istockphoto.com/id/1164089117/photo/pride-parade-with-rainbow-flags.jpg?s=612x612&w=0&k=20&c=8pZ7P3EN4MZb9pRZ8GFn7D5sS7Z6w4q8YvJzZsE7zXo=",
+  "https://media.istockphoto.com/id/1325901754/photo/pride-celebration-crowd.jpg?s=612x612&w=0&k=20&c=Hc6v9f1lYv1B5m6wJwz5ZP0BzHXYm1P7Z0F7m0p6l1A=",
+],
+
 
 };
 

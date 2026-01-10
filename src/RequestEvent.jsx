@@ -5,62 +5,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
 import {
-  EVENT_TYPES,
-  normalizeEventType,
+  EVENT_TYPES as EVENT_TYPE_OPTIONS,
   parseEventTypes,
 } from "./eventTypes";
 
 
 const RequestEvent = ({ initialVenue = {} }) => {
-
-
-    const getAnnualPridePrefix = () =>
-  prideName ? `${prideName} Presents: Annual Pride Event` : "";
-
-const hasAnnualPridePrefix = (txt = "") => {
-  if (!prideName) return false;
-  const re = new RegExp(
-    `^\\s*${prideName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s+presents\\s*:\\s*annual pride event`,
-    "i"
-  );
-  return re.test(txt);
-};
-
-const stripAnnualPridePrefix = (txt = "") => {
-  if (!prideName) return txt;
-  const re = new RegExp(
-    `^\\s*${prideName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s+presents\\s*:\\s*annual pride event\\s*`,
-    "i"
-  );
-  return txt.replace(re, "").trimStart();
-};
-
-const toggleAnnualPridePrefix = () => {
-  if (!prideName) return;
-
-  setFormData((prev) => {
-    let desc = prev.description || "";
-
-    // Remove normal prefix if present (mutual exclusivity)
-    if (hasPridePrefix(desc)) {
-      desc = stripPridePrefix(desc);
-    }
-
-    if (hasAnnualPridePrefix(desc)) {
-      return {
-        ...prev,
-        description: stripAnnualPridePrefix(desc),
-      };
-    }
-
-    const next = `${getAnnualPridePrefix()} ${desc}`.trim();
-    return {
-      ...prev,
-      description: next.slice(0, 800),
-    };
-  });
-};
-
   // ---------- Core form state ----------
   const [formData, setFormData] = useState({
     venue_name: initialVenue?.venue_name || "",
@@ -77,9 +27,6 @@ const toggleAnnualPridePrefix = () => {
     recurrence_anchor_date: "",
     eventbrite_url: "",
   });
-const API = "https://singspacebackend.onrender.com";
-
-const [prideName, setPrideName] = useState("");
 
   const [relatedArtistData, setRelatedArtistData] = useState([]);
 
@@ -128,47 +75,27 @@ const monthlyRuleText =
 
   const [venueNameError, setVenueNameError] = useState("");
 
-const getPridePrefix = () =>
-  prideName ? `${prideName} Presents:` : "";
-
-const hasPridePrefix = (txt = "") => {
-  if (!prideName) return false;
-  const re = new RegExp(
-    `^\\s*${prideName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s+presents\\s*:`,
-    "i"
-  );
-  return re.test(txt);
-};
-
-const stripPridePrefix = (txt = "") => {
-  if (!prideName) return txt;
-  const re = new RegExp(
-    `^\\s*${prideName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s+presents\\s*:\\s*`,
-    "i"
-  );
-  return txt.replace(re, "").trimStart();
-};
-
-const togglePridePrefix = () => {
-  if (!prideName) return;
-
-  setFormData((prev) => {
-    const desc = prev.description || "";
-
-    if (hasPridePrefix(desc)) {
-      return {
-        ...prev,
-        description: stripPridePrefix(desc),
-      };
-    }
-
-    const next = `${getPridePrefix()} ${desc}`.trim();
-    return {
-      ...prev,
-      description: next.slice(0, 800),
-    };
-  });
-};
+  const SKY_PREFIX = "Sky Casper Presents:";
+  const hasSkyPrefix = (txt = "") =>
+    /^\s*sky\s*casper\s*presents\s*:/i.test(txt);
+  const stripSkyPrefix = (txt = "") =>
+    txt.replace(/^\s*sky\s*casper\s*presents\s*:\s*/i, "").trimStart();
+  const toggleSkyCasperPrefix = () => {
+    setFormData((prev) => {
+      const desc = prev.description || "";
+      if (hasSkyPrefix(desc)) {
+        const stripped = stripSkyPrefix(desc);
+        return { ...prev, description: stripped };
+      }
+      const next = `${SKY_PREFIX} ${desc}`.trim();
+const trimmed = next.slice(0, 800);
+      return { ...prev, description: trimmed };
+    });
+  };
+const artistOptions = bands.map((b) => ({
+  value: b.id,
+  label: b.artist_name,
+}));
 
   // ---------- Load data ----------
   useEffect(() => {
@@ -202,21 +129,9 @@ const togglePridePrefix = () => {
       })
       .catch(() => console.error("Failed to load venues"));
   }, []);
-useEffect(() => {
-  async function fetchPride() {
-    try {
-      const res = await axios.get(`${API}/api/pride/2`);
-      setPrideName(res.data?.name || "");
-    } catch (err) {
-      console.error("Failed to load Pride Center");
-    }
-  }
-
-  fetchPride();
-}, []);
 
   // ---------- Misc helpers ----------
-const eventTypeOptions = EVENT_TYPES;
+const eventTypeOptions = EVENT_TYPE_OPTIONS;
 
 
   const handleChange = (e) => {
@@ -244,56 +159,63 @@ const eventTypeOptions = EVENT_TYPES;
   };
 
   // ---------- Build server payload (preserving your formatting) ----------
-  const buildPayload = () => {
-    const daysText = additionalDays.length
-      ? `Also Occurs on: ${additionalDays
-          .map((d) => {
-            const fmt = (t) => {
-              if (!t) return "";
-              const [hour, minute] = t.split(":");
-              const dt = new Date();
-              dt.setHours(hour, minute);
-              return dt.toLocaleTimeString([], {
-                hour: "numeric",
-                minute: "2-digit",
-              });
-            };
-            return `${d.day} ${fmt(d.start)} - ${fmt(d.end)}`;
-          })
-          .join(" | ")}`
-      : "";
+const buildPayload = () => {
+  const daysText = additionalDays.length
+    ? `Also Occurs on: ${additionalDays
+        .map((d) => {
+          const fmt = (t) => {
+            if (!t) return "";
+            const [hour, minute] = t.split(":");
+            const dt = new Date();
+            dt.setHours(hour, minute);
+            return dt.toLocaleTimeString([], {
+              hour: "numeric",
+              minute: "2-digit",
+            });
+          };
+          return `${d.day} ${fmt(d.start)} - ${fmt(d.end)}`;
+        })
+        .join(" | ")}`
+    : "";
 
-    const sevenDaysText = sevenDays ? "7 Days a Week" : "";
+  const sevenDaysText = sevenDays ? "7 Days a Week" : "";
 
-    const showDatesText = showDates.length
-      ? `Additional Show Dates:\n${showDates
-          .map((d) => ` • ${formatShowDate(d.date, d.time)}`)
-          .join("\n")}`
-      : "";
+  const showDatesText = showDates.length
+    ? `Additional Show Dates:\n${showDates
+        .map((d) => ` • ${formatShowDate(d.date, d.time)}`)
+        .join("\n")}`
+    : "";
 
-    return {
-      ...formData,
-      event_type: Array.isArray(formData.event_type)
-        ? formData.event_type.join(",")
-        : formData.event_type,
-      recurrence_pattern: formData.recurrence_pattern,
+  return {
+    // 🌈 Always tag as Pride Center ID 2
+    pride_id: 2,
+
+    ...formData,
+
+    // backend expects comma-separated string
+    event_type: formData.event_type.join(","),
+
+    recurrence_pattern: formData.recurrence_pattern,
+
     description: [
-  formData.description || "",
-  daysText,
-  sevenDaysText,
-  showDatesText,
-  monthlyRuleText, // <-- ADD THIS
-]
-  .filter(Boolean)
-  .join("\n\n"),
+      formData.description || "",
+      daysText,
+      sevenDaysText,
+      showDatesText,
+      monthlyRuleText,
+    ]
+      .filter(Boolean)
+      .join("\n\n"),
 
-      related_artist_ids: selectedBandIds,
-      eventbrite_url:
-        showEventbrite && formData.eventbrite_url
-          ? formData.eventbrite_url.trim()
-          : null,
-    };
+    related_artist_ids: selectedBandIds,
+
+    eventbrite_url:
+      showEventbrite && formData.eventbrite_url
+        ? formData.eventbrite_url.trim()
+        : null,
   };
+};
+
 
   // ---------- Submission ----------
   const handleSubmit = async (e) => {
@@ -313,10 +235,11 @@ const eventTypeOptions = EVENT_TYPES;
 
     try {
       const payload = buildPayload();
-      await axios.post(
-        "https://singspacebackend.onrender.com/event-submissions",
-        payload
-      );
+    await axios.post(
+  "https://singspacebackend.onrender.com/event-submissions/pride",
+  payload
+);
+
       setSubmitted(true);
 
       // reset
@@ -770,28 +693,24 @@ setMonthlyWeekdayRules([]);
   Event Type(s)
 </h2>
 
-              <Select
-                isMulti
-                name="event_type"
-                options={eventTypeOptions}
-                value={eventTypeOptions.filter((opt) =>
-                  formData.event_type.includes(opt.value)
-                )}
-              onChange={(selectedOptions) => {
-  const values = selectedOptions.map((opt) =>
-    normalizeEventType(opt.value)
-  );
-
-  setFormData((prev) => ({
-    ...prev,
-    event_type: values,
-  }));
-}}
-
-                className="text-md font-bold text-black z-20 text-center"
-                classNamePrefix="react-select"
-                placeholder="Select one or more event types..."
-              />
+             <Select
+  isMulti
+  name="event_type"
+  options={eventTypeOptions}
+  value={eventTypeOptions.filter((opt) =>
+    formData.event_type.includes(opt.value)
+  )}
+  onChange={(selected) => {
+    const arr = selected ? selected.map((o) => o.value) : [];
+    setFormData((prev) => ({
+      ...prev,
+      event_type: arr,
+    }));
+  }}
+  className="text-md font-bold text-black z-20 text-center"
+  classNamePrefix="react-select"
+  placeholder="Select one or more event types..."
+/>
 
               {formData.event_type.includes("theatre") && (
                 <div className="my-2 p-4 border-2 border-purple-400 rounded bg-white shadow space-y-3">
@@ -851,7 +770,7 @@ setMonthlyWeekdayRules([]);
                                                         <h2 className="text-3xl sm:text-4xl font-extrabold  bg-gradient-to-r from-pink-400 via-purple-500 to-indigo-500 text-white font-serif text-center drop-shadow-lg mb-4">
  Additional Information  
 </h2>
-<p className="text-center"> Add an Artist, Include more dates if it's weekly (not monthly or bi-weekly) or add an eventbrite link for ticket purchase! <br/>(click next to skip)</p>
+<p className="text-black text-center"> Add an Artist, Include more dates if it's weekly (not monthly or bi-weekly) or add an eventbrite link for ticket purchase! <br/>(click next to skip)</p>
               <div className="grid grid-cols-3 gap-3">
                 <button
                   type="button"
@@ -898,16 +817,19 @@ setMonthlyWeekdayRules([]);
                   <label className="block font-semibold text-purple-700">🎸 Related Artists</label>
    
                   <Select
-                    isMulti
-                    options={options}
-                    value={options.filter((opt) => selectedBandIds.includes(opt.value))}
-                    onChange={(selected) => {
-                      setSelectedBandIds(selected.map((opt) => opt.value));
-                    }}
-                    placeholder="Select artists…"
-                    className="text-sm text-black"
-                    classNamePrefix="react-select"
-                  />
+  isMulti
+  options={artistOptions}
+  value={artistOptions.filter((opt) =>
+    selectedBandIds.includes(opt.value)
+  )}
+  onChange={(selected) => {
+    setSelectedBandIds(selected ? selected.map((opt) => opt.value) : []);
+  }}
+  placeholder="Select artists…"
+  className="text-sm text-black"
+  classNamePrefix="react-select"
+/>
+
                 </div>
               )}
 
@@ -1044,45 +966,6 @@ setMonthlyWeekdayRules([]);
                                                                       <h2 className="text-3xl sm:text-4xl font-extrabold  bg-gradient-to-r from-pink-400 via-purple-500 to-indigo-500 text-white font-serif text-center drop-shadow-lg mb-4">
 Description 
 </h2>
-{prideName && (
-  <div className="flex flex-wrap gap-3 justify-center mt-2">
-    {/* Standard Pride Prefix */}
-    <button
-      type="button"
-      onClick={togglePridePrefix}
-      className={`
-        px-4 py-2 rounded font-bold shadow transition
-        ${
-          hasPridePrefix(formData.description)
-            ? "bg-red-500 text-white"
-            : "bg-gradient-to-r from-pink-500 to-purple-600 text-white"
-        }
-      `}
-    >
-      {hasPridePrefix(formData.description)
-        ? `Remove ${prideName} Presents`
-        : `${prideName} Presents`}
-    </button>
-
-    {/* Annual Pride Event Prefix */}
-    <button
-      type="button"
-      onClick={toggleAnnualPridePrefix}
-      className={`
-        px-4 py-2 rounded font-bold shadow transition
-        ${
-          hasAnnualPridePrefix(formData.description)
-            ? "bg-red-500 text-white"
-            : "bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 text-black"
-        }
-      `}
-    >
-      {hasAnnualPridePrefix(formData.description)
-        ? "Remove Annual Pride Event"
-        : "Annual Pride Event"}
-    </button>
-  </div>
-)}
 
 <textarea
   name="description"
