@@ -125,7 +125,7 @@ setEventHosts(hostsRes.data?.event_hosts || []);
       <div
         key={host.id}
         className="flex flex-col sm:flex-row items-center justify-between gap-4
-                  rounded-xl p-4"
+                  rounded-xl p-1"
       >
         {/* INFO */}
         <div className="text-center sm:text-left">
@@ -138,7 +138,7 @@ setEventHosts(hostsRes.data?.event_hosts || []);
           </p>
 
           {host.notes && (
-            <p className="mt-2 text-sm text-pink-100 italic max-w-xl">
+            <p className="mt-2 text-sm font-bold text-pink-100  max-w-xl">
               {host.notes}
             </p>
           )}

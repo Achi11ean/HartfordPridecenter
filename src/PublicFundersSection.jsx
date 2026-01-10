@@ -86,7 +86,7 @@ export default function PublicFundersSection() {
                     </p>
                   )}
 
-                  <span className="mt-auto text-xs text-yellow-300 font-semibold">
+                  <span className="mt-auto text-xs text-white font-semibold">
                     Click for details →
                   </span>
                 </div>
@@ -98,7 +98,7 @@ export default function PublicFundersSection() {
             No community funders are currently listed.
           </p>
         )}
-               <div className="mt-2 text-center text-[11px] text-neutral-400">
+               <div className="mt-2 text-center text-[18px] text-black">
           ← swipe to see more →
         </div>
       </section>

@@ -11,6 +11,7 @@ export default function VendorSlider() {
   const [loading, setLoading] = useState(true);
   const [activeVendor, setActiveVendor] = useState(null);
   const sliderRef = useRef(null);
+const isSingleVendor = vendors.length === 1;
 
   useEffect(() => {
     const fetchVendors = async () => {
@@ -57,13 +58,16 @@ export default function VendorSlider() {
     <>
       {/* ================= SLIDER ================= */}
       <div className="relative w-full overflow-hidden">
-        <motion.div
-          ref={sliderRef}
-          className="flex gap-4 cursor-grab active:cursor-grabbing"
-          drag="x"
-          dragConstraints={{ left: -1000, right: 0 }}
-          whileTap={{ scale: 0.98 }}
-        >
+    <motion.div
+  ref={sliderRef}
+  className={`flex gap-4 ${
+    isSingleVendor ? "justify-center cursor-default" : "cursor-grab active:cursor-grabbing"
+  }`}
+  drag={isSingleVendor ? false : "x"}
+  dragConstraints={isSingleVendor ? undefined : { left: -1000, right: 0 }}
+  whileTap={isSingleVendor ? undefined : { scale: 0.98 }}
+>
+
           {vendors.map((v) => (
             <motion.button
               key={v.id}
@@ -104,9 +108,12 @@ export default function VendorSlider() {
           ))}
         </motion.div>
 
-        <div className="mt-2 text-center text-[11px] text-neutral-400">
-          ← swipe to see more →
-        </div>
+  {!isSingleVendor && (
+  <div className="mt-2 text-center text-[18px] text-black">
+    ← swipe to see more →
+  </div>
+)}
+
                 <div className="text-center mt-4 bg-black/40 rounded-xl p-2 border-2 border-yellow-400/60 shadow-xl">
                   <h2 className="text-3xl font-bold text-yellow-300 mb-3">
                     Become a Vendor

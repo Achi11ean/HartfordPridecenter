@@ -51,7 +51,7 @@ const RainbowDivider = () => (
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-amber-900 to-yellow-900 text-white pt-24">
+    <div className="min-h-screen bg-gradient-to-b from-red-900  via-green-900 via-green-600 via-green-800 to-blue-400 text-white pt-24">
 
       {/* 🌞 HERO SECTION */}
       <section
