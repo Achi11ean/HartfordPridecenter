@@ -210,9 +210,9 @@ export default function HomePage() {
             <h3 className="text-2xl font-extrabold text-yellow-300">
               What you can do here
             </h3>
-            <div className="mt-3 h-[2px] w-full bg-gradient-to-r from-yellow-400/70 to-transparent" />
+            <div className="mt-3 h-[4px] w-full bg-gradient-to-r from-yellow-400/70 to-transparent" />
 
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-2">
               <FeatureCard
                 icon={<FaCalendarAlt className="text-2xl text-yellow-300" />}
                 title="Find Events"
