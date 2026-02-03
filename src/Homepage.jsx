@@ -237,43 +237,40 @@ export default function HomePage() {
             </div>
 
             {/* Featured Link */}
-            <div className="mt-7 p-5 bg-white/10 border border-yellow-400/20 shadow-xl">
-              <p className="text-yellow-100 font-bold text-lg">Featured:</p>
-              <video
-                src="/Video2.mp4"
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="
-    w-[100%]
-    max-w-[420px]
-    sm:max-w-[600px]
-    drop-shadow-2xl 
-    border-b-4 border-t border-l border-r
-    rounded-none
-  "
-              >
-                <img
-                  src="/karaoversebanner.jpeg"
-                  alt="Karaoverse Logo Fallback"
-                />
-              </video>
+            <div className="mt-2 p-5 ">
+              <p className="inline-block text-6xl font-[Aspire] w-full text-center px-6  rounded-none font-extrabold text-white border border-white/20 shadow-lg
+    bg-gradient-to-b from-yellow-500 via-orange-500 to-yellow-800
+    hover:brightness-110 transition-all duration-300">Featured:</p>
+<a
+  href="https://karaoverse.com"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  <video
+    src="/Video2.mp4"
+    autoPlay
+    loop
+    muted
+    playsInline
+    className="
+      w-[100%]
+      max-w-[420px]
+      sm:max-w-[600px]
+      drop-shadow-2xl 
+      border-b-4 border-t border-l border-r
+      rounded-none
+      cursor-pointer
+    "
+  >
+    <img
+      src="/karaoversebanner.jpeg"
+      alt="Karaoverse Logo Fallback"
+    />
+  </video>
+</a>
 
-              <a
-                href="https://karaoverse.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className=" inline-block w-full text-center px-6 py-3 font-extrabold text-white  border border-white/20 shadow-lg
-    bg-gradient-to-br from-red-500 via-black to-red-800
-    hover:brightness-110 transition-all duration-300"
-              >
-                Karaoverse.com
-                <br />{" "}
-                <span className="text-[11px] ">
-                  Local Events, Artist, Hosts & Venues
-                </span>
-              </a>
+
+
             </div>
           </motion.div>
         </section>
