@@ -1,15 +1,22 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FaInstagram, FaFacebook, FaEnvelope, FaCalendarAlt, FaHandHoldingHeart, FaUsers } from "react-icons/fa";
-import "./App.css"
+import {
+  FaInstagram,
+  FaFacebook,
+  FaEnvelope,
+  FaCalendarAlt,
+  FaHandHoldingHeart,
+  FaUsers,
+} from "react-icons/fa";
+import "./App.css";
 import EmailSubscribe from "./EmailSubscribe";
 
 export default function HomePage() {
   const year = new Date().getFullYear();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#3B0A0A] via-black to-[#7A1C1C] text-white">
+<div className="min-h-screen bg-gradient-to-br from-pink-600 via-slate-500 to-red-700 text-white">
       {/* Top Hero */}
       <header className="relative pt-28 pb-14 sm:pt-32 sm:pb-20 overflow-hidden">
         {/* Background image */}
@@ -21,9 +28,10 @@ export default function HomePage() {
           }}
         />
         {/* Overlays */}
-        <div className="absolute inset-0 bg-black/60" />
-        <div className="absolute inset-0 bg-gradient-to-br from-[#3B0A0A]/50 via-black/60 to-[#7A1C1C]/60
-" />
+        <div
+          className="absolute inset-0 bg-gradient-to-br from-[#3B0A0A]/50 via-black/60 to-[#7A1C1C]/60
+"
+        />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6">
           {/* Logo + Tag */}
@@ -36,7 +44,7 @@ export default function HomePage() {
               alt="Hartford Pride Center Logo"
               className="w-full max-w-md sm:max-w-lg shadow-2xl border-4 border-red-400"
             />
-<hr className="rainbow-hr" />
+            <hr className="rainbow-hr" />
 
             <motion.div
               initial={{ opacity: 0, y: 14 }}
@@ -48,103 +56,100 @@ export default function HomePage() {
                 Hartford Pride Center
               </h1>
               <p className="mt-4 text-lg sm:text-xl text-yellow-100/90 font-semibold">
-                Supporting & promoting LGBTQIA+ safe spaces, resources, and community connection
-                in and around Hartford, CT.
+                Supporting & promoting LGBTQIA+ safe spaces, resources, and
+                community connection in and around Hartford, CT.
               </p>
- <Link
+
+              <Link
                 to="/pride"
-                className="mt-3 inline-block w-full text-center px-6 py-3 font-extrabold text-white border border-white/20 shadow-lg
-                  bg-gradient-to-r from-[#0F2D25] via-[#18453B] to-[#0F2D25]
-                  hover:brightness-110 transition-all duration-300"
+                className="mt-3 inline-block w-full text-center  px-6 py-3 font-extrabold text-white border border-white shadow-lg
+                  bg-gradient-to-r from-[#a21f1f] via-[#3fb541] to-[#a01fba]
+                  hover:brightness-110 transition-all duration-300 neon-pulse"
               >
                 Capital City Pride 2026
               </Link>
               {/* CTAs */}
-  <nav aria-label="Primary">
-          <div className="grid mt-6 grid-cols-3 gap-3 sm:gap-4">
-
-            {/* Contact */}
-            <Link
-              to="/contact"
-              className="block text-center px-6 py-3 font-semibold text-black border border-black shadow-lg 
+              <nav aria-label="Primary">
+                <div className="grid mt-6 grid-cols-3 gap-3 sm:gap-4">
+                  {/* Contact */}
+                  <Link
+                    to="/contact"
+                    className="block text-center px-6 py-3 font-semibold text-black border border-black shadow-lg 
               bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-500 
               hover:from-amber-500 hover:via-yellow-400 hover:to-yellow-300 
               transition-all duration-300"
-            >
-              Contact
-            </Link>
+                  >
+                    Contact
+                  </Link>
 
-<a
-  href="https://karaoverse.com/events"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="block text-center px-6 py-3 font-semibold text-black border border-black shadow-lg 
+                  <a
+                    href="https://karaoverse.com/events"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block text-center px-6 py-3 font-semibold text-black border border-black shadow-lg 
     bg-gradient-to-r from-amber-300 via-yellow-400 to-yellow-500 
     hover:from-yellow-600 hover:via-yellow-400 hover:to-amber-300 
     transition-all duration-300"
->
-  Events
-</a>
+                  >
+                    Events
+                  </a>
 
-            {/* Volunteer */}
-            <Link
-              to="/funders"
-              className="block text-center px-2 py-3 font-semibold text-black border border-black shadow-lg 
+                  {/* Volunteer */}
+                  <Link
+                    to="/funders"
+                    className="block text-center px-2 py-3 font-semibold text-black border border-black shadow-lg 
               bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 
               hover:from-yellow-600 hover:via-amber-500 hover:to-yellow-400
               transition-all duration-300"
-            >
-              Funders
-            </Link>
-
-
-
-
-          </div>
-        </nav>
+                  >
+                    Funders
+                  </Link>
+                </div>
+              </nav>
 
               {/* Sponsor / Donate */}
-
             </motion.div>
           </div>
-          
         </div>
-        
       </header>
-<hr className="rainbow-hr" />
-
+      <hr className="rainbow-hr" />
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-6 pb-16">
+      <main className="max-w-7xl mx-auto px-2 pb-16">
         {/* Mission + Impact Cards */}
-<section className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-2">
           {/* Mission */}
           <motion.div
             initial={{ opacity: 0, y: 18 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="bg-white/10 backdrop-blur-md border border-yellow-400/25 shadow-2xl p-7"
+            className="bg-black/30 backdrop-blur-md border border-yellow-400/25 shadow-2xl p-2"
           >
-            <h2 className="text-3xl font-extrabold text-yellow-300">Welcome 👋</h2>
+            <h2 className="text-3xl font-extrabold text-yellow-300">
+              Welcome 👋
+            </h2>
             <div className="mt-3 h-[2px] w-full bg-gradient-to-r from-yellow-400/70 to-transparent" />
 
             <p className="mt-5 text-yellow-50/90 text-lg leading-relaxed font-semibold">
-              We believe every person deserves a space where they feel seen, supported, and celebrated.
-              Our mission is to uplift LGBTQIA+ individuals through advocacy, education, and community connection.
+              We believe every person deserves a space where they feel seen,
+              supported, and celebrated. Our mission is to uplift LGBTQIA+
+              individuals through advocacy, education, and community connection.
             </p>
 
             <p className="mt-4 text-yellow-50/90 text-lg leading-relaxed font-semibold">
-              Together, we’re building a more inclusive world — where authenticity shines and every voice matters. 🌈
+              Together, we’re building a more inclusive world — where
+              authenticity shines and every voice matters. 🌈
             </p>
 
-<div className="
+            <div
+              className="
   mt-6
   flex flex-wrap justify-center
   gap-3
-">
-
-                      <Link
+"
+            >
+              <Link
                 to="/about"
                 className="px-6 py-3 font-bold border border-white/20 shadow-lg
                   bg-black/40 hover:bg-black/60 text-yellow-200
@@ -159,40 +164,38 @@ export default function HomePage() {
                   hover:from-amber-500 hover:via-yellow-400 hover:to-yellow-300
                   transition-all duration-300 text-center"
               >
-                 Resources
+                Resources
               </Link>
-                                      <Link
-            to="https://givebutter.com/lgbtqadvocacy"
-            state={{ openSponsors: true }}
-           className="block text-center px-6 py-3 font-semibold text-black border border-black shadow-lg 
+              <Link
+                to="https://givebutter.com/lgbtqadvocacy"
+                state={{ openSponsors: true }}
+                className="block text-center px-6 py-3 font-semibold text-black border border-black shadow-lg 
               bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 
               hover:from-yellow-600 hover:via-amber-500 hover:to-yellow-400
               transition-all duration-300"
-            >
-            Donate
-          </Link>
+              >
+                Donate
+              </Link>
 
-   <Link
-              to="/volunteer"
-              className="block text-center px-2 py-3 font-semibold text-black border border-black shadow-lg 
+              <Link
+                to="/volunteer"
+                className="block text-center px-2 py-3 font-semibold text-black border border-black shadow-lg 
               bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 
               hover:from-yellow-600 hover:via-amber-500 hover:to-yellow-400
               transition-all duration-300"
-            >
-              Volunteer
-            </Link>
-                      <Link
-            to="/sponsors"
-            state={{ openSponsors: true }}
-           className="block text-center px-6 py-3 font-semibold text-black border border-black shadow-lg 
+              >
+                Volunteer
+              </Link>
+              <Link
+                to="/sponsors"
+                state={{ openSponsors: true }}
+                className="block text-center px-6 py-3 font-semibold text-black border border-black shadow-lg 
               bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 
               hover:from-yellow-600 hover:via-amber-500 hover:to-yellow-400
               transition-all duration-300"
-            >
-            Sponsors
-          </Link>
-
-
+              >
+                Sponsors
+              </Link>
             </div>
           </motion.div>
 
@@ -204,19 +207,23 @@ export default function HomePage() {
             transition={{ duration: 0.5, delay: 0.05 }}
             className="bg-black/40 border border-white/10 shadow-2xl p-7"
           >
-            <h3 className="text-2xl font-extrabold text-yellow-300">What you can do here</h3>
+            <h3 className="text-2xl font-extrabold text-yellow-300">
+              What you can do here
+            </h3>
             <div className="mt-3 h-[2px] w-full bg-gradient-to-r from-yellow-400/70 to-transparent" />
 
             <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
-<FeatureCard
-  icon={<FaCalendarAlt className="text-2xl text-yellow-300" />}
-  title="Find Events"
-  desc="See what’s happening next, updated regularly."
-  href="https://karaoverse.com/events"
-/>
+              <FeatureCard
+                icon={<FaCalendarAlt className="text-2xl text-yellow-300" />}
+                title="Find Events"
+                desc="See what’s happening next, updated regularly."
+                href="https://karaoverse.com/events"
+              />
 
               <FeatureCard
-                icon={<FaHandHoldingHeart className="text-2xl text-yellow-300" />}
+                icon={
+                  <FaHandHoldingHeart className="text-2xl text-yellow-300" />
+                }
                 title="Volunteer"
                 desc="Support the community with your time & talent."
                 to="/volunteer"
@@ -231,16 +238,14 @@ export default function HomePage() {
 
             {/* Featured Link */}
             <div className="mt-7 p-5 bg-white/10 border border-yellow-400/20 shadow-xl">
-              <p className="text-yellow-100 font-bold text-lg">
-                Featured:
-              </p>
-<video
-  src="/Video2.mp4"
-  autoPlay
-  loop
-  muted
-  playsInline
-  className="
+              <p className="text-yellow-100 font-bold text-lg">Featured:</p>
+              <video
+                src="/Video2.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="
     w-[100%]
     max-w-[420px]
     sm:max-w-[600px]
@@ -248,35 +253,36 @@ export default function HomePage() {
     border-b-4 border-t border-l border-r
     rounded-none
   "
->
-  <img
-    src="/karaoversebanner.jpeg"
-    alt="Karaoverse Logo Fallback"
-  />
-</video>
+              >
+                <img
+                  src="/karaoversebanner.jpeg"
+                  alt="Karaoverse Logo Fallback"
+                />
+              </video>
 
-             <a
-  href="https://karaoverse.com"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="mt-3 inline-block w-full text-center px-6 py-3 font-extrabold text-white  border border-white/20 shadow-lg
+              <a
+                href="https://karaoverse.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className=" inline-block w-full text-center px-6 py-3 font-extrabold text-white  border border-white/20 shadow-lg
     bg-gradient-to-br from-red-500 via-black to-red-800
     hover:brightness-110 transition-all duration-300"
->
-Karaoverse.com
-<br/> <span className="text-[11px] ">Local Events, Artist, Hosts & Venues</span>
-</a>
-
+              >
+                Karaoverse.com
+                <br />{" "}
+                <span className="text-[11px] ">
+                  Local Events, Artist, Hosts & Venues
+                </span>
+              </a>
             </div>
           </motion.div>
         </section>
         <EmailSubscribe prideId={2} />
-
       </main>
-<hr className="rainbow-hr" />
+      <hr className="rainbow-hr" />
 
       {/* Footer */}
-      <footer className="border-t border-white/10 bg-black/60">
+      <footer className="border-t border-white/10 bg-black/80">
         <div className="max-w-7xl mx-auto px-6 py-10">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Org */}
@@ -285,7 +291,8 @@ Karaoverse.com
                 Hartford Pride Center 🌈
               </h3>
               <p className="mt-2 text-yellow-100/80 font-semibold">
-                Empowering the LGBTQ+ community through support, creativity, and compassion.
+                Empowering the LGBTQ+ community through support, creativity, and
+                compassion.
               </p>
               <p className="mt-3 text-sm text-yellow-100/70 font-semibold">
                 📍 Hartford, Connecticut
@@ -294,42 +301,72 @@ Karaoverse.com
 
             {/* Links */}
             <div>
-              <h4 className="text-lg font-bold text-yellow-200">Quick Links</h4>
+              <h4 className="text-lg font-bold border-b border-yellow-400 text-yellow-200">Quick Links</h4>
               <ul className="mt-3 grid grid-cols-2 gap-2 text-sm font-semibold text-yellow-100/80">
-                <li><Link className="hover:text-yellow-300" to="/about">About</Link></li>
-                <li><Link className="hover:text-yellow-300" to="/services">Services</Link></li>
-                <li><Link className="hover:text-yellow-300" to="/events">Events</Link></li>
-                <li><Link className="hover:text-yellow-300" to="/volunteer">Volunteer</Link></li>
-                <li><Link className="hover:text-yellow-300" to="/resources">Resources</Link></li>
-                <li><Link className="hover:text-yellow-300" to="/contact">Contact</Link></li>
-                <li><Link className="hover:text-yellow-300" to="/donate">Donate</Link></li>
                 <li>
-  <a
-    href="https://givebutter.com/lgbtqadvocacy"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="hover:text-yellow-300"
-  >
-    Donate
-  </a>
-</li>
-<li>
-  <Link
-    to="/sponsors"
-    className="hover:text-yellow-300"
-  >
-    Sponsors
-  </Link>
-</li>
+                  <Link className="hover:text-yellow-300" to="/about">
+                    About
+                  </Link>
+                </li>
+                <li>
+                  <Link className="hover:text-yellow-300" to="/services">
+                    Services
+                  </Link>
+                </li>
+                <li>
+                  <Link className="hover:text-yellow-300" to="/events">
+                    Events
+                  </Link>
+                </li>
+                <li>
+                  <Link className="hover:text-yellow-300" to="/volunteer">
+                    Volunteer
+                  </Link>
+                </li>
+                <li>
+                  <Link className="hover:text-yellow-300" to="/resources">
+                    Resources
+                  </Link>
+                </li>
+                <li>
+                  <Link className="hover:text-yellow-300" to="/contact">
+                    Contact
+                  </Link>
+                </li>
+                <li>
+                  <Link className="hover:text-yellow-300" to="/donate">
+                    Donate
+                  </Link>
+                </li>
+                <li>
+                  <a
+                    href="https://givebutter.com/lgbtqadvocacy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-yellow-300"
+                  >
+                    Donate
+                  </a>
+                </li>
+                <li>
+                  <Link to="/sponsors" className="hover:text-yellow-300">
+                    Sponsors
+                  </Link>
+                </li>
 
-
-                <li><Link className="hover:text-yellow-300" to="/privacy">Privacy</Link></li>
+                <li>
+                  <Link className="hover:text-yellow-300" to="/privacy">
+                    Privacy
+                  </Link>
+                </li>
               </ul>
             </div>
 
             {/* Contact */}
             <div>
-              <h4 className="text-lg font-bold text-yellow-200">Get in Touch</h4>
+              <h4 className="text-lg font-bold text-yellow-200">
+                Get in Touch
+              </h4>
               <p className="mt-3 text-sm font-semibold">
                 📧{" "}
                 <a
@@ -389,7 +426,9 @@ function FeatureCard({ icon, title, desc, to }) {
       className="block p-4 bg-black/40 border border-white/10 shadow-lg hover:bg-white/10 transition"
     >
       <div className="flex items-center gap-3">
-        <div className="p-2 bg-white/10 border border-yellow-400/20">{icon}</div>
+        <div className="p-2 bg-white/10 border border-yellow-400/20">
+          {icon}
+        </div>
         <div>
           <p className="font-extrabold text-yellow-200">{title}</p>
           <p className="text-sm text-yellow-100/80 font-semibold">{desc}</p>

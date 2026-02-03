@@ -78,7 +78,6 @@ export default function Events() {
 </section>
 
 
-      {/* ───────────────── Header ───────────────── */}
 
 
       {/* ───────────────── Event List ───────────────── */}

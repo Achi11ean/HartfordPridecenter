@@ -3,6 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useAuth } from "./AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const API = "https://singspacebackend.onrender.com";
 const CLOUD_NAME = "dcw0wqlse";
@@ -31,6 +32,7 @@ export default function Sponsors() {
 };
 
 const [socialInputs, setSocialInputs] = useState([]);
+const navigate = useNavigate();
 
   const [selectedSponsor, setSelectedSponsor] = useState(null);
 const [searchTerm, setSearchTerm] = useState("");

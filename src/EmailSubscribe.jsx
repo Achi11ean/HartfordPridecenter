@@ -133,15 +133,41 @@ const sub_id = results[0].id;
       </p>
 
       {/* Subscribe Toggle */}
-      <button
-        onClick={() => setShowForm(!showForm)}
-        className="mt-6 px-8 py-3 font-bold text-black border border-black shadow-lg
-        bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-500 
-        hover:from-amber-500 hover:via-yellow-400 hover:to-yellow-300
-        transition-all duration-300"
-      >
-        {showForm ? "Hide Form" : "Subscribe"}
-      </button>
+ <div className="mt-8 flex flex-col sm:flex-row items-center gap-6">
+
+  {/* Subscribe */}
+  <button
+    onClick={() => setShowForm(!showForm)}
+    className="px-8 py-3 font-bold text-black rounded-xl
+      bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-500
+      shadow-lg shadow-amber-500/30
+      hover:from-amber-500 hover:via-yellow-400 hover:to-yellow-300
+      hover:shadow-amber-500/50
+      transition-all duration-300"
+  >
+    {showForm ? "Hide Form" : "Subscribe"}
+  </button>
+
+  {/* Divider text */}
+  <span className="text-yellow-100/70 font-semibold text-sm sm:text-base">
+    or
+  </span>
+
+  {/* Unsubscribe */}
+  <button
+    onClick={() => setShowUnsub(!showUnsub)}
+    className="px-7 py-3 font-semibold rounded-xl
+      text-red-900
+      bg-gradient-to-r from-red-200 via-red-300 to-red-400
+      shadow-md shadow-red-500/20
+      hover:from-red-400 hover:via-red-300 hover:to-red-200
+      hover:shadow-red-500/40
+      transition-all duration-300"
+  >
+    {showUnsub ? "Hide" : "Unsubscribe"}
+  </button>
+
+</div>
 
       {/* Subscribe Form */}
       <AnimatePresence>
@@ -248,19 +274,7 @@ const sub_id = results[0].id;
 
       {/* NEW — UNSUBSCRIBE SECTION */}
       <div className="mt-14">
-        <p className="text-yellow-100/80 font-semibold text-lg">
-          Want to unsubscribe?
-        </p>
 
-        <button
-          onClick={() => setShowUnsub(!showUnsub)}
-          className="mt-3 px-6 py-2 text-black font-bold border border-black shadow-lg
-          bg-gradient-to-r from-red-400 via-red-500 to-red-600 
-          hover:from-red-600 hover:via-red-500 hover:to-red-400 
-          transition-all duration-300"
-        >
-          {showUnsub ? "Hide" : "Unsubscribe"}
-        </button>
 
         <AnimatePresence>
           {showUnsub && (

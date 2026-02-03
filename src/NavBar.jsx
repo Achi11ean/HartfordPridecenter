@@ -17,7 +17,7 @@ const NavBar = () => {
 const location = useLocation();
 
 const gradientMap = {
-  "/": "from-red-900 via-red-800 to-black",
+  "/": "from-pink-500 via-pink-600 to-pink-400",
   "/about": "from-orange-900 via-orange-800 to-black",
   "/services": "from-yellow-900 via-yellow-700 to-black",
   "/events": "from-green-900 via-green-800 to-black",
