@@ -24,10 +24,13 @@ export default function AddMember({ committeeId, onMemberAdded }) {
       setLoading(true);
       setError(null);
       try {
-        const endpoint =
-          memberType === "admin"
-            ? `/api/pride/${prideId}/admins`
-            : `/api/pride/${prideId}/staff`;
+       const endpoint =
+  memberType === "admin"
+    ? `/api/pride/${prideId}/admins`
+    : memberType === "staff"
+    ? `/api/pride/${prideId}/staff`
+    : `/api/pride/${prideId}/volunteer-spotlights`;
+
 
         const res = await axios.get(`${API_BASE}${endpoint}`, {
           headers: { Authorization: `Bearer ${token}` },
@@ -126,8 +129,10 @@ export default function AddMember({ committeeId, onMemberAdded }) {
             }}
             className="w-full p-2 rounded bg-black text-yellow-200 border border-yellow-500/40"
           >
-            <option value="staff">Staff</option>
-            <option value="admin">Admin</option>
+           <option value="staff">Staff</option>
+<option value="admin">Admin</option>
+<option value="volunteer">Volunteer</option>
+
           </select>
         </div>
 
@@ -142,14 +147,15 @@ export default function AddMember({ committeeId, onMemberAdded }) {
             className="w-full p-2 rounded bg-black text-yellow-200 border border-yellow-500/40"
           >
             <option value="">-- Choose --</option>
-            {members.map((m) => (
-              <option key={m.id} value={m.id}>
-                {memberType === "admin"
-                  ? m.name
-                  : `${m.first_name} ${m.last_name}`} 
-                {m.role ? `(${m.role})` : ""}
-              </option>
-            ))}
+          {members.map((m) => (
+  <option key={m.id} value={m.id}>
+    {memberType === "admin" && m.name}
+    {memberType === "staff" && `${m.first_name} ${m.last_name}`}
+    {memberType === "volunteer" && m.name}
+    {m.role ? ` (${m.role})` : ""}
+  </option>
+))}
+
           </select>
         </div>
 
