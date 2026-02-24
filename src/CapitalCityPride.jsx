@@ -6,6 +6,8 @@ import SponsorSlider from "./SponsorSlider";
 import PublicFundersSection from "./PublicFundersSection";
 import VendorSlider from "./VendorSlider";
 import AnnualPrideEventDetails from "./AnnualPrideEventDetails";
+import PrideItinerary from "./PrideItinerary";
+
 import {
   FaInstagram,
   FaFacebook,
@@ -95,19 +97,19 @@ const RainbowDivider = () => (
             }}
           >
             {prideEvent ? (
-              <>
-                🌟{" "}
-                {new Date(prideEvent.date).toLocaleDateString("en-US", {
-                  weekday: "long",
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
-                })}{" "}
-                • {prideEvent.city}, {prideEvent.state}
-              </>
-            ) : (
-              "🌟 June 2026 •  Pride Event"
-            )}
+             <>
+    🌟{" "}
+    {new Date(prideEvent.date + "T00:00:00").toLocaleDateString("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    })}{" "}
+    • {prideEvent.city}, {prideEvent.state}
+  </>
+) : (
+  "🌟 June 2026 • Pride Event"
+)}
           </div>
         </div>
       </section>               <hr className="rainbow-hr" />
@@ -130,40 +132,9 @@ const RainbowDivider = () => (
       {/* 🎭 MAIN FEATURES */}
       <section className="max-w-6xl mx-auto grid md:grid-cols-1 gap-8 px-2 py-2">
 
-
-        <div className="bg-black/60 p-2 rounded-2xl border border-yellow-500/40 shadow-lg">
+    <div className="bg-black/60 p-2 rounded-2xl border border-yellow-500/40 shadow-lg">
           <FaMapMarkerAlt className="text-4xl text-yellow-300 mb-3 mx-auto" />
-          <h3 className="text-xl font-bold text-yellow-300 mb-">
-            Pride Itinerary
-          </h3>
-          <ul className="text-yellow-100 text-sm space-y-2">
-            <li>• Pride on Pratt: 11-5pm | Pop up Drag | Street Artists | Signature cocktails | </li>
-            <li>• Pride Fest & Concert 5-9pm | On the river front | Neon Dance Party | Food Trucks | Liquor | Live Entertainment</li>
-<li>
-  • Official After Party: Hosted By{" "}
-  <a
-    href="https://www.instagram.com/therobinfierce"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="underline text-pink-400 hover:text-pink-300 transition font-semibold"
-  >
-    Robin Fierce
-  </a>{" "}
-  @{" "}
-  <a
-    href="https://www.google.com/maps/search/?api=1&query=Chez%20Est%2C%20458%20Wethersfield%20Ave%2C%20Hartford%2C%20CT"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="underline text-blue-400 hover:text-blue-300 transition font-semibold"
-  >
-    Chez Est
-  </a>{" "}
-  10p – 2am
-</li>
-
-          </ul>
-          <br/>
-          <p className="font-[sans] text-xl">In collaboration with: <br/>Pratt St Merchant association </p>
+ <PrideItinerary  />
         </div>
 
        

@@ -10,6 +10,8 @@ export default function AnnualPrideEventDetails() {
   const [event, setEvent] = useState(null);
   const [artists, setArtists] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [itineraryArtists, setItineraryArtists] = useState([]);
+  const [itineraryHosts, setItineraryHosts] = useState([]);
   const [eventHosts, setEventHosts] = useState([]);
 const formatTime12 = (time) => {
   if (!time) return null;
@@ -92,8 +94,42 @@ setEventHosts(hostsRes.data?.event_hosts || []);
     load();
   }, []);
 
-  /* ---------------- RENDER STATES ---------------- */
+  useEffect(() => {
+  async function loadItinerary() {
+    try {
+      const res = await axios.get(
+        `${API}/eventitinerary/pride/${PRIDE_ID}`
+      );
 
+      const performerMap = new Map();
+      const hostMap = new Map();
+
+      res.data.forEach(item => {
+        (item.performers || []).forEach(p => {
+          performerMap.set(p.id, p);
+        });
+
+        (item.hosts || []).forEach(h => {
+          hostMap.set(h.id, h);
+        });
+      });
+
+      setItineraryArtists([...performerMap.values()]);
+      setItineraryHosts([...hostMap.values()]);
+
+    } catch (err) {
+      console.error("Failed loading Pride itinerary", err);
+    }
+  }
+
+  loadItinerary();
+}, []);
+  /* ---------------- RENDER STATES ---------------- */
+const featuredArtists =
+  itineraryArtists.length > 0 ? itineraryArtists : artists;
+
+
+  
   if (loading) {
     return (
       <div className="text-center py-16 text-yellow-200 animate-pulse">
@@ -230,13 +266,13 @@ setEventHosts(hostsRes.data?.event_hosts || []);
               🎤 Featured Artists
             </h3>
 
-            {artists.length === 0 ? (
+            {featuredArtists.length === 0 ? (
               <p className="text-center italic text-yellow-200">
                 Artist lineup coming soon.
               </p>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
-                {artists.map((artist) => (
+                {featuredArtists.map((artist) => (
                   <Link
                     key={artist.id}
                     to={`/artist/${artist.slug}`}
@@ -260,6 +296,36 @@ setEventHosts(hostsRes.data?.event_hosts || []);
                 ))}
               </div>
             )}
+
+            {itineraryHosts.length > 0 && (
+  <div className="mb-6">
+    <h3 className="text-xl font-bold text-yellow-300 text-center mb-3">
+      🎧 Featured Hosts
+    </h3>
+
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
+      {itineraryHosts.map(host => (
+        <Link
+          key={host.id}
+          to={`/${host.slug}`}
+          className="group flex flex-col items-center text-center hover:scale-105 transition"
+        >
+          <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-pink-400 shadow-lg">
+            <img
+              src={host.photo_url || "/default-dj.png"}
+              alt={host.dj_name}
+              className="w-full h-full object-cover"
+            />
+          </div>
+
+          <span className="mt-2 font-bold text-sm">
+            {host.dj_name}
+          </span>
+        </Link>
+      ))}
+    </div>
+  </div>
+)}
           </div>
          
 
