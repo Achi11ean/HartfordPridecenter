@@ -83,7 +83,7 @@ to-[#EA580C]
 
             {/* Events */}
 <a
-  href="https://karaoverse.com/events"
+  href="https://karaoverse.com/event/capital-city-pride"
   target="_blank"
   rel="noopener noreferrer"
   className="block text-center px-6 py-3 font-semibold text-black border border-black shadow-lg 

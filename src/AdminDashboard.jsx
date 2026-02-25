@@ -81,7 +81,7 @@ const [sponsorSubTab, setSponsorSubTab] = useState("add_prospect");
         ">
  
 
-<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+<div className="grid grid-cols-3  sm:grid-cols-2 lg:grid-cols-5 gap-3">
                         <TabButton
               label="Admins"
               active={activeTab === "admins"}
@@ -423,7 +423,7 @@ function TabButton({ label, active, onClick }) {
     <button
       onClick={onClick}
       className={`
-        w-full py-3 rounded-none font-semibold transition text-xl
+        w-full py-2 rounded-none font-semibold transition text-sm
         ${
           active
             ? "bg-yellow-400 text-black shadow-md"

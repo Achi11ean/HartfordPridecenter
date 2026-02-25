@@ -83,7 +83,7 @@ export default function HomePage() {
                   </Link>
 
                   <a
-                    href="https://karaoverse.com/events"
+                    href="https://karaoverse.com/event/capital-city-pride"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block text-center px-6 py-3 font-semibold text-black border border-black shadow-lg 
@@ -115,19 +115,21 @@ export default function HomePage() {
       <hr className="rainbow-hr" />
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-2 pb-16">
+      <main className="max-w-full mx-auto  ">
         {/* Mission + Impact Cards */}
-        <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-2">
+        <section className="grid grid-cols-1 lg:grid-cols-1 gap-8 ">
           {/* Mission */}
+
+
+          {/* Impact / Highlights */}
           <motion.div
             initial={{ opacity: 0, y: 18 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="bg-black/30 backdrop-blur-md border border-yellow-400/25 shadow-2xl p-2"
-          >
-            <h2 className="text-3xl font-extrabold text-yellow-300">
-              Welcome 👋
+            transition={{ duration: 0.5, delay: 0.05 }}
+            className="bg-black/40 border border-white/10 shadow-2xl p-7"
+          >  <h2 className="text-4xl lg:text-6xl font-[Aspire] font-extrabold text-yellow-300">
+              Welcome, Friends & Allies 
             </h2>
             <div className="mt-3 h-[2px] w-full bg-gradient-to-r from-yellow-400/70 to-transparent" />
 
@@ -146,20 +148,21 @@ export default function HomePage() {
               className="
   mt-6
   flex flex-wrap justify-center
-  gap-3
+  gap-3 font-serif
 "
             >
               <Link
                 to="/about"
-                className="px-6 py-3 font-bold border border-white/20 shadow-lg
-                  bg-black/40 hover:bg-black/60 text-yellow-200
-                  transition-all duration-300 text-center "
+                 className="px-6 py-2 font-bold text-black border border-black shadow-lg
+                  bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-500
+                  hover:from-amber-500 hover:via-yellow-400 hover:to-yellow-300
+                  transition-all duration-300 text-center"
               >
                 About Us
               </Link>
               <Link
                 to="/resources"
-                className="px-6 py-3 font-bold text-black border border-black shadow-lg
+                className="px-6 py-2 font-bold text-black border border-black shadow-lg
                   bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-500
                   hover:from-amber-500 hover:via-yellow-400 hover:to-yellow-300
                   transition-all duration-300 text-center"
@@ -169,7 +172,7 @@ export default function HomePage() {
               <Link
                 to="https://givebutter.com/lgbtqadvocacy"
                 state={{ openSponsors: true }}
-                className="block text-center px-6 py-3 font-semibold text-black border border-black shadow-lg 
+                className="block text-center px-6 py-2 font-semibold text-black border border-black shadow-lg 
               bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 
               hover:from-yellow-600 hover:via-amber-500 hover:to-yellow-400
               transition-all duration-300"
@@ -179,7 +182,7 @@ export default function HomePage() {
 
               <Link
                 to="/volunteer"
-                className="block text-center px-2 py-3 font-semibold text-black border border-black shadow-lg 
+                className="block text-center px-2 py-2 font-semibold text-black border border-black shadow-lg 
               bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 
               hover:from-yellow-600 hover:via-amber-500 hover:to-yellow-400
               transition-all duration-300"
@@ -189,7 +192,7 @@ export default function HomePage() {
               <Link
                 to="/sponsors"
                 state={{ openSponsors: true }}
-                className="block text-center px-6 py-3 font-semibold text-black border border-black shadow-lg 
+                className="block text-center px-6 py-2 font-semibold text-black border border-black shadow-lg 
               bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 
               hover:from-yellow-600 hover:via-amber-500 hover:to-yellow-400
               transition-all duration-300"
@@ -197,17 +200,7 @@ export default function HomePage() {
                 Sponsors
               </Link>
             </div>
-          </motion.div>
-
-          {/* Impact / Highlights */}
-          <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.05 }}
-            className="bg-black/40 border border-white/10 shadow-2xl p-7"
-          >
-            <h3 className="text-2xl font-extrabold text-yellow-300">
+            <h3 className="text-2xl mt-6 font-extrabold text-yellow-300">
               What you can do here
             </h3>
             <div className="mt-3 h-[4px] w-full bg-gradient-to-r from-yellow-400/70 to-transparent" />
@@ -217,7 +210,7 @@ export default function HomePage() {
                 icon={<FaCalendarAlt className="text-2xl text-yellow-300" />}
                 title="Find Events"
                 desc="See what’s happening next, updated regularly."
-                href="https://karaoverse.com/events"
+                href="https://karaoverse.com/event/capital-city-pride"
               />
 
               <FeatureCard
@@ -237,44 +230,43 @@ export default function HomePage() {
             </div>
 
             {/* Featured Link */}
-            <div className="mt-2 p-5 ">
-              <p className="inline-block text-6xl font-[Aspire] w-full text-center px-6  rounded-none font-extrabold text-white border border-white/20 shadow-lg
+          <div className="mt-2 p-5 flex flex-col items-center">
+
+  <p className="inline-block max-w-3xl text-6xl font-[Aspire] w-full text-center px-6 rounded-none font-extrabold text-white border border-white/20 shadow-lg
     bg-gradient-to-b from-yellow-500 via-orange-500 to-yellow-800
-    hover:brightness-110 transition-all duration-300">Featured:</p>
-<a
-  href="https://karaoverse.com"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  <video
-    src="/Video2.mp4"
-    autoPlay
-    loop
-    muted
-    playsInline
-    className="
-      w-[100%]
-      max-w-[420px]
-      sm:max-w-[600px]
-      drop-shadow-2xl 
-      border-b-4 border-t border-l border-r
-      rounded-none
-      cursor-pointer
-    "
+    hover:brightness-110 transition-all duration-300">
+    Featured:
+  </p>
+
+  <a
+    href="https://karaoverse.com"
+    target="_blank"
+    rel="noopener noreferrer"
+    className=" flex justify-center w-full"
   >
-    <img
-      src="/karaoversebanner.jpeg"
-      alt="Karaoverse Logo Fallback"
+    <video
+      src="/Video2.mp4"
+      autoPlay
+      loop
+      muted
+      playsInline
+      className="
+        w-full
+        max-w-[420px]
+        sm:max-w-[860px]
+        drop-shadow-2xl 
+        border
+        rounded-none
+        cursor-pointer
+      "
     />
-  </video>
-</a>
+  </a>
 
-
-
-            </div>
+</div>   <EmailSubscribe prideId={2} />
           </motion.div>
+          
         </section>
-        <EmailSubscribe prideId={2} />
+
       </main>
       <hr className="rainbow-hr" />
 

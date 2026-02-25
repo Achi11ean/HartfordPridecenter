@@ -127,7 +127,7 @@ export default function Events() {
   {/* CTA Button */}
   <div className="mt-8">
     <a
-      href="https://karaoverse.com"
+      href="https://karaoverse.com/event/capital-city-pride"
       target="_blank"
       rel="noopener noreferrer"
       className="

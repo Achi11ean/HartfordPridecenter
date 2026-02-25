@@ -129,16 +129,15 @@ const sub_id = results[0].id;
       </motion.h2>
 
       <p className="mt-2 text-yellow-100/80 font-semibold text-lg">
-        Stay updated on events, resources, pride programs & opportunities.
+       Subscribe to get the latest information for Hartford Pride events, news, and opportunities to get involved including Vendors, Sponsors, Funders & more! <br/> We promise to only send the good stuff — no spam, just love! 🌈
       </p>
 
       {/* Subscribe Toggle */}
- <div className="mt-8 flex flex-col sm:flex-row items-center gap-6">
-
+<div className="mt-8 flex flex-row flex-wrap justify-center items-center gap-3">
   {/* Subscribe */}
   <button
     onClick={() => setShowForm(!showForm)}
-    className="px-8 py-3 font-bold text-black rounded-xl
+    className="px-4 py-3 font-bold text-yellow-900 border border-white rounded-xl
       bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-500
       shadow-lg shadow-amber-500/30
       hover:from-amber-500 hover:via-yellow-400 hover:to-yellow-300
@@ -156,7 +155,7 @@ const sub_id = results[0].id;
   {/* Unsubscribe */}
   <button
     onClick={() => setShowUnsub(!showUnsub)}
-    className="px-7 py-3 font-semibold rounded-xl
+    className="px-4 py-3 font-semibold border-white border rounded-xl
       text-red-900
       bg-gradient-to-r from-red-200 via-red-300 to-red-400
       shadow-md shadow-red-500/20

@@ -2,7 +2,8 @@ import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Select from "react-select";
-
+const CLOUD_NAME = "dcw0wqlse";   // same as admin
+const UPLOAD_PRESET = "karaoke";  // or your staff preset
 const API = "https://singspacebackend.onrender.com";
 const STAFF_ROLES = [
   "Executive Director",
@@ -38,6 +39,30 @@ export default function Staff() {
   const token = localStorage.getItem("prideToken");
   const admin = JSON.parse(localStorage.getItem("prideUser") || "{}");
   const prideId = admin.pride_id;
+  const handleImageUpload = async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", UPLOAD_PRESET);
+
+  try {
+    const res = await axios.post(
+      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+      formData
+    );
+
+    setEditing((prev) => ({
+      ...prev,
+      image_url: res.data.secure_url,
+    }));
+
+    toast.success("Image uploaded ✨");
+  } catch (err) {
+    toast.error("Image upload failed");
+  }
+};
 const formatPhoneNumber = (value) => {
   if (!value) return "";
 
@@ -353,11 +378,35 @@ const filtered = useMemo(() => {
       {/* ✏️ Edit Modal (unchanged logic, cleaner UI) */}
       {editing && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-black border border-yellow-500 rounded-2xl p-6 w-full max-w-lg">
+          <div className="bg-black border max-h-[500px] overflow-auto border-yellow-500 rounded-2xl p-6 w-full max-w-lg">
             <h3 className="text-2xl font-bold text-yellow-300 mb-4">
               Edit Staff
             </h3>
+{/* Profile Image */}
+<div className="mb-4">
+  <label className="block text-yellow-300 font-semibold mb-2">
+    Profile Image
+  </label>
 
+  {editing.image_url && (
+    <img
+      src={editing.image_url}
+      alt="Staff"
+      className="w-24 h-24 rounded-xl object-cover mb-3 border border-yellow-400"
+    />
+  )}
+
+  <input
+    type="file"
+    accept="image/*"
+    onChange={handleImageUpload}
+    className="block w-full text-sm text-yellow-200
+      file:mr-4 file:py-2 file:px-4
+      file:rounded-xl file:border-0
+      file:bg-yellow-400 file:text-black file:font-bold
+      hover:file:bg-yellow-500"
+  />
+</div>
             {[
   "first_name",
   "last_name",

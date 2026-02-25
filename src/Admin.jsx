@@ -342,25 +342,11 @@ useEffect(() => {
 
       {/* ───────────── Edit Modal ───────────── */}
       {editingAdmin && (
-        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center px-4">
-          <div className="bg-gradient-to-br from-[#18453B] via-black to-[#0f2d25] p-6 rounded-3xl border border-yellow-400/40 w-full max-w-md">
+        <div className="fixed inset-0 mx-auto z-50  bg-black/70 flex items-center justify-center px-4">
+          <div className="bg-gradient-to-br from-[#18453B] max-h-[500px] overflow-auto via-black to-[#0f2d25] p-6 rounded-3xl border border-yellow-400/40 w-full max-w-md">
             <h3 className="text-2xl font-extrabold text-yellow-300 mb-4">
               ✏️ Edit Admin
             </h3>
-
-            {["name", "email", "username", "pin"].map((field) => (
-              <input
-                key={field}
-                type={field === "pin" ? "password" : "text"}
-                placeholder={field.toUpperCase()}
-                value={editForm[field]}
-                onChange={(e) =>
-                  setEditForm({ ...editForm, [field]: e.target.value })
-                }
-                className="w-full mb-3 p-3 rounded-xl bg-black/40 border border-yellow-500/40 text-yellow-100"
-              />
-            ))}
-{/* Profile Image */}
 <div className="mb-4">
   <label className="block text-yellow-300 font-semibold mb-2">
     Profile Image
@@ -385,6 +371,20 @@ useEffect(() => {
                hover:file:bg-yellow-500"
   />
 </div>
+
+            {["name", "email", "username", "pin"].map((field) => (
+              <input
+                key={field}
+                type={field === "pin" ? "password" : "text"}
+                placeholder={field.toUpperCase()}
+                value={editForm[field]}
+                onChange={(e) =>
+                  setEditForm({ ...editForm, [field]: e.target.value })
+                }
+                className="w-full mb-3 p-3 rounded-xl bg-black/40 border border-yellow-500/40 text-yellow-100"
+              />
+            ))}
+{/* Profile Image */}
 
 
 <div className="mb-4">

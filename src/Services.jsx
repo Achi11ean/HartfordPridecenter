@@ -175,70 +175,75 @@ return (
   key={s.id}
   to={`/services/${s.slug}`}
   className="
-    group block w-full text-left overflow-hidden rounded-3xl
-    bg-gradient-to-br from-white to-yellow-50
-    border-[6px] border-yellow-400
-    shadow-[0_8px_25px_rgba(0,0,0,0.25)]
-    hover:shadow-[0_20px_35px_rgba(0,0,0,0.35)]
-    hover:scale-[1.03]
+    group relative block overflow-hidden rounded-2xl
+    bg-black shadow-2xl
+    hover:scale-[1.04]
     transition-all duration-500
   "
 >
+  {/* IMAGE */}
+  <div className="relative h-72 w-full overflow-hidden">
+    <img
+      src={s.image}
+      alt={s.title}
+      className="
+        w-full h-full object-cover
+        group-hover:scale-110
+        transition-transform duration-[2000ms] ease-out
+      "
+    />
 
-            {/* IMAGE */}
-            {s.image && (
-              <div className="relative h-56 w-full overflow-hidden">
-                <img
-                  src={s.image}
-                  alt={s.title}
-                  className="
-                    w-full h-full object-cover
-                    group-hover:scale-110
-                    transition-transform duration-[1600ms]
-                  "
-                />
-                <div
-                  className="
-                    absolute inset-0 bg-gradient-to-t
-                    from-black/60 to-transparent
-                  "
-                />
-              </div>
-            )}
+    {/* CINEMATIC OVERLAY */}
+    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+  </div>
 
-            {/* TEXT */}
-            <div className="p-7">
-              <h3
-                className="
-                  text-3xl font-black tracking-tight
-                  bg-gradient-to-r from-yellow-800 to-yellow-600
-                  bg-clip-text text-transparent
-                  drop-shadow
-                "
-              >
-                {s.title}
-              </h3>
+  {/* TEXT OVERLAY */}
+  <div className="absolute bottom-0 p-6 w-full">
+    <h3
+      className="
+        text-2xl font-extrabold text-white
+        drop-shadow-lg
+        translate-y-6 group-hover:translate-y-0
+        transition-all duration-500
+      "
+    >
+      {s.title}
+    </h3>
 
-              <p
-                className="
-                  mt-4 text-[#5A4400]/90 font-medium leading-relaxed
-                  min-h-[65px]
-                "
-              >
-                {s.desc}
-              </p>
+    <p
+      className="
+        text-sm text-white/80 mt-2
+        opacity-0 group-hover:opacity-100
+        transition-all duration-500
+        line-clamp-2
+      "
+    >
+      {s.desc}
+    </p>
 
-              <p
-                className="
-                  mt-6 pr-2 text-right font-extrabold uppercase text-sm
-                  bg-gradient-to-r from-black to-yellow-700
-                  bg-clip-text text-transparent tracking-widest
-                "
-              >
-                Learn more →
-              </p>
-            </div>
-</Link>        ))}
+    <div
+      className="
+        mt-3 text-xs uppercase font-bold tracking-widest
+        text-yellow-400
+        opacity-0 group-hover:opacity-100
+        transition-all duration-500
+      "
+    >
+      Explore →
+    </div>
+  </div>
+
+  {/* GLOW EFFECT */}
+  <div
+    className="
+      absolute inset-0 rounded-2xl
+      opacity-0 group-hover:opacity-100
+      transition duration-500
+      shadow-[0_0_60px_rgba(250,204,21,0.35)]
+      pointer-events-none
+    "
+  />
+</Link>     ))}
       </section>
     )}
 

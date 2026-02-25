@@ -46,7 +46,7 @@ const navItems = [
   { name: "Funders", path: "/funders" },
   {
     name: "Events",
-    path: "https://karaoverse.com/events",
+    path: "https://karaoverse.com/event/capital-city-pride",
     external: true,
   },  { name: "Team", path: "/ourteam" },
   { name: "Pride", path: "/pride" },
