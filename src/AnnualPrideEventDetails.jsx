@@ -37,7 +37,7 @@ const formatTime12 = (time) => {
       try {
         setLoading(true);
 
-        const eventUrl = `${API}/karaokeevents/pride/${PRIDE_ID}/annual`;
+const eventUrl = `${API}/pride/${PRIDE_ID}/annual`;
         console.log("📡 Fetching:", eventUrl);
 const hostsUrl = `${API}/api/pride/${PRIDE_ID}/event-hosts`;
 
@@ -213,12 +213,13 @@ const featuredArtists =
   <FaCalendarAlt className="text-yellow-300" />
 
   {event.date
-    ? new Date(event.date).toLocaleDateString("en-US", {
-        weekday: "long",
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-      })
+    ? new Date(event.date + "T00:00:00")
+  .toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  })
     : "Date TBA"}
 <br/>
   {event.start_time && (

@@ -26,7 +26,7 @@ const navigate = useNavigate();
 
 useEffect(() => {
   axios
-    .get("https://singspacebackend.onrender.com/karaokeevents/pride/2/annual")
+    .get("https://singspacebackend.onrender.com/pride/2/annual")
     .then((res) => setPrideEvent(res.data))
     .catch((err) =>
       console.error("Error loading Annual Pride event:", err)
