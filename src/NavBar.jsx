@@ -48,7 +48,8 @@ const navItems = [
     name: "Events",
     path: "https://karaoverse.com/event/capital-city-pride",
     external: true,
-  },  { name: "Team", path: "/ourteam" },
+  }, 
+  //  { name: "Team", path: "/ourteam" },
   { name: "Pride", path: "/pride" },
   { name: "Contact", path: "/contact" },
 ];
