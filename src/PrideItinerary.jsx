@@ -97,9 +97,9 @@ const sorted = res.data.sort((a, b) => {
             </h2>
             <span className="h-[1px] w-10 bg-gradient-to-r from-transparent via-yellow-300/70 to-transparent" />
           </div>
-          <p className="text-yellow-100/80 font-semibold">
-            Explore each area’s events, performances, and activities.
-          </p>
+          {/* <p className="text-yellow-100/80 font-semibold">
+            Come explore the vendors, performers and food!
+          </p> */}
         </div>
 
         {/* LOCATION TABS */}

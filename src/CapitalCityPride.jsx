@@ -33,7 +33,7 @@ useEffect(() => {
     );
 }, []);
 const SectionHeader = ({ icon, title, subtitle }) => (
-  <div className="text-center mb-10">
+  <div className="text-center mb-4 border-b">
     <h3 className="text-5xl sm:text-6xl font-[Aspire] text-yellow-300 drop-shadow-lg">
       {icon} {title}
     </h3>
@@ -138,7 +138,7 @@ const RainbowDivider = () => (
       </section>
 
       <AnnualPrideEventDetails />
-          <div className=" ">
+          <div className=" px-3">
  <PrideItinerary  />
         </div>
 {/* 🌈 PRIDE PARTNERS SHOWCASE */}
@@ -151,26 +151,10 @@ const RainbowDivider = () => (
     <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-purple-500/20 blur-3xl rounded-full" />
   </div>
 
-  <div className="relative max-w-7xl mx-auto">
+  <div className="relative max-w-7xl px-2 mx-auto">
 
     {/* 🌈 MAIN HEADER */}
-    <div className="text-center mb-16">
-      <h2 className="
-        text-4xl sm:text-5xl md:text-6xl
-        font-extrabold
-        bg-gradient-to-r from-pink-400 via-yellow-300 to-purple-400
-        bg-clip-text text-transparent
-        drop-shadow-lg
-        mb-4
-      ">
-         Pride  <br/> Sponsors, Vendors & Community Partners
-      </h2>
-
-      <p className="max-w-3xl mx-auto text-yellow-100 text-lg font-semibold">
-        Powered by the incredible businesses, creators, and organizations
-        who make Pride celebrations possible.
-      </p>
-    </div>
+   
 <div className="text-center mb-4 bg-black/40 rounded-xl p-4 border-2 border-yellow-400/60 shadow-xl">
 
   {/* 📸 VOLUNTEER IMAGE */}
@@ -211,7 +195,7 @@ const RainbowDivider = () => (
 </div>
 
     {/* 🏆 SPONSORS */}
-    <div className="mb-20">
+<div className="text-center mb-4 bg-black/40 rounded-xl p-4 border-2 border-yellow-400/60 shadow-xl">
       <SectionHeader
         icon="🏆"
         title="Sponsors"
@@ -220,10 +204,9 @@ const RainbowDivider = () => (
       <SponsorSlider />
     </div>
 
-    <RainbowDivider />
 
     {/* 🛍️ VENDORS */}
-    <div className="my-20">
+<div className="text-center mb-4 bg-black/40 rounded-xl p-4 border-2 border-yellow-400/60 shadow-xl">
       <SectionHeader
         icon="🛍️"
         title="Vendors"
@@ -232,10 +215,9 @@ const RainbowDivider = () => (
       <VendorSlider />
     </div>
 
-    <RainbowDivider />
 
     {/* 💖 FUNDERS */}
-    <div className="mt-20">
+<div className="text-center mb-4 bg-black/40 rounded-xl p-4 border-2 border-yellow-400/60 shadow-xl">
       <SectionHeader
         icon="💖"
         title="Funders"
@@ -274,15 +256,15 @@ const RainbowDivider = () => (
   </h2>
                <hr className="rainbow-hr my-4" />
 
-  <div className="relative w-full pt-[56.25%] rounded-2xl overflow-hidden shadow-2xl border-4 border-pink-400">
-    <iframe
-      className="absolute top-0 left-0 w-full h-full"
-      src="https://www.google.com/maps?q=Pratt+Street,+Hartford,+CT&z=17&output=embed"
-      allowFullScreen
-      loading="lazy"
-      referrerPolicy="no-referrer-when-downgrade"
-    />
-  </div>
+<div className="relative w-full pt-[56.25%] rounded-2xl overflow-hidden shadow-2xl border-4 border-pink-400">
+  <iframe
+    className="absolute top-0 left-0 w-full h-full"
+    src="https://www.google.com/maps?q=196+Pratt+St,+Hartford,+CT+06103&z=19&output=embed"
+    allowFullScreen
+    loading="lazy"
+    referrerPolicy="no-referrer-when-downgrade"
+  />
+</div>
 </section>
 
 
