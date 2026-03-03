@@ -178,7 +178,7 @@ return (
                 <div
                   key={host.id}
                   className="
-                    rounded-2xl p-4 sm:p-5
+                    rounded-2xl p-2 sm:p-5
                     border border-white/10
                     bg-white/5
                     hover:bg-white/10
@@ -188,7 +188,7 @@ return (
                   <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-4">
                     {/* INFO */}
                     <div className="text-center sm:text-left">
-                      <p className="text-lg sm:text-xl font-extrabold text-pink-100">
+                      <p className="text-xl border-b sm:text-xl font-extrabold text-pink-100">
                         {host.event_name || "Pride Event Host"}
                       </p>
 
@@ -197,27 +197,12 @@ return (
                       </p>
 
                       {host.notes && (
-                        <p className="mt-3 text-sm sm:text-[15px] font-semibold text-pink-50/90 max-w-xl">
+                        <p className="mt-3  text-md sm:text-[15px] font-semibold text-pink-50/90 max-w-xl">
                           {host.notes}
                         </p>
                       )}
 
-                      <div className="mt-4">
-                        <p
-                          className="
-                            inline-block
-                            text-xs sm:text-sm font-bold
-                            text-pink-100
-                            rounded-full px-4 py-2
-                            border border-white/15
-                            bg-black/30
-                            shadow-[0_10px_25px_-15px_rgba(255,255,255,0.35)]
-                          "
-                        >
-                          Performer applications & performer profiles are managed directly
-                          through Karaoverse.
-                        </p>
-                      </div>
+           
                     </div>
 
                     {/* BUTTON */}

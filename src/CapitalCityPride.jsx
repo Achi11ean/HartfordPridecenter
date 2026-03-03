@@ -142,90 +142,233 @@ const RainbowDivider = () => (
  <PrideItinerary  />
         </div>
 {/* 🌈 PRIDE PARTNERS SHOWCASE */}
-<section className="relative w-full px-2 py-2 overflow-hidden">
+{/* 🎤 BECOME A PERFORMER */}
 
-  {/* 🌈 Ambient Pride Glow */}
+<section className="relative w-full px-2 py-2 overflow-hidden">
+<div
+  className="
+    rounded-3xl p-6 mb-2 sm:p-8
+    border border-white/10
+    bg-gradient-to-b from-black/60 via-black/40 to-black/60
+    backdrop-blur-xl 
+    shadow-[0_25px_70px_-40px_rgba(0,0,0,0.9)]
+    text-center
+    relative overflow-hidden
+  "
+>
+  {/* Stage Glow Accents */}
+  <div className="pointer-events-none absolute -top-20 -left-20 h-64 w-64 rounded-full bg-fuchsia-500/20 blur-3xl" />
+  <div className="pointer-events-none absolute -bottom-24 -right-20 h-72 w-72 rounded-full bg-purple-500/20 blur-3xl" />
+  <div className="pointer-events-none absolute top-1/3 left-1/4 h-60 w-60 rounded-full bg-yellow-400/10 blur-3xl" />
+
+  <div className="relative">
+    {/* Optional Performer Image */}
+    <div className="relative mb-6">
+      <img
+        src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819"
+        alt="Performer on stage at Pride event"
+        className="
+          w-full max-w-2xl mx-auto
+          rounded-2xl
+          border border-white/10
+          shadow-[0_20px_60px_-30px_rgba(168,85,247,0.7)]
+          object-cover
+        "
+        loading="lazy"
+      />
+      <div className="absolute inset-0 rounded-2xl ring-1 ring-purple-400/20 pointer-events-none" />
+    </div>
+
+    <h2 className="text-3xl sm:text-4xl font-extrabold text-purple-300 mb-3 drop-shadow-lg">
+      🎤 Become a Performer
+    </h2>
+
+    <p className="text-yellow-100/85 text-lg sm:text-xl mb-6 max-w-2xl mx-auto leading-relaxed">
+      Sing. Dance. DJ. Host. Inspire.
+      Apply to perform at Capital City Pride through Karaoverse and showcase your talent to thousands.
+    </p>
+
+    <a
+      href="https://karaoverse.com/job-postings"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="
+        inline-flex items-center justify-center gap-2
+        px-8 py-3 rounded-2xl
+        bg-gradient-to-r from-fuchsia-500 via-purple-600 to-indigo-600
+        text-white font-extrabold
+        shadow-[0_20px_50px_-25px_rgba(168,85,247,0.85)]
+        hover:brightness-110 hover:scale-[1.03]
+        active:scale-[0.99]
+        transition
+        focus:outline-none focus:ring-2 focus:ring-purple-300/60
+      "
+    >
+      Apply on Karaoverse
+      <span aria-hidden className="opacity-80">↗</span>
+    </a>
+  </div>
+</div>
   <div className="absolute inset-0 pointer-events-none">
-    <div className="absolute top-10 left-10 w-72 h-72 bg-pink-500/20 blur-3xl rounded-full" />
-    <div className="absolute bottom-10 right-10 w-96 h-96 bg-yellow-400/20 blur-3xl rounded-full" />
+    <div className="absolute -top-20 -left-20 w-72 h-72 bg-pink-500/20 blur-3xl rounded-full" />
+    <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-yellow-400/20 blur-3xl rounded-full" />
     <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-purple-500/20 blur-3xl rounded-full" />
   </div>
 
-  <div className="relative max-w-7xl px-2 mx-auto">
+  {/* ✅ Use one max container for ALL cards */}
+  <div className="relative max-w-6xl mx-auto space-y-6">
+    {/* 💛 VOLUNTEER CARD */}
+    <div
+      className="
+        rounded-3xl p-6 sm:p-8
+        border border-white/10
+        bg-gradient-to-b from-black/60 via-black/40 to-black/60
+        backdrop-blur-xl
+        shadow-[0_25px_70px_-40px_rgba(0,0,0,0.9)]
+        text-center
+        overflow-hidden
+        relative
+      "
+    >
+      {/* soft glow accents */}
+      <div className="pointer-events-none absolute -top-20 -left-20 h-56 w-56 rounded-full bg-pink-500/20 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-24 -right-20 h-64 w-64 rounded-full bg-yellow-400/15 blur-3xl" />
 
-    {/* 🌈 MAIN HEADER */}
-   
-<div className="text-center mb-4 bg-black/40 rounded-xl p-4 border-2 border-yellow-400/60 shadow-xl">
+      <div className="relative">
+        {/* 📸 VOLUNTEER IMAGE */}
+        <div className="relative mb-6">
+          <img
+            src="https://main-stream.org/wp-content/uploads/2024/05/call-for-Pride-volunteers-cover-image-770x434-1.jpg"
+            alt="Pride event volunteer helping at the festival"
+            className="
+              w-full max-w-2xl mx-auto
+              rounded-2xl
+              border border-white/10
+              shadow-[0_20px_60px_-30px_rgba(250,204,21,0.6)]
+              object-cover
+            "
+            loading="lazy"
+          />
+          <div className="absolute inset-0 rounded-2xl ring-1 ring-yellow-300/20 pointer-events-none" />
+        </div>
 
-  {/* 📸 VOLUNTEER IMAGE */}
-  <img
-    src="https://main-stream.org/wp-content/uploads/2024/05/call-for-Pride-volunteers-cover-image-770x434-1.jpg"
-    alt="Pride event volunteer helping at the festival"
-    className="
-      w-full max-w-xl mx-auto mb-4
-      rounded-xl
-      border-2 border-yellow-300
-      shadow-lg
-      object-cover
-    "
-  />
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-yellow-300 mb-3 drop-shadow-lg">
+          💛 Become a Volunteer
+        </h2>
 
-  <h2 className="text-3xl font-bold text-yellow-300 mb-3">
-    Become a Volunteer
-  </h2>
+        <p className="text-yellow-100/85 text-lg sm:text-xl mb-6 max-w-2xl mx-auto leading-relaxed">
+          Support Capital City Pride by lending a helping hand and being part of something unforgettable.
+        </p>
 
-  <p className="text-yellow-100 text-lg mb-6">
-    Support Capital City Pride by lending a helping hand!
-  </p>
+        <button
+          onClick={() => navigate("/contact")}
+          className="
+            inline-flex items-center justify-center gap-2
+            px-8 py-3 rounded-2xl
+            bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-500
+            text-black font-extrabold
+            shadow-[0_20px_50px_-25px_rgba(250,204,21,0.85)]
+            hover:brightness-110 hover:scale-[1.03]
+            active:scale-[0.99]
+            transition
+            focus:outline-none focus:ring-2 focus:ring-yellow-200/70
+          "
+        >
+          Contact Us <span aria-hidden className="opacity-80">↗</span>
+        </button>
+      </div>
+    </div>
 
-  <button
-    onClick={() => navigate("/contact")}
-    className="
-      inline-block px-8 py-3 rounded-xl
-      bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600
-      font-bold text-black
-      border-2 border-white
-      shadow-lg
-      hover:scale-105 transition
-    "
-  >
-    Contact Us
-  </button>
+{/* 🏆 SPONSORS */}
+<div
+  className="
+    max-w-6xl mx-auto mb-6
+    rounded-3xl p-6 sm:p-8
+    border border-white/10
+    bg-gradient-to-b from-black/60 via-black/40 to-black/60
+    backdrop-blur-xl
+    shadow-[0_25px_70px_-40px_rgba(0,0,0,0.9)]
+    text-center
+    relative overflow-hidden
+  "
+>
+  {/* soft glow accents */}
+  <div className="pointer-events-none absolute -top-20 -left-20 h-56 w-56 rounded-full bg-yellow-400/20 blur-3xl" />
+  <div className="pointer-events-none absolute -bottom-24 -right-20 h-64 w-64 rounded-full bg-pink-500/15 blur-3xl" />
 
-</div>
+  <div className="relative">
+    <SectionHeader
+      icon="🏆"
+      title="Sponsors"
+      subtitle="Supporting Pride at the highest level"
+    />
 
-    {/* 🏆 SPONSORS */}
-<div className="text-center mb-4 bg-black/40 rounded-xl p-4 border-2 border-yellow-400/60 shadow-xl">
-      <SectionHeader
-        icon="🏆"
-        title="Sponsors"
-        subtitle="Supporting Pride at the highest level"
-      />
+    <div className="flex justify-center mt-6">
       <SponsorSlider />
     </div>
+  </div>
+</div>
 
+{/* 🛍️ VENDORS */}
+<div
+  className="
+    max-w-6xl mx-auto mb-6
+    rounded-3xl p-6 sm:p-8
+    border border-white/10
+    bg-gradient-to-b from-black/60 via-black/40 to-black/60
+    backdrop-blur-xl
+    shadow-[0_25px_70px_-40px_rgba(0,0,0,0.9)]
+    text-center
+    relative overflow-hidden
+  "
+>
+  {/* soft glow accents */}
+  <div className="pointer-events-none absolute -top-20 -left-20 h-56 w-56 rounded-full bg-pink-500/20 blur-3xl" />
+  <div className="pointer-events-none absolute -bottom-24 -right-20 h-64 w-64 rounded-full bg-yellow-400/15 blur-3xl" />
 
-    {/* 🛍️ VENDORS */}
-<div className="text-center mb-4 bg-black/40 rounded-xl p-4 border-2 border-yellow-400/60 shadow-xl">
-      <SectionHeader
-        icon="🛍️"
-        title="Vendors"
-        subtitle="Local businesses bringing the magic"
-      />
+  <div className="relative">
+    <SectionHeader
+      icon="🛍️"
+      title="Vendors"
+      subtitle="Local businesses bringing the magic"
+    />
+
+    <div className="flex justify-center mt-6">
       <VendorSlider />
     </div>
-
+  </div>
+</div>
 
     {/* 💖 FUNDERS */}
-<div className="text-center mb-4 bg-black/40 rounded-xl p-4 border-2 border-yellow-400/60 shadow-xl">
-      <SectionHeader
-        icon="💖"
-        title="Funders"
-        subtitle="Community champions making it happen"
-      />
+{/* 💖 FUNDERS */}
+<div
+  className="
+    max-w-6xl mx-auto mb-6
+    rounded-3xl p-6 sm:p-8
+    border border-white/10
+    bg-gradient-to-b from-black/60 via-black/40 to-black/60
+    backdrop-blur-xl
+    shadow-[0_25px_70px_-40px_rgba(0,0,0,0.9)]
+    text-center
+    relative overflow-hidden
+  "
+>
+  {/* soft glow accents */}
+  <div className="pointer-events-none absolute -top-20 -left-20 h-56 w-56 rounded-full bg-pink-500/20 blur-3xl" />
+  <div className="pointer-events-none absolute -bottom-24 -right-20 h-64 w-64 rounded-full bg-yellow-400/15 blur-3xl" />
+
+  <div className="relative">
+    <SectionHeader
+      icon="💖"
+      title="Funders"
+      subtitle="Community champions making it happen"
+    />
+
+    <div className="flex justify-center mt-6">
       <PublicFundersSection />
     </div>
-
+  </div>
+</div>
   </div>
 </section>
 
