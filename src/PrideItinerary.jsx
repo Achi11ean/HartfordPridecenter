@@ -38,8 +38,11 @@ useEffect(() => {
         console.warn("⚠️ No itinerary items returned!");
       }
 
-      const sorted = res.data.sort((a, b) => a.position - b.position);
-
+const sorted = res.data.sort((a, b) => {
+  if (!a.start_time) return 1;
+  if (!b.start_time) return -1;
+  return a.start_time.localeCompare(b.start_time);
+});
       console.log("📊 Sorted Items:", sorted);
 
       setItems(sorted);
@@ -68,101 +71,186 @@ useEffect(() => {
 
   if (!items.length) return null;
 
-  return (
-    <section className="max-w-6xl mx-auto px-4 py-16">
-      {/* HEADER */}
-      <div className="text-center mb-12">
-        <h2 className="text-5xl font-[Aspire] text-yellow-300 drop-shadow-lg">
-          🌈 Pride Itinerary
-        </h2>
-        <p className="text-yellow-100 mt-2 font-semibold">
-          Explore each area’s events, performances, and activities.
-        </p>
-      </div>
+ return (
+  <section className="max-w-6xl mx-auto ">
+    {/* WRAP CARD (matches the other section) */}
+    <div
+      className="
+        relative overflow-hidden rounded-3xl
+        border border-white/10
+        bg-gradient-to-b from-black/60 via-black/40 to-black/60
+        backdrop-blur-xl
+        shadow-[0_25px_70px_-40px_rgba(0,0,0,0.9)]
+      "
+    >
+      {/* subtle glow accents */}
+      <div className="pointer-events-none absolute -top-24 -left-24 h-64 w-64 rounded-full bg-pink-500/20 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-28 -right-24 h-72 w-72 rounded-full bg-yellow-400/15 blur-3xl" />
 
-      {/* LOCATION TABS */}
-      <div className="flex flex-wrap justify-center gap-4 mb-10">
-        {locations.map((loc) => (
-          <button
-            key={loc}
-            onClick={() => setActiveLocation(loc)}
-            className={`px-6 py-2 rounded-xl font-bold transition
-              ${
-                activeLocation === loc
-                  ? "bg-yellow-400 text-black shadow-lg scale-105"
-                  : "bg-white/10 border border-yellow-400/40 text-yellow-200 hover:bg-white/20"
-              }`}
-          >
-            📍 {loc}
-          </button>
-        ))}
-      </div>
-
-      {/* ITINERARY GRID */}
-      <div className="grid md:grid-cols-2 gap-6">
-        {filtered.map((item) => (
-          <div
-            key={item.id}
-            className="bg-black/60 border border-yellow-400/40 rounded-2xl p-6 shadow-xl"
-          >
-            <h3 className="text-2xl font-bold text-yellow-300 mb-2">
-              #{item.position} — {item.title}
-            </h3>
-
-            <p className="text-sm text-yellow-100 mb-3">
-              🕒 {formatTime(item.start_time)} – {formatTime(item.end_time)}
-            </p>
-
-{item.performers?.length > 0 && (
-  <div className="mt-3 flex flex-wrap gap-3">
-    {item.performers.map((p) => (
-      <a
-        key={p.id}
-href={`https://karaoverse.com/artist/${p.slug}`}     
-   target="_blank"
-        rel="noopener noreferrer"
-        className="flex items-center gap-2 bg-gradient-to-r from-pink-500/20 to-purple-500/20 border border-pink-400/40 px-3 py-2 rounded-xl hover:scale-105 transition"
-      >
-        <img
-          src={p.image_url}
-          alt={p.artist_name}
-          className="w-8 h-8 rounded-full object-cover border border-white/30"
-        />
-        <span className="font-semibold text-pink-200">
-          {p.artist_name}
-        </span>
-      </a>
-    ))}
-  </div>
-)}
-{item.hosts?.length > 0 && (
-  <div className="mt-3 flex flex-wrap gap-3">
-    {item.hosts.map((h) => (
-      <a
-        key={h.id}
-        href={`https://karaoverse.com/host/${h.slug}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex items-center gap-2 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 border border-blue-400/40 px-3 py-2 rounded-xl hover:scale-105 transition"
-      >
-        <span className="text-lg">🎧</span>
-
-        <span className="font-semibold text-blue-200">
-          {h.dj_name}
-        </span>
-      </a>
-    ))}
-  </div>
-)}
-
-            {item.description && (
-              <p className="text-sm border-t mt-3 text-yellow-100 italic">
-                {item.description}
-              </p>
-            )}
+      <div className="relative p-4 sm:p-6">
+        {/* HEADER */}
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center gap-3 mb-3">
+            <span className="h-[1px] w-10 bg-gradient-to-r from-transparent via-yellow-300/70 to-transparent" />
+            <h2 className="text-3xl sm:text-5xl font-[Aspire] text-yellow-300 drop-shadow-lg">
+              🌈 Pride Itinerary
+            </h2>
+            <span className="h-[1px] w-10 bg-gradient-to-r from-transparent via-yellow-300/70 to-transparent" />
           </div>
-        ))}
+          <p className="text-yellow-100/80 font-semibold">
+            Explore each area’s events, performances, and activities.
+          </p>
+        </div>
+
+        {/* LOCATION TABS */}
+        <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-8">
+          {locations.map((loc) => {
+            const active = activeLocation === loc;
+            return (
+              <button
+                key={loc}
+                onClick={() => setActiveLocation(loc)}
+                className={`
+                  group inline-flex items-center gap-2
+                  px-5 sm:px-6 py-2.5 rounded-2xl font-extrabold
+                  border transition
+                  focus:outline-none focus:ring-2
+                  ${
+                    active
+                      ? "bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-500 text-black border-white/10 shadow-[0_18px_40px_-26px_rgba(250,204,21,0.85)] scale-[1.02] focus:ring-yellow-200/70"
+                      : "bg-white/5 text-yellow-100/80 border-white/10 hover:bg-white/10 hover:text-yellow-100 focus:ring-yellow-200/30"
+                  }
+                `}
+              >
+                <span className={`${active ? "" : "opacity-90"} transition`}>
+                  📍
+                </span>
+                <span className="tracking-tight">{loc}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* ITINERARY GRID */}
+        <div className="grid md:grid-cols-2 gap-6">
+          {filtered.map((item) => (
+            <div
+              key={item.id}
+              className="
+                rounded-2xl p-2 sm:p-6
+                border border-white/10
+                bg-white/5
+                hover:bg-white/10
+                transition
+                shadow-[0_18px_60px_-40px_rgba(0,0,0,0.85)]
+              "
+            >
+              <div className="flex items-start justify-between gap-3">
+                <h3 className="text-xl sm:text-2xl font-extrabold text-yellow-200 leading-tight">
+                  {item.title}
+                </h3>
+
+                {/* optional: tiny badge vibe */}
+                <span className="shrink-0 rounded-full px-3 py-1 text-xs font-extrabold bg-black/30 border border-white/10 text-yellow-100/80">
+                  Itinerary
+                </span>
+              </div>
+
+              <p className="mt-2 text-sm sm:text-[15px] text-yellow-100/80 font-semibold">
+                🕒 {formatTime(item.start_time)} – {formatTime(item.end_time)}
+              </p>
+
+              {/* PERFORMERS */}
+              {item.performers?.length > 0 && (
+                <div className="mt-4 flex flex-wrap gap-3">
+                  {item.performers.map((p) => (
+                    <a
+                      key={p.id}
+                      href={`https://karaoverse.com/artist/${p.slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="
+                        group inline-flex items-center gap-2
+                        rounded-2xl px-3.5 py-2
+                        border border-white/10
+                        bg-gradient-to-r from-pink-500/15 to-purple-500/15
+                        hover:from-pink-500/25 hover:to-purple-500/25
+                        hover:scale-[1.03]
+                        transition
+                        shadow-[0_16px_40px_-30px_rgba(236,72,153,0.65)]
+                        focus:outline-none focus:ring-2 focus:ring-pink-300/40
+                      "
+                    >
+                      <div className="w-8 h-8 rounded-full overflow-hidden border border-white/20">
+                        <img
+                          src={p.image_url}
+                          alt={p.artist_name}
+                          className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                          loading="lazy"
+                        />
+                      </div>
+                      <span className="font-extrabold text-pink-100 text-sm">
+                        {p.artist_name}
+                      </span>
+                      <span aria-hidden className="text-pink-100/70 text-xs">
+                        ↗
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              )}
+
+              {/* HOSTS */}
+              {item.hosts?.length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-3">
+                  {item.hosts.map((h) => (
+                    <a
+                      key={h.id}
+                      href={`https://karaoverse.com/host/${h.slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="
+                        group inline-flex items-center gap-2
+                        rounded-2xl px-3.5 py-2
+                        border border-white/10
+                        bg-gradient-to-r from-blue-500/15 to-indigo-500/15
+                        hover:from-blue-500/25 hover:to-indigo-500/25
+                        hover:scale-[1.03]
+                        transition
+                        shadow-[0_16px_40px_-30px_rgba(59,130,246,0.55)]
+                        focus:outline-none focus:ring-2 focus:ring-blue-300/35
+                      "
+                    >
+                      <span className="text-base">🎧</span>
+                      <span className="font-extrabold text-blue-100 text-sm">
+                        {h.dj_name}
+                      </span>
+                      <span aria-hidden className="text-blue-100/70 text-xs">
+                        ↗
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              )}
+
+              {/* DESCRIPTION */}
+              {item.description && (
+                <p className="mt-4 pt-4 border-t border-white/10 text-sm sm:text-[15px] text-yellow-100/80 italic leading-relaxed">
+                  {item.description}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* optional: empty state */}
+        {filtered.length === 0 && (
+          <div className="text-center py-10 text-yellow-100/70 italic">
+            No itinerary items for this location yet.
+          </div>
+        )}
       </div>
-    </section>
-  );
+    </div>
+  </section>
+);
 }

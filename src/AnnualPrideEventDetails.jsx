@@ -146,193 +146,299 @@ const featuredArtists =
     );
   }
 
-  return (
-    <section className="max-w-6xl mx-auto px-2 py-4">
-      <div className=" px-1 shadow-2xl">
+return (
+  <section className="max-w-6xl mx-auto px-3 sm:px-6 py-6">
+    <div
+      className="
+        relative overflow-hidden rounded-3xl
+        border border-white/10
+        bg-gradient-to-b from-black/60 via-black/40 to-black/60
+        backdrop-blur-xl
+        shadow-[0_25px_70px_-40px_rgba(0,0,0,0.9)]
+      "
+    >
+      {/* subtle glow accents */}
+      <div className="pointer-events-none absolute -top-24 -left-24 h-64 w-64 rounded-full bg-pink-500/20 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-28 -right-24 h-72 w-72 rounded-full bg-yellow-400/15 blur-3xl" />
 
-  {eventHosts.length > 0 && (
-  <div className="mb-8 bg-black/50 border border-pink-400/40 rounded-2xl p-5">
-<h3 className="text-2xl font-extrabold text-pink-300 mb-3 text-center shadow-[0_6px_10px_-6px_rgba(255,255,255,0.8)]">
-      🌈 Pride in Karaoverse
+      <div className="relative p-4 sm:p-6">
+        {/* 🌈 PRIDE HOSTS */}
+        {eventHosts.length > 0 && (
+          <div className="mb-8">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <span className="h-[1px] w-10 bg-gradient-to-r from-transparent via-pink-300/70 to-transparent" />
+              <h3 className="text-xl sm:text-3xl font-extrabold tracking-tight text-pink-200 drop-shadow">
+                🌈 Pride in Karaoverse
+              </h3>
+              <span className="h-[1px] w-10 bg-gradient-to-r from-transparent via-pink-300/70 to-transparent" />
+            </div>
 
-    </h3>
+            <div className="space-y-4">
+              {eventHosts.map((host) => (
+                <div
+                  key={host.id}
+                  className="
+                    rounded-2xl p-4 sm:p-5
+                    border border-white/10
+                    bg-white/5
+                    hover:bg-white/10
+                    transition
+                  "
+                >
+                  <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-4">
+                    {/* INFO */}
+                    <div className="text-center sm:text-left">
+                      <p className="text-lg sm:text-xl font-extrabold text-pink-100">
+                        {host.event_name || "Pride Event Host"}
+                      </p>
 
-    {eventHosts.map((host) => (
-      <div
-        key={host.id}
-        className="flex flex-col sm:flex-row items-center justify-between gap-4
-                  rounded-xl p-1"
-      >
-        {/* INFO */}
-        <div className="text-center sm:text-left">
-          <p className="text-lg font-bold text-pink-200">
-            {host.event_name || "Pride Event Host"}
-          </p>
+                      <p className="text-sm text-pink-100/70 mt-1">
+                        {host.city}, {host.state}
+                      </p>
 
-          <p className="text-sm text-pink-100 opacity-80">
-            {host.city}, {host.state}
-          </p>
+                      {host.notes && (
+                        <p className="mt-3 text-sm sm:text-[15px] font-semibold text-pink-50/90 max-w-xl">
+                          {host.notes}
+                        </p>
+                      )}
 
-          {host.notes && (
-            <p className="mt-2 text-sm font-bold text-pink-100  max-w-xl">
-              {host.notes}
-            </p>
-          )}
-          <p className="text-center font-bold shadow-white shadow-md rounded-full p-3 mt-4 border-t text-pink-100 mb-6 max-w-3xl mx-auto text-sm sm:text-base">
+                      <div className="mt-4">
+                        <p
+                          className="
+                            inline-block
+                            text-xs sm:text-sm font-bold
+                            text-pink-100
+                            rounded-full px-4 py-2
+                            border border-white/15
+                            bg-black/30
+                            shadow-[0_10px_25px_-15px_rgba(255,255,255,0.35)]
+                          "
+                        >
+                          Performer applications & performer profiles are managed directly
+                          through Karaoverse.
+                        </p>
+                      </div>
+                    </div>
 
-  Performer applications & performer profiles are managed directly through Karaoverse.
-</p>
- 
-        </div>
+                    {/* BUTTON */}
+                    <a
+                      href={`https://karaoverse.com/event/${host.slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="
+                        inline-flex items-center justify-center gap-2
+                        px-6 py-3 rounded-2xl
+                        bg-gradient-to-r from-pink-500 via-fuchsia-600 to-purple-600
+                        text-white font-extrabold
+                        shadow-[0_18px_40px_-20px_rgba(236,72,153,0.8)]
+                        hover:brightness-110 hover:scale-[1.03]
+                        active:scale-[0.99]
+                        transition
+                        focus:outline-none focus:ring-2 focus:ring-pink-300/60
+                      "
+                    >
+                      🎤 View Page
+                      <span aria-hidden className="opacity-90">↗</span>
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
-        {/* BUTTON */}
-<a
-  href={`https://karaoverse.com/event/${host.slug}`}
-  target="_blank"
-  rel="noopener noreferrer"
-  className="
-    px-6 py-3 rounded-xl
-    bg-gradient-to-r from-pink-500 via-fuchsia-600 to-purple-600
-    text-white font-extrabold
-    shadow-lg
-    hover:scale-105 hover:brightness-110
-    transition
-  "
->
-  🎤 View Page
-</a>
-
-      </div>
-    ))}
-  </div>
-)}
+        {/* MAIN GRID */}
         <div className="grid md:grid-cols-2 gap-8 text-yellow-100">
           {/* LEFT */}
           <div className="space-y-4">
-          <p className="flex items-center gap-3 text-lg">
-  <FaCalendarAlt className="text-yellow-300" />
+            <div
+              className="
+                rounded-2xl p-4
+                border border-white/10
+                bg-white/5
+              "
+            >
+              <p className="flex items-start gap-3 text-base sm:text-lg">
+                <FaCalendarAlt className="text-yellow-300 mt-1" />
+                <span className="leading-relaxed">
+                  <span className="font-bold text-yellow-100">
+                    {event.date
+                      ? new Date(event.date + "T00:00:00").toLocaleDateString(
+                          "en-US",
+                          {
+                            weekday: "long",
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                          }
+                        )
+                      : "Date TBA"}
+                  </span>
 
-  {event.date
-    ? new Date(event.date + "T00:00:00")
-  .toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  })
-    : "Date TBA"}
-<br/>
-  {event.start_time && (
-    <>
-      {" "}
-      • {formatTime12(event.start_time)}
-      {event.end_time && ` – ${formatTime12(event.end_time)}`}
-    </>
-  )}
-</p>
+                  {event.start_time && (
+                    <span className="block text-yellow-100/80 font-semibold">
+                      • {formatTime12(event.start_time)}
+                      {event.end_time && ` – ${formatTime12(event.end_time)}`}
+                    </span>
+                  )}
+                </span>
+              </p>
 
+              <p className="flex items-start gap-3 text-base sm:text-lg mt-3">
+                <FaMapMarkerAlt className="text-yellow-300 mt-1" />
+                <span className="leading-relaxed">
+                  <span className="font-bold text-yellow-100">
+                    {event.address}
+                  </span>
+                  <span className="block text-yellow-100/80 font-semibold">
+                    {event.city}, {event.state}
+                  </span>
+                </span>
+              </p>
 
-            <p className="flex items-center gap-3 text-lg">
-              <FaMapMarkerAlt className="text-yellow-300" />
-              {event.address}, {event.city}, {event.state}
-            </p>
+              {event.notes && (
+                <div className="mt-4 bg-black/40 border border-yellow-400/20 rounded-2xl p-4 text-sm sm:text-[15px] whitespace-pre-line leading-relaxed">
+                  {event.notes}
+                </div>
+              )}
 
-            {event.notes && (
-              <div className="bg-black/50 border border-yellow-400/30 rounded-xl p-4 text-sm whitespace-pre-line">
-                {event.notes}
-              </div>
-            )}
-
-            {event.eventbrite_url && (
-              <a
-                href={event.eventbrite_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="
-                  inline-flex items-center gap-2 mt-4
-                  px-6 py-3 rounded-xl
-                  bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600
-                  text-black font-bold
-                  hover:brightness-110 transition
-                "
-              >
-                <FaTicketAlt /> Get Tickets
-              </a>
-            )}
+              {event.eventbrite_url && (
+                <a
+                  href={event.eventbrite_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="
+                    inline-flex items-center justify-center gap-2 mt-5
+                    px-6 py-3 rounded-2xl
+                    bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-500
+                    text-black font-extrabold
+                    shadow-[0_18px_40px_-24px_rgba(250,204,21,0.85)]
+                    hover:brightness-110 hover:scale-[1.03]
+                    active:scale-[0.99]
+                    transition
+                    focus:outline-none focus:ring-2 focus:ring-yellow-200/70
+                  "
+                >
+                  <FaTicketAlt /> Get Tickets
+                  <span aria-hidden className="opacity-80">↗</span>
+                </a>
+              )}
+            </div>
           </div>
 
           {/* RIGHT */}
-          <div>
-            <h3 className="text-2xl font-bold text-yellow-300 mb-4 text-center">
-              🎤 Featured Artists
-            </h3>
+          <div className="space-y-6">
+            <div
+              className="
+                rounded-2xl p-4
+                border border-white/10
+                bg-white/5
+              "
+            >
+              <h3 className="text-2xl font-extrabold text-yellow-300 mb-4 text-center">
+                🎤 Featured Artists
+              </h3>
 
-            {featuredArtists.length === 0 ? (
-              <p className="text-center italic text-yellow-200">
-                Artist lineup coming soon.
-              </p>
-            ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
-                {featuredArtists.map((artist) => (
-                  <Link
-                    key={artist.id}
-                    to={`/artist/${artist.slug}`}
-                    className="group flex flex-col items-center text-center hover:scale-105 transition"
-                  >
-                    <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-yellow-300 shadow-[0_0_25px_rgba(255,215,0,0.45)]">
-                      <img
-                        src={
-                          artist.image_url ||
-                          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSL2me_CKyfrr925EXl7hOyjKOmLKFmkz40rA&s"
-                        }
-                        alt={artist.artist_name}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
+              {featuredArtists.length === 0 ? (
+                <p className="text-center italic text-yellow-200/80">
+                  Artist lineup coming soon.
+                </p>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
+                  {featuredArtists.map((artist) => (
+                    <a
+                      key={artist.id}
+                      href={`https://karaoverse.com/artist/${artist.slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="
+                        group flex flex-col items-center text-center
+                        hover:scale-[1.04] transition
+                        focus:outline-none
+                      "
+                    >
+                      <div
+                        className="
+                          w-28 h-28 rounded-full overflow-hidden
+                          border-4 border-yellow-300/90
+                          shadow-[0_0_28px_rgba(255,215,0,0.35)]
+                          group-hover:shadow-[0_0_38px_rgba(255,215,0,0.55)]
+                          transition
+                        "
+                      >
+                        <img
+                          src={
+                            artist.image_url ||
+                            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSL2me_CKyfrr925EXl7hOyjKOmLKFmkz40rA&s"
+                          }
+                          alt={artist.artist_name}
+                          className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                          loading="lazy"
+                        />
+                      </div>
 
-                    <span className="mt-3 font-bold text-sm">
-                      {artist.artist_name}
-                    </span>
-                  </Link>
-                ))}
-              </div>
-            )}
+                      <span className="mt-3 font-extrabold text-sm text-yellow-100">
+                        {artist.artist_name}
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
 
             {itineraryHosts.length > 0 && (
-  <div className="mb-6">
-    <h3 className="text-xl font-bold text-yellow-300 text-center mb-3">
-      🎧 Featured Hosts
-    </h3>
+              <div
+                className="
+                  rounded-2xl p-4
+                  border border-white/10
+                  bg-white/5
+                "
+              >
+                <h3 className="text-xl font-extrabold text-yellow-300 text-center mb-4">
+                  🎧 Featured Hosts
+                </h3>
 
-    <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
-      {itineraryHosts.map(host => (
-        <Link
-          key={host.id}
-          to={`/${host.slug}`}
-          className="group flex flex-col items-center text-center hover:scale-105 transition"
-        >
-          <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-pink-400 shadow-lg">
-            <img
-              src={host.photo_url || "/default-dj.png"}
-              alt={host.dj_name}
-              className="w-full h-full object-cover"
-            />
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
+                  {itineraryHosts.map((host) => (
+                    <a
+                      key={host.id}
+                      href={`https://karaoverse.com/${host.slug}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="
+                        group flex flex-col items-center text-center
+                        hover:scale-[1.04] transition
+                      "
+                    >
+                      <div
+                        className="
+                          w-24 h-24 rounded-full overflow-hidden
+                          border-4 border-pink-400/90
+                          shadow-[0_0_26px_rgba(236,72,153,0.35)]
+                          group-hover:shadow-[0_0_36px_rgba(236,72,153,0.55)]
+                          transition
+                        "
+                      >
+                        <img
+                          src={host.photo_url || "/default-dj.png"}
+                          alt={host.dj_name}
+                          className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                          loading="lazy"
+                        />
+                      </div>
+
+                      <span className="mt-2 font-extrabold text-sm text-yellow-100">
+                        {host.dj_name}
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-
-          <span className="mt-2 font-bold text-sm">
-            {host.dj_name}
-          </span>
-        </Link>
-      ))}
-    </div>
-  </div>
-)}
-          </div>
-         
-
         </div>
-       
       </div>
-    </section>
-  );
+    </div>
+  </section>
+);
 }

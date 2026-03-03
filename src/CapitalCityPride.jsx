@@ -130,17 +130,17 @@ const RainbowDivider = () => (
       </section>
 
       {/* 🎭 MAIN FEATURES */}
-      <section className="max-w-6xl mx-auto grid md:grid-cols-1 gap-8 px-2 py-2">
+      <section className="max-w-6xl mx-auto grid md:grid-cols-1 gap-2 px-2 ">
 
-    <div className="bg-black/60 p-2 rounded-2xl border border-yellow-500/40 shadow-lg">
-          <FaMapMarkerAlt className="text-4xl text-yellow-300 mb-3 mx-auto" />
- <PrideItinerary  />
-        </div>
+
 
        
       </section>
 
       <AnnualPrideEventDetails />
+          <div className=" ">
+ <PrideItinerary  />
+        </div>
 {/* 🌈 PRIDE PARTNERS SHOWCASE */}
 <section className="relative w-full px-2 py-2 overflow-hidden">
 
