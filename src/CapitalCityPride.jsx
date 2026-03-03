@@ -179,13 +179,13 @@ const RainbowDivider = () => (
       <div className="absolute inset-0 rounded-2xl ring-1 ring-purple-400/20 pointer-events-none" />
     </div>
 
-    <h2 className="text-3xl sm:text-4xl font-extrabold text-purple-300 mb-3 drop-shadow-lg">
-      🎤 Become a Performer
+    <h2 className="text-2xl border-b sm:text-4xl font-extrabold text-purple-300 mb-3 drop-shadow-lg">
+      Are you a Performer?
     </h2>
 
     <p className="text-yellow-100/85 text-lg sm:text-xl mb-6 max-w-2xl mx-auto leading-relaxed">
-      Sing. Dance. DJ. Host. Inspire.
-      Apply to perform at Capital City Pride through Karaoverse and showcase your talent to thousands.
+      Drag performers, artists,  DJs & other LGBTQIA+ performers - 
+      Apply to perform at Capital City Pride through Karaoverse and showcase your talent to the community with easy digital connections and support!
     </p>
 
     <a
