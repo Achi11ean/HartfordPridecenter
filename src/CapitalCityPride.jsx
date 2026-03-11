@@ -254,7 +254,7 @@ useEffect(() => {
         loading="lazy"
       />
     </div>
-
+ 
   </div>
 
 </section>
@@ -269,11 +269,11 @@ useEffect(() => {
 
 
       {/* 🌈 PRIDE PARTNER INTRO */}
-<section className="relative w-full py-20  overflow-hidden">
+<section className="relative w-full py-10  overflow-hidden">
 
 
 
-  <div className="relative max-w-5xl mx-auto">
+  <div className="relative max-w-full mx-auto">
 
     {/* Header */}
     <div className="text-center px-1 mb-10">
@@ -352,51 +352,32 @@ authentically with the community.
   </div>
 
 </section>
-     <section className="relative w-full  py-12 overflow-hidden">
-
+<section className="
+  relative w-full
+  bg-gradient-to-br from-pink-400 via-white to-purple-400
+  py-12 overflow-hidden
+  shadow-[inset_0_0_80px_rgba(0,0,0,0.35)]
+">
 
   {/* MAIN CONTENT CONTAINER */}
   <div className="relative max-w-full mx-auto space-y-10">
 
-    {/* 🎤 PERFORMERS */}
+    {/* 🏆 SPONSORS */}
     <div className="rounded-none p-8 border border-white/10 bg-black/50 backdrop-blur-xl shadow-2xl text-center">
 
-      <img
-        src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819"
-        alt="Performer on stage"
-        className="w-full max-w-3xl mx-auto rounded-2xl mb-6 border border-white/10 shadow-xl"
+      <SectionHeader
+        icon="🏆"
+        title="Sponsors"
+        subtitle="Supporting Pride at the highest level"
       />
 
-      <h2 className="text-3xl sm:text-4xl font-extrabold text-purple-300 mb-3">
-        🎤 Are you a Performer?
-      </h2>
-
-      <p className="text-yellow-100/90 text-lg max-w-2xl mx-auto mb-6">
-        Drag performers, DJs, artists, dancers, and LGBTQIA+ entertainers —
-        apply through Karaoverse and showcase your talent at
-        <span className="text-yellow-300 font-bold"> Capital City Pride.</span>
-      </p>
-
-      <a
-        href="https://karaoverse.com/job-postings"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="
-        inline-flex items-center gap-2
-        px-8 py-3 rounded-2xl
-        bg-gradient-to-r from-fuchsia-500 via-purple-600 to-indigo-600
-        text-white font-extrabold
-        shadow-xl
-        hover:scale-105 hover:brightness-110
-        transition
-        "
-      >
-        Apply on Karaoverse ↗
-      </a>
+      <div className="flex justify-center mt-8">
+        <SponsorSlider />
+      </div>
 
     </div>
 
-
+   
     {/* 💛 VOLUNTEERS */}
     <div className="rounded-none p-8 border border-white/10 bg-black/50 backdrop-blur-xl shadow-2xl text-center">
 
@@ -433,20 +414,6 @@ authentically with the community.
     </div>
 
 
-    {/* 🏆 SPONSORS */}
-    <div className="rounded-none p-8 border border-white/10 bg-black/50 backdrop-blur-xl shadow-2xl text-center">
-
-      <SectionHeader
-        icon="🏆"
-        title="Sponsors"
-        subtitle="Supporting Pride at the highest level"
-      />
-
-      <div className="flex justify-center mt-8">
-        <SponsorSlider />
-      </div>
-
-    </div>
 
 
     {/* 🛍️ VENDORS */}
@@ -463,6 +430,43 @@ authentically with the community.
       </div>
 
     </div>
+ <div className="rounded-none p-8 border border-white/10 bg-black/50 backdrop-blur-xl shadow-2xl text-center">
+
+      <img
+        src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819"
+        alt="Performer on stage"
+        className="w-full max-w-3xl mx-auto rounded-2xl mb-6 border border-white/10 shadow-xl"
+      />
+
+      <h2 className="text-3xl sm:text-4xl font-extrabold text-purple-300 mb-3">
+        🎤 Are you a Performer?
+      </h2>
+
+      <p className="text-yellow-100/90 text-lg max-w-2xl mx-auto mb-6">
+        Drag performers, DJs, artists, dancers, and LGBTQIA+ entertainers —
+        apply through Karaoverse and showcase your talent at
+        <span className="text-yellow-300 font-bold"> Capital City Pride.</span>
+      </p>
+
+      <a
+        href="https://karaoverse.com/job-postings"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="
+        inline-flex items-center gap-2
+        px-8 py-3 rounded-2xl
+        bg-gradient-to-r from-fuchsia-500 via-purple-600 to-indigo-600
+        text-white font-extrabold
+        shadow-xl
+        hover:scale-105 hover:brightness-110
+        transition
+        "
+      >
+        Apply on Karaoverse ↗
+      </a>
+
+    </div>
+
 
 
     {/* 💖 FUNDERS */}

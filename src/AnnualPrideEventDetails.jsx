@@ -196,7 +196,7 @@ return (
                       </p>
 
                       {host.notes && (
-                        <p className="mt-3  text-md sm:text-[15px] font-semibold text-pink-50/90 max-w-xl">
+                        <p className="mt-3 max-h-[500px] overflow-auto  text-md sm:text-[15px] font-semibold text-pink-50/90 max-w-xl">
                           {host.notes}
                         </p>
                       )}

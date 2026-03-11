@@ -58,12 +58,12 @@ export default function SponsorInvitationPage() {
     const [showConsultation, setShowConsultation] = useState(false);
 
   return (
-  <div className="min-h-screen bg-gradient-to-br from-black via-slate-900 to-slate-800 text-white">
+  <div className="min-h-screen bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 text-white">
 
     {/* 🌈 HERO BANNER */}
-    <section className="relative mt-24 w-full h-[340px] sm:h-[420px] overflow-hidden">
+    <section className="relative mt-12 sm:mt-24 border-b w-full h-[340px] sm:h-[420px] overflow-hidden">
       <img
-        src="https://www.plannedgiving.com/wp-content/uploads/2023/09/sponsorship.jpg"
+        src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExM2MwZ2dzZnMxenNjN2s5MnJ1YmQ4Ym41NGw5OWtnajc0eGxvN20ycyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3ohs4ucXR6NYRxmpTa/giphy.gif"
         alt="Pride sponsorship"
         className="absolute inset-0 w-full h-full object-cover"
       />
@@ -72,18 +72,24 @@ export default function SponsorInvitationPage() {
       <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-slate-900" />
 
       {/* Hero Content */}
-      <div className="relative z-10 h-full flex items-center justify-center px-6">
+      <div className="relative z-10 h-full flex items-center justify-center px-2">
         <div className="max-w-4xl text-center space-y-6">
           <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-yellow-300 drop-shadow">
             Become a Pride Community Sponsor
           </h1>
 
-          <p className="text-lg sm:text-xl text-slate-200 leading-relaxed">
-            Join us in uplifting LGBTQ+ voices, creating safe spaces,
-            and celebrating Pride through inclusive, community-driven events.
-          </p>
+  
+       
+        </div>
+      </div>
+    </section>
 
-          <button
+    {/* 🌟 INTRO COPY */}
+    <section className="max-w-4xl mx-auto text-center py-6 px-4 space-y-6">
+      <h2 className="text-3xl sm:text-4xl font-extrabold text-yellow-300">
+        Sponsorship Opportunities
+      </h2>
+   <button
             onClick={() => setShowConsultation(true)}
             className="
               inline-flex items-center gap-2
@@ -96,16 +102,6 @@ export default function SponsorInvitationPage() {
           >
             🤝 Start a Sponsorship Conversation
           </button>
-        </div>
-      </div>
-    </section>
-
-    {/* 🌟 INTRO COPY */}
-    <section className="max-w-4xl mx-auto text-center py-16 px-4 space-y-6">
-      <h2 className="text-3xl sm:text-4xl font-extrabold text-yellow-300">
-        Sponsorship Opportunities
-      </h2>
-
       <p className="text-lg text-slate-200 leading-relaxed">
         Our sponsorship tiers are designed to create meaningful partnerships.
         Whether you’re a local business or a community organization,
@@ -162,25 +158,7 @@ export default function SponsorInvitationPage() {
     </section>
 
     {/* 🌟 FINAL CTA */}
-    <footer className="text-center pb-20 px-6 space-y-6">
-      <p className="text-slate-300 max-w-2xl mx-auto">
-        Interested in partnering with us or creating a custom sponsorship?
-        We’d love to collaborate.
-      </p>
-
-      <button
-        onClick={() => setShowConsultation(true)}
-        className="
-          px-8 py-4 rounded-2xl
-          bg-yellow-400 text-black font-extrabold
-          hover:bg-yellow-300
-          transition
-          shadow-xl shadow-yellow-400/30
-        "
-      >
-        📞 Contact Us for a Consultation
-      </button>
-    </footer>
+  
 
     {/* 🌟 CONSULTATION MODAL */}
     <AnimatePresence>

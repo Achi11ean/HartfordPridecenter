@@ -2,13 +2,14 @@ import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaTimes, FaGlobe } from "react-icons/fa";
-
+import { useNavigate } from "react-router-dom";
 const API = "https://singspacebackend.onrender.com";
 const PRIDE_ID = 2; // 🔒 hard-coded (global Pride)
 
 export default function SponsorSlider() {
   const [sponsors, setSponsors] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
   const [activeSponsor, setActiveSponsor] = useState(null);
   const sliderRef = useRef(null);
 const isSingleSponsor = sponsors.length === 1;

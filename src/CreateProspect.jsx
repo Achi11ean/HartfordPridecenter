@@ -149,7 +149,7 @@ const handlePhoneChange = (e) => {
             disabled:opacity-50
           "
         >
-          {loading ? "Saving..." : "Add Prospect"}
+          {loading ? "Submitting..." : "Submit"}
         </button>
       </form>
     </div>
