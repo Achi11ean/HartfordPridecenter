@@ -24,6 +24,7 @@ export default function HartfordCityPride() {
   const [vendors, setVendors] = useState([]);
   const navigate = useNavigate();
 const [showIntro, setShowIntro] = useState(true);
+const scrollRef = React.useRef(null);
   useEffect(() => {
     axios
       .get("https://singspacebackend.onrender.com/pride/2/annual")
@@ -31,6 +32,40 @@ const [showIntro, setShowIntro] = useState(true);
       .catch((err) => console.error("Error loading Annual Pride event:", err));
   }, []);
 
+useEffect(() => {
+  const el = scrollRef.current;
+  if (!el) return;
+
+  const speed = 0.15;
+  let animationFrame;
+  let paused = false;
+
+  const scroll = () => {
+    if (!paused) {
+      if (el.scrollTop + el.clientHeight >= el.scrollHeight) {
+        el.scrollTop = 0;
+      } else {
+        el.scrollTop += speed;
+      }
+    }
+
+    animationFrame = requestAnimationFrame(scroll);
+  };
+
+  const handleEnter = () => (paused = true);
+  const handleLeave = () => (paused = false);
+
+  el.addEventListener("mouseenter", handleEnter);
+  el.addEventListener("mouseleave", handleLeave);
+
+  animationFrame = requestAnimationFrame(scroll);
+
+  return () => {
+    cancelAnimationFrame(animationFrame);
+    el.removeEventListener("mouseenter", handleEnter);
+    el.removeEventListener("mouseleave", handleLeave);
+  };
+}, []);
 useEffect(() => {
   const timer = setTimeout(() => {
     setShowIntro(false);
@@ -61,13 +96,14 @@ useEffect(() => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-red-900  via-green-900 via-green-600 via-green-800 to-blue-400 text-white pt-24">
+    <div className="min-h-screen bg-gradient-to-br from-slate-700 via-balck to-slate-700 text-white lg:pt-24 pt-4">
+      
       {showIntro && (
   <div
     className="
       fixed inset-0 z-[9999]
       flex items-center justify-center
-      bg-black
+      bg-black logo-overlay
       transition-opacity duration-1000
       animate-fadeOut 
     "
@@ -80,100 +116,148 @@ useEffect(() => {
   </div>
 )}
       {/* 🌞 HERO SECTION */}
-      <section
-        className="
-          relative text-center py-20 
-          bg-[url('https://www.vacationer.travel/wp-content/uploads/2023/05/West-Hartford-Pride-1024x768.jpg')]
-          bg-cover bg-center
-          shadow-2xl
-        "
-      >
-        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+    {/* 🌞 HERO SECTION */}
+<section
+  className="
+    relative text-center py-28
+    bg-[url('https://www.vacationer.travel/wp-content/uploads/2023/05/West-Hartford-Pride-1024x768.jpg')]
+    bg-cover bg-center
+    shadow-[0_40px_100px_-30px_rgba(0,0,0,0.9)]
+  "
+>
 
-        <div className="relative z-10 px-6">
-          <h1 className="text-4xl sm:text-6xl font-extrabold drop-shadow-lg">
-            Capital <span className="text-yellow-300">City Pride</span>
-          </h1>
-          <p className="mt-3 text-lg sm:text-xl text-yellow-200 font-semibold">
-            The Official Pride Celebration of Hartford, Connecticut
-          </p>
+  {/* dark cinematic overlay */}
+  <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/90"></div>
 
-          {/* 🌞 CLICKABLE DATE BANNER */}
-          <div
-            className="
-              mt-6 inline-block 
-              bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-600
-              px-6 py-3 
-              rounded-none font-bold shadow-xl border-2 border-white
-              cursor-pointer hover:opacity-90 transition
-              text-black
-            "
-            onClick={() => {
-              if (
-                window.confirm(
-                  "You’re being redirected to the full event page on Karaoverse!\n\nContinue?",
-                )
-              ) {
-                window.location.href = prideEvent
-                  ? `https://karaoverse.com/events/${prideEvent.slug}`
-                  : "https://karaoverse.com";
-              }
-            }}
-          >
-            {prideEvent ? (
-              <>
-                🌟{" "}
-                {new Date(prideEvent.date + "T00:00:00").toLocaleDateString(
-                  "en-US",
-                  {
-                    weekday: "long",
-                    month: "long",
-                    day: "numeric",
-                    year: "numeric",
-                  },
-                )}{" "}
-                • {prideEvent.city}, {prideEvent.state}
-              </>
-            ) : (
-              "🌟 June 2026 • Pride Event"
-            )}
-          </div>
-        </div>
-      </section>{" "}
-      <hr className="rainbow-hr" />
-      {/* 🟡 EVENT OVERVIEW */}
-      <section className="max-w-4xl mx-auto text-center px-2 py-2">
-        <h2 className="text-3xl font-bold text-yellow-300 mb-4">
-         Capital City Pride 2026 formerly Hartford Pride
-        </h2>
+  {/* subtle rainbow glow */}
+  <div className="absolute inset-0 opacity-30 bg-gradient-to-r from-red-500 via-yellow-400 via-green-400 via-blue-500 to-purple-500 blur-3xl"></div>
 
-        <p className="text-yellow-100 leading-relaxed text-lg">
-       The Hartford Pride Center, a program of CLARO, strengthens and sustains Connecticut’s LGBTQ+
-community through direct services, advocacy, and statewide collaboration. We provide housing
-navigation and stabilization support to help individuals secure and maintain safe, affirming
-homes. Our team connects community members to culturally responsive physical and mental
-health care, reduces barriers to services, and promotes long-term wellness. Through case
-management, psycho-social support groups, and assistance with basic human needs, we address
-immediate challenges while building pathways toward stability and self-determination.
-        </p>
-      </section>
-         <section className="max-w-3xl mx-auto px-6 pb-16">
-                  <hr className="rainbow-hr my-4" />
+  <div className="relative z-10 max-w-5xl mx-auto px-6">
 
-        <h2 className="text-3xl font-bold text-center text-white mb-4">
-          Festival Location
-        </h2>
+    <h1 className="text-5xl sm:text-7xl font-[Aspire] font-bold tracking-wide text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]">
+      Capital City <span className="text-yellow-300">Pride</span>
+    </h1>
 
-        <div className="relative w-full pt-[56.25%] rounded-2xl overflow-hidden shadow-2xl border-4 border-pink-400">
-          <iframe
-            className="absolute top-0 left-0 w-full h-full"
-            src="https://www.google.com/maps?q=196+Pratt+St,+Hartford,+CT+06103&z=19&output=embed"
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-          />
-        </div>
-      </section>
+    <p className="mt-4 text-xl text-yellow-100 font-semibold">
+      The Official Pride Celebration of Hartford, Connecticut
+    </p>
+
+    {/* Event Date Badge */}
+    <div
+      className="
+        mt-8 inline-flex items-center
+        bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-500
+        text-black
+        px-8 py-3
+        rounded-full
+        font-bold
+        text-lg
+        shadow-[0_10px_40px_rgba(255,215,0,0.5)]
+        border border-white/30
+        cursor-pointer
+        hover:scale-105 hover:brightness-110
+        transition
+      "
+      onClick={() => {
+        if (
+          window.confirm(
+            "You’re being redirected to the full event page on Karaoverse!\n\nContinue?"
+          )
+        ) {
+          window.location.href = prideEvent
+            ? `https://karaoverse.com/events/${prideEvent.slug}`
+            : "https://karaoverse.com";
+        }
+      }}
+    >
+      {prideEvent ? (
+        new Date(prideEvent.date + "T00:00:00").toLocaleDateString(
+          "en-US",
+          {
+            weekday: "long",
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          }
+        )
+      ) : (
+        "🌟 June 2026 • Pride Event"
+      )}
+    </div>
+
+  </div>
+</section>
+
+
+{/* 🌈 OVERVIEW SECTION */}
+<section className="relative py-20 bg-gradient-to-b from-black to-slate-900 text-center">
+
+  <div className="max-w-5xl mx-auto px-6">
+
+    <h2 className="text-4xl font-bold text-yellow-300 mb-8">
+      Capital City Pride 2026
+    </h2>
+
+    {/* Glass card */}
+    <div
+      ref={scrollRef}
+      className="
+        backdrop-blur-xl
+        bg-white/5
+        border border-white/10
+        rounded-3xl
+        shadow-2xl
+        p-8
+        text-yellow-100
+        text-lg
+        leading-relaxed
+        max-h-[300px]
+        overflow-auto
+      "
+    >
+      The Hartford Pride Center, a program of CLARO, strengthens and sustains
+      Connecticut’s LGBTQ+ community through direct services, advocacy,
+      and statewide collaboration. We provide housing navigation and
+      stabilization support to help individuals secure and maintain safe,
+      affirming homes. Our team connects community members to culturally
+      responsive physical and mental health care, reduces barriers to services,
+      and promotes long-term wellness.
+    </div>
+
+  </div>
+
+</section>
+
+
+{/* 📍 FESTIVAL LOCATION */}
+<section className="relative py-10  bg-gradient-to-b from-slate-900 to-black">
+
+  <div className="max-w-4xl mx-auto px-6">
+
+    <h2 className="text-4xl font-bold text-center text-white mb-10">
+      Festival Location
+    </h2>
+
+    <div
+      className="
+        relative
+        rounded-3xl
+        overflow-hidden
+        shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)]
+        border border-white/10
+      "
+    >
+      <iframe
+        className="w-full h-[420px]"
+        src="https://www.google.com/maps?q=196+Pratt+St,+Hartford,+CT+06103&z=19&output=embed"
+        allowFullScreen
+        loading="lazy"
+      />
+    </div>
+
+  </div>
+
+</section>
       {/* 🎭 MAIN FEATURES */}
       <div className=" ">
         <PrideItinerary />
@@ -185,14 +269,14 @@ immediate challenges while building pathways toward stability and self-determina
 
 
       {/* 🌈 PRIDE PARTNER INTRO */}
-<section className="relative w-full py-20 px-6 overflow-hidden">
+<section className="relative w-full py-20  overflow-hidden">
 
 
 
   <div className="relative max-w-5xl mx-auto">
 
     {/* Header */}
-    <div className="text-center mb-10">
+    <div className="text-center px-1 mb-10">
       <h2 className="text-4xl sm:text-5xl font-extrabold text-yellow-300 drop-shadow-lg">
         🌈 Why Become a Pride Partner
       </h2>
@@ -207,17 +291,17 @@ immediate challenges while building pathways toward stability and self-determina
 
     {/* Card */}
     <div className="
-      rounded-3xl
+      rounded-none
       p-8 sm:p-10
       border border-white/10
-      bg-gradient-to-b from-black/60 via-black/40 to-black/60
+      bg-gradient-to-b from-white via-white to-white/60
       backdrop-blur-xl
       shadow-[0_30px_80px_-40px_rgba(0,0,0,0.9)]
       text-center
     ">
 
-      <p className="text-yellow-100/90 text-lg leading-relaxed max-w-3xl mx-auto mb-8">
-        As a <span className="text-yellow-300 font-bold">Pride Partner</span>,
+      <p className="text-black text-lg leading-relaxed max-w-3xl mx-auto mb-8">
+        As a <span className="text-blue-800 font-bold">Pride Partner</span>,
         your organization plays a meaningful role in bringing this vision to life.
         Rather than traditional sponsorship or tabling, Pride Partners are
         intentionally integrated into the experience of the event — enriching the
@@ -227,33 +311,33 @@ immediate challenges while building pathways toward stability and self-determina
       {/* Partner Benefits */}
       <div className="grid md:grid-cols-3 gap-6 text-left">
 
-        <div className="bg-black/40 rounded-xl p-5 border border-white/10">
-          <h4 className="text-lg font-bold text-pink-300 mb-2">
+        <div className="bg-gradient-to-br from-red-500 via-red-700 to-orange-400 rounded-xl p-5 border border-white/10">
+          <h4 className="text-lg font-bold text-white mb-2">
             🌟 Celebrate Pride
           </h4>
-          <p className="text-yellow-100 text-sm leading-relaxed">
+          <p className="text-yellow-100 font-semibold text-sm leading-relaxed">
             Stand alongside Hartford’s LGBTQ+ community to celebrate artistic
             expression and cultural pride while contributing to storytelling
             throughout the day via our media partners.
           </p>
         </div>
 
-        <div className="bg-black/40 rounded-xl p-5 border border-white/10">
-          <h4 className="text-lg font-bold text-purple-300 mb-2">
+
+        <div className="bg-gradient-to-br from-green-500 via-green-700 to-green-400 rounded-xl p-5 border border-white/10">
+          <h4 className="text-lg font-bold text-white mb-2">
             🎉 Enhance the Experience
           </h4>
-          <p className="text-yellow-100 text-sm leading-relaxed">
+          <p className="text-yellow-100 text-sm font-semibold leading-relaxed">
             Help elevate the atmosphere of Pride through thoughtful presence,
             engagement, and creative social activities that add to the festival
             experience.
           </p>
         </div>
-
-        <div className="bg-black/40 rounded-xl p-5 border border-white/10">
-          <h4 className="text-lg font-bold text-yellow-300 mb-2">
+        <div className="bg-gradient-to-br from-blue-500 via-cyan-700 to-blue-400 rounded-xl p-5 border border-white/10">
+          <h4 className="text-lg font-bold text-white mb-2">
             🤝 Show Your Commitment
           </h4>
-          <p className="text-yellow-100 text-sm leading-relaxed">
+          <p className="text-yellow-100 font-semibold text-sm leading-relaxed">
     As a Pride Partner, your organization will play a meaningful role in helping bring this vision to
 life. Rather than traditional sponsorship or tabling, Pride Partners are intentionally integrated
 into the experience of the event, helping to enrich the atmosphere while connecting
@@ -268,14 +352,14 @@ authentically with the community.
   </div>
 
 </section>
-     <section className="relative w-full px-4 py-12 overflow-hidden">
+     <section className="relative w-full  py-12 overflow-hidden">
 
 
   {/* MAIN CONTENT CONTAINER */}
-  <div className="relative max-w-5xl mx-auto space-y-10">
+  <div className="relative max-w-full mx-auto space-y-10">
 
     {/* 🎤 PERFORMERS */}
-    <div className="rounded-3xl p-8 border border-white/10 bg-black/50 backdrop-blur-xl shadow-2xl text-center">
+    <div className="rounded-none p-8 border border-white/10 bg-black/50 backdrop-blur-xl shadow-2xl text-center">
 
       <img
         src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819"
@@ -314,7 +398,7 @@ authentically with the community.
 
 
     {/* 💛 VOLUNTEERS */}
-    <div className="rounded-3xl p-8 border border-white/10 bg-black/50 backdrop-blur-xl shadow-2xl text-center">
+    <div className="rounded-none p-8 border border-white/10 bg-black/50 backdrop-blur-xl shadow-2xl text-center">
 
       <img
         src="https://main-stream.org/wp-content/uploads/2024/05/call-for-Pride-volunteers-cover-image-770x434-1.jpg"
@@ -350,7 +434,7 @@ authentically with the community.
 
 
     {/* 🏆 SPONSORS */}
-    <div className="rounded-3xl p-8 border border-white/10 bg-black/50 backdrop-blur-xl shadow-2xl text-center">
+    <div className="rounded-none p-8 border border-white/10 bg-black/50 backdrop-blur-xl shadow-2xl text-center">
 
       <SectionHeader
         icon="🏆"
@@ -366,7 +450,7 @@ authentically with the community.
 
 
     {/* 🛍️ VENDORS */}
-    <div className="rounded-3xl p-8 border border-white/10 bg-black/50 backdrop-blur-xl shadow-2xl text-center">
+    <div className="rounded-none p-8 border border-white/10 bg-black/50 backdrop-blur-xl shadow-2xl text-center">
 
       <SectionHeader
         icon="🛍️"
@@ -382,7 +466,7 @@ authentically with the community.
 
 
     {/* 💖 FUNDERS */}
-    <div className="rounded-3xl p-8 border border-white/10 bg-black/50 backdrop-blur-xl shadow-2xl text-center">
+    <div className="rounded-none p-8 border border-white/10 bg-black/50 backdrop-blur-xl shadow-2xl text-center">
 
       <SectionHeader
         icon="💖"

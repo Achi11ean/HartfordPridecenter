@@ -147,12 +147,12 @@ const featuredArtists =
   }
 
 return (
-  <section className="max-w-6xl mx-auto px-3 sm:px-6 py-6">
+  <section className="max-w-full mx-auto  py-6">
     <div
       className="
-        relative overflow-hidden rounded-3xl
+        relative overflow-hidden rounded-none
         border border-white/10
-        bg-gradient-to-b from-black/60 via-black/40 to-black/60
+        bg-gradient-to-b from-white/60 via-white/40 to-white/60
         backdrop-blur-xl
         shadow-[0_25px_70px_-40px_rgba(0,0,0,0.9)]
       "
@@ -161,13 +161,13 @@ return (
       <div className="pointer-events-none absolute -top-24 -left-24 h-64 w-64 rounded-full bg-pink-500/20 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-28 -right-24 h-72 w-72 rounded-full bg-yellow-400/15 blur-3xl" />
 
-      <div className="relative p-4 sm:p-6">
+      <div className="relative p-1 pt-4 sm:p-6">
         {/* 🌈 PRIDE HOSTS */}
         {eventHosts.length > 0 && (
           <div className="mb-8">
             <div className="flex items-center justify-center gap-3 mb-4">
               <span className="h-[1px] w-10 bg-gradient-to-r from-transparent via-pink-300/70 to-transparent" />
-              <h3 className="text-xl sm:text-3xl font-extrabold tracking-tight text-pink-200 drop-shadow">
+              <h3 className="text-xl sm:text-3xl font-extrabold tracking-tight bg-white lg:px-12 px-2 rounded-full text-pink-600 font-serif drop-shadow">
                 🌈 Pride in Karaoverse
               </h3>
               <span className="h-[1px] w-10 bg-gradient-to-r from-transparent via-pink-300/70 to-transparent" />
@@ -180,8 +180,7 @@ return (
                   className="
                     rounded-2xl p-2 sm:p-5
                     border border-white/10
-                    bg-white/5
-                    hover:bg-white/10
+                    bg-black/60
                     transition
                   "
                 >
@@ -240,7 +239,7 @@ return (
               className="
                 rounded-2xl p-4
                 border border-white/10
-                bg-white/5
+                bg-black/40
               "
             >
               <p className="flex items-start gap-3 text-base sm:text-lg">
@@ -317,7 +316,7 @@ return (
               className="
                 rounded-2xl p-4
                 border border-white/10
-                bg-white/5
+                bg-black/40
               "
             >
               <h3 className="text-2xl font-extrabold text-yellow-300 mb-4 text-center">

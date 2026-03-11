@@ -72,11 +72,11 @@ const sorted = res.data.sort((a, b) => {
   if (!items.length) return null;
 
  return (
-  <section className="max-w-6xl mx-auto ">
+  <section className="max-w-full mx-auto ">
     {/* WRAP CARD (matches the other section) */}
     <div
       className="
-        relative overflow-hidden rounded-3xl
+        relative overflow-hidden rounded-none py-6
         border border-white/10
         bg-gradient-to-b from-black/60 via-black/40 to-black/60
         backdrop-blur-xl
@@ -132,7 +132,7 @@ const sorted = res.data.sort((a, b) => {
         </div>
 
         {/* ITINERARY GRID */}
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-3 gap-6">
           {filtered.map((item) => (
             <div
               key={item.id}
