@@ -21,40 +21,64 @@ import SponsorInvitationPage from "./SponsorInvitationPage";
 export default function HartfordCityPride() {
   const [showSponsorModal, setShowSponsorModal] = React.useState(false);
   const [prideEvent, setPrideEvent] = useState(null);
-const [vendors, setVendors] = useState([]);
-const navigate = useNavigate();
+  const [vendors, setVendors] = useState([]);
+  const navigate = useNavigate();
+const [showIntro, setShowIntro] = useState(true);
+  useEffect(() => {
+    axios
+      .get("https://singspacebackend.onrender.com/pride/2/annual")
+      .then((res) => setPrideEvent(res.data))
+      .catch((err) => console.error("Error loading Annual Pride event:", err));
+  }, []);
 
 useEffect(() => {
-  axios
-    .get("https://singspacebackend.onrender.com/pride/2/annual")
-    .then((res) => setPrideEvent(res.data))
-    .catch((err) =>
-      console.error("Error loading Annual Pride event:", err)
-    );
-}, []);
-const SectionHeader = ({ icon, title, subtitle }) => (
-  <div className="text-center mb-4 border-b">
-    <h3 className="text-5xl sm:text-6xl font-[Aspire] text-yellow-300 drop-shadow-lg">
-      {icon} {title}
-    </h3>
-    <p className="mt-2 text-yellow-100 font-semibold tracking-wide">
-      {subtitle}
-    </p>
-  </div>
-);
+  const timer = setTimeout(() => {
+    setShowIntro(false);
+  }, 2000); // 2 seconds
 
-const RainbowDivider = () => (
-  <div className="my-16 h-1 w-full rounded-full bg-gradient-to-r 
+  return () => clearTimeout(timer);
+}, []);
+  
+  const SectionHeader = ({ icon, title, subtitle }) => (
+    <div className="text-center mb-4 border-b">
+      <h3 className="text-5xl sm:text-6xl font-[Aspire] text-yellow-300 drop-shadow-lg">
+        {icon} {title}
+      </h3>
+      <p className="mt-2 text-yellow-100 font-semibold tracking-wide">
+        {subtitle}
+      </p>
+    </div>
+  );
+
+  const RainbowDivider = () => (
+    <div
+      className="my-16 h-1 w-full rounded-full bg-gradient-to-r 
     from-red-500 via-orange-400 via-yellow-300 via-green-400 
     via-blue-400 via-purple-500 to-pink-500
     shadow-[0_0_20px_rgba(255,255,255,0.35)]
-  " />
-);
-
+  "
+    />
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-900  via-green-900 via-green-600 via-green-800 to-blue-400 text-white pt-24">
-
+      {showIntro && (
+  <div
+    className="
+      fixed inset-0 z-[9999]
+      flex items-center justify-center
+      bg-black
+      transition-opacity duration-1000
+      animate-fadeOut 
+    "
+  >
+    <img
+      src="/pridelogo22.png"
+      alt="Capital City Pride"
+      className="w-72 sm:w-96 md:w-[500px] drop-shadow-2xl"
+    />
+  </div>
+)}
       {/* 🌞 HERO SECTION */}
       <section
         className="
@@ -87,7 +111,7 @@ const RainbowDivider = () => (
             onClick={() => {
               if (
                 window.confirm(
-                  "You’re being redirected to the full event page on Karaoverse!\n\nContinue?"
+                  "You’re being redirected to the full event page on Karaoverse!\n\nContinue?",
                 )
               ) {
                 window.location.href = prideEvent
@@ -97,283 +121,285 @@ const RainbowDivider = () => (
             }}
           >
             {prideEvent ? (
-             <>
-    🌟{" "}
-    {new Date(prideEvent.date + "T00:00:00").toLocaleDateString("en-US", {
-      weekday: "long",
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    })}{" "}
-    • {prideEvent.city}, {prideEvent.state}
-  </>
-) : (
-  "🌟 June 2026 • Pride Event"
-)}
+              <>
+                🌟{" "}
+                {new Date(prideEvent.date + "T00:00:00").toLocaleDateString(
+                  "en-US",
+                  {
+                    weekday: "long",
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
+                  },
+                )}{" "}
+                • {prideEvent.city}, {prideEvent.state}
+              </>
+            ) : (
+              "🌟 June 2026 • Pride Event"
+            )}
           </div>
         </div>
-      </section>               <hr className="rainbow-hr" />
-
-
+      </section>{" "}
+      <hr className="rainbow-hr" />
       {/* 🟡 EVENT OVERVIEW */}
       <section className="max-w-4xl mx-auto text-center px-2 py-2">
         <h2 className="text-3xl font-bold text-yellow-300 mb-4">
-          The Biggest Pride Event <br/> in Hartford
+         Capital City Pride 2026 formerly Hartford Pride
         </h2>
 
         <p className="text-yellow-100 leading-relaxed text-lg">
-          Every June, thousands come together in Hartford to celebrate love,
-          identity, diversity, and resilience. The Hartford City Pride Festival
-          features live entertainment, vendors, community resources, a massive
-          parade, and a celebration that lights up the city.
+       The Hartford Pride Center, a program of CLARO, strengthens and sustains Connecticut’s LGBTQ+
+community through direct services, advocacy, and statewide collaboration. We provide housing
+navigation and stabilization support to help individuals secure and maintain safe, affirming
+homes. Our team connects community members to culturally responsive physical and mental
+health care, reduces barriers to services, and promotes long-term wellness. Through case
+management, psycho-social support groups, and assistance with basic human needs, we address
+immediate challenges while building pathways toward stability and self-determination.
         </p>
       </section>
+         <section className="max-w-3xl mx-auto px-6 pb-16">
+                  <hr className="rainbow-hr my-4" />
 
-      {/* 🎭 MAIN FEATURES */}
-      <section className="max-w-6xl mx-auto grid md:grid-cols-1 gap-2 px-2 ">
+        <h2 className="text-3xl font-bold text-center text-white mb-4">
+          Festival Location
+        </h2>
 
-
-
-       
-      </section>
-
-      <AnnualPrideEventDetails />
-          <div className=" px-3">
- <PrideItinerary  />
+        <div className="relative w-full pt-[56.25%] rounded-2xl overflow-hidden shadow-2xl border-4 border-pink-400">
+          <iframe
+            className="absolute top-0 left-0 w-full h-full"
+            src="https://www.google.com/maps?q=196+Pratt+St,+Hartford,+CT+06103&z=19&output=embed"
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
         </div>
-{/* 🌈 PRIDE PARTNERS SHOWCASE */}
-{/* 🎤 BECOME A PERFORMER */}
+      </section>
+      {/* 🎭 MAIN FEATURES */}
+      <div className=" ">
+        <PrideItinerary />
+      </div>
+            <AnnualPrideEventDetails />
 
-<section className="relative w-full px-2 py-2 overflow-hidden">
-<div
-  className="
-    rounded-3xl p-6 mb-2 sm:p-8
-    border border-white/10
-    bg-gradient-to-b from-black/60 via-black/40 to-black/60
-    backdrop-blur-xl 
-    shadow-[0_25px_70px_-40px_rgba(0,0,0,0.9)]
-    text-center
-    relative overflow-hidden
-  "
->
-  {/* Stage Glow Accents */}
-  <div className="pointer-events-none absolute -top-20 -left-20 h-64 w-64 rounded-full bg-fuchsia-500/20 blur-3xl" />
-  <div className="pointer-events-none absolute -bottom-24 -right-20 h-72 w-72 rounded-full bg-purple-500/20 blur-3xl" />
-  <div className="pointer-events-none absolute top-1/3 left-1/4 h-60 w-60 rounded-full bg-yellow-400/10 blur-3xl" />
+      {/* 🌈 PRIDE PARTNERS SHOWCASE */}
+      {/* 🎤 BECOME A PERFORMER */}
 
-  <div className="relative">
-    {/* Optional Performer Image */}
-    <div className="relative mb-6">
-      <img
-        src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819"
-        alt="Performer on stage at Pride event"
-        className="
-          w-full max-w-2xl mx-auto
-          rounded-2xl
-          border border-white/10
-          shadow-[0_20px_60px_-30px_rgba(168,85,247,0.7)]
-          object-cover
-        "
-        loading="lazy"
-      />
-      <div className="absolute inset-0 rounded-2xl ring-1 ring-purple-400/20 pointer-events-none" />
+
+      {/* 🌈 PRIDE PARTNER INTRO */}
+<section className="relative w-full py-20 px-6 overflow-hidden">
+
+
+
+  <div className="relative max-w-5xl mx-auto">
+
+    {/* Header */}
+    <div className="text-center mb-10">
+      <h2 className="text-4xl sm:text-5xl font-extrabold text-yellow-300 drop-shadow-lg">
+        🌈 Why Become a Pride Partner
+      </h2>
+
+      <p className="mt-4 text-lg text-yellow-100 max-w-3xl mx-auto leading-relaxed">
+        Capital City Pride is designed to elevate queer artists across disciplines —
+        visual, literary, performance, drag, and music — while reflecting the
+        professionalism, creativity, and cultural leadership of Hartford’s diverse
+        LGBTQIA+ community.
+      </p>
     </div>
 
-    <h2 className="text-2xl border-b sm:text-4xl font-extrabold text-purple-300 mb-3 drop-shadow-lg">
-      Are you a Performer?
-    </h2>
+    {/* Card */}
+    <div className="
+      rounded-3xl
+      p-8 sm:p-10
+      border border-white/10
+      bg-gradient-to-b from-black/60 via-black/40 to-black/60
+      backdrop-blur-xl
+      shadow-[0_30px_80px_-40px_rgba(0,0,0,0.9)]
+      text-center
+    ">
 
-    <p className="text-yellow-100/85 text-lg sm:text-xl mb-6 max-w-2xl mx-auto leading-relaxed">
-      Drag performers, artists,  DJs & other LGBTQIA+ performers - 
-      Apply to perform at Capital City Pride through Karaoverse and showcase your talent to the community with easy digital connections and support!
-    </p>
+      <p className="text-yellow-100/90 text-lg leading-relaxed max-w-3xl mx-auto mb-8">
+        As a <span className="text-yellow-300 font-bold">Pride Partner</span>,
+        your organization plays a meaningful role in bringing this vision to life.
+        Rather than traditional sponsorship or tabling, Pride Partners are
+        intentionally integrated into the experience of the event — enriching the
+        atmosphere while connecting authentically with the community.
+      </p>
 
-    <a
-      href="https://karaoverse.com/job-postings"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="
-        inline-flex items-center justify-center gap-2
+      {/* Partner Benefits */}
+      <div className="grid md:grid-cols-3 gap-6 text-left">
+
+        <div className="bg-black/40 rounded-xl p-5 border border-white/10">
+          <h4 className="text-lg font-bold text-pink-300 mb-2">
+            🌟 Celebrate Pride
+          </h4>
+          <p className="text-yellow-100 text-sm leading-relaxed">
+            Stand alongside Hartford’s LGBTQ+ community to celebrate artistic
+            expression and cultural pride while contributing to storytelling
+            throughout the day via our media partners.
+          </p>
+        </div>
+
+        <div className="bg-black/40 rounded-xl p-5 border border-white/10">
+          <h4 className="text-lg font-bold text-purple-300 mb-2">
+            🎉 Enhance the Experience
+          </h4>
+          <p className="text-yellow-100 text-sm leading-relaxed">
+            Help elevate the atmosphere of Pride through thoughtful presence,
+            engagement, and creative social activities that add to the festival
+            experience.
+          </p>
+        </div>
+
+        <div className="bg-black/40 rounded-xl p-5 border border-white/10">
+          <h4 className="text-lg font-bold text-yellow-300 mb-2">
+            🤝 Show Your Commitment
+          </h4>
+          <p className="text-yellow-100 text-sm leading-relaxed">
+    As a Pride Partner, your organization will play a meaningful role in helping bring this vision to
+life. Rather than traditional sponsorship or tabling, Pride Partners are intentionally integrated
+into the experience of the event, helping to enrich the atmosphere while connecting
+authentically with the community.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+     <section className="relative w-full px-4 py-12 overflow-hidden">
+
+
+  {/* MAIN CONTENT CONTAINER */}
+  <div className="relative max-w-5xl mx-auto space-y-10">
+
+    {/* 🎤 PERFORMERS */}
+    <div className="rounded-3xl p-8 border border-white/10 bg-black/50 backdrop-blur-xl shadow-2xl text-center">
+
+      <img
+        src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819"
+        alt="Performer on stage"
+        className="w-full max-w-3xl mx-auto rounded-2xl mb-6 border border-white/10 shadow-xl"
+      />
+
+      <h2 className="text-3xl sm:text-4xl font-extrabold text-purple-300 mb-3">
+        🎤 Are you a Performer?
+      </h2>
+
+      <p className="text-yellow-100/90 text-lg max-w-2xl mx-auto mb-6">
+        Drag performers, DJs, artists, dancers, and LGBTQIA+ entertainers —
+        apply through Karaoverse and showcase your talent at
+        <span className="text-yellow-300 font-bold"> Capital City Pride.</span>
+      </p>
+
+      <a
+        href="https://karaoverse.com/job-postings"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="
+        inline-flex items-center gap-2
         px-8 py-3 rounded-2xl
         bg-gradient-to-r from-fuchsia-500 via-purple-600 to-indigo-600
         text-white font-extrabold
-        shadow-[0_20px_50px_-25px_rgba(168,85,247,0.85)]
-        hover:brightness-110 hover:scale-[1.03]
-        active:scale-[0.99]
+        shadow-xl
+        hover:scale-105 hover:brightness-110
         transition
-        focus:outline-none focus:ring-2 focus:ring-purple-300/60
-      "
-    >
-      Apply on Karaoverse
-      <span aria-hidden className="opacity-80">↗</span>
-    </a>
-  </div>
-</div>
-  <div className="absolute inset-0 pointer-events-none">
-    <div className="absolute -top-20 -left-20 w-72 h-72 bg-pink-500/20 blur-3xl rounded-full" />
-    <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-yellow-400/20 blur-3xl rounded-full" />
-    <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-purple-500/20 blur-3xl rounded-full" />
-  </div>
+        "
+      >
+        Apply on Karaoverse ↗
+      </a>
 
-  {/* ✅ Use one max container for ALL cards */}
-  <div className="relative max-w-6xl mx-auto space-y-6">
-    {/* 💛 VOLUNTEER CARD */}
-    <div
-      className="
-        rounded-3xl p-6 sm:p-8
-        border border-white/10
-        bg-gradient-to-b from-black/60 via-black/40 to-black/60
-        backdrop-blur-xl
-        shadow-[0_25px_70px_-40px_rgba(0,0,0,0.9)]
-        text-center
-        overflow-hidden
-        relative
-      "
-    >
-      {/* soft glow accents */}
-      <div className="pointer-events-none absolute -top-20 -left-20 h-56 w-56 rounded-full bg-pink-500/20 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-24 -right-20 h-64 w-64 rounded-full bg-yellow-400/15 blur-3xl" />
+    </div>
 
-      <div className="relative">
-        {/* 📸 VOLUNTEER IMAGE */}
-        <div className="relative mb-6">
-          <img
-            src="https://main-stream.org/wp-content/uploads/2024/05/call-for-Pride-volunteers-cover-image-770x434-1.jpg"
-            alt="Pride event volunteer helping at the festival"
-            className="
-              w-full max-w-2xl mx-auto
-              rounded-2xl
-              border border-white/10
-              shadow-[0_20px_60px_-30px_rgba(250,204,21,0.6)]
-              object-cover
-            "
-            loading="lazy"
-          />
-          <div className="absolute inset-0 rounded-2xl ring-1 ring-yellow-300/20 pointer-events-none" />
-        </div>
 
-        <h2 className="text-3xl sm:text-4xl font-extrabold text-yellow-300 mb-3 drop-shadow-lg">
-          💛 Become a Volunteer
-        </h2>
+    {/* 💛 VOLUNTEERS */}
+    <div className="rounded-3xl p-8 border border-white/10 bg-black/50 backdrop-blur-xl shadow-2xl text-center">
 
-        <p className="text-yellow-100/85 text-lg sm:text-xl mb-6 max-w-2xl mx-auto leading-relaxed">
-          Support Capital City Pride by lending a helping hand and being part of something unforgettable.
-        </p>
+      <img
+        src="https://main-stream.org/wp-content/uploads/2024/05/call-for-Pride-volunteers-cover-image-770x434-1.jpg"
+        alt="Volunteer helping at Pride"
+        className="w-full max-w-3xl mx-auto rounded-2xl mb-6 border border-white/10 shadow-xl"
+      />
 
-        <button
-          onClick={() => navigate("/contact")}
-          className="
-            inline-flex items-center justify-center gap-2
-            px-8 py-3 rounded-2xl
-            bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-500
-            text-black font-extrabold
-            shadow-[0_20px_50px_-25px_rgba(250,204,21,0.85)]
-            hover:brightness-110 hover:scale-[1.03]
-            active:scale-[0.99]
-            transition
-            focus:outline-none focus:ring-2 focus:ring-yellow-200/70
-          "
-        >
-          Contact Us <span aria-hidden className="opacity-80">↗</span>
-        </button>
+      <h2 className="text-3xl font-extrabold text-yellow-300 mb-3">
+        💛 Become a Volunteer
+      </h2>
+
+      <p className="text-yellow-100/90 text-lg max-w-2xl mx-auto mb-6">
+        Join our volunteer team and help bring Pride to life.
+        From stage assistance to community outreach,
+        your support helps create an unforgettable celebration.
+      </p>
+
+      <button
+        onClick={() => navigate("/contact")}
+        className="
+        px-8 py-3 rounded-2xl
+        bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-500
+        text-black font-extrabold
+        shadow-xl
+        hover:scale-105 hover:brightness-110
+        transition
+        "
+      >
+        Contact Us
+      </button>
+
+    </div>
+
+
+    {/* 🏆 SPONSORS */}
+    <div className="rounded-3xl p-8 border border-white/10 bg-black/50 backdrop-blur-xl shadow-2xl text-center">
+
+      <SectionHeader
+        icon="🏆"
+        title="Sponsors"
+        subtitle="Supporting Pride at the highest level"
+      />
+
+      <div className="flex justify-center mt-8">
+        <SponsorSlider />
       </div>
+
     </div>
 
-{/* 🏆 SPONSORS */}
-<div
-  className="
-    max-w-6xl mx-auto mb-6
-    rounded-3xl p-6 sm:p-8
-    border border-white/10
-    bg-gradient-to-b from-black/60 via-black/40 to-black/60
-    backdrop-blur-xl
-    shadow-[0_25px_70px_-40px_rgba(0,0,0,0.9)]
-    text-center
-    relative overflow-hidden
-  "
->
-  {/* soft glow accents */}
-  <div className="pointer-events-none absolute -top-20 -left-20 h-56 w-56 rounded-full bg-yellow-400/20 blur-3xl" />
-  <div className="pointer-events-none absolute -bottom-24 -right-20 h-64 w-64 rounded-full bg-pink-500/15 blur-3xl" />
 
-  <div className="relative">
-    <SectionHeader
-      icon="🏆"
-      title="Sponsors"
-      subtitle="Supporting Pride at the highest level"
-    />
+    {/* 🛍️ VENDORS */}
+    <div className="rounded-3xl p-8 border border-white/10 bg-black/50 backdrop-blur-xl shadow-2xl text-center">
 
-    <div className="flex justify-center mt-6">
-      <SponsorSlider />
+      <SectionHeader
+        icon="🛍️"
+        title="Vendors"
+        subtitle="Local businesses bringing the magic"
+      />
+
+      <div className="flex justify-center mt-8">
+        <VendorSlider />
+      </div>
+
     </div>
-  </div>
-</div>
 
-{/* 🛍️ VENDORS */}
-<div
-  className="
-    max-w-6xl mx-auto mb-6
-    rounded-3xl p-6 sm:p-8
-    border border-white/10
-    bg-gradient-to-b from-black/60 via-black/40 to-black/60
-    backdrop-blur-xl
-    shadow-[0_25px_70px_-40px_rgba(0,0,0,0.9)]
-    text-center
-    relative overflow-hidden
-  "
->
-  {/* soft glow accents */}
-  <div className="pointer-events-none absolute -top-20 -left-20 h-56 w-56 rounded-full bg-pink-500/20 blur-3xl" />
-  <div className="pointer-events-none absolute -bottom-24 -right-20 h-64 w-64 rounded-full bg-yellow-400/15 blur-3xl" />
-
-  <div className="relative">
-    <SectionHeader
-      icon="🛍️"
-      title="Vendors"
-      subtitle="Local businesses bringing the magic"
-    />
-
-    <div className="flex justify-center mt-6">
-      <VendorSlider />
-    </div>
-  </div>
-</div>
 
     {/* 💖 FUNDERS */}
-{/* 💖 FUNDERS */}
-<div
-  className="
-    max-w-6xl mx-auto mb-6
-    rounded-3xl p-6 sm:p-8
-    border border-white/10
-    bg-gradient-to-b from-black/60 via-black/40 to-black/60
-    backdrop-blur-xl
-    shadow-[0_25px_70px_-40px_rgba(0,0,0,0.9)]
-    text-center
-    relative overflow-hidden
-  "
->
-  {/* soft glow accents */}
-  <div className="pointer-events-none absolute -top-20 -left-20 h-56 w-56 rounded-full bg-pink-500/20 blur-3xl" />
-  <div className="pointer-events-none absolute -bottom-24 -right-20 h-64 w-64 rounded-full bg-yellow-400/15 blur-3xl" />
+    <div className="rounded-3xl p-8 border border-white/10 bg-black/50 backdrop-blur-xl shadow-2xl text-center">
 
-  <div className="relative">
-    <SectionHeader
-      icon="💖"
-      title="Funders"
-      subtitle="Community champions making it happen"
-    />
+      <SectionHeader
+        icon="💖"
+        title="Funders"
+        subtitle="Community champions making it happen"
+      />
 
-    <div className="flex justify-center mt-6">
-      <PublicFundersSection />
+      <div className="flex justify-center mt-8">
+        <PublicFundersSection />
+      </div>
+
     </div>
+
   </div>
-</div>
-  </div>
+
 </section>
-
       {/* 🛍️ VENDOR / SPONSOR / VOLUNTEER */}
-
       {/* ⭐ Sponsor Modal */}
       {showSponsorModal && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -391,26 +417,8 @@ const RainbowDivider = () => (
           </div>
         </div>
       )}
-
       {/* 📍 MAP */}
-<section className="max-w-4xl mx-auto px-6 pb-16">
-  <h2 className="text-3xl font-bold text-center text-white mb-4">
-    Festival Location
-  </h2>
-               <hr className="rainbow-hr my-4" />
-
-<div className="relative w-full pt-[56.25%] rounded-2xl overflow-hidden shadow-2xl border-4 border-pink-400">
-  <iframe
-    className="absolute top-0 left-0 w-full h-full"
-    src="https://www.google.com/maps?q=196+Pratt+St,+Hartford,+CT+06103&z=19&output=embed"
-    allowFullScreen
-    loading="lazy"
-    referrerPolicy="no-referrer-when-downgrade"
-  />
-</div>
-</section>
-
-
+   
       {/* ⭐ FOOTER — YELLOW THEME */}
       <section className="bg-gradient-to-br from-yellow-900 via-black to-amber-900 text-yellow-200 py-6 border-t-4 border-yellow-500">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 divide-y lg:divide-y-0 lg:divide-x lg:divide-yellow-700">
@@ -419,8 +427,8 @@ const RainbowDivider = () => (
               Hartford Pride Center 🌟
             </h3>
             <p className="text-sm font-bold">
-              Celebrating identity, community, and love
-              in the heart of Connecticut.
+              Celebrating identity, community, and love in the heart of
+              Connecticut.
             </p>
           </div>
 
@@ -473,7 +481,10 @@ const RainbowDivider = () => (
               >
                 <FaFacebook />
               </a>
-              <a href="mailto:david@hartfordpridecenter.org" className="hover:text-yellow-300">
+              <a
+                href="mailto:david@hartfordpridecenter.org"
+                className="hover:text-yellow-300"
+              >
                 <FaEnvelope />
               </a>
             </div>
@@ -481,7 +492,8 @@ const RainbowDivider = () => (
         </div>
 
         <div className="mt-6 text-center text-xs text-yellow-500">
-          © {new Date().getFullYear()} Hartford Pride Center - Non Profit Organization.
+          © {new Date().getFullYear()} Hartford Pride Center - Non Profit
+          Organization.
         </div>
       </section>
     </div>

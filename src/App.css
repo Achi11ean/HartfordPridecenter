@@ -192,3 +192,14 @@
   font-weight: normal;
   font-style: normal;
 }
+
+
+@keyframes fadeOutIntro {
+  0% { opacity: 1; }
+  70% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.animate-fadeOut {
+  animation: fadeOutIntro 2s ease forwards;
+}
