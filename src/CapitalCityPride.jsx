@@ -143,50 +143,50 @@ useEffect(() => {
     </p>
 
     {/* Event Date Badge */}
-    <div
-      className="
-        mt-8 inline-flex items-center
-        bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-500
-        text-black
-        px-8 py-3
-        rounded-full
-        font-bold
-        text-lg
-        shadow-[0_10px_40px_rgba(255,215,0,0.5)]
-        border border-white/30
-        cursor-pointer
-        hover:scale-105 hover:brightness-110
-        transition
-      "
-      onClick={() => {
-        if (
-          window.confirm(
-            "You’re being redirected to the full event page on Karaoverse!\n\nContinue?"
-          )
-        ) {
-          window.location.href = prideEvent
-            ? `https://karaoverse.com/events/${prideEvent.slug}`
-            : "https://karaoverse.com";
-        }
-      }}
-    >
-      {prideEvent ? (
-        new Date(prideEvent.date + "T00:00:00").toLocaleDateString(
-          "en-US",
-          {
-            weekday: "long",
-            month: "long",
-            day: "numeric",
-            year: "numeric",
-          }
-        )
-      ) : (
-        "🌟 June 2026 • Pride Event"
-      )}
-    </div>
+   <div
+  className="
+    mt-8 inline-flex items-center
+    bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-500
+    text-black
+    px-8 py-1
+    rounded-full
+    font-bold
+    text-lg
+    shadow-[0_10px_40px_rgba(255,215,0,0.5)]
+    border border-white/30
+    cursor-pointer
+    hover:scale-105 hover:brightness-110
+    transition
+  "
+  onClick={() => {
+    if (
+      window.confirm(
+        "You’re being redirected to the full event page on Karaoverse!\n\nContinue?"
+      )
+    ) {
+      window.location.href =
+        "https://karaoverse.com/event/capital-city-pride";
+    }
+  }}
+>
+  {prideEvent ? (
+    new Date(prideEvent.date + "T00:00:00").toLocaleDateString(
+      "en-US",
+      {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      }
+    )
+  ) : (
+    "June 2026"
+  )}
+</div>
 
   </div>
 </section>
+       <hr className="rainbow-hr" />
 
 
 {/* 🌈 OVERVIEW SECTION */}
@@ -258,6 +258,8 @@ useEffect(() => {
   </div>
 
 </section>
+       <hr className="rainbow-hr" />
+
       {/* 🎭 MAIN FEATURES */}
       <div className=" ">
         <PrideItinerary />
@@ -288,6 +290,7 @@ useEffect(() => {
         LGBTQIA+ community.
       </p>
     </div>
+       <hr className="rainbow-hr" />
 
     {/* Card */}
     <div className="
@@ -352,6 +355,8 @@ authentically with the community.
   </div>
 
 </section>
+       <hr className="rainbow-hr" />
+
 <section className="
   relative w-full
   bg-gradient-to-br from-pink-400 via-white to-purple-400
