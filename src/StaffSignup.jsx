@@ -41,8 +41,8 @@ const STAFF_ROLE_OPTIONS = STAFF_ROLES.map(r => ({
 }));
 
 // ---- Cloudinary Config ----
-const CLOUD_NAME = "dcw0wqlse";
-const UPLOAD_PRESET = "karaoke";
+const CLOUD_NAME = "dincfzdau";
+const UPLOAD_PRESET = "pridecenters";
 const [uploadStatus, setUploadStatus] = useState("");
 // ────────────────────────────────────────────────
 // Cloudinary Manual Upload

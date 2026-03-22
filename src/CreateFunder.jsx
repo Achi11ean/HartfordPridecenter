@@ -4,8 +4,8 @@ import { motion } from "framer-motion";
 import { useAuth } from "./AuthContext"; // 👈 adjust path if needed
 
 const API = "https://singspacebackend.onrender.com";
-const CLOUD_NAME = "dcw0wqlse";
-const UPLOAD_PRESET = "karaoke";
+const CLOUD_NAME = "dincfzdau";
+const UPLOAD_PRESET = "pridecenters";
 
 export default function CreateFunder({ onCreated }) {
   const { prideId, isAuthenticated, isAdmin, isStaff } = useAuth();

@@ -6,8 +6,8 @@ import { useAuth } from "./AuthContext";
 const API = "https://singspacebackend.onrender.com";
 
 // 🔐 Cloudinary
-const CLOUD_NAME = "dcw0wqlse";
-const UPLOAD_PRESET = "karaoke";
+const CLOUD_NAME = "dincfzdau";
+const UPLOAD_PRESET = "pridecenters";
 
 export default function ManageServices() {
   const { token, prideId } = useAuth();

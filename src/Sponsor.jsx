@@ -6,8 +6,8 @@ import axios from "axios";
 const PRIDE_ID = 2;
 
 // 🔐 Cloudinary (same pattern as before)
-const CLOUD_NAME = "dcw0wqlse";
-const UPLOAD_PRESET = "karaoke";
+const CLOUD_NAME = "dincfzdau";
+const UPLOAD_PRESET = "pridecenters";
 
 // ⭐ Sponsor tiers
 const SPONSOR_TIERS = [

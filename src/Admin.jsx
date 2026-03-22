@@ -6,8 +6,9 @@ import { useAuth } from "./AuthContext";
 import Select from "react-select";
 
 const API = "https://singspacebackend.onrender.com";
-const CLOUD_NAME = "dcw0wqlse";
-const UPLOAD_PRESET = "karaoke";
+const CLOUD_NAME = "dincfzdau";
+const UPLOAD_PRESET = "pridecenters";
+
 
 const ROLE_OPTIONS = [
   "Admin",
