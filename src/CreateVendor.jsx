@@ -10,15 +10,14 @@ const CLOUD_NAME = "dincfzdau";
 const UPLOAD_PRESET = "pridecenters";
 
 const VENDOR_TYPES = [
-  "Food",
-  "Retail",
-  "Non-Profit",
-  "Sponsor",
-  "Performer",
-  "Info Booth",
-  "Other",
+  "Merchandise",
+  "Arts and Crafts",
+  "Wellness or Beauty",
+  "Travel or Tourism Agency",
+  "Food and Beverage",
+  "Community Service or Nonprofit",
+  "Political or Activism",
 ];
-
 const STATUS_OPTIONS = [
   "pending",
   "approved",
@@ -30,17 +29,18 @@ const STATUS_OPTIONS = [
 export default function CreateVendor() {
   const { token, prideId } = useAuth();
 
-  const [form, setForm] = useState({
-    company_name: "",
-    vendor_type: "",
-    contact_name: "",
-    contact_email: "",
-    website_url: "",
-    image_url: "", // 🖼 NEW
-    start_time: "",
-    end_time: "",
-    status: "pending",
-  });
+const [form, setForm] = useState({
+  company_name: "",
+  vendor_type: "",
+  contact_name: "",
+  contact_email: "",
+  websites: [""],   // 🔥 NEW
+  socials: [""],    // 🔥 NEW
+  image_url: "",
+  start_time: "",
+  end_time: "",
+  status: "pending",
+});
 
   const [submitting, setSubmitting] = useState(false);
 
@@ -75,7 +75,27 @@ export default function CreateVendor() {
       toast.error("❌ Image upload failed");
     }
   };
+const updateListItem = (type, index, value) => {
+  setForm((prev) => {
+    const updated = [...prev[type]];
+    updated[index] = value;
+    return { ...prev, [type]: updated };
+  });
+};
 
+const addListItem = (type) => {
+  setForm((prev) => ({
+    ...prev,
+    [type]: [...prev[type], ""],
+  }));
+};
+
+const removeListItem = (type, index) => {
+  setForm((prev) => ({
+    ...prev,
+    [type]: prev[type].filter((_, i) => i !== index),
+  }));
+};
   /* ───────────────────────────── */
   /* 🚀 Submit */
   /* ───────────────────────────── */
@@ -84,29 +104,39 @@ export default function CreateVendor() {
     setSubmitting(true);
 
     try {
-      await axios.post(
-        `${API}/api/pride/${prideId}/vendors`,
-        {
-          ...form,
-          start_time: form.start_time || null,
-          end_time: form.end_time || null,
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+     await axios.post(
+  `${API}/api/pride/${prideId}/vendors`,
+  {
+    ...form,
+
+    website_url: form.websites
+      .filter((w) => w && w.trim())
+      .join(","),
+
+    social_links: form.socials
+      .filter((s) => s && s.trim())
+      .join(","),
+
+    start_time: form.start_time || null,
+    end_time: form.end_time || null,
+  },
+  { headers: { Authorization: `Bearer ${token}` } }
+);
 
       toast.success("🏳️‍🌈 Vendor added successfully!");
 
-      setForm({
-        company_name: "",
-        vendor_type: "",
-        contact_name: "",
-        contact_email: "",
-        website_url: "",
-        image_url: "",
-        start_time: "",
-        end_time: "",
-        status: "pending",
-      });
+    setForm({
+  company_name: "",
+  vendor_type: "",
+  contact_name: "",
+  contact_email: "",
+  websites: [""],
+  socials: [""],
+  image_url: "",
+  start_time: "",
+  end_time: "",
+  status: "pending",
+});
     } catch (err) {
       console.error(err);
       toast.error("❌ Failed to add vendor");
@@ -116,145 +146,266 @@ export default function CreateVendor() {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto">
+    <div className="w-full max-w-full mx-auto">
       <h2 className="text-2xl font-extrabold text-yellow-300 mb-4 border-b border-yellow-400">
         ➕ Add Pride Vendor
       </h2>
 
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-4 bg-black/60 border border-yellow-500/30 rounded-xl p-6 shadow-lg"
+    <form
+  onSubmit={handleSubmit}
+  className="
+    space-y-6
+    bg-gradient-to-br from-black/80 via-slate-900/90 to-black/80
+    border border-yellow-400/20
+    rounded-2xl p-5 sm:p-6
+    shadow-[0_10px_40px_rgba(0,0,0,0.6)]
+    backdrop-blur-xl
+  "
+>
+
+  {/* HEADER */}
+  <div className="text-center">
+    <h2 className="text-2xl font-extrabold text-yellow-300">
+      🏪 Vendor Setup
+    </h2>
+    <p className="text-xs text-yellow-100/60">
+      Create or update vendor information
+    </p>
+  </div>
+
+  {/* BASIC INFO */}
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+    <div className="form-group sm:col-span-2">
+      <label>Company / Organization</label>
+      <input
+        name="company_name"
+        value={form.company_name}
+        onChange={handleChange}
+        required
+        className="input-pro"
+      />
+    </div>
+
+    <div className="form-group">
+      <label>Vendor Type</label>
+      <select
+        name="vendor_type"
+        value={form.vendor_type}
+        onChange={handleChange}
+        required
+        className="input-pro"
       >
-        {/* Company Name */}
-        <input
-          name="company_name"
-          value={form.company_name}
-          onChange={handleChange}
-          placeholder="Company / Organization Name"
-          required
-          className="w-full px-4 py-2 rounded bg-black text-yellow-100 border border-yellow-400/40"
-        />
+        <option value="">Select type</option>
+        {VENDOR_TYPES.map((type) => (
+          <option key={type}>{type}</option>
+        ))}
+      </select>
+    </div>
 
-        {/* Vendor Type */}
-        <select
-          name="vendor_type"
-          value={form.vendor_type}
-          onChange={handleChange}
-          required
-          className="w-full px-4 py-2 rounded bg-black text-yellow-100 border border-yellow-400/40"
-        >
-          <option value="">Select vendor type</option>
-          {VENDOR_TYPES.map((type) => (
-            <option key={type} value={type}>
-              {type}
-            </option>
-          ))}
-        </select>
+    <div className="form-group">
+      <label>Status</label>
+      <select
+        name="status"
+        value={form.status}
+        onChange={handleChange}
+        className="input-pro"
+      >
+        {STATUS_OPTIONS.map((s) => (
+          <option key={s} value={s}>
+            {s}
+          </option>
+        ))}
+      </select>
+    </div>
 
-        {/* Contact Info */}
-        <div className="grid sm:grid-cols-2 gap-4">
+  </div>
+
+  {/* CONTACT */}
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div className="form-group">
+      <label>Contact Name</label>
+      <input
+        name="contact_name"
+        value={form.contact_name}
+        onChange={handleChange}
+        required
+        className="input-pro"
+      />
+    </div>
+
+    <div className="form-group">
+      <label>Contact Email</label>
+      <input
+        type="email"
+        name="contact_email"
+        value={form.contact_email}
+        onChange={handleChange}
+        required
+        className="input-pro"
+      />
+    </div>
+  </div>
+
+  {/* LINKS */}
+  <div className="grid sm:grid-cols-2 gap-4">
+
+    {/* Websites */}
+    <div className="space-y-2">
+      <label className="label">🌐 Websites</label>
+
+      {(form.websites || []).map((site, i) => (
+        <div key={i} className="flex gap-2">
           <input
-            name="contact_name"
-            value={form.contact_name}
-            onChange={handleChange}
-            placeholder="Contact Name"
-            required
-            className="px-4 py-2 rounded bg-black text-yellow-100 border border-yellow-400/40"
+            value={site}
+            onChange={(e) =>
+              updateListItem("websites", i, e.target.value)
+            }
+            className="input-pro"
+            placeholder="https://..."
           />
 
-          <input
-            type="email"
-            name="contact_email"
-            value={form.contact_email}
-            onChange={handleChange}
-            placeholder="Contact Email"
-            required
-            className="px-4 py-2 rounded bg-black text-yellow-100 border border-yellow-400/40"
-          />
-        </div>
-
-        {/* Website */}
-        <input
-          name="website_url"
-          value={form.website_url}
-          onChange={handleChange}
-          placeholder="Website URL (optional)"
-          className="w-full px-4 py-2 rounded bg-black text-yellow-100 border border-yellow-400/40"
-        />
-
-        {/* 🖼 Vendor Image */}
-        <div className="space-y-2">
-          <label className="text-sm font-bold text-yellow-200">
-            Vendor Image (optional)
-          </label>
-
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-            className="w-full text-yellow-100"
-          />
-
-          <input
-            name="image_url"
-            value={form.image_url}
-            onChange={handleChange}
-            placeholder="Or paste image URL"
-            className="w-full px-4 py-2 rounded bg-black text-yellow-100 border border-yellow-400/40"
-          />
-
-          {form.image_url && (
-            <img
-              src={form.image_url}
-              alt="Preview"
-              className="mt-2 h-32 rounded shadow object-cover"
-            />
+          {form.websites.length > 1 && (
+            <button
+              type="button"
+              onClick={() => removeListItem("websites", i)}
+              className="btn-danger-sm"
+            >
+              ✕
+            </button>
           )}
         </div>
+      ))}
 
-        {/* Event Times */}
-        <div className="grid sm:grid-cols-2 gap-4">
+      <button
+        type="button"
+        onClick={() => addListItem("websites")}
+        className="text-xs text-yellow-300 hover:underline"
+      >
+        ➕ Add
+      </button>
+    </div>
+
+    {/* Socials */}
+    <div className="space-y-2">
+      <label className="label">📱 Social Links</label>
+
+      {(form.socials || []).map((social, i) => (
+        <div key={i} className="flex gap-2">
           <input
-            type="datetime-local"
-            name="start_time"
-            value={form.start_time}
-            onChange={handleChange}
-            className="px-4 py-2 rounded bg-black text-yellow-100 border border-yellow-400/40"
+            value={social}
+            onChange={(e) =>
+              updateListItem("socials", i, e.target.value)
+            }
+            className="input-pro"
+            placeholder="https://..."
           />
 
-          <input
-            type="datetime-local"
-            name="end_time"
-            value={form.end_time}
-            onChange={handleChange}
-            className="px-4 py-2 rounded bg-black text-yellow-100 border border-yellow-400/40"
-          />
+          {form.socials.length > 1 && (
+            <button
+              type="button"
+              onClick={() => removeListItem("socials", i)}
+              className="btn-danger-sm"
+            >
+              ✕
+            </button>
+          )}
         </div>
+      ))}
 
-        {/* Status */}
-        <select
-          name="status"
-          value={form.status}
-          onChange={handleChange}
-          className="w-full px-4 py-2 rounded bg-black text-yellow-100 border border-yellow-400/40"
-        >
-          {STATUS_OPTIONS.map((s) => (
-            <option key={s} value={s}>
-              {s.charAt(0).toUpperCase() + s.slice(1)}
-            </option>
-          ))}
-        </select>
+      <button
+        type="button"
+        onClick={() => addListItem("socials")}
+        className="text-xs text-yellow-300 hover:underline"
+      >
+        ➕ Add
+      </button>
+    </div>
 
-        <button
-          type="submit"
-          disabled={submitting}
-          className="w-full py-3 font-bold rounded
-            bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600
-            text-black hover:brightness-110 transition"
-        >
-          {submitting ? "Saving…" : "Save Vendor"}
-        </button>
-      </form>
+  </div>
+
+  {/* IMAGE */}
+  <div className="space-y-3">
+    <label className="label">🖼 Vendor Image</label>
+
+    <div className="grid sm:grid-cols-2 gap-4">
+
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleImageUpload}
+        className="input-pro"
+      />
+
+      <input
+        name="image_url"
+        value={form.image_url}
+        onChange={handleChange}
+        placeholder="Paste image URL"
+        className="input-pro"
+      />
+
+    </div>
+
+    {form.image_url && (
+      <div className="flex justify-center">
+        <img
+          src={form.image_url}
+          alt="Preview"
+          className="
+            max-h-40
+            object-contain
+            rounded-xl
+            border border-yellow-400/30
+            bg-black/40 p-2
+          "
+        />
+      </div>
+    )}
+  </div>
+
+  {/* TIMES */}
+  <div className="grid sm:grid-cols-2 gap-4">
+    <div className="form-group">
+      <label>Start Time</label>
+      <input
+        type="datetime-local"
+        name="start_time"
+        value={form.start_time}
+        onChange={handleChange}
+        className="input-pro"
+      />
+    </div>
+
+    <div className="form-group">
+      <label>End Time</label>
+      <input
+        type="datetime-local"
+        name="end_time"
+        value={form.end_time}
+        onChange={handleChange}
+        className="input-pro"
+      />
+    </div>
+  </div>
+
+  {/* SUBMIT */}
+  <button
+    type="submit"
+    disabled={submitting}
+    className="
+      w-full py-4 rounded-xl font-extrabold text-lg
+      bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600
+      text-black
+      shadow-lg
+      hover:scale-105 hover:shadow-yellow-400/40
+      transition-all duration-300
+    "
+  >
+    {submitting ? "Saving…" : "💾 Save Vendor"}
+  </button>
+
+</form>
     </div>
   );
 }

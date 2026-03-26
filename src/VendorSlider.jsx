@@ -1,8 +1,16 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaTimes, FaGlobe } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import {
+  FaTimes,
+  FaGlobe,
+  FaInstagram,
+  FaFacebook,
+  FaYoutube,
+} from "react-icons/fa";
+
+import { SiTiktok } from "react-icons/si";
 const API = "https://singspacebackend.onrender.com";
 const PRIDE_ID = 2; // 🔒 hard-coded (global Pride)
 
@@ -10,7 +18,10 @@ export default function VendorSlider() {
   const [vendors, setVendors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeVendor, setActiveVendor] = useState(null);
-  const sliderRef = useRef(null);
+const sliderRef = useRef(null);
+const containerRef = useRef(null); // 🔥 NEW
+
+const [dragLimits, setDragLimits] = useState({ left: 0, right: 0 }); // 🔥 NEW
 const isSingleVendor = vendors.length === 1;
 
   useEffect(() => {
@@ -38,6 +49,80 @@ const isSingleVendor = vendors.length === 1;
     fetchVendors();
   }, []);
 
+
+
+  const getWebsites = (v) => {
+  if (v.websites?.length) return v.websites;
+  if (v.website_url) return v.website_url.split(",").map(s => s.trim());
+  return [];
+};
+
+const getSocials = (v) => {
+  if (v.socials?.length) return v.socials;
+  if (v.social_links) return v.social_links.split(",").map(s => s.trim());
+  return [];
+};
+const getPlatform = (url) => {
+  const u = url.toLowerCase();
+
+  if (u.includes("instagram")) {
+    return {
+      icon: <FaInstagram />,
+      label: "Instagram",
+      color: "text-pink-400",
+    };
+  }
+
+  if (u.includes("tiktok")) {
+    return {
+      icon: <SiTiktok />,
+      label: "TikTok",
+      color: "text-white",
+    };
+  }
+
+  if (u.includes("facebook")) {
+    return {
+      icon: <FaFacebook />,
+      label: "Facebook",
+      color: "text-blue-400",
+    };
+  }
+
+  if (u.includes("youtube")) {
+    return {
+      icon: <FaYoutube />,
+      label: "YouTube",
+      color: "text-red-400",
+    };
+  }
+
+  return {
+    icon: <FaGlobe />,
+    label: "Link",
+    color: "text-yellow-300",
+  };
+};
+
+
+
+useEffect(() => {
+  if (!sliderRef.current || !containerRef.current) return;
+
+  const sliderWidth = sliderRef.current.scrollWidth;
+  const containerWidth = containerRef.current.offsetWidth;
+
+  const maxDrag = sliderWidth - containerWidth;
+
+  setDragLimits({
+    left: -Math.max(0, maxDrag),
+    right: 0,
+  });
+}, [vendors]);
+
+
+
+
   if (loading) {
     return (
       <p className="text-center text-sm text-neutral-400">
@@ -54,18 +139,23 @@ const isSingleVendor = vendors.length === 1;
     );
   }
 
+
+
+
   return (
     <>
       {/* ================= SLIDER ================= */}
-      <div className="relative w-full overflow-hidden">
-    <motion.div
+<div ref={containerRef} className="relative w-full overflow-hidden">
+      <motion.div
   ref={sliderRef}
   className={`flex gap-4 ${
     isSingleVendor ? "justify-center cursor-default" : "cursor-grab active:cursor-grabbing"
   }`}
   drag={isSingleVendor ? false : "x"}
-  dragConstraints={isSingleVendor ? undefined : { left: -1000, right: 0 }}
-  whileTap={isSingleVendor ? undefined : { scale: 0.98 }}
+dragConstraints={isSingleVendor ? undefined : dragLimits}
+dragElastic={0.05}
+dragMomentum={false}
+whileTap={isSingleVendor ? undefined : { scale: 0.98 }}
 >
 
           {vendors.map((v) => (
@@ -123,12 +213,15 @@ const isSingleVendor = vendors.length === 1;
                     Help us craft a unique, exciting , and inclusive Pride experience!
                   </p>
         
-                  <Link
-                    to="/volunteer"
-                    className="inline-block px-8 py-3 rounded-xl bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 font-bold text-black border-2 border-white shadow-lg hover:scale-105 transition"
-                  >
-                   Contact us
-                  </Link>
+<a
+  href="https://docs.google.com/forms/d/1J6jkAaV2LaV6yt-JDkXUTpTq4a7zxId0xz777NQF5Kg/viewform"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="inline-block px-8 py-3 rounded-xl bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 font-bold text-black border-2 border-white shadow-lg hover:scale-105 transition"
+>
+  Contact us
+</a>
+
                 </div>
       </div>
 
@@ -207,24 +300,86 @@ const isSingleVendor = vendors.length === 1;
               )}
 
               {/* WEBSITE */}
-              {activeVendor.website_url && (
-                <div className="flex justify-center">
-                  <a
-                    href={activeVendor.website_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="
-                      flex items-center gap-2
-                      px-4 py-2 rounded-xl
-                      bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600
-                      text-black font-bold
-                      hover:brightness-110 transition
-                    "
-                  >
-                    <FaGlobe /> Visit Website
-                  </a>
-                </div>
-              )}
+{getWebsites(activeVendor).length > 0 && (
+  (() => {
+    const websites = getWebsites(activeVendor);
+    const count = websites.length;
+
+    const gridCols =
+      count === 1
+        ? "grid-cols-1 justify-items-center"
+        : count === 2
+        ? "grid-cols-2 justify-items-center"
+        : "grid-cols-3";
+
+    return (
+      <div className={`grid ${gridCols} gap-2 mt-4`}>
+        {websites.map((site, i) => (
+          <a
+            key={i}
+            href={site}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="
+              flex items-center justify-center gap-2
+              px-4 py-2
+              rounded-xl
+              bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600
+              text-black font-bold text-sm text-center
+              hover:brightness-110 transition
+              min-w-[120px]
+            "
+          >
+            <FaGlobe />
+            Website {i + 1}
+          </a>
+        ))}
+      </div>
+    );
+  })()
+)}
+{(() => {
+  const socials = getSocials(activeVendor);
+  const count = socials.length;
+
+  const gridCols =
+    count === 1
+      ? "grid-cols-1 justify-items-center"
+      : count === 2
+      ? "grid-cols-2 justify-items-center"
+      : "grid-cols-3";
+
+  return (
+    <div className={`grid ${gridCols} gap-2 mt-3`}>
+      {socials.map((social, i) => {
+        const platform = getPlatform(social);
+
+        return (
+          <a
+            key={i}
+            href={social}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="
+              flex items-center justify-center gap-2
+              px-3 py-2
+              rounded-lg
+              bg-white/10 border border-white/20
+              text-xs text-center
+              hover:bg-white/20 transition
+              min-w-[100px]
+            "
+          >
+            <span className={`${platform.color} text-sm`}>
+              {platform.icon}
+            </span>
+            <span>{platform.label}</span>
+          </a>
+        );
+      })}
+    </div>
+  );
+})()}
             </motion.div>
           </motion.div>
         )}

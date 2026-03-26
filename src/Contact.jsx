@@ -236,14 +236,14 @@ const handleTopicSelect = (e) => {
 {/* Banner */}
 <div
   className="
-    w-full h-80 md:h-96
-    bg-center bg-contain bg-no-repeat
+    w-full h-40 md:h-96
+    bg-center bg-cover bg-no-repeat
     relative shadow-2xl
     border-b-4 border-slate-700
-    mt-24 sm:mt-28  /* 👈 ADD THIS LINE */
+    lg:mt-24 mt-14
   "
   style={{
-    backgroundImage: "url('/PrideLogo3.jpg')",
+    backgroundImage: "url('https://images.squarespace-cdn.com/content/v1/5ac3f2dd3e2d0974e2f2f286/1529702076428-JZK6BYEGGOI8G1CVPMFZ/Pride-2138.jpg?format=1500w')",
   }}
 >
   <div
@@ -260,7 +260,7 @@ const handleTopicSelect = (e) => {
 
 <h2
   className="
-    pt-4 text-7xl lg:text-8xl
+    pt-2 text-7xl lg:text-8xl
     font-extrabold font-[Aspire] tracking-tight text-center
     relative
     bg-gradient-to-r from-violet-700 via-violet-400 to-violet-900
@@ -276,7 +276,7 @@ Contact Us
       <hr className="rainbow-hr" />
 
         {/* Content Section */}
-        <section className="max-w-6xl mx-auto p-8 pt-24 space-y-6">
+        <section className="max-w-6xl mx-auto p-2 pt-4 ">
 
           {/* Header */}
           <p
@@ -290,219 +290,322 @@ Contact Us
           </p>
 
           {/* ================= FORM ================= */}
-          <motion.form
-            onSubmit={handleSubmit}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="
-              bg-black/70
-              border border-slate-700
-              rounded-xl p-6 shadow-xl backdrop-blur-sm
-            "
-          >
-
-            {/* NAME + EMAIL */}
-            {["name", "email"].map((field) => (
-              <div key={field} className="mb-4">
-                <label className="block mb-1 font-semibold text-slate-200">
-                  {field.toUpperCase()}
-                </label>
-                <input
-                  type={field === "email" ? "email" : "text"}
-                  name={field}
-                  value={form[field]}
-                  onChange={handleChange}
-                  required
-                  className="
-                    w-full p-3 rounded-none
-                    bg-white border border-slate-600
-                    text-black placeholder-slate-400
-                    focus:ring-2 focus:ring-indigo-400
-                  "
-                />
-              </div>
-            ))}
-
-            {/* PHONE */}
-            <div className="mb-4">
-              <label className="block mb-1 font-semibold text-slate-200">
-                PHONE (optional)
-              </label>
-              <input
-                type="tel"
-                value={phone}
-                onChange={handlePhoneChange}
-                className="
-                  w-full p-3 rounded-lg
-                  bg-white border border-slate-600
-                  text-black placeholder-slate-400
-                  focus:ring-2 focus:ring-indigo-400
-                "
-              />
-            </div>
-{/* TOPIC / INTEREST */}
-<div className="mb-4">
-  <label className="block mb-1 font-semibold text-slate-200">
-    TOPIC / INTEREST
-  </label>
-
- <select
-  value={selectedTopic}
-  onChange={handleTopicSelect}
+       <motion.form
+  onSubmit={handleSubmit}
+  initial={{ opacity: 0, y: 30 }}
+  animate={{ opacity: 1, y: 0 }}
   className="
-    w-full p-3 rounded-lg
-    bg-white border border-slate-600
-    text-black
-    focus:ring-2 focus:ring-indigo-400
+    relative overflow-hidden
+    bg-gradient-to-br from-slate-950/95 via-black/90 to-slate-900/95
+    border border-white/10
+    rounded-[28px]
+    p-2 sm:p-6 md:p-8
+    shadow-[0_20px_80px_rgba(0,0,0,0.55)]
+    backdrop-blur-xl
   "
 >
-  <option value="">Select a topic…</option>
+  {/* ambient glow */}
+  <div className="pointer-events-none absolute inset-0 overflow-hidden">
+    <div className="absolute -top-20 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full bg-pink-500/10 blur-3xl" />
+    <div className="absolute bottom-0 right-0 h-48 w-48 rounded-full bg-blue-500/10 blur-3xl" />
+    <div className="absolute bottom-10 left-0 h-40 w-40 rounded-full bg-yellow-400/10 blur-3xl" />
+  </div>
 
-  {/* General */}
-  <optgroup label="General">
-    <option value="I want to volunteer">I want to volunteer</option>
-    <option value="I want to Partner">I want to Partner</option>
-  </optgroup>
+  <div className="relative z-10">
+    {/* header */}
+    <div className="mb-6 text-center">
 
-  {/* Services */}
-  {services.length > 0 && (
-    <optgroup label="Pride Services">
-      {services.map(service => (
-        <option key={service.id} value={service.title}>
-          {service.title}
-        </option>
-      ))}
-    </optgroup>
-  )}
+      <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+        Let’s Connect
+      </h2>
 
-  {/* Committees */}
-  {committees.length > 0 && (
-    <optgroup label="Pride Committees">
-      {committees.map(committee => (
-        <option key={committee.id} value={committee.name}>
-          {committee.name} 
-        </option>
-      ))}
-    </optgroup>
-  )}
+      <p className="mx-auto mt-2 max-w-xl text-sm sm:text-base text-white/65">
+        Reach out for support, partnerships, volunteering, committees, services, or to connect with a team member.
+      </p>
+    </div>
 
-  {/* Admins */}
-  {admins.length > 0 && (
-    <optgroup label="Pride Admins">
-      {admins.map(admin => (
-        <option key={admin.id} value={admin.id}>
-          {admin.name}
-        </option>
-      ))}
-    </optgroup>
-  )}
+    {/* fields */}
+    <div className="grid grid-cols-2 gap-3 sm:gap-4">
+      {/* NAME */}
+      <div className="col-span-1">
+        <label className="mb-2 block text-[11px] font-bold uppercase tracking-[0.22em] text-white/70">
+          Name
+        </label>
+        <input
+          type="text"
+          name="name"
+          value={form.name}
+          onChange={handleChange}
+          required
+          className="
+            w-full min-w-0
+            rounded-2xl border border-white/10
+            bg-white text-black
+            px-4 py-2
+            text-sm sm:text-base
+            placeholder:text-slate-400
+            shadow-[inset_0_1px_0_rgba(255,255,255,0.35)]
+            outline-none
+            transition-all duration-300
+            focus:border-fuchsia-400/60
+            focus:ring-4 focus:ring-fuchsia-500/20
+          "
+        />
+      </div>
 
-  {/* Staff */}
-  {staff.length > 0 && (
-    <optgroup label="Pride Staff">
-      {staff.map(member => (
-        <option key={member.id} value={member.id}>
-          {member.first_name} {member.last_name} — {member.role}
-        </option>
-      ))}
-    </optgroup>
-  )}
-</select>
+      {/* EMAIL */}
+      <div className="col-span-1">
+        <label className="mb-2 block text-[11px] font-bold uppercase tracking-[0.22em] text-white/70">
+          Email
+        </label>
+        <input
+          type="email"
+          name="email"
+          value={form.email}
+          onChange={handleChange}
+          required
+          className="
+            w-full min-w-0
+            rounded-2xl border border-white/10
+            bg-white text-black
+            px-4 py-2
+            text-sm sm:text-base
+            placeholder:text-slate-400
+            shadow-[inset_0_1px_0_rgba(255,255,255,0.35)]
+            outline-none
+            transition-all duration-300
+            focus:border-indigo-400/60
+            focus:ring-4 focus:ring-indigo-500/20
+          "
+        />
+      </div>
 
+      {/* PHONE */}
+      <div className="col-span-2 sm:col-span-1">
+        <label className="mb-2 block text-[11px] font-bold uppercase tracking-[0.22em] text-white/70">
+          Phone <span className="normal-case tracking-normal text-white/40">(optional)</span>
+        </label>
+        <input
+          type="tel"
+          value={phone}
+          onChange={handlePhoneChange}
+          className="
+            w-full min-w-0
+            rounded-2xl border border-white/10
+            bg-white text-black
+            px-4 py-2
+            text-sm sm:text-base
+            placeholder:text-slate-400
+            shadow-[inset_0_1px_0_rgba(255,255,255,0.35)]
+            outline-none
+            transition-all duration-300
+            focus:border-cyan-400/60
+            focus:ring-4 focus:ring-cyan-500/20
+          "
+        />
+      </div>
 
-</div>
+      {/* TOPIC / INTEREST */}
+      <div className="col-span-2 sm:col-span-1">
+        <label className="mb-2 block text-[11px] font-bold uppercase tracking-[0.22em] text-white/70">
+          Topic / Interest
+        </label>
 
-            {/* MESSAGE */}
-            <div className="mb-6">
-              <label className="block mb-1 font-semibold text-slate-200">
-                MESSAGE
-              </label>
-              <textarea
-                name="message"
-                rows="4"
-                value={form.message}
-                onChange={handleChange}
-                required
-                className="
-                  w-full p-3 rounded-lg
-                  bg-white  border border-slate-600
-                  text-black placeholder-slate-400
-                  focus:ring-2 focus:ring-indigo-400
-                "
-              />
-            </div>
+        <select
+          value={selectedTopic}
+          onChange={handleTopicSelect}
+          className="
+            w-full min-w-0
+            rounded-2xl border border-white/10
+            bg-white text-black
+            px-4 py-3.5
+            text-sm sm:text-base
+            shadow-[inset_0_1px_0_rgba(255,255,255,0.35)]
+            outline-none
+            transition-all duration-300
+            focus:border-yellow-400/60
+            focus:ring-4 focus:ring-yellow-500/20
+          "
+        >
+          <option value="">Select a topic…</option>
 
-            {/* TERMS */}
-            <div className="mb-4 flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={termsAccepted}
-                onChange={(e) => setTermsAccepted(e.target.checked)}
-                className="w-4 h-4 accent-yellow-400"
-              />
-              <span
-                onClick={() => setShowTerms(!showTerms)}
-                className="text-sm underline cursor-pointer"
-              >
-                I agree to the Terms and Conditions
-              </span>
-            </div>
+          <optgroup label="General">
+            <option value="I want to volunteer">I want to volunteer</option>
+            <option value="I want to Partner">I want to Partner</option>
+          </optgroup>
 
-            {/* Expandable Terms */}
-          <AnimatePresence>
-              {showTerms && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="mb-4 text-sm text-yellow-200 bg-slate-800 p-3 rounded-md"
-                >
-                  <p>
-                    You consent to being contacted  regarding your inquiry using the information submitted.
-                  </p>
-                  <p className="mt-2 font-semibold text-red-300">
-                    Hate, harassment, or threats will lock this device immediately and submit IP address for a possible report to authorities.
-                  </p>
-                </motion.div>
-              )}
-            </AnimatePresence>
+          {services.length > 0 && (
+            <optgroup label="Pride Services">
+              {services.map((service) => (
+                <option key={service.id} value={service.title}>
+                  {service.title}
+                </option>
+              ))}
+            </optgroup>
+          )}
 
-            {/* SUBMIT */}
-            <motion.button
-              type="submit"
-              disabled={isLoading || !termsAccepted || localBlocked}
-              whileHover={termsAccepted ? { scale: 1.02 } : {}}
-              whileTap={termsAccepted ? { scale: 0.97 } : {}}
-              className={`
-                w-full py-3 rounded-lg font-bold text-black text-lg shadow-md
-                ${
-                  termsAccepted && !localBlocked
-                    ? "bg-gradient-to-r from-red-400 via-yellow-300 to-blue-400"
-                    : "bg-gray-600 text-gray-300 cursor-not-allowed"
-                }
-              `}
-            >
-              {isLoading ? "Sending…" : "Send Message 🌈"}
-            </motion.button>
+          {committees.length > 0 && (
+            <optgroup label="Pride Committees">
+              {committees.map((committee) => (
+                <option key={committee.id} value={committee.name}>
+                  {committee.name}
+                </option>
+              ))}
+            </optgroup>
+          )}
 
-            {/* DEVICE LOCKED MESSAGE */}
-            {localBlocked && (
-              <div className="mt-4 text-center text-red-300 font-bold bg-red-900/40 border border-red-500 p-3">
-                🚫 Submissions from this device are disabled.
-              </div>
-            )}
+          {admins.length > 0 && (
+            <optgroup label="Pride Admins">
+              {admins.map((admin) => (
+                <option key={admin.id} value={admin.id}>
+                  {admin.name}
+                </option>
+              ))}
+            </optgroup>
+          )}
 
-            {/* STATUS */}
-            {status && (
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="mt-4 text-center font-bold p-3 rounded-md bg-black/40"
-              >
-                {status}
-              </motion.p>
-            )}
-          </motion.form>
+          {staff.length > 0 && (
+            <optgroup label="Pride Staff">
+              {staff.map((member) => (
+                <option key={member.id} value={member.id}>
+                  {member.first_name} {member.last_name} — {member.role}
+                </option>
+              ))}
+            </optgroup>
+          )}
+        </select>
+      </div>
+
+      {/* MESSAGE */}
+      <div className="col-span-2">
+        <label className="mb-2 block text-[11px] font-bold uppercase tracking-[0.22em] text-white/70">
+          Message
+        </label>
+        <textarea
+          name="message"
+          rows="5"
+          value={form.message}
+          onChange={handleChange}
+          required
+          className="
+            w-full min-w-0
+            rounded-3xl border border-white/10
+            bg-white text-black
+            px-4 py-4
+            text-sm sm:text-base
+            placeholder:text-slate-400
+            shadow-[inset_0_1px_0_rgba(255,255,255,0.35)]
+            outline-none
+            transition-all duration-300
+            focus:border-pink-400/60
+            focus:ring-4 focus:ring-pink-500/20
+          "
+        />
+      </div>
+    </div>
+
+    {/* terms card */}
+    <div className="mt-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4 sm:p-5">
+      <div className="flex items-start gap-3">
+        <input
+          type="checkbox"
+          checked={termsAccepted}
+          onChange={(e) => setTermsAccepted(e.target.checked)}
+          className="mt-1 h-5 w-5 rounded accent-yellow-400"
+        />
+
+        <div className="min-w-0 flex-1">
+          <button
+            type="button"
+            onClick={() => setShowTerms(!showTerms)}
+            className="text-left text-sm sm:text-base font-semibold text-white underline decoration-white/40 underline-offset-4 transition hover:text-yellow-300"
+          >
+            I agree to the Terms and Conditions
+          </button>
+
+          <p className="mt-1 text-xs sm:text-sm text-white/50">
+            Please review the contact and conduct policy before submitting.
+          </p>
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {showTerms && (
+          <motion.div
+            initial={{ opacity: 0, height: 0, y: -4 }}
+            animate={{ opacity: 1, height: "auto", y: 0 }}
+            exit={{ opacity: 0, height: 0, y: -4 }}
+            className="
+              mt-4 overflow-hidden rounded-2xl
+              border border-yellow-400/20
+              bg-gradient-to-br from-yellow-500/10 via-slate-900/90 to-red-500/10
+              p-4 text-sm text-yellow-100
+            "
+          >
+            <p>
+              You consent to being contacted regarding your inquiry using the information submitted.
+            </p>
+            <p className="mt-3 font-semibold text-red-300">
+              Hate, harassment, or threats will lock this device immediately and submit IP address for a possible report to authorities.
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+
+    {/* submit */}
+    <div className="mt-6">
+      <motion.button
+        type="submit"
+        disabled={isLoading || !termsAccepted || localBlocked}
+        whileHover={termsAccepted && !localBlocked ? { scale: 1.015 } : {}}
+        whileTap={termsAccepted && !localBlocked ? { scale: 0.985 } : {}}
+        className={`
+          group relative w-full overflow-hidden
+          rounded-2xl py-4 px-5
+          text-base sm:text-lg font-extrabold
+          shadow-[0_15px_40px_rgba(0,0,0,0.35)]
+          transition-all duration-300
+          ${
+            termsAccepted && !localBlocked
+              ? "bg-gradient-to-r from-red-400 via-yellow-300 to-blue-400 text-black"
+              : "cursor-not-allowed bg-slate-700 text-slate-300"
+          }
+        `}
+      >
+        <span className="relative z-10">
+          {isLoading ? "Sending…" : "Send Message 🌈"}
+        </span>
+
+        {termsAccepted && !localBlocked && (
+          <span className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(120deg,transparent_20%,rgba(255,255,255,0.35)_50%,transparent_80%)] bg-[length:220%_100%] opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-hover:animate-[shimmer_1.6s_linear_infinite]" />
+        )}
+      </motion.button>
+    </div>
+
+    {/* blocked */}
+    {localBlocked && (
+      <div className="mt-4 rounded-2xl border border-red-500/40 bg-red-900/30 p-4 text-center font-bold text-red-200">
+        🚫 Submissions from this device are disabled.
+      </div>
+    )}
+
+    {/* status */}
+    {status && (
+      <motion.p
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="
+          mt-4 rounded-2xl border border-white/10
+          bg-white/[0.06] p-4 text-center
+          font-bold text-white
+        "
+      >
+        {status}
+      </motion.p>
+    )}
+  </div>
+</motion.form>
         </section>
       </div>
     </div>
