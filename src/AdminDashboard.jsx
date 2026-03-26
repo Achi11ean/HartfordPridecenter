@@ -94,6 +94,11 @@ const [sponsorSubTab, setSponsorSubTab] = useState("add_prospect");
               onClick={() => setActiveTab("staff")}
             />
             <TabButton
+  label="Contacts"
+  active={activeTab === "contacts"}
+  onClick={() => setActiveTab("contacts")}
+/>
+            <TabButton
   label="Committees"
   active={activeTab === "committees"}
   onClick={() => setActiveTab("committees")}
@@ -131,11 +136,7 @@ const [sponsorSubTab, setSponsorSubTab] = useState("add_prospect");
   active={activeTab === "services"}
   onClick={() => setActiveTab("services")}
 />
-<TabButton
-  label="Contacts"
-  active={activeTab === "contacts"}
-  onClick={() => setActiveTab("contacts")}
-/>
+
 <TabButton
   label="Messaging"
   active={activeTab === "messaging"}
