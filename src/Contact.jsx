@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
-
+import emailjs from "@emailjs/browser";
 const API = "https://singspacebackend.onrender.com";
 const PRIDE_ID = 2;
 
@@ -166,56 +166,74 @@ const handleTopicSelect = (e) => {
   };
 
   // submit logic + hate lock
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (localBlocked) {
+  if (localBlocked) {
+    setStatus(
+      "🚫 This device has been locked due to prior hate speech violations. Submissions are disabled."
+    );
+    return;
+  }
+
+  if (!termsAccepted) {
+    setStatus("❗ You must agree to the Terms and Conditions before submitting.");
+    return;
+  }
+
+  setIsLoading(true);
+  setStatus("");
+
+  try {
+    // ✅ 1. Save to backend FIRST
+    const res = await axios.post(`${API}/api/pride/${PRIDE_ID}/contact`, {
+      name: form.name,
+      email: form.email,
+      phone: phone || null,
+      message: form.message,
+    });
+
+    // 🚨 moderation lock
+    if (res.data?.contact_status === "flagged") {
+      localStorage.setItem("pride_contact_blocked", "true");
+      setLocalBlocked(true);
+
       setStatus(
-        "🚫 This device has been locked due to prior hate speech violations. Submissions are disabled."
+        "🚨 Hate speech was detected. Your information has been logged and this device has been blocked."
       );
       return;
     }
 
-    if (!termsAccepted) {
-      setStatus("❗ You must agree to the Terms and Conditions before submitting.");
-      return;
-    }
+    // ✅ 2. SEND EMAIL (NEW 🔥)
+    const templateParams = {
+      from_name: form.name,
+      from_email: form.email,
+      phone: phone || "N/A",
+      topic: selectedTopic || "General Inquiry",
+      message: form.message,
+    };
 
-    setIsLoading(true);
-    setStatus("");
+    await emailjs.send(
+      "service_ud7473n",
+      "template_6i8lf6u",
+      templateParams,
+      "BDPsT3cNRMnCg-OaU" // same public key you used before
+    );
 
-    try {
-      const res = await axios.post(`${API}/api/pride/${PRIDE_ID}/contact`, {
-        name: form.name,
-        email: form.email,
-        phone: phone || null,
-        message: form.message,
-      });
+    // ✅ success
+    setStatus("📬 Message sent successfully! We'll be in touch soon.");
 
-      if (res.data?.contact_status === "flagged") {
-        localStorage.setItem("pride_contact_blocked", "true");
-        setLocalBlocked(true);
+    setForm({ name: "", email: "", message: "" });
+    setPhone("");
+    setSelectedTopic("");
 
-        setStatus(
-          "🚨 Hate speech was detected. Your information has been logged and this device has been blocked."
-        );
-
-        return;
-      }
-
-      setStatus("✅ Thank you! Our team will reach out shortly.");
-      setForm({ name: "", email: "", message: "" });
-      setPhone("");
-      setSelectedTopic(""); // 👈 ADD THIS
-
-
-    } catch (err) {
-      console.error(err);
-      setStatus("❌ Something went wrong. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  } catch (err) {
+    console.error(err);
+    setStatus("❌ Something went wrong. Please try again.");
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
 <div
