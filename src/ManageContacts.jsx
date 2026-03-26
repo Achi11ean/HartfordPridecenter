@@ -113,22 +113,36 @@ console.log("AUTH prideId:", prideId);
   }
 
   return (
-    <div className="w-full space-y-4">
-      {contacts.length === 0 && (
-        <p className="text-yellow-200 italic">
-          No contact submissions yet.
-        </p>
-      )}
+  <div className="w-full space-y-4">
 
-      {contacts.map((c) => (
-        <div
-          key={c.id}
-          className="bg-black/60 border border-yellow-500/30 rounded-2xl p-5 shadow-xl space-y-3"
-        >
-          {editingId === c.id ? (
-            <>
+    {contacts.length === 0 && (
+      <p className="text-yellow-200 italic text-center">
+        No contact submissions yet.
+      </p>
+    )}
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+    {contacts.map((c) => (
+      <div
+        key={c.id}
+        className="
+          bg-gradient-to-br from-black/70 via-slate-900/80 to-black/70
+          border border-yellow-400/20
+          rounded-2xl p-5
+          shadow-[0_10px_40px_rgba(0,0,0,0.6)]
+          backdrop-blur-xl
+          transition-all duration-300
+          hover:shadow-yellow-400/10
+        "
+      >
+
+        {editingId === c.id ? (
+          <>
+            {/* 🔥 EDIT GRID */}
+            <div className="grid grid-cols-2 sm:grid-cols-2 gap-4">
+
               <input
-                className="w-full p-2 rounded bg-black/70 border border-yellow-500/30"
+                className="input-pro"
                 value={editForm.name || ""}
                 onChange={(e) =>
                   setEditForm({ ...editForm, name: e.target.value })
@@ -137,7 +151,7 @@ console.log("AUTH prideId:", prideId);
               />
 
               <input
-                className="w-full p-2 rounded bg-black/70 border border-yellow-500/30"
+                className="input-pro"
                 value={editForm.email || ""}
                 onChange={(e) =>
                   setEditForm({ ...editForm, email: e.target.value })
@@ -146,7 +160,7 @@ console.log("AUTH prideId:", prideId);
               />
 
               <input
-                className="w-full p-2 rounded bg-black/70 border border-yellow-500/30"
+                className="input-pro"
                 value={editForm.phone || ""}
                 onChange={(e) =>
                   setEditForm({ ...editForm, phone: e.target.value })
@@ -154,17 +168,8 @@ console.log("AUTH prideId:", prideId);
                 placeholder="Phone"
               />
 
-              <textarea
-                className="w-full p-2 rounded bg-black/70 border border-yellow-500/30 min-h-[100px]"
-                value={editForm.message || ""}
-                onChange={(e) =>
-                  setEditForm({ ...editForm, message: e.target.value })
-                }
-                placeholder="Message"
-              />
-
               <select
-                className="w-full p-2 rounded bg-black/70 border border-yellow-500/30"
+                className="input-pro"
                 value={editForm.status || "new"}
                 onChange={(e) =>
                   setEditForm({ ...editForm, status: e.target.value })
@@ -177,40 +182,74 @@ console.log("AUTH prideId:", prideId);
                 ))}
               </select>
 
-              <div className="flex gap-3">
-                <button
-                  onClick={() => saveEdit(c.id)}
-                  className="px-4 py-2 rounded bg-yellow-400 text-black font-bold"
-                >
-                  Save
-                </button>
-                <button
-                  onClick={cancelEdit}
-                  className="px-4 py-2 rounded bg-black/60 border border-yellow-500/30"
-                >
-                  Cancel
-                </button>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="flex justify-between items-start gap-4">
-                <div>
-                  <p className="font-bold text-yellow-300">
-                    {c.name}
-                  </p>
-                  <p className="text-sm">{c.email}</p>
-                  {c.phone && (
-                    <p className="text-sm">{c.phone}</p>
-                  )}
-                </div>
+              {/* MESSAGE FULL WIDTH */}
+              <textarea
+                className="input-pro sm:col-span-2 min-h-[120px]"
+                value={editForm.message || ""}
+                onChange={(e) =>
+                  setEditForm({ ...editForm, message: e.target.value })
+                }
+                placeholder="Message"
+              />
 
+            </div>
+
+            {/* ACTIONS */}
+            <div className="flex gap-3 mt-4">
+              <button
+                onClick={() => saveEdit(c.id)}
+                className="
+                  px-4 py-2 rounded-xl font-bold
+                  bg-gradient-to-r from-yellow-400 to-yellow-500
+                  text-black
+                  hover:scale-105 transition
+                "
+              >
+                Save
+              </button>
+
+              <button
+                onClick={cancelEdit}
+                className="
+                  px-4 py-2 rounded-xl
+                  bg-black/60 border border-yellow-500/30
+                  text-yellow-200
+                "
+              >
+                Cancel
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            {/* 🔥 HEADER ROW */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
+
+              {/* LEFT */}
+              <div className="space-y-1">
+                <p className="font-extrabold text-yellow-300 text-lg">
+                  {c.name}
+                </p>
+
+                <p className="text-sm text-yellow-100/80">
+                  {c.email}
+                </p>
+
+                {c.phone && (
+                  <p className="text-sm text-yellow-100/60">
+                    {c.phone}
+                  </p>
+                )}
+              </div>
+
+              {/* RIGHT (STATUS) */}
+              <div className="flex justify-start sm:justify-end">
                 <select
                   value={c.status}
                   onChange={(e) =>
                     updateStatus(c.id, e.target.value)
                   }
-                  className="bg-black/70 border border-yellow-500/30 rounded px-2 py-1 text-sm"
+                  className="input-pro max-w-[180px]"
                 >
                   {STATUS_OPTIONS.map((s) => (
                     <option key={s} value={s}>
@@ -220,28 +259,52 @@ console.log("AUTH prideId:", prideId);
                 </select>
               </div>
 
-              <p className="text-sm whitespace-pre-wrap border-l-2 border-yellow-500/40 pl-3">
-                {c.message}
-              </p>
+            </div>
 
-              <div className="flex gap-3 pt-2">
-                <button
-                  onClick={() => startEdit(c)}
-                  className="px-3 py-1 rounded bg-yellow-300 text-black text-sm font-bold"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => deleteContact(c.id)}
-                  className="px-3 py-1 rounded bg-red-600/80 text-white text-sm"
-                >
-                  Delete
-                </button>
-              </div>
-            </>
-          )}
-        </div>
-      ))}
+            {/* 🔥 MESSAGE (SCROLLABLE) */}
+            <div
+              className="
+                mt-3
+                bg-black/40 border border-yellow-400/10
+                rounded-xl p-3
+                text-sm text-yellow-100
+                max-h-[120px] overflow-y-auto
+                whitespace-pre-wrap
+              "
+            >
+              {c.message}
+            </div>
+
+            {/* ACTIONS */}
+            <div className="flex gap-3 mt-4">
+              <button
+                onClick={() => startEdit(c)}
+                className="
+                  px-4 py-2 rounded-xl
+                  bg-gradient-to-r from-yellow-300 to-yellow-400
+                  text-black font-bold text-sm
+                  hover:scale-105 transition
+                "
+              >
+                Edit
+              </button>
+
+              <button
+                onClick={() => deleteContact(c.id)}
+                className="
+                  px-4 py-2 rounded-xl
+                  bg-red-500/80 text-white text-sm
+                  hover:scale-105 transition
+                "
+              >
+                Delete
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    ))}
     </div>
-  );
+  </div>
+);
 }
