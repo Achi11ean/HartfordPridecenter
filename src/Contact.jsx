@@ -209,7 +209,6 @@ const handleSubmit = async (e) => {
       from_name: form.name,
       from_email: form.email,
       phone: phone || "N/A",
-      topic: selectedTopic || "General Inquiry",
       message: form.message,
     };
 
