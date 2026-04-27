@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
-import emailjs from "@emailjs/browser";
+
 const API = "https://singspacebackend.onrender.com";
 const PRIDE_ID = 2;
 
@@ -166,73 +166,56 @@ const handleTopicSelect = (e) => {
   };
 
   // submit logic + hate lock
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  if (localBlocked) {
-    setStatus(
-      "🚫 This device has been locked due to prior hate speech violations. Submissions are disabled."
-    );
-    return;
-  }
-
-  if (!termsAccepted) {
-    setStatus("❗ You must agree to the Terms and Conditions before submitting.");
-    return;
-  }
-
-  setIsLoading(true);
-  setStatus("");
-
-  try {
-    // ✅ 1. Save to backend FIRST
-    const res = await axios.post(`${API}/api/pride/${PRIDE_ID}/contact`, {
-      name: form.name,
-      email: form.email,
-      phone: phone || null,
-      message: form.message,
-    });
-
-    // 🚨 moderation lock
-    if (res.data?.contact_status === "flagged") {
-      localStorage.setItem("pride_contact_blocked", "true");
-      setLocalBlocked(true);
-
+    if (localBlocked) {
       setStatus(
-        "🚨 Hate speech was detected. Your information has been logged and this device has been blocked."
+        "🚫 This device has been locked due to prior hate speech violations. Submissions are disabled."
       );
       return;
     }
 
-    // ✅ 2. SEND EMAIL (NEW 🔥)
-    const templateParams = {
-      from_name: form.name,
-      from_email: form.email,
-      phone: phone || "N/A",
-      message: form.message,
-    };
+    if (!termsAccepted) {
+      setStatus("❗ You must agree to the Terms and Conditions before submitting.");
+      return;
+    }
 
-    await emailjs.send(
-      "service_ud7473n",
-      "template_6i8lf6u",
-      templateParams,
-      "BDPsT3cNRMnCg-OaU" // same public key you used before
-    );
+    setIsLoading(true);
+    setStatus("");
 
-    // ✅ success
-    setStatus("📬 Message sent successfully! We'll be in touch soon.");
+    try {
+      const res = await axios.post(`${API}/api/pride/${PRIDE_ID}/contact`, {
+        name: form.name,
+        email: form.email,
+        phone: phone || null,
+        message: form.message,
+      });
 
-    setForm({ name: "", email: "", message: "" });
-    setPhone("");
-    setSelectedTopic("");
+      if (res.data?.contact_status === "flagged") {
+        localStorage.setItem("pride_contact_blocked", "true");
+        setLocalBlocked(true);
 
-  } catch (err) {
-    console.error(err);
-    setStatus("❌ Something went wrong. Please try again.");
-  } finally {
-    setIsLoading(false);
-  }
-};
+        setStatus(
+          "🚨 Hate speech was detected. Your information has been logged and this device has been blocked."
+        );
+
+        return;
+      }
+
+      setStatus("✅ Thank you! Our team will reach out shortly.");
+      setForm({ name: "", email: "", message: "" });
+      setPhone("");
+      setSelectedTopic(""); // 👈 ADD THIS
+
+
+    } catch (err) {
+      console.error(err);
+      setStatus("❌ Something went wrong. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
 <div
@@ -295,51 +278,46 @@ Contact Us
         {/* Content Section */}
         <section className="max-w-6xl mx-auto p-2 pt-4 ">
 
-          {/* Header */}
-          <p
-            className="
-              text-2xl sm:text-3xl font-extrabold text-center pb-3
-              bg-gradient-to-r from-yellow-200 via-white to-yellow-200
-              bg-clip-text text-transparent
-            "
-          >
-            💛 We’d love to hear from you!
-          </p>
+  <div className="grid md:grid-cols-3 gap-5 mb-10">
+    {[
+      ["🤝", "Volunteer & Community Involvement", "Join projects, events, and local outreach efforts."],
+      ["🌈", "Partnerships & Sponsorships", "Connect your business or organization with Pride initiatives."],
+      ["💬", "Questions, Services & Support", "Reach committees, staff, admins, and available programs."],
+    ].map((box, i) => (
+      <motion.div
+        key={i}
+        initial={{ opacity: 0, y: 18 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: i * 0.08 }}
+        className="rounded-[28px] border border-white/10 bg-white/5 backdrop-blur-xl p-6 shadow-xl"
+      >
+        <div className="text-3xl mb-3">{box[0]}</div>
+        <div className="font-black text-lg text-violet-200 mb-2">{box[1]}</div>
+        <div className="text-white/60 text-sm leading-relaxed">{box[2]}</div>
+      </motion.div>
+    ))}
+  </div>
+
 
           {/* ================= FORM ================= */}
-       <motion.form
+<motion.form
   onSubmit={handleSubmit}
   initial={{ opacity: 0, y: 30 }}
   animate={{ opacity: 1, y: 0 }}
   className="
     relative overflow-hidden
-    bg-gradient-to-br from-slate-950/95 via-black/90 to-slate-900/95
-    border border-white/10
-    rounded-[28px]
-    p-2 sm:p-6 md:p-8
-    shadow-[0_20px_80px_rgba(0,0,0,0.55)]
-    backdrop-blur-xl
+    rounded-[34px]
+    border border-white
+    bg-gradient-to-br from-yellow-500 via-[#090909]/95 to-yellow-500
+    p-3 sm:p-7 md:p-9
+    shadow-[0_30px_100px_rgba(0,0,0,0.7)]
+    backdrop-blur-2xl
   "
 >
-  {/* ambient glow */}
-  <div className="pointer-events-none absolute inset-0 overflow-hidden">
-    <div className="absolute -top-20 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full bg-pink-500/10 blur-3xl" />
-    <div className="absolute bottom-0 right-0 h-48 w-48 rounded-full bg-blue-500/10 blur-3xl" />
-    <div className="absolute bottom-10 left-0 h-40 w-40 rounded-full bg-yellow-400/10 blur-3xl" />
-  </div>
 
   <div className="relative z-10">
     {/* header */}
-    <div className="mb-6 text-center">
 
-      <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
-        Let’s Connect
-      </h2>
-
-      <p className="mx-auto mt-2 max-w-xl text-sm sm:text-base text-white/65">
-        Reach out for support, partnerships, volunteering, committees, services, or to connect with a team member.
-      </p>
-    </div>
 
     {/* fields */}
     <div className="grid grid-cols-2 gap-3 sm:gap-4">

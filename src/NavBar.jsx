@@ -46,7 +46,7 @@ const navItems = [
   { name: "Funders", path: "/funders" },
   {
     name: "Events",
-    path: "https://karaoverse.com/event/capital-city-pride",
+    path: "https://karaoverse.com/events",
     external: true,
   }, 
   //  { name: "Team", path: "/ourteam" },
@@ -95,14 +95,14 @@ const navItems = [
         href={item.path}
         target="_blank"
         rel="noopener noreferrer"
-        className="hover:underline underline hover:text-yellow-200 transition"
+        className="hover:underline  hover:text-yellow-200 transition"
       >
         {item.name}
       </a>
     ) : (
       <Link
         to={item.path}
-        className="hover:underline underline hover:text-yellow-200 transition"
+        className="hover:underline  hover:text-yellow-200 transition"
       >
         {item.name}
       </Link>
