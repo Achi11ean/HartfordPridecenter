@@ -6,31 +6,42 @@ import {
   FaHandsHelping,
   FaBook,
   FaGlobeAmericas,
+  FaInstagram,
+  FaFacebook,
+  FaEnvelope,
+  FaLink,
 } from "react-icons/fa";
 
 export default function Resources() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0F2D25] via-black to-[#18453B] text-white pt-28 pb-20">
       <div className="max-w-7xl mx-auto px-6">
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center max-w-3xl mx-auto"
+          className="text-center max-w-4xl mx-auto"
         >
           <h1 className="text-4xl sm:text-5xl font-extrabold text-yellow-300">
             Community Resources
           </h1>
-          <p className="mt-4 text-lg text-yellow-100/90 font-semibold">
-            Support, safety, education, and connection — curated for the LGBTQIA+ community
-            and allies in and around Hartford, CT.
+
+          {/* MANUAL DESCRIPTION AREA */}
+          <p className="mt-4 text-lg text-yellow-100/90 font-semibold leading-relaxed">
+            {/* ✏️ MANUALLY WRITE YOUR PAGE DESCRIPTION HERE */}
+            Support, safety, education, advocacy, and mutual aid resources curated
+            for community members seeking immediate help, legal information,
+            bystander assistance, wellness support, and trusted organizations.
           </p>
         </motion.div>
 
-        {/* Resource Sections */}
+
+        {/* FEATURED CUSTOM COMMUNITY RESOURCE */}
+      
+        {/* STANDARD RESOURCE SECTIONS */}
         <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Crisis & Support */}
           <ResourceCard
             icon={<FaPhoneAlt />}
             title="Crisis & Immediate Support"
@@ -53,7 +64,6 @@ export default function Resources() {
             ]}
           />
 
-          {/* Local Community */}
           <ResourceCard
             icon={<FaHandsHelping />}
             title="Local Community & Advocacy"
@@ -76,7 +86,6 @@ export default function Resources() {
             ]}
           />
 
-          {/* Health & Wellness */}
           <ResourceCard
             icon={<FaHeart />}
             title="Health & Wellness"
@@ -94,7 +103,6 @@ export default function Resources() {
             ]}
           />
 
-          {/* Education & Legal */}
           <ResourceCard
             icon={<FaBook />}
             title="Education & Legal Resources"
@@ -112,6 +120,64 @@ export default function Resources() {
             ]}
           />
         </div>
+  <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mt-14 bg-gradient-to-br from-yellow-900/30 to-black border border-yellow-400/20 shadow-2xl p-8"
+        >
+          <h2 className="text-3xl font-extrabold text-yellow-300 mb-3">
+            {/* ✏️ MANUAL TITLE */}
+            The Perseus Project
+          </h2>
+
+          <p className="text-yellow-100/85 font-semibold leading-relaxed mb-6">
+            {/* ✏️ MANUAL DESCRIPTION */}
+            Community-based rapid response, bystander aid, know-your-rights access,
+            whistle distribution, and mutual support tools helping individuals
+            protect one another, stay informed, and mobilize safely in the face of threats, violence, and injustice.
+          </p>
+
+          <div className="grid sm:grid-cols-2 gap-4 text-sm font-semibold">
+
+            <a href="https://instagram.com/theperseusproject" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-4 bg-white/5 border border-white/10 hover:bg-white/10">
+              <FaInstagram className="text-yellow-300" />
+              IG @theperseusproject
+            </a>
+
+            <a href="https://facebook.com/theperseusproject" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-4 bg-white/5 border border-white/10 hover:bg-white/10">
+              <FaFacebook className="text-yellow-300" />
+              Facebook.com/theperseusproject
+            </a>
+
+            <a href="https://gofundme.com/u/perseusproject" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-4 bg-white/5 border border-white/10 hover:bg-white/10">
+              <FaLink className="text-yellow-300" />
+              Gofundme.com/u/perseusproject
+            </a>
+
+            <a href="mailto:wetakecareofus1@proton.me" className="flex items-center gap-3 p-4 bg-white/5 border border-white/10 hover:bg-white/10">
+              <FaEnvelope className="text-yellow-300" />
+              wetakecareofus1@proton.me
+            </a>
+
+            <div className="flex items-center gap-3 p-4 bg-white/5 border border-white/10">
+              <FaPhoneAlt className="text-yellow-300" />
+              Aid & Bystander Hotline: 860-352-0590
+            </div>
+
+            <a href="mailto:whistlerequests@proton.me" className="flex items-center gap-3 p-4 bg-white/5 border border-white/10 hover:bg-white/10">
+              <FaEnvelope className="text-yellow-300" />
+              Request up to 3,000 whistles free
+            </a>
+
+            <a href="https://www.ilrc.org" target="_blank" rel="noopener noreferrer" className="sm:col-span-2 flex items-center gap-3 p-4 bg-white/5 border border-white/10 hover:bg-white/10">
+              <FaBook className="text-yellow-300" />
+              Order free Know Your Rights cards / Red Cards (up to 250 weekly) at ILRC.org
+            </a>
+          </div>
+        </motion.div>
+
 
         {/* Closing CTA */}
         <motion.div
@@ -126,8 +192,7 @@ export default function Resources() {
             Know a resource we should add?
           </h2>
           <p className="mt-3 text-yellow-100/90 font-semibold">
-            We’re always growing. If you know a local organization, hotline, or
-            service that supports the community, let us know.
+            We are continually expanding this library of support and mutual aid.
           </p>
 
           <a
@@ -144,10 +209,6 @@ export default function Resources() {
     </div>
   );
 }
-
-/* ───────────────────────────── */
-/* Resource Card */
-/* ───────────────────────────── */
 
 function ResourceCard({ icon, title, items }) {
   return (
@@ -181,7 +242,9 @@ function ResourceCard({ icon, title, items }) {
             </a>
           </li>
         ))}
+
       </ul>
     </motion.div>
-  );
+
+);
 }
