@@ -32,10 +32,6 @@ export default function HomePage() {
   {/* DARK CINEMATIC OVERLAY */}
   <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(to_bottom_right,rgba(20,0,0,.78),rgba(0,0,0,.78),rgba(50,0,0,.74))]" />
 
-  {/* COLOR BLOOMS */}
-  <div className="absolute top-[-120px] left-[-100px] w-[280px] sm:w-[420px] h-[280px] sm:h-[420px] bg-red-500/20 rounded-full blur-[100px] pointer-events-none" />
-  <div className="absolute bottom-[-120px] right-[-80px] w-[260px] sm:w-[380px] h-[260px] sm:h-[380px] bg-purple-500/20 rounded-full blur-[100px] pointer-events-none" />
-  <div className="absolute top-[35%] left-[40%] w-[220px] h-[220px] bg-yellow-300/10 rounded-full blur-[90px] pointer-events-none" />
 
   {/* SUBTLE GRID */}
   <div className="absolute inset-0 opacity-[0.08] bg-[linear-gradient(rgba(255,255,255,.15)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.15)_1px,transparent_1px)] bg-[size:42px_42px] pointer-events-none" />
@@ -307,7 +303,6 @@ export default function HomePage() {
   <div className="absolute bottom-0 right-0 w-72 h-72 bg-cyan-300/30 rounded-full blur-3xl pointer-events-none" />
   <div className="absolute top-10 right-[30%] w-60 h-60 bg-yellow-300/20 rounded-full blur-3xl pointer-events-none" />
 
-  <div className="absolute inset-0 opacity-20 bg-[linear-gradient(135deg,rgba(255,0,128,0.15)_0%,rgba(255,0,128,0.15)_14%,transparent_14%,transparent_28%,rgba(255,214,0,0.15)_28%,rgba(255,214,0,0.15)_42%,transparent_42%,transparent_56%,rgba(0,200,255,0.15)_56%,rgba(0,200,255,0.15)_70%,transparent_70%)] pointer-events-none" />
 
   <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-16">
 
