@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
+import emailjs from "@emailjs/browser";
 
 const API = "https://singspacebackend.onrender.com";
 const PRIDE_ID = 2;
-
+const SERVICE_ID = "service_ud7473n";
+const TEMPLATE_ID = "template_6i8lf6u";
+const PUBLIC_KEY = "BDPsT3cNRMnCg-OaU";
 export default function ContactPageTemplate() {
   const [status, setStatus] = useState("");
   const [committees, setCommittees] = useState([]);
@@ -166,56 +169,102 @@ const handleTopicSelect = (e) => {
   };
 
   // submit logic + hate lock
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+ const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (localBlocked) {
+  if (localBlocked) {
+    setStatus(
+      "🚫 This device has been locked due to prior hate speech violations. Submissions are disabled."
+    );
+    return;
+  }
+
+  if (!termsAccepted) {
+    setStatus("❗ You must agree to the Terms and Conditions before submitting.");
+    return;
+  }
+
+  setIsLoading(true);
+  setStatus("");
+
+  try {
+    // ================= SAVE TO BACKEND =================
+    const res = await axios.post(`${API}/api/pride/${PRIDE_ID}/contact`, {
+      name: form.name,
+      email: form.email,
+      phone: phone || null,
+      message: form.message,
+    });
+
+    // ================= MODERATION BLOCK =================
+    if (res.data?.contact_status === "flagged") {
+      localStorage.setItem("pride_contact_blocked", "true");
+      setLocalBlocked(true);
+
       setStatus(
-        "🚫 This device has been locked due to prior hate speech violations. Submissions are disabled."
+        "🚨 Hate speech was detected. Your information has been logged and this device has been blocked."
       );
       return;
     }
 
-    if (!termsAccepted) {
-      setStatus("❗ You must agree to the Terms and Conditions before submitting.");
-      return;
+    // ================= BUILD PRETTY TOPIC LABEL =================
+    let formattedTopic = selectedTopic || "General Inquiry";
+
+    const service = services.find((s) => s.title === selectedTopic);
+    const committee = committees.find((c) => c.name === selectedTopic);
+    const admin = admins.find((a) => a.id === Number(selectedTopic));
+    const staffMember = staff.find((s) => s.id === Number(selectedTopic));
+
+    if (service) {
+      formattedTopic = `${service.title} Services`;
+    } else if (committee) {
+      formattedTopic = `${committee.name} Committee`;
+    } else if (admin) {
+      formattedTopic = `Connect with ${admin.name} (Admin)`;
+    } else if (staffMember) {
+      formattedTopic = `Connect with ${staffMember.first_name} ${staffMember.last_name} (${staffMember.role})`;
     }
 
-    setIsLoading(true);
-    setStatus("");
+    // ================= SEND EMAILJS EMAIL =================
+    const templateParams = {
+      from_name: form.name,
+      from_email: form.email,
+      phone: phone || "N/A",
+      selected_topic: formattedTopic,
+      message: form.message,
+    };
 
-    try {
-      const res = await axios.post(`${API}/api/pride/${PRIDE_ID}/contact`, {
-        name: form.name,
-        email: form.email,
-        phone: phone || null,
-        message: form.message,
-      });
+    console.log("📨 Sending Pride Contact Email:", templateParams);
 
-      if (res.data?.contact_status === "flagged") {
-        localStorage.setItem("pride_contact_blocked", "true");
-        setLocalBlocked(true);
+    await emailjs.send(
+      SERVICE_ID,
+      TEMPLATE_ID,
+      templateParams,
+      PUBLIC_KEY
+    );
 
-        setStatus(
-          "🚨 Hate speech was detected. Your information has been logged and this device has been blocked."
-        );
+    console.log("✅ EmailJS Sent Successfully");
 
-        return;
-      }
+    // ================= SUCCESS RESET =================
+    setStatus("📬 Message sent successfully! We'll be in touch soon.");
 
-      setStatus("✅ Thank you! Our team will reach out shortly.");
-      setForm({ name: "", email: "", message: "" });
-      setPhone("");
-      setSelectedTopic(""); // 👈 ADD THIS
+    setForm({
+      name: "",
+      email: "",
+      message: "",
+    });
 
+    setPhone("");
+    setSelectedTopic("");
+    setTermsAccepted(false);
 
-    } catch (err) {
-      console.error(err);
-      setStatus("❌ Something went wrong. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  } catch (err) {
+    console.error("❌ CONTACT FORM ERROR:", err);
+    setStatus("❌ Something went wrong. Please try again.");
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
 <div
