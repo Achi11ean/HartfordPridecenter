@@ -2,16 +2,17 @@ import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaTimes, FaGlobe } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+
 const API = "https://singspacebackend.onrender.com";
 const PRIDE_ID = 2; // 🔒 hard-coded (global Pride)
 
 export default function SponsorSlider() {
   const [sponsors, setSponsors] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
   const [activeSponsor, setActiveSponsor] = useState(null);
   const sliderRef = useRef(null);
+  const containerRef = useRef(null);
+const [dragLimit, setDragLimit] = useState(0);
 const isSingleSponsor = sponsors.length === 1;
 
   useEffect(() => {
@@ -30,7 +31,23 @@ const isSingleSponsor = sponsors.length === 1;
 
     fetchSponsors();
   }, []);
+useEffect(() => {
+  const calculateDrag = () => {
+    if (!sliderRef.current || !containerRef.current) return;
 
+    const totalWidth = sliderRef.current.scrollWidth;
+    const visibleWidth = containerRef.current.offsetWidth;
+
+    const maxDrag = totalWidth - visibleWidth;
+
+    setDragLimit(maxDrag > 0 ? maxDrag : 0);
+  };
+
+  calculateDrag();
+  window.addEventListener("resize", calculateDrag);
+
+  return () => window.removeEventListener("resize", calculateDrag);
+}, [sponsors]);
   if (loading) {
     return (
       <p className="text-center text-sm text-neutral-400">
@@ -50,72 +67,215 @@ const isSingleSponsor = sponsors.length === 1;
   return (
     <>
       {/* ================= SLIDER ================= */}
-      <div className="relative w-full overflow-hidden">
+<div
+  ref={containerRef}
+  className="
+    relative
+    w-full
+    overflow-hidden
+    px-2 sm:px-4
+  "
+>
 <motion.div
   ref={sliderRef}
-  className={`flex gap-4 ${
-    isSingleSponsor
-      ? "justify-center cursor-default"
-      : "cursor-grab active:cursor-grabbing"
-  }`}
-  drag={isSingleSponsor ? false : "x"}
-  dragConstraints={isSingleSponsor ? undefined : { left: -1000, right: 0 }}
-  whileTap={isSingleSponsor ? undefined : { scale: 0.98 }}
->
+  className={`
+    flex
+    w-max
+    gap-5
+    py-4
 
-          {sponsors.map((s) => (
-            <motion.button
-              key={s.id}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.97 }}
-              onClick={() => setActiveSponsor(s)}
-              className="
-                min-w-[160px] sm:min-w-[200px]
-                bg-white/90
-                border border-yellow-300
-                rounded-xl
-                p-4
-                shadow-md
-                text-center
-                flex flex-col items-center justify-center
-              "
-            >
-              {s.logo_url ? (
-                <img
-                  src={s.logo_url}
-                  alt={s.organization}
-                  className="h-16 w-auto object-contain mb-2"
-                />
-              ) : (
-                <div className="h-16 flex items-center text-xs text-neutral-500">
-                  No Logo
-                </div>
-              )}
+    ${
+      isSingleSponsor
+        ? "justify-center cursor-default"
+        : "cursor-grab active:cursor-grabbing"
+    }
+  `}
+    drag={isSingleSponsor ? false : "x"}
+    dragConstraints={
+      isSingleSponsor
+        ? undefined
+        : {
+            left: -Math.max(dragLimit, 0),
+            right: 0,
+          }
+    }
+    dragElastic={0.06}
+    whileTap={
+      isSingleSponsor
+        ? undefined
+        : { cursor: "grabbing" }
+    }
+  >
 
-              <p className="text-sm font-bold text-black leading-tight">
-                {s.organization}
-              </p>
+    {sponsors.map((s) => (
+      <motion.button
+        key={s.id}
+        whileHover={{
+          scale: 1.04,
+          y: -4,
+        }}
+        whileTap={{ scale: 0.98 }}
+        onClick={() => setActiveSponsor(s)}
+        className="
+          group
+          relative
+          overflow-hidden
 
-              <p className="text-[11px] text-neutral-600 mt-1">
-                {s.tier}
-              </p>
-            </motion.button>
-          ))}
-        </motion.div>
+          flex-shrink-0
+
+          w-[320px]
+          sm:w-[320px]
+
+          h-[200px]
+          sm:h-[220px]
+
+          rounded-3xl
+
+          shadow-[0_10px_40px_rgba(0,0,0,0.65)]
+
+          transition-all
+          duration-500
+        "
+      >
+
+    {/* BACKGROUND IMAGE */}
+    {s.logo_url ? (
+      <img
+        src={s.logo_url}
+        alt={s.organization}
+        className="
+          absolute inset-0
+          w-full h-full
+          object-cover
+
+          transition-transform
+          duration-700
+
+          group-hover:scale-110
+        "
+      />
+    ) : (
+      <div
+        className="
+          absolute inset-0
+          bg-gradient-to-br
+          from-neutral-900
+          via-black
+          to-neutral-800
+        "
+      />
+    )}
+
+    {/* DARK OVERLAY */}
+    <div
+      className="
+        absolute inset-0
+
+        bg-gradient-to-t
+        from-black
+        via-black/40
+        to-black/10
+      "
+    />
+
+    {/* GLOW */}
+    <div
+      className="
+        absolute inset-0
+        opacity-0
+        group-hover:opacity-100
+
+        transition duration-700
+
+        bg-gradient-to-br
+        from-yellow-400/10
+        via-transparent
+        to-fuchsia-500/20
+      "
+    />
+
+    {/* SPONSOR TIER */}
+    <div
+      className="
+        absolute top-3 right-3
+        z-20
+
+        px-3 py-1
+
+        rounded-full
+
+        backdrop-blur-xl
+
+        bg-black/60
+
+        border border-white/20
+
+        text-white
+        text-[10px]
+        sm:text-xs
+        font-black
+        uppercase
+        tracking-[0.2em]
+
+        shadow-lg
+      "
+    >
+      {s.tier}
+    </div>
+
+    {/* TITLE */}
+    <div
+      className="
+        absolute bottom-0 left-0 right-0
+        z-20
+
+        p-4 sm:p-5
+
+        flex items-end justify-end
+      "
+    >
+      <h3
+        className="
+          text-right
+
+          text-white
+          font-black
+
+          text-lg
+          sm:text-2xl
+
+          leading-tight
+
+          drop-shadow-[0_4px_20px_rgba(0,0,0,0.9)]
+
+          max-w-[85%]
+
+          group-hover:text-yellow-200
+
+          transition-all
+          duration-300
+        "
+      >
+        {s.organization}
+      </h3>
+    </div>
+
+  </motion.button>
+))}        </motion.div>
 
      {!isSingleSponsor && (
-  <div className="mt-2 text-center text-[18px] text-black">
+  <div className="mt-2 text-center text-[18px] text-white">
     ← swipe to see more →
   </div>
 )}
 
-          <div className="text-center mt-4 bg-black/40 rounded-xl p-2 border-2 border-yellow-400/60 shadow-xl">
-          <h2 className="text-3xl font-bold text-yellow-300 mb-3">
+          <div className="text-center mt-4 p-2  shadow-xl">
+          <h2 className="text-3xl font-bold text-yellow-300 border-b mb-1">
             Become a Sponsor
           </h2>
 
-          <p className="text-yellow-100 text-lg mb-6">
-            Support Hartford City Pride while gaining powerful brand visibility.
+          <p className="text-yellow-100 text-sm mb-2">
+            Support South Haven Pride while gaining powerful brand visibility.
           </p>
 
 <button

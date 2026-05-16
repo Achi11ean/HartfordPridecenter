@@ -20,7 +20,8 @@ export default function VendorSlider() {
   const [activeVendor, setActiveVendor] = useState(null);
 const sliderRef = useRef(null);
 const containerRef = useRef(null); // 🔥 NEW
-
+const isLgbtqOwnedVendor = (vendor) =>
+  (vendor.description || "").includes("LGBTQIA+ Owned");
 const [dragLimits, setDragLimits] = useState({ left: 0, right: 0 }); // 🔥 NEW
 const isSingleVendor = vendors.length === 1;
 
@@ -146,7 +147,21 @@ useEffect(() => {
     <>
       {/* ================= SLIDER ================= */}
 <div ref={containerRef} className="relative w-full overflow-hidden">
-      <motion.div
+
+  {/* ⭐ LGBTQIA+ Notice */}
+  <div className="
+    text-left mb-2
+    text-xs sm:text-sm
+    text-yellow-200/80
+    flex  gap-2
+  ">
+    <span className="animate-bounce text-yellow-400">⭐</span>
+    <span>
+      Cards with a star in the top left are LGBTQIA+ owned 🌈
+    </span>
+  </div>
+
+  <motion.div
   ref={sliderRef}
   className={`flex gap-4 ${
     isSingleVendor ? "justify-center cursor-default" : "cursor-grab active:cursor-grabbing"
@@ -158,58 +173,166 @@ dragMomentum={false}
 whileTap={isSingleVendor ? undefined : { scale: 0.98 }}
 >
 
-          {vendors.map((v) => (
-            <motion.button
-              key={v.id}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.97 }}
-              onClick={() => setActiveVendor(v)}
-              className="
-                min-w-[180px] sm:min-w-[220px]
-                bg-white/90
-                border border-yellow-300
-                rounded-xl
-                p-4
-                shadow-md
-                text-center
-                flex flex-col items-center justify-center
-              "
-            >
-              {v.image_url ? (
-                <img
-                  src={v.image_url}
-                  alt={v.company_name}
-                  className="h-20 w-auto object-contain mb-2 rounded"
-                />
-              ) : (
-                <div className="h-20 flex items-center text-xs text-neutral-500 px-2">
-                  {v.company_name}
-                </div>
-              )}
+   {vendors.map((v) => (
+  <motion.button
+    key={v.id}
+    whileHover={{
+      scale: 1.04,
+      y: -4,
+    }}
+    whileTap={{ scale: 0.98 }}
+    onClick={() => setActiveVendor(v)}
+    className="
+      group
+      relative
+      overflow-hidden
 
-              <p className="text-sm font-bold text-black leading-tight">
-                {v.company_name}
-              </p>
+      flex-shrink-0
 
-              <p className="text-[11px] text-neutral-600 mt-1 italic">
-                {v.vendor_type}
-              </p>
-            </motion.button>
-          ))}
+      w-[320px]
+      sm:w-[320px]
+
+      h-[200px]
+      sm:h-[220px]
+
+      rounded-3xl
+border border-white
+      shadow-[0_10px_40px_rgba(0,0,0,0.65)]
+
+      transition-all
+      duration-500
+    "
+  >
+
+    {/* BACKGROUND IMAGE */}
+    {v.image_url ? (
+      <img
+        src={v.image_url}
+        alt={v.company_name}
+        className="
+          absolute inset-0
+          w-full h-full
+          object-cover
+
+          transition-transform
+          duration-700
+
+          group-hover:scale-110
+        "
+      />
+    ) : (
+      <div
+        className="
+          absolute inset-0
+          bg-gradient-to-br
+          from-neutral-900
+          via-black
+          to-neutral-800
+        "
+      />
+    )}
+
+    {/* DARK OVERLAY */}
+    <div
+      className="
+        absolute inset-0
+
+        bg-gradient-to-t
+        from-black
+        via-black/40
+        to-black/10
+      "
+    />
+
+    {/* LGBTQ BADGE */}
+    {isLgbtqOwnedVendor(v) && (
+      <div
+        className="
+          absolute
+          top-3
+          left-3
+          z-20
+
+          h-6
+          w-6
+
+          rounded-full
+
+          bg-gradient-to-br
+          from-pink-500
+          via-yellow-400
+          to-cyan-400
+text-transparent bg-clip-text
+          flex items-center justify-center
+
+          text-black
+          text-md
+
+          shadow-[0_0_25px_rgba(255,255,255,0.45)]
+
+          border-2 border-white
+        "
+        title="LGBTQIA+ Owned"
+      >
+        ⭐️
+      </div>
+    )}
+
+    {/* VENDOR TYPE */}
+
+    {/* TITLE */}
+    <div
+      className="
+        absolute bottom-0 left-0 right-0
+        z-20
+
+        p-4 sm:p-5
+
+        flex items-end justify-end
+      "
+    >
+      <h3
+        className="
+          text-right
+
+          text-white
+          font-black
+
+          text-lg
+          sm:text-2xl
+
+          leading-tight
+
+          drop-shadow-[0_4px_20px_rgba(0,0,0,0.9)]
+
+          max-w-[85%]
+
+          group-hover:text-yellow-200
+
+          transition-all
+          duration-300
+        "
+      >
+        {v.company_name}
+      </h3>
+    </div>
+
+  </motion.button>
+))}
         </motion.div>
 
   {!isSingleVendor && (
-  <div className="mt-2 text-center text-[18px] text-black">
+  <div className="mt-2 text-center text-[18px] text-white">
     ← swipe to see more →
   </div>
 )}
 
-                <div className="text-center mt-4 bg-black/40 rounded-xl p-2 border-2 border-yellow-400/60 shadow-xl">
-                  <h2 className="text-3xl font-bold text-yellow-300 mb-3">
+                <div className="text-center mt-4 shadow-xl">
+                  <h2 className="text-3xl font-bold text-yellow-300 mb-1 border-b">
                     Become a Vendor
                   </h2>
         
-                  <p className="text-yellow-100 text-lg mb-6">
+                  <p className="text-yellow-100 text-sm mb-6">
                     Help us craft a unique, exciting , and inclusive Pride experience!
                   </p>
         

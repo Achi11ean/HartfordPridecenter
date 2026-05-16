@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Autoplay } from "swiper/modules";
 
+import "swiper/css";
+import "swiper/css/pagination";
 const API = "https://singspacebackend.onrender.com";
 
 export default function PrideItinerary() {
@@ -72,13 +76,13 @@ const sorted = res.data.sort((a, b) => {
   if (!items.length) return null;
 
  return (
-  <section className="max-w-full mx-auto ">
+  <section className="max-w-full mt-2 mx-auto ">
     {/* WRAP CARD (matches the other section) */}
     <div
       className="
-        relative overflow-hidden rounded-none py-6
+        relative overflow-hidden rounded-none
         border border-white/10
-        bg-gradient-to-b from-black/60 via-black/40 to-black/60
+        bg-gradient-to-br from-purple-800/60 via-red-800/70 to-pink-500/60
         backdrop-blur-xl
         shadow-[0_25px_70px_-40px_rgba(0,0,0,0.9)]
       "
@@ -87,10 +91,10 @@ const sorted = res.data.sort((a, b) => {
       <div className="pointer-events-none absolute -top-24 -left-24 h-64 w-64 rounded-full bg-pink-500/20 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-28 -right-24 h-72 w-72 rounded-full bg-yellow-400/15 blur-3xl" />
 
-      <div className="relative p-4 sm:p-6">
+      <div className="relative p-3 sm:p-6">
         {/* HEADER */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-3 mb-3">
+        <div className="text-center mb-2">
+          <div className="flex items-center justify-center gap-3 mb-2">
             <span className="h-[1px] w-10 bg-gradient-to-r from-transparent via-yellow-300/70 to-transparent" />
             <h2 className="text-3xl sm:text-5xl font-[Aspire] text-yellow-300 drop-shadow-lg">
               🌈 Pride Itinerary
@@ -103,7 +107,7 @@ const sorted = res.data.sort((a, b) => {
         </div>
 
         {/* LOCATION TABS */}
-        <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-8">
+        <div className="flex flex-wrap justify-start gap-3 sm:gap-4 mb-2">
           {locations.map((loc) => {
             const active = activeLocation === loc;
             return (
@@ -112,7 +116,7 @@ const sorted = res.data.sort((a, b) => {
                 onClick={() => setActiveLocation(loc)}
                 className={`
                   group inline-flex items-center gap-2
-                  px-5 sm:px-6 py-2.5 rounded-2xl font-extrabold
+                  px-2 sm:px-6 py-1 rounded-2xl font-extrabold
                   border transition
                   focus:outline-none focus:ring-2
                   ${
@@ -132,116 +136,293 @@ const sorted = res.data.sort((a, b) => {
         </div>
 
         {/* ITINERARY GRID */}
-        <div className="grid md:grid-cols-3 gap-6">
-          {filtered.map((item) => (
-            <div
-              key={item.id}
-              className="
-                rounded-2xl p-2 sm:p-6
-                border border-white/10
-                bg-white/5
-                hover:bg-white/10
-                transition
-                shadow-[0_18px_60px_-40px_rgba(0,0,0,0.85)]
-              "
-            >
-              <div className="flex items-start justify-between gap-3">
-                <h3 className="text-xl sm:text-2xl font-extrabold text-yellow-200 leading-tight">
-                  {item.title}
-                </h3>
+    {/* ITINERARY SWIPER */}
+{filtered.length > 0 ? (
+  <Swiper
+    modules={[Pagination, Autoplay]}
+    spaceBetween={18}
+    slidesPerView={1}
+    centeredSlides={true}
+    grabCursor={true}
+    loop={filtered.length > 1}
+    autoplay={{
+      delay: 5000,
+      disableOnInteraction: false,
+    }}
+    pagination={{ clickable: true }}
+    breakpoints={{
+      768: {
+        slidesPerView: 1.15,
+      },
+      1100: {
+        slidesPerView: 1.25,
+      },
+    }}
+    className="pb-10"
+  >
+    {filtered.map((item) => (
+      <SwiperSlide key={item.id}>
+        <div
+          className="
+            rounded-2xl p-2 sm:p-6
+            border border-white/10
+            bg-black/40
+            hover:bg-white/10
+            transition
+            shadow-[0_18px_60px_-40px_rgba(0,0,0,0.85)]
+            min-h-[320px]
+          "
+        >
+          <div className="flex items-start ">
+    <h3
+  className={`
+    border-b
+    font-extrabold
+    text-yellow-200
+    leading-tight
 
-                {/* optional: tiny badge vibe */}
-                <span className="shrink-0 rounded-full px-3 py-1 text-xs font-extrabold bg-black/30 border border-white/10 text-yellow-100/80">
-                  Itinerary
-                </span>
-              </div>
+    ${
+      item.title?.length > 15
+        ? "text-lg sm:text-xl"
+        : "text-xl sm:text-2xl"
+    }
+  `}
+>
+  {item.title}
+</h3>
+        
+          </div>
 
-              <p className="mt-2 text-sm sm:text-[15px] text-yellow-100/80 font-semibold">
-                🕒 {formatTime(item.start_time)} – {formatTime(item.end_time)}
-              </p>
+          <p className="mt-2 text-sm sm:text-[15px] text-yellow-100/80 font-semibold">
+            🕒 {formatTime(item.start_time)} – {formatTime(item.end_time)}
+          </p>
 
-              {/* PERFORMERS */}
-              {item.performers?.length > 0 && (
-                <div className="mt-4 flex flex-wrap gap-3">
-                  {item.performers.map((p) => (
-                    <a
-                      key={p.id}
-                      href={`https://karaoverse.com/artist/${p.slug}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="
-                        group inline-flex items-center gap-2
-                        rounded-2xl px-3.5 py-2
-                        border border-white/10
-                        bg-gradient-to-r from-pink-500/15 to-purple-500/15
-                        hover:from-pink-500/25 hover:to-purple-500/25
-                        hover:scale-[1.03]
-                        transition
-                        shadow-[0_16px_40px_-30px_rgba(236,72,153,0.65)]
-                        focus:outline-none focus:ring-2 focus:ring-pink-300/40
-                      "
-                    >
-                      <div className="w-8 h-8 rounded-full overflow-hidden border border-white/20">
-                        <img
-                          src={p.image_url}
-                          alt={p.artist_name}
-                          className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
-                          loading="lazy"
-                        />
-                      </div>
-                      <span className="font-extrabold text-pink-100 text-sm">
-                        {p.artist_name}
-                      </span>
-                      <span aria-hidden className="text-pink-100/70 text-xs">
-                        ↗
-                      </span>
-                    </a>
-                  ))}
-                </div>
-              )}
+      {item.performers?.length > 0 && (
+  <div className="mt-5 flex flex-wrap gap-4">
+    {item.performers.map((p) => (
+      <a
+        key={p.id}
+        href={`https://karaoverse.com/artist/${p.slug}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="
+          group
 
-              {/* HOSTS */}
-              {item.hosts?.length > 0 && (
-                <div className="mt-3 flex flex-wrap gap-3">
-                  {item.hosts.map((h) => (
-                    <a
-                      key={h.id}
-                      href={`https://karaoverse.com/host/${h.slug}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="
-                        group inline-flex items-center gap-2
-                        rounded-2xl px-3.5 py-2
-                        border border-white/10
-                        bg-gradient-to-r from-blue-500/15 to-indigo-500/15
-                        hover:from-blue-500/25 hover:to-indigo-500/25
-                        hover:scale-[1.03]
-                        transition
-                        shadow-[0_16px_40px_-30px_rgba(59,130,246,0.55)]
-                        focus:outline-none focus:ring-2 focus:ring-blue-300/35
-                      "
-                    >
-                      <span className="text-base">🎧</span>
-                      <span className="font-extrabold text-blue-100 text-sm">
-                        {h.dj_name}
-                      </span>
-                      <span aria-hidden className="text-blue-100/70 text-xs">
-                        ↗
-                      </span>
-                    </a>
-                  ))}
-                </div>
-              )}
+          relative overflow-hidden
 
-              {/* DESCRIPTION */}
-              {item.description && (
-                <p className="mt-4 pt-4 border-t border-white/10 text-sm sm:text-[15px] text-yellow-100/80 italic leading-relaxed">
-                  {item.description}
-                </p>
-              )}
-            </div>
-          ))}
+          flex items-center gap-3
+
+          rounded-[1.4rem]
+
+          pl-2 pr-5 py-2.5
+
+          border border-pink-300/20
+
+          bg-gradient-to-br
+          from-pink-500/20
+          via-fuchsia-500/10
+          to-purple-600/20
+
+          backdrop-blur-xl
+
+          shadow-[0_10px_35px_-15px_rgba(236,72,153,0.6)]
+
+          hover:shadow-[0_18px_50px_-15px_rgba(236,72,153,0.9)]
+
+          hover:scale-[1.05]
+
+          transition-all duration-300
+        "
+      >
+
+        {/* GLOW */}
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-500 bg-gradient-to-r from-pink-400/10 via-fuchsia-400/5 to-purple-400/10" />
+
+        {/* IMAGE */}
+        <div
+          className="
+            relative
+
+            w-12 h-12
+
+            rounded-full
+
+            overflow-hidden
+
+            border-2 border-pink-200/70
+
+            shadow-[0_0_25px_rgba(236,72,153,0.45)]
+
+            shrink-0
+          "
+        >
+          <img
+            src={p.image_url}
+            alt={p.artist_name}
+            className="
+              w-full h-full object-cover
+
+              group-hover:scale-110
+
+              transition duration-500
+            "
+          />
         </div>
+
+        {/* TEXT */}
+        <div className="relative">
+          <div
+            className="
+              text-[10px]
+
+              uppercase
+              tracking-[0.25em]
+
+              text-pink-200/60
+
+              font-black
+            "
+          >
+            Featured Artist
+          </div>
+
+          <div
+            className="
+              text-sm
+              sm:text-base
+
+              font-black
+
+              text-white
+
+              leading-tight
+            "
+          >
+            {p.artist_name}
+          </div>
+        </div>
+      </a>
+    ))}
+  </div>
+)}
+
+{item.hosts?.length > 0 && (
+  <div className="mt-4 flex flex-wrap gap-4">
+    {item.hosts.map((h) => (
+      <a
+        key={h.id}
+        href={`https://karaoverse.com/host/${h.slug}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="
+          group
+
+          relative overflow-hidden
+
+          flex items-center gap-3
+
+          rounded-[1.4rem]
+
+          px-4 py-3
+
+          border border-cyan-300/20
+
+          bg-gradient-to-br
+          from-cyan-500/20
+          via-blue-500/10
+          to-indigo-600/20
+
+          backdrop-blur-xl
+
+          shadow-[0_10px_35px_-15px_rgba(59,130,246,0.6)]
+
+          hover:shadow-[0_18px_50px_-15px_rgba(59,130,246,0.9)]
+
+          hover:scale-[1.05]
+
+          transition-all duration-300
+        "
+      >
+
+        {/* GLOW */}
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-500 bg-gradient-to-r from-cyan-400/10 via-blue-400/5 to-indigo-400/10" />
+
+        {/* ICON */}
+        <div
+          className="
+            relative
+
+            w-12 h-12
+
+            rounded-full
+
+            bg-gradient-to-br
+            from-cyan-400
+            to-blue-600
+
+            flex items-center justify-center
+
+            text-white text-xl
+
+            shadow-[0_0_25px_rgba(59,130,246,0.55)]
+
+            shrink-0
+          "
+        >
+          🎧
+        </div>
+
+        {/* TEXT */}
+        <div className="relative">
+          <div
+            className="
+              text-[10px]
+
+              uppercase
+              tracking-[0.25em]
+
+              text-cyan-100/60
+
+              font-black
+            "
+          >
+            Event Host
+          </div>
+
+          <div
+            className="
+              text-sm
+              sm:text-base
+
+              font-black
+
+              text-white
+
+              leading-tight
+            "
+          >
+            {h.dj_name}
+          </div>
+        </div>
+      </a>
+    ))}
+  </div>
+)}
+
+          {item.description && (
+            <p className="mt-4 pt-4 border-t border-white/10 text-sm sm:text-[15px] text-yellow-100/80 italic leading-relaxed">
+              {item.description}
+            </p>
+          )}
+        </div>
+      </SwiperSlide>
+    ))}
+  </Swiper>
+) : (
+  <div className="text-center py-10 text-yellow-100/70 italic">
+    No itinerary items for this location yet.
+  </div>
+)}
 
         {/* optional: empty state */}
         {filtered.length === 0 && (
