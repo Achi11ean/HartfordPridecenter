@@ -197,7 +197,7 @@ useEffect(() => {
       )
     ) {
       window.location.href =
-        "https://karaoverse.com/event/capital-city-pride";
+        "https://karaoverse.com/venue/capital-city-pride";
     }
   }}
 >
