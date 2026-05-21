@@ -105,36 +105,142 @@ const sorted = res.data.sort((a, b) => {
             Come explore the vendors, performers and food!
           </p> */}
         </div>
+<p
+  className="
+    text-xs sm:text-sm
+    uppercase tracking-[0.25em]
+    text-yellow-100/60
+    font-black
+    mb-3
+  "
+>
+  Locations
+</p>
 
-        {/* LOCATION TABS */}
-        <div className="flex flex-wrap justify-start gap-3 sm:gap-4 mb-2">
-          {locations.map((loc) => {
-            const active = activeLocation === loc;
-            return (
-              <button
-                key={loc}
-                onClick={() => setActiveLocation(loc)}
-                className={`
-                  group inline-flex items-center gap-2
-                  px-2 sm:px-6 py-1 rounded-2xl font-extrabold
-                  border transition
-                  focus:outline-none focus:ring-2
-                  ${
-                    active
-                      ? "bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-500 text-black border-white/10 shadow-[0_18px_40px_-26px_rgba(250,204,21,0.85)] scale-[1.02] focus:ring-yellow-200/70"
-                      : "bg-white/5 text-yellow-100/80 border-white/10 hover:bg-white/10 hover:text-yellow-100 focus:ring-yellow-200/30"
-                  }
-                `}
-              >
-                <span className={`${active ? "" : "opacity-90"} transition`}>
-                  📍
-                </span>
-                <span className="tracking-tight">{loc}</span>
-              </button>
-            );
-          })}
+<div className="flex flex-wrap justify-start gap-2 sm:gap-3 mb-2">
+  {locations.map((loc) => {
+
+    const active = activeLocation === loc;
+
+    const isLong =
+      (loc || "").length > 12;
+
+    return (
+      <button
+        key={loc}
+        onClick={() => setActiveLocation(loc)}
+        className={`
+          group
+
+          relative overflow-hidden
+
+          flex flex-col items-center justify-center
+          text-center
+
+          min-w-[90px]
+          max-w-[140px]
+
+          px-3 py-2
+
+          rounded-[1.4rem]
+
+          border
+
+          backdrop-blur-xl
+
+          transition-all duration-300
+
+          hover:scale-[1.04]
+
+          ${
+            active
+              ? `
+                bg-gradient-to-br
+                from-yellow-300
+                via-amber-400
+                to-yellow-500
+
+                text-black
+
+                border-white/20
+
+                shadow-[0_15px_40px_-20px_rgba(250,204,21,0.9)]
+              `
+              : `
+                bg-gradient-to-br
+                from-white/10
+                via-white/[0.04]
+                to-white/[0.08]
+
+                text-yellow-100/85
+
+                border-white/10
+
+                hover:bg-white/10
+              `
+          }
+        `}
+      >
+
+        {/* GLOW */}
+        <div
+          className="
+            absolute inset-0
+            opacity-0 group-hover:opacity-100
+            transition duration-500
+
+            bg-gradient-to-br
+            from-white/10
+            via-yellow-200/5
+            to-transparent
+          "
+        />
+
+        {/* ICON */}
+        <div
+          className={`
+            relative z-10
+
+            w-8 h-8 mb-1
+
+            rounded-full
+
+            flex items-center justify-center
+
+            text-sm
+
+            ${
+              active
+                ? "bg-black/15"
+                : "bg-yellow-300/10"
+            }
+          `}
+        >
+          📍
         </div>
 
+        {/* NAME */}
+        <span
+          className={`
+            relative z-10
+
+            font-black
+            leading-tight
+            break-words
+
+            ${
+              isLong
+                ? "text-[10px] sm:text-[11px]"
+                : "text-xs sm:text-sm"
+            }
+          `}
+        >
+          {loc}
+        </span>
+      </button>
+    );
+  })}
+</div>
         {/* ITINERARY GRID */}
     {/* ITINERARY SWIPER */}
 {filtered.length > 0 ? (
@@ -193,116 +299,139 @@ const sorted = res.data.sort((a, b) => {
         
           </div>
 
-          <p className="mt-2 text-sm sm:text-[15px] text-yellow-100/80 font-semibold">
+          <p className="mt-2  text-sm text-left sm:text-[15px] text-yellow-100/80 font-semibold">
             🕒 {formatTime(item.start_time)} – {formatTime(item.end_time)}
           </p>
 
-      {item.performers?.length > 0 && (
-  <div className="mt-5 flex flex-wrap gap-4">
-    {item.performers.map((p) => (
-      <a
-        key={p.id}
-        href={`https://karaoverse.com/artist/${p.slug}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="
-          group
+             {item.description && (
+            <p className="mt-4 pt-4 border-t border-white/10 text-sm sm:text-[15px] text-yellow-100/80 italic leading-relaxed">
+              {item.description}
+            </p>
+          )}
+{item.performers?.length > 0 && (
+  <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-3">
+    {item.performers.map((p) => {
+      const isLongName =
+        (p.artist_name || "").length > 10;
 
-          relative overflow-hidden
-
-          flex items-center gap-3
-
-          rounded-[1.4rem]
-
-          pl-2 pr-5 py-2.5
-
-          border border-pink-300/20
-
-          bg-gradient-to-br
-          from-pink-500/20
-          via-fuchsia-500/10
-          to-purple-600/20
-
-          backdrop-blur-xl
-
-          shadow-[0_10px_35px_-15px_rgba(236,72,153,0.6)]
-
-          hover:shadow-[0_18px_50px_-15px_rgba(236,72,153,0.9)]
-
-          hover:scale-[1.05]
-
-          transition-all duration-300
-        "
-      >
-
-        {/* GLOW */}
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-500 bg-gradient-to-r from-pink-400/10 via-fuchsia-400/5 to-purple-400/10" />
-
-        {/* IMAGE */}
-        <div
+      return (
+        <a
+          key={p.id}
+          href={`https://karaoverse.com/artist/${p.slug}`}
+          target="_blank"
+          rel="noopener noreferrer"
           className="
-            relative
+            group
 
-            w-12 h-12
+            relative overflow-hidden
 
-            rounded-full
+            flex flex-col items-center
+            text-center
 
-            overflow-hidden
+            rounded-[1.3rem]
 
-            border-2 border-pink-200/70
+            px-2 py-3
 
-            shadow-[0_0_25px_rgba(236,72,153,0.45)]
+            border border-pink-300/20
 
-            shrink-0
+            bg-gradient-to-br
+            from-pink-500/20
+            via-fuchsia-500/10
+            to-purple-600/20
+
+            backdrop-blur-xl
+
+            shadow-[0_10px_30px_-18px_rgba(236,72,153,0.7)]
+
+            hover:scale-[1.04]
+            hover:shadow-[0_16px_40px_-12px_rgba(236,72,153,0.9)]
+
+            transition-all duration-300
           "
         >
-          <img
-            src={p.image_url}
-            alt={p.artist_name}
-            className="
-              w-full h-full object-cover
 
-              group-hover:scale-110
-
-              transition duration-500
-            "
-          />
-        </div>
-
-        {/* TEXT */}
-        <div className="relative">
+          {/* GLOW */}
           <div
             className="
-              text-[10px]
+              absolute inset-0
+              opacity-0 group-hover:opacity-100
+              transition duration-500
+
+              bg-gradient-to-br
+              from-pink-400/10
+              via-fuchsia-400/5
+              to-purple-400/10
+            "
+          />
+
+          {/* IMAGE */}
+          <div
+            className="
+              relative
+
+              w-16 h-16 sm:w-20 sm:h-20
+
+              rounded-full
+              overflow-hidden
+
+              border-2 border-pink-200/70
+
+              shadow-[0_0_25px_rgba(236,72,153,0.45)]
+
+              mb-2
+            "
+          >
+            <img
+              src={p.image_url}
+              alt={p.artist_name}
+              className="
+                w-full h-full
+                object-cover
+
+                group-hover:scale-110
+                transition duration-500
+              "
+            />
+          </div>
+
+          {/* LABEL */}
+          <div
+            className="
+              text-[9px]
 
               uppercase
-              tracking-[0.25em]
+              tracking-[0.18em]
 
               text-pink-200/60
 
               font-black
+
+              mb-1
             "
           >
-            Featured Artist
+            Artist
           </div>
 
+          {/* NAME */}
           <div
-            className="
-              text-sm
-              sm:text-base
-
+            className={`
               font-black
-
               text-white
-
               leading-tight
-            "
+              break-words
+
+              ${
+                isLongName
+                  ? "text-[11px] sm:text-xs"
+                  : "text-sm sm:text-base"
+              }
+            `}
           >
             {p.artist_name}
           </div>
-        </div>
-      </a>
-    ))}
+        </a>
+      );
+    })}
   </div>
 )}
 
@@ -409,11 +538,7 @@ const sorted = res.data.sort((a, b) => {
   </div>
 )}
 
-          {item.description && (
-            <p className="mt-4 pt-4 border-t border-white/10 text-sm sm:text-[15px] text-yellow-100/80 italic leading-relaxed">
-              {item.description}
-            </p>
-          )}
+       
         </div>
       </SwiperSlide>
     ))}
