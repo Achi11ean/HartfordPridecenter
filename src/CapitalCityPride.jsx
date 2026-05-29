@@ -144,14 +144,13 @@ useEffect(() => {
     ${fadeOut ? "opacity-0" : "opacity-100"}
   `}
 />
-    <div className="absolute inset-0 bg-black/40 pointer-events-none" />
   </div>
 )}
       {/* 🌞 HERO SECTION */}
     {/* 🌞 HERO SECTION */}
 <section
   className="
-    relative text-center py-28
+    relative text-center py-24
     bg-[url('https://www.vacationer.travel/wp-content/uploads/2023/05/West-Hartford-Pride-1024x768.jpg')]
     bg-cover bg-center
     shadow-[0_40px_100px_-30px_rgba(0,0,0,0.9)]
@@ -159,12 +158,11 @@ useEffect(() => {
 >
 
   {/* dark cinematic overlay */}
-  <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/90"></div>
+  <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/60 to-black/80"></div>
 
   {/* subtle rainbow glow */}
-  <div className="absolute inset-0 opacity-30 bg-gradient-to-r from-red-500 via-yellow-400 via-green-400 via-blue-500 to-purple-500 blur-3xl"></div>
 
-  <div className="relative z-10 max-w-5xl mx-auto px-6">
+  <div className="relative z-10 max-w-5xl mx-auto ">
 
     <h1 className="text-5xl sm:text-7xl font-[Aspire] font-bold tracking-wide text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]">
       Capital City <span className="text-yellow-300">Pride</span>
@@ -216,93 +214,113 @@ useEffect(() => {
   )}
 </div>
 {/* QUICK NAV */}
-<div
-  className="
-    mt-8
 
-    grid grid-cols-4
+  </div>
+ <div
+  className="
+    absolute
+
+    bottom-4
+    left-1/2
+
+    -translate-x-1/2
+
+    z-20
+
+    flex
+    flex-wrap
+
+    items-center
+    justify-center
 
     gap-2
 
-    max-w-md
-    mx-auto
+    w-full
+
+    px-3
   "
 >
   {[
-   {
-  label: "Itinerary",
- onClick: () => {
-  const el = document.getElementById("pride-itinerary");
+    {
+      label: "Itinerary",
+      color:
+        "bg-gradient-to-r from-red-500 to-red-600 text-white border-red-300/40",
+      onClick: () => {
+        const el =
+          document.getElementById("pride-itinerary");
 
-  if (!el) return;
+        if (!el) return;
 
-  const y =
-    el.getBoundingClientRect().top +
-    window.pageYOffset -
-    120;
+        const y =
+          el.getBoundingClientRect().top +
+          window.pageYOffset -
+          120;
 
-  window.scrollTo({
-    top: y,
-    behavior: "smooth",
-  });
-},
-},
+        window.scrollTo({
+          top: y,
+          behavior: "smooth",
+        });
+      },
+    },
     {
       label: "Vendors",
+      color:
+        "bg-gradient-to-r from-green-400 to-emerald-500 text-black border-green-100/40",
       ref: vendorsRef,
     },
     {
       label: "Talent",
+      color:
+        "bg-gradient-to-r from-blue-500 to-cyan-500 text-white border-blue-100/40",
       ref: talentRef,
     },
     {
       label: "Sponsors",
+      color:
+        "bg-gradient-to-r from-purple-500 to-indigo-500 text-white border-blue-100/40",
       ref: sponsorsRef,
     },
   ].map((item) => (
     <button
       key={item.label}
       onClick={() => {
-  if (item.onClick) {
-    item.onClick();
-  } else {
-    scrollToSection(item.ref);
-  }
-}}
-      className=" 
-        px-2 py-2
+        if (item.onClick) {
+          item.onClick();
+        } else {
+          scrollToSection(item.ref);
+        }
+      }}
+      className={`
+        px-3
+        py-1.5
 
         rounded-full
 
-        bg-black/50
-        hover:bg-white/15
+        ${item.color}
 
-        backdrop-blur-xl
-
-        border border-white/10
+        border
 
         text-[10px]
         sm:text-xs
 
         font-black
+        font-serif
 
-        tracking-wide
-
-        text-white
+        tracking-[0.08em]
 
         shadow-lg
 
+        hover:brightness-110
         hover:scale-105
 
         transition-all
-      "
+        duration-300
+      `}
     >
       {item.label}
     </button>
   ))}
 </div>
-  </div>
-  
 </section>
 
        <hr className="rainbow-hr" />
@@ -354,7 +372,7 @@ useEffect(() => {
     </div>
 
     {/* 💛 VOLUNTEERS */}
-    <div className="rounded-[2.5rem] p-6 sm:p-10 border border-white bg-black/30 backdrop-blur-2xl shadow-[0_25px_100px_-30px_rgba(0,0,0,0.85)]">
+    {/* <div className="rounded-[2.5rem] p-6 sm:p-10 border border-white bg-black/30 backdrop-blur-2xl shadow-[0_25px_100px_-30px_rgba(0,0,0,0.85)]">
       <div className="grid md:grid-cols-2 gap-8 items-center">
         <img
           src="https://main-stream.org/wp-content/uploads/2024/05/call-for-Pride-volunteers-cover-image-770x434-1.jpg"
@@ -380,8 +398,8 @@ useEffect(() => {
           </button>
         </div>
       </div>
-    </div>
-    <div className="rounded-[2.5rem] p-2 sm:p-10 border border-white bg-black/30 backdrop-blur-2xl shadow-[0_25px_100px_-30px_rgba(0,0,0,0.85)]">
+    </div> */}
+    {/* <div className="rounded-[2.5rem] p-2 sm:p-10 border border-white bg-black/30 backdrop-blur-2xl shadow-[0_25px_100px_-30px_rgba(0,0,0,0.85)]">
       <div className="grid md:grid-cols-2 gap-8 items-center">
         <div className="text-center md:text-left order-2 md:order-1">
           <h2 className="text-4xl border-b sm:text-5xl font-[Aspire] text-purple-300 mb-1">
@@ -409,7 +427,7 @@ useEffect(() => {
           className="w-full rounded-3xl border  shadow-pink-400 shadow-xl order-1 md:order-2"
         />
       </div>
-    </div>
+    </div> */}
     {/* 🛍️ VENDORS */}
     <div ref={vendorsRef}></div>
     <div className="rounded-[2.5rem] p-6 sm:p-10 border border-white bg-black/30 backdrop-blur-2xl shadow-[0_25px_100px_-30px_rgba(0,0,0,0.85)] text-center">
@@ -488,9 +506,143 @@ useEffect(() => {
       <div>
 
         <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white shadow-xl text-pink-500 font-black uppercase tracking-[0.25em] text-xs sm:text-sm">
-          🌈 Hartford Pride Center
+          🌈 Capital City Pride
+        </div>
+{/* LOCATION CARD */}
+
+<div className="mt-6">
+
+  <div
+    className="
+      overflow-hidden
+
+      rounded-[2rem]
+
+      bg-white
+
+      shadow-[0_25px_70px_-25px_rgba(0,0,0,0.35)]
+
+      border border-pink-100
+    "
+  >
+
+    {/* MAP */}
+
+    <button
+      onClick={() => setShowMap(true)}
+      className="
+        relative
+
+        w-full
+        h-[180px]
+
+        overflow-hidden
+
+        group
+      "
+    >
+      <iframe
+        className="
+          absolute inset-0
+
+          w-full h-full
+
+          pointer-events-none
+
+          scale-110
+
+          group-hover:scale-125
+
+          transition-all
+          duration-700
+        "
+        src="https://www.google.com/maps?q=Stanley+Johnston+Park,+South+Haven,+MI&z=14&output=embed"
+        loading="lazy"
+      />
+
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+      <div
+        className="
+          absolute bottom-3 left-3
+
+          px-3 py-2
+
+          rounded-full
+
+          bg-white/95
+
+          backdrop-blur
+
+          font-black
+
+          text-pink-500
+
+          shadow-lg
+        "
+      >
+        📍 View Location
+      </div>
+    </button>
+
+    {/* ADDRESS */}
+
+    <a
+      href="https://www.google.com/maps/search/?api=1&query=Stanley+Johnston+Park+South+Haven+MI"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="
+        block
+
+        p-5
+
+        hover:bg-pink-50/50
+
+        transition-all
+      "
+    >
+      <div className="flex gap-4">
+
+        <div
+          className="
+            w-12 h-12
+
+            rounded-2xl
+
+            bg-pink-100
+
+            flex items-center justify-center
+
+            text-xl
+          "
+        >
+          📍
         </div>
 
+        <div>
+          <div className="text-xs uppercase tracking-[0.25em] text-pink-500 font-black">
+            Event Location
+          </div>
+
+          <h5 className="text-lg font-black text-gray-900 mt-1">
+            Stanley Johnston Park
+          </h5>
+
+          <p className="text-gray-600 font-semibold">
+            South Haven, Michigan
+          </p>
+
+          <div className="mt-2 text-sm font-black text-cyan-500">
+            Open In Google Maps ↗
+          </div>
+        </div>
+
+      </div>
+    </a>
+
+  </div>
+
+</div>
         <h3 className="mt-6 text-3xl sm:text-5xl font-black leading-tight text-gray-900">
           Building LGBTQIA+
           <span className="block text-pink-500">
@@ -613,9 +765,6 @@ useEffect(() => {
             </a>
           </p>
 
-          <p className="text-gray-700 font-black">
-            📍 Hartford, Connecticut
-          </p>
 
         </div>
 

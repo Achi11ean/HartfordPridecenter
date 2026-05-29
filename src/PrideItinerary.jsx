@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Autoplay } from "swiper/modules";
+import { Pagination } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/pagination";
@@ -245,16 +245,13 @@ const sorted = res.data.sort((a, b) => {
     {/* ITINERARY SWIPER */}
 {filtered.length > 0 ? (
   <Swiper
-    modules={[Pagination, Autoplay]}
+    modules={[Pagination]}
     spaceBetween={18}
     slidesPerView={1}
     centeredSlides={true}
     grabCursor={true}
     loop={filtered.length > 1}
-    autoplay={{
-      delay: 5000,
-      disableOnInteraction: false,
-    }}
+
     pagination={{ clickable: true }}
     breakpoints={{
       768: {
@@ -309,132 +306,175 @@ const sorted = res.data.sort((a, b) => {
             </p>
           )}
 {item.performers?.length > 0 && (
-  <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-3">
-    {item.performers.map((p) => {
-      const isLongName =
-        (p.artist_name || "").length > 10;
+  <div className="mt-4">
 
-      return (
-        <a
-          key={p.id}
-          href={`https://karaoverse.com/artist/${p.slug}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="
-            group
+    <div
+      className="
+        flex items-center justify-between
+        mb-3
+      "
+    >
+      <h4
+        className="
+          text-xs
+          uppercase
+          tracking-[0.25em]
+          text-pink-200/70
+          font-black
+        "
+      >
+        Featured Artists
+      </h4>
 
-            relative overflow-hidden
+      <span className="text-pink-100/50 text-xs">
+        {item.performers.length} Artists
+      </span>
+    </div>
 
-            flex flex-col items-center
-            text-center
+    <div
+      className="
+        flex gap-3
 
-            rounded-[1.3rem]
+        overflow-x-auto
+        overflow-y-hidden
 
-            px-2 py-3
+        pb-2
 
-            border border-pink-300/20
+        snap-x snap-mandatory
 
-            bg-gradient-to-br
-            from-pink-500/20
-            via-fuchsia-500/10
-            to-purple-600/20
+        scrollbar-thin
+        scrollbar-thumb-pink-400/50
+        scrollbar-track-transparent
+      "
+    >
+      {item.performers.map((p) => {
+        const isLongName =
+          (p.artist_name || "").length > 10;
 
-            backdrop-blur-xl
-
-            shadow-[0_10px_30px_-18px_rgba(236,72,153,0.7)]
-
-            hover:scale-[1.04]
-            hover:shadow-[0_16px_40px_-12px_rgba(236,72,153,0.9)]
-
-            transition-all duration-300
-          "
-        >
-
-          {/* GLOW */}
-          <div
+        return (
+          <a
+            key={p.id}
+            href={`https://karaoverse.com/artist/${p.slug}`}
+            target="_blank"
+            rel="noopener noreferrer"
             className="
-              absolute inset-0
-              opacity-0 group-hover:opacity-100
-              transition duration-500
+              snap-start
+              shrink-0
+
+              w-[120px]
+              sm:w-[150px]
+
+              group
+
+              relative overflow-hidden
+
+              flex flex-col items-center
+              text-center
+
+              rounded-[1.3rem]
+
+              px-2 py-3
+
+              border border-pink-300/20
 
               bg-gradient-to-br
-              from-pink-400/10
-              via-fuchsia-400/5
-              to-purple-400/10
-            "
-          />
+              from-pink-500/20
+              via-fuchsia-500/10
+              to-purple-600/20
 
-          {/* IMAGE */}
-          <div
-            className="
-              relative
+              backdrop-blur-xl
 
-              w-16 h-16 sm:w-20 sm:h-20
+              shadow-[0_10px_30px_-18px_rgba(236,72,153,0.7)]
 
-              rounded-full
-              overflow-hidden
+              hover:scale-[1.04]
 
-              border-2 border-pink-200/70
-
-              shadow-[0_0_25px_rgba(236,72,153,0.45)]
-
-              mb-2
+              transition-all
+              duration-300
             "
           >
-            <img
-              src={p.image_url}
-              alt={p.artist_name}
+            {/* GLOW */}
+            <div
               className="
-                w-full h-full
-                object-cover
+                absolute inset-0
+                opacity-0
+                group-hover:opacity-100
 
-                group-hover:scale-110
-                transition duration-500
+                transition
+                duration-500
+
+                bg-gradient-to-br
+                from-pink-400/10
+                via-fuchsia-400/5
+                to-purple-400/10
               "
             />
-          </div>
 
-          {/* LABEL */}
-          <div
-            className="
-              text-[9px]
+            <div
+              className="
+                relative
 
-              uppercase
-              tracking-[0.18em]
+                w-16 h-16 sm:w-20 sm:h-20
 
-              text-pink-200/60
+                rounded-full
+                overflow-hidden
 
-              font-black
+                border-2 border-pink-200/70
 
-              mb-1
-            "
-          >
-            Artist
-          </div>
+                shadow-[0_0_25px_rgba(236,72,153,0.45)]
 
-          {/* NAME */}
-          <div
-            className={`
-              font-black
-              text-white
-              leading-tight
-              break-words
+                mb-2
+              "
+            >
+              <img
+                src={p.image_url}
+                alt={p.artist_name}
+                className="
+                  w-full h-full
+                  object-cover
 
-              ${
-                isLongName
-                  ? "text-[11px] sm:text-xs"
-                  : "text-sm sm:text-base"
-              }
-            `}
-          >
-            {p.artist_name}
-          </div>
-        </a>
-      );
-    })}
+                  group-hover:scale-110
+
+                  transition
+                  duration-500
+                "
+              />
+            </div>
+
+            <div
+              className="
+                text-[9px]
+                uppercase
+                tracking-[0.18em]
+                text-pink-200/60
+                font-black
+                mb-1
+              "
+            >
+              Artist
+            </div>
+
+            <div
+              className={`
+                font-black
+                text-white
+                leading-tight
+
+                ${
+                  isLongName
+                    ? "text-[11px] sm:text-xs"
+                    : "text-sm sm:text-base"
+                }
+              `}
+            >
+              {p.artist_name}
+            </div>
+          </a>
+        );
+      })}
+    </div>
+
   </div>
 )}
-
 {item.hosts?.length > 0 && (
   <div className="mt-4 flex flex-wrap gap-4">
     {item.hosts.map((h) => (
@@ -548,7 +588,27 @@ const sorted = res.data.sort((a, b) => {
     No itinerary items for this location yet.
   </div>
 )}
+<div
+  className="
+    flex items-center justify-center
 
+    mt-4
+
+    text-yellow-100/60
+
+    text-xs sm:text-sm
+
+    font-black
+
+    uppercase
+
+    tracking-[0.25em]
+
+    animate-pulse
+  "
+>
+  ← Swipe To See More →
+</div>
         {/* optional: empty state */}
         {filtered.length === 0 && (
           <div className="text-center py-10 text-yellow-100/70 italic">

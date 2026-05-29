@@ -106,9 +106,7 @@ useEffect(() => {
     }
   };
 
-  // ─────────────────────────────────────────────
-  // Delete Volunteer (DELETE)
-  // ─────────────────────────────────────────────
+
   const deleteVolunteer = async (vid) => {
     if (!window.confirm("Delete this volunteer submission?")) return;
 
