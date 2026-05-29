@@ -327,7 +327,7 @@ text-transparent bg-clip-text
   </div>
 )}
 
-                <div className="text-center mt-4 shadow-xl">
+                {/* <div className="text-center mt-4 shadow-xl">
                   <h2 className="text-3xl font-bold text-yellow-300 mb-1 border-b">
                     Become a Vendor
                   </h2>
@@ -345,7 +345,7 @@ text-transparent bg-clip-text
   Contact us
 </a>
 
-                </div>
+                </div> */}
       </div>
 
       {/* ================= MODAL ================= */}

@@ -269,7 +269,7 @@ useEffect(() => {
   </div>
 )}
 
-          <div className="text-center mt-4 p-2  shadow-xl">
+          {/* <div className="text-center mt-4 p-2  shadow-xl">
           <h2 className="text-3xl font-bold text-yellow-300 border-b mb-1">
             Become a Sponsor
           </h2>
@@ -292,7 +292,7 @@ useEffect(() => {
   Sponsorship Options
 </button>
 
-        </div>
+        </div> */}
 
       </div>
 
