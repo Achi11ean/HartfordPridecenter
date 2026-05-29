@@ -7,7 +7,7 @@ import PublicFundersSection from "./PublicFundersSection";
 import VendorSlider from "./VendorSlider";
 import AnnualPrideEventDetails from "./AnnualPrideEventDetails";
 import PrideItinerary from "./PrideItinerary";
-
+import { FaPaperPlane } from "react-icons/fa";
 import {
   FaInstagram,
   FaFacebook,
@@ -794,7 +794,58 @@ useEffect(() => {
           >
             <FaEnvelope className="text-xl" />
           </a>
+<button
+  onClick={async () => {
+    const shareUrl =
+      "https://hartfordpridecenter.netlify.app/pride";
 
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "Hartford Pride Center",
+          text: "Celebrate Pride, connect with community, and explore upcoming events.",
+          url: shareUrl,
+        });
+      } catch (err) {
+        console.log("Share cancelled");
+      }
+    } else {
+      navigator.clipboard.writeText(shareUrl);
+      alert("Pride page link copied!");
+    }
+  }}
+  className="
+    inline-flex items-center gap-2
+
+    rounded-full
+
+    bg-gradient-to-br
+    from-green-600
+    via-emerald-500
+    to-green-900
+
+    px-5 py-1
+
+    border border-white
+
+    text-white
+    font-black
+    text-sm
+    lg:text-base
+
+    backdrop-blur-xl
+
+    shadow-[0_0_30px_rgba(16,185,129,0.45)]
+
+    hover:scale-105
+    hover:brightness-110
+
+    transition-all duration-300
+  "
+>
+  <FaPaperPlane />
+  Share
+</button>
         </div>
 
       </div>
