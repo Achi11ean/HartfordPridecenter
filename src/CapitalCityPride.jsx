@@ -27,7 +27,24 @@ const itineraryRef = React.useRef(null);
 const vendorsRef = React.useRef(null);
 const talentRef = React.useRef(null);
 const sponsorsRef = React.useRef(null);
+const handleShare = () => {
+  const shareUrl =
+    "https://share.karaoverse.com/og/pride";
 
+  if (navigator.share) {
+    navigator
+      .share({
+        title: "Capital City Pride",
+        text: "Check out the Capital City Pride Page!",
+        url: shareUrl,
+      })
+      .catch(() => {});
+  } else {
+    navigator.clipboard.writeText(shareUrl);
+
+    alert("Share link copied to clipboard!");
+  }
+};
 const scrollToSection = (ref) => {
   ref?.current?.scrollIntoView({
     behavior: "smooth",
@@ -795,25 +812,7 @@ useEffect(() => {
             <FaEnvelope className="text-xl" />
           </a>
 <button
-  onClick={async () => {
-    const shareUrl =
-      "https://hartfordpridecenter.netlify.app/pride";
-
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: "Hartford Pride Center",
-          text: "Celebrate Pride, connect with community, and explore upcoming events.",
-          url: shareUrl,
-        });
-      } catch (err) {
-        console.log("Share cancelled");
-      }
-    } else {
-      navigator.clipboard.writeText(shareUrl);
-      alert("Pride page link copied!");
-    }
-  }}
+  onClick={handleShare}
   className="
     inline-flex items-center gap-2
 
@@ -833,14 +832,8 @@ useEffect(() => {
     text-sm
     lg:text-base
 
-    backdrop-blur-xl
-
-    shadow-[0_0_30px_rgba(16,185,129,0.45)]
-
     hover:scale-105
-    hover:brightness-110
-
-    transition-all duration-300
+    transition-all
   "
 >
   <FaPaperPlane />
