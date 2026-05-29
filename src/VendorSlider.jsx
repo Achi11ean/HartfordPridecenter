@@ -194,7 +194,7 @@ whileTap={isSingleVendor ? undefined : { scale: 0.98 }}
 
       h-[200px]
       sm:h-[220px]
-
+bg-white
       rounded-3xl
 border border-white
       shadow-[0_10px_40px_rgba(0,0,0,0.65)]
