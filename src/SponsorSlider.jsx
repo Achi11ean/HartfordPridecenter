@@ -275,7 +275,7 @@ useEffect(() => {
           </h2>
 
           <p className="text-yellow-100 text-sm mb-2">
-            Support South Haven Pride while gaining powerful brand visibility.
+            Support Hartford Pride while gaining powerful brand visibility.
           </p>
 
 <button

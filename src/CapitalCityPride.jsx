@@ -403,7 +403,7 @@ useEffect(() => {
           </h2>
 
           <p className="text-yellow-100/85 text-lg leading-relaxed mb-6">
-            Help bring South Haven Pride to life. From event support and guest guidance
+            Help bring Hartford Pride to life. From event support and guest guidance
             to stage operations and outreach, every helping hand creates a stronger celebration.
           </p>
 
