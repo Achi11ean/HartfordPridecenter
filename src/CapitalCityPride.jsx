@@ -526,55 +526,44 @@ useEffect(() => {
           🌈 Capital City Pride
         </div>
 {/* LOCATION CARD */}
-
 <div className="mt-6">
-
   <div
     className="
       overflow-hidden
-
       rounded-[2rem]
-
       bg-white
-
       shadow-[0_25px_70px_-25px_rgba(0,0,0,0.35)]
-
       border border-pink-100
     "
   >
 
     {/* MAP */}
-
-    <button
-      onClick={() => setShowMap(true)}
-      className="
-        relative
-
-        w-full
-        h-[180px]
-
-        overflow-hidden
-
-        group
-      "
-    >
+<button
+  onClick={() =>
+    window.open(
+      "https://www.google.com/maps/search/?api=1&query=Pratt+Street+Hartford+CT",
+      "_blank"
+    )
+  }
+  className="
+    relative
+    w-full
+    h-[180px]
+    overflow-hidden
+    group
+  "
+>
       <iframe
         className="
           absolute inset-0
-
           w-full h-full
-
           pointer-events-none
-
           scale-110
-
           group-hover:scale-125
-
           transition-all
           duration-700
         "
-        src="https://www.google.com/maps?q=Stanley+Johnston+Park,+South+Haven,+MI&z=14&output=embed"
-        loading="lazy"
+src="https://maps.google.com/maps?q=100%20Pratt%20Street%20Hartford%20CT&t=&z=17&ie=UTF8&iwloc=&output=embed"        loading="lazy"
       />
 
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
@@ -582,19 +571,12 @@ useEffect(() => {
       <div
         className="
           absolute bottom-3 left-3
-
           px-3 py-2
-
           rounded-full
-
           bg-white/95
-
           backdrop-blur
-
           font-black
-
           text-pink-500
-
           shadow-lg
         "
       >
@@ -603,18 +585,14 @@ useEffect(() => {
     </button>
 
     {/* ADDRESS */}
-
     <a
-      href="https://www.google.com/maps/search/?api=1&query=Stanley+Johnston+Park+South+Haven+MI"
+      href="https://www.google.com/maps/search/?api=1&query=Pratt+Street+Hartford+CT"
       target="_blank"
       rel="noopener noreferrer"
       className="
         block
-
         p-5
-
         hover:bg-pink-50/50
-
         transition-all
       "
     >
@@ -623,13 +601,9 @@ useEffect(() => {
         <div
           className="
             w-12 h-12
-
             rounded-2xl
-
             bg-pink-100
-
             flex items-center justify-center
-
             text-xl
           "
         >
@@ -642,11 +616,11 @@ useEffect(() => {
           </div>
 
           <h5 className="text-lg font-black text-gray-900 mt-1">
-            Stanley Johnston Park
+            Pratt Street
           </h5>
 
           <p className="text-gray-600 font-semibold">
-            South Haven, Michigan
+            Downtown Hartford, Connecticut
           </p>
 
           <div className="mt-2 text-sm font-black text-cyan-500">
@@ -658,8 +632,8 @@ useEffect(() => {
     </a>
 
   </div>
-
 </div>
+
         <h3 className="mt-6 text-3xl sm:text-5xl font-black leading-tight text-gray-900">
           Building LGBTQIA+
           <span className="block text-pink-500">
