@@ -99,7 +99,19 @@ useEffect(() => {
   };
 }, []);
 
+useEffect(() => {
+  axios
+    .get("https://singspacebackend.onrender.com/pride/2/annual")
+    .then((res) => {
+      console.log("🏳️‍🌈 Pride Event API Response:", res.data);
+      console.log("📅 Pride Event Date:", res.data?.date);
 
+      setPrideEvent(res.data);
+    })
+    .catch((err) =>
+      console.error("Error loading Annual Pride event:", err)
+    );
+}, []);
   
   const SectionHeader = ({ icon, title, subtitle }) => (
     <div className="text-center mb-4 ">

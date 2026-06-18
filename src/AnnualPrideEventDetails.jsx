@@ -343,7 +343,7 @@ return (
 </div>
 
 <div>
-  <div className="flex items-center justify-between mb-4">
+  {/* <div className="flex items-center justify-between mb-4">
     <h3 className="text-xl sm:text-2xl font-extrabold text-pink-300">
       🎤 Featured Artists
     </h3>
@@ -353,11 +353,11 @@ return (
         ← Scroll →
       </span>
     )}
-  </div>
+  </div> */}
 
   {featuredArtists.length === 0 ? (
     <p className="text-center italic text-yellow-200/80">
-      Artist lineup coming soon.
+      Artist lineup pending.
     </p>
   ) : (
     <div
