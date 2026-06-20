@@ -71,8 +71,8 @@ export default function HomePage() {
         transition={{ duration: 0.8, delay: 0.15 }}
         className="order-2 lg:order-2 text-center lg:text-left"
       >
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-xl text-xs sm:text-sm uppercase tracking-[0.25em] font-bold text-yellow-200 shadow-xl">
-          Hartford, Connecticut Pride Initiative
+        <div className="inline-flex  items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-xl text-[12px] sm:text-sm uppercase tracking-[0.25em] font-bold text-yellow-200 shadow-xl">
+          Proudly Based in Hartford, CT. A Program of CLARO Inc. 
         </div>
 
         <h1 className="mt-5 text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-black leading-[0.95] tracking-tight text-white drop-shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
