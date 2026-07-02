@@ -135,7 +135,7 @@ const featuredArtists =
   
   if (loading) {
     return (
-      <div className="text-center py-16 text-yellow-200 animate-pulse">
+      <div className="text-center py-14 text-yellow-200 animate-pulse">
         Loading Pride Festival details…
       </div>
     );
@@ -160,32 +160,31 @@ return (
         shadow-[0_25px_70px_-40px_rgba(0,0,0,0.9)]
       "
     >
+      {/* subtle glow accents */}
+      <div className="pointer-events-none absolute -top-24 -left-24 h-64 w-64 rounded-full bg-green-500/20 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-28 -right-24 h-72 w-72 rounded-full bg-green-400 blur-3xl" />
 
-      <div className="pointer-events-none absolute -top-24 -left-24 h-64 w-64 rounded-full bg-pink-500/20 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-28 -right-24 h-72 w-72 rounded-full bg-yellow-400/15 blur-3xl" />
-
-      <div className="relative ">
+      <div className="relative">
         {/* 🌈 PRIDE HOSTS */}
 {eventHosts.length > 0 && (
-  <div className="">
+  <div className="mb-1">
 
 
-    <div className="space-y-6">
+    <div className="space-y-5">
       {eventHosts.map((host) => (
         <div
           key={host.id}
           className="
             relative overflow-hidden
-
+py-6
             rounded-none
 
             border border-white/10
 
-            bg-gradient-to-br
-            from-pink-500/10
-            via-black/80
-            to-purple-500/10
-
+     bg-gradient-to-br
+from-green-400/10
+via-black/80
+to-emerald-700/40
             backdrop-blur-2xl
 
             shadow-[0_25px_80px_-35px_rgba(0,0,0,0.95)]
@@ -195,7 +194,7 @@ return (
         >
 
           {/* GLOWS */}
-          <div className="absolute -top-10 -right-10 w-44 h-44 bg-pink-500/10 blur-3xl rounded-full" />
+          <div className="absolute -top-10 -right-10 w-44 h-44 bg-green-500/10 blur-3xl rounded-full" />
           <div className="absolute -bottom-10 -left-10 w-44 h-44 bg-cyan-400/10 blur-3xl rounded-full" />
 
           <div className="relative z-10 flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
@@ -203,7 +202,275 @@ return (
             {/* LEFT CONTENT */}
             <div className="flex-1">
 
+              {/* EVENT NAME */}
 
+
+              {/* DATE */}
+{/* MINI MAP PREVIEW */}
+<section className="relative">
+  <div className="flex justify-center">
+
+    {/* SMALL CENTERED MAP PREVIEW */}
+    <button
+      onClick={() => setShowMap(true)}
+      className="
+        relative
+
+        w-[120px]
+        h-[120px]
+
+        sm:w-[150px]
+        sm:h-[150px]
+
+        rounded-[2rem]
+
+        overflow-hidden
+
+        border border-white/10
+
+        shadow-[0_20px_60px_-25px_rgba(0,0,0,0.95)]
+
+        hover:scale-105
+
+        transition-all
+
+        group
+      "
+    >
+
+      {/* MAP */}
+      <iframe
+        className="
+          absolute inset-0
+
+          w-full h-full
+
+          scale-[1.15]
+
+          pointer-events-none
+
+          opacity-90
+
+          group-hover:scale-[1.2]
+
+          transition-all
+          duration-500
+        "
+        src="https://www.google.com/maps?q=Stanley+Johnston+Park,+South+Haven,+MI&z=14&output=embed"
+        loading="lazy"
+      />
+
+      {/* OVERLAY */}
+      <div
+        className="
+          absolute inset-0
+
+          bg-gradient-to-b
+          from-black/10
+          via-transparent
+          to-black/40
+        "
+      />
+
+      {/* ICON */}
+      <div
+        className="
+          absolute bottom-2 right-2
+
+          w-8 h-8
+
+          rounded-full
+
+          bg-black/70
+
+          backdrop-blur-md
+
+          border border-white/10
+
+          flex items-center justify-center
+
+          text-white text-sm
+
+          shadow-lg
+        "
+      >
+        📍
+      </div>
+    </button>
+
+    {/* MODAL */}
+    {showMap && (
+      <div
+        className="
+          fixed inset-0 z-[9999]
+
+          bg-black/80
+
+          backdrop-blur-md
+
+          flex items-center justify-center
+
+          p-4
+
+          animate-in fade-in duration-300
+        "
+        onClick={() => setShowMap(false)}
+      >
+
+        {/* MODAL CARD */}
+        <div
+          className="
+            relative
+
+            w-full max-w-5xl
+
+            rounded-[2rem]
+
+            overflow-hidden
+
+            border border-white/10
+
+            bg-black
+
+            shadow-[0_40px_120px_-20px_rgba(0,0,0,0.95)]
+
+            animate-in zoom-in-95 duration-300
+          "
+          onClick={(e) => e.stopPropagation()}
+        >
+
+          {/* CLOSE */}
+          <button
+            onClick={() => setShowMap(false)}
+            className="
+              absolute top-4 right-4 z-20
+
+              w-11 h-11
+
+              rounded-full
+
+              bg-black/70
+
+              text-white text-lg
+
+              border border-white/10
+
+              hover:scale-110
+
+              transition-all
+            "
+          >
+            ✕
+          </button>
+
+          <iframe
+            className="w-full h-[75vh]"
+            src="https://www.google.com/maps?q=Stanley+Johnston+Park,+South+Haven,+MI&z=17&output=embed"
+            allowFullScreen
+            loading="lazy"
+          />
+        </div>
+      </div>
+    )}
+
+  </div>
+</section>
+              {/* ADDRESS */}
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                  `${event.address}, ${event.city}, ${event.state}`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="
+                  mt-4
+
+                  flex items-start gap-4
+
+                  rounded-2xl
+
+                  bg-white/5
+
+                  border border-white/10
+
+                  p-4
+
+                  group
+
+                  hover:bg-white/10
+
+                  transition-all
+                "
+              >
+                <div
+                  className="
+                    w-11 h-11
+                    rounded-full
+
+                    bg-pink-400/15
+
+                    flex items-center justify-center
+
+                    shrink-0
+                  "
+                >
+                  <FaMapMarkerAlt className="text-pink-300 text-lg" />
+                </div>
+
+                <div className="leading-relaxed">
+                  <span
+                    className="
+                      block
+
+                      font-extrabold
+
+                      text-white
+
+                      text-lg sm:text-xl
+
+                      group-hover:text-pink-300
+
+                      transition-colors
+                    "
+                  >
+                    {event.address}
+                  </span>
+
+                  <span
+                    className="
+                      block
+
+                      text-cyan-100/80
+
+                      font-bold
+
+                      mt-1
+                    "
+                  >
+                    {event.city}, {event.state}
+                  </span>
+
+                  <span
+                    className="
+                      inline-block
+
+                      mt-2
+
+                      text-xs
+                      uppercase
+                      tracking-[0.25em]
+
+                      text-pink-300/70
+
+                      group-hover:text-pink-200
+
+                      transition-colors
+                    "
+                  >
+                   Directions ↗
+                  </span>
+                </div>
+              </a>
       {event.eventbrite_url && (
         <div className="pt-2 text-center">
           <a
@@ -212,7 +479,7 @@ return (
             rel="noopener noreferrer"
             className="
               inline-flex items-center justify-center gap-2
-              px-8 py-3 rounded-2xl
+              px-4 py-2 rounded-2xl
               bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-500
               text-black font-extrabold
               shadow-[0_18px_40px_-24px_rgba(250,204,21,0.85)]
@@ -225,20 +492,19 @@ return (
           </a>
         </div>
       )}
-         
 
+      
+              {/* HOST NOTES */}
               {host.notes && (
                 <div
                   className="
-                    mt-1
+                    mt-2
 
                     rounded-2xl
 
-                    border border-white/10
+                 
 
-                    bg-black/30
-
-                    p-2
+                    
 
                     shadow-inner
                   "
@@ -246,7 +512,7 @@ return (
                   <p
                     className="
                       text-sm
-                      sm:text-lg
+                      sm:text-[15px]
 
                       leading-relaxed
 
@@ -261,315 +527,164 @@ return (
               )}
             </div>
 
-            {/* RIGHT BUTTON */}
-           
+
           </div>
         </div>
       ))}
     </div>
   </div>
 )}
-
 <div
+  id="pride-itinerary"
+  className="hidden lg:block"
+>
+  <PrideItinerary />
+</div>
+<div
+  id="pride-itinerary"
+  className="block  lg:hidden"
+>
+  <PrideItinerary />
+</div>
+        {/* MAIN GRID */}
+        <div className="grid rounded-none md:grid-cols-1  text-yellow-100">
+          {/* LEFT */}
+      
+
+         <hr className="rainbow-hr"/>
+        <div
   className="
-    p-1 sm:p-7
-    border border-white/10
-    bg-gradient-to-b from-black/50 via-black/35 to-black/50
+    rounded-none  sm:px-7
+  py-6
+    bg-gradient-to-br from-purple-600 via-pink-500 via-pink-600 to-yellow-300
     backdrop-blur-xl
     shadow-[0_25px_70px_-40px_rgba(0,0,0,0.9)]
   "
 >
+  
+  {/* SHARED HEADER */}
 
-<div className="text-center mb-8">
-  <div
-    className="
-      inline-block
+  {/* ARTISTS */}
+  <div>
 
-      px-5 py-2
-
-      rounded-full
-
-      bg-yellow-300
-
-      text-black
-
-      font-black
-
-      uppercase
-
-      tracking-[0.25em]
-
-      text-xs
-
-      shadow-lg
-    "
-  >
-    Festival Talent
+<div className="mb-2 text-center">
+  <div className="text-white text-sm tracking-[0.5em] uppercase mb-1">
+    🌈 Capital City Pride 🦄
   </div>
 
   <h2
     className="
-      mt-4
-
-      text-3xl
-      sm:text-5xl
-
-      font-[Aspire]
-
-      text-yellow-300
+      text-3xl sm:text-7xl
+      font-[serif]
+      bg-white
+      bg-clip-text
+      text-transparent
+      drop-shadow-[0_0_40px_rgba(236,72,153,0.7)]
     "
   >
-    Meet The Featured Lineup
+    Performers
   </h2>
 
-  <p
-    className="
-      mt-3
-
-      text-sm
-      sm:text-base
-
-      text-yellow-100/75
-
-      font-semibold
-
-      max-w-2xl
-
-      mx-auto
-    "
-  >
-    Explore performers, hosts, and personalities bringing the celebration to life.
-  </p>
+  <div className="mt-2 text-yellow-300 text-lg tracking-widest">
+    ✨ Drag • Bands • Artists  ✨
+  </div>
 </div>
 
-<div>
-  {/* <div className="flex items-center justify-between mb-4">
-    <h3 className="text-xl sm:text-2xl font-extrabold text-pink-300">
-      🎤 Featured Artists
-    </h3>
-
-    {featuredArtists.length > 0 && (
-      <span className="text-xs uppercase tracking-[0.2em] text-yellow-200/60 font-black">
-        ← Scroll →
-      </span>
-    )}
-  </div> */}
-
-  {featuredArtists.length === 0 ? (
-    <p className="text-center italic text-yellow-200/80">
-      Artist lineup pending.
-    </p>
-  ) : (
-    <div
-      className="
-        flex gap-5
-
-        overflow-x-auto
-        overflow-y-hidden
-
-        pb-4
-
-        snap-x snap-mandatory
-
-        scrollbar-thin
-        scrollbar-thumb-yellow-300/40
-        scrollbar-track-transparent
-      "
-    >
-      {featuredArtists.map((artist) => (
-        <a
-          key={artist.id}
-          href={`https://karaoverse.com/artist/${artist.slug}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="
-            group
-
-            shrink-0
-            snap-start
-
-            w-[120px]
-            sm:w-[140px]
-
-            flex flex-col items-center
-            text-center
-
-            hover:scale-[1.04]
-
-            transition-all
-            duration-300
-          "
-        >
-          <div
-            className="
-              w-24 h-24
-              sm:w-28 sm:h-28
-
-              rounded-full
-              overflow-hidden
-
-              border-4 border-yellow-300/90
-
-              shadow-[0_0_28px_rgba(255,215,0,0.35)]
-
-              group-hover:shadow-[0_0_38px_rgba(255,215,0,0.55)]
-
-              transition
-            "
+    {featuredArtists.length === 0 ? (
+      <p className="text-center italic text-yellow-200/80">
+        Artist lineup coming soon.
+      </p>
+    ) : (
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+        {featuredArtists.map((artist) => (
+          <a
+            key={artist.id}
+            href={`https://karaoverse.com/artist/${artist.slug}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex flex-col items-center text-center hover:scale-[1.04] transition"
           >
-            <img
-              src={
-                artist.image_url ||
-                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSL2me_CKyfrr925EXl7hOyjKOmLKFmkz40rA&s"
-              }
-              alt={artist.artist_name}
+            <div
               className="
-                w-full h-full
-                object-cover
-
-                group-hover:scale-110
-
+                w-24 h-24 rounded-sm overflow-hidden
+                border-2 border-yellow-300/90
+                shadow-[0_0_28px_rgba(255,215,0,0.35)]
+                group-hover:shadow-[0_0_38px_rgba(255,215,0,0.55)]
                 transition
-                duration-500
               "
-            />
-          </div>
+            >
+              <img
+                src={
+                  artist.image_url ||
+                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSL2me_CKyfrr925EXl7hOyjKOmLKFmkz40rA&s"
+                }
+                alt={artist.artist_name}
+                className="w-full h-full  object-cover group-hover:scale-110 transition duration-500"
+              />
+            </div>
 
-          <span
-            className="
-              mt-3
+            <span className=" font-extrabold font-serif text-sm text-white">
+              {artist.artist_name}
+            </span>
+          </a>
+        ))}
+      </div>
+    )}
+  </div>
 
-              font-extrabold
 
-              text-sm
+  {/* HOSTS */}
+  {itineraryHosts.length > 0 && (
+    <div className="mt-4 pt-2 ">
+  
+  <div className=" text-white mb-2 text-lg tracking-widest">
+    ✨ DJs • Karaoke • Hosts  ✨
+  </div>
 
-              text-yellow-100
-
-              leading-tight
-            "
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+        {itineraryHosts.map((host) => (
+          <a
+            key={host.id}
+            href={`https://karaoverse.com/${host.slug}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex flex-col items-center text-center hover:scale-[1.04] transition"
           >
-            {artist.artist_name}
-          </span>
-        </a>
-      ))}
+            <div
+              className="
+                w-24 h-24 rounded-sm overflow-hidden
+                border-2 border-yellow-400/90
+                shadow-[0_0_26px_rgba(236,72,153,0.35)]
+                group-hover:shadow-[0_0_36px_rgba(236,72,153,0.55)]
+                transition
+              "
+            >
+              <img
+                src={host.photo_url || "/default-dj.png"}
+                alt={host.dj_name}
+                className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+              />
+            </div>
+
+<span className="font-serif pb-2 font-extrabold text-sm text-white">
+  {host.dj_name
+    ?.replace(/^dj/i, "DJ ")
+    .replace(/\b\w/g, (c) => c.toUpperCase())}
+</span>
+          </a>
+        ))}
+      </div>
     </div>
   )}
 </div>
 
-{/* HOSTS */}
 
-{itineraryHosts.length > 0 && (
-  <div className="mt-10 pt-8 border-t border-white/10">
 
-    <div className="flex items-center justify-between mb-4">
-      <h3 className="text-xl sm:text-2xl font-extrabold text-cyan-300">
-        🎧 Featured Hosts
-      </h3>
 
-      <span className="text-xs uppercase tracking-[0.2em] text-cyan-200/60 font-black">
-        ← Scroll →
-      </span>
-    </div>
-
-    <div
-      className="
-        flex gap-5
-
-        overflow-x-auto
-        overflow-y-hidden
-
-        pb-4
-
-        snap-x snap-mandatory
-
-        scrollbar-thin
-        scrollbar-thumb-cyan-400/40
-        scrollbar-track-transparent
-      "
-    >
-      {itineraryHosts.map((host) => (
-        <a
-          key={host.id}
-          href={`https://karaoverse.com/${host.slug}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="
-            group
-
-            shrink-0
-            snap-start
-
-            w-[120px]
-            sm:w-[140px]
-
-            flex flex-col items-center
-            text-center
-
-            hover:scale-[1.04]
-
-            transition-all
-            duration-300
-          "
-        >
-          <div
-            className="
-              w-24 h-24
-
-              rounded-full
-              overflow-hidden
-
-              border-4 border-pink-400/90
-
-              shadow-[0_0_26px_rgba(236,72,153,0.35)]
-
-              group-hover:shadow-[0_0_36px_rgba(236,72,153,0.55)]
-
-              transition
-            "
-          >
-            <img
-              src={host.photo_url || "/default-dj.png"}
-              alt={host.dj_name}
-              className="
-                w-full h-full
-                object-cover
-
-                group-hover:scale-110
-
-                transition
-                duration-500
-              "
-            />
-          </div>
-
-          <span
-            className="
-              mt-3
-
-              font-extrabold
-
-              text-sm
-
-              text-yellow-100
-
-              leading-tight
-            "
-          >
-            {host.dj_name}
-          </span>
-        </a>
-      ))}
-    </div>
-  </div>
-)}
-</div>
+        </div>
+        
       </div>
-<div
-  id="pride-itinerary"
-  className="py-2 pt-4"
->
-  <PrideItinerary />
-</div>
+
 
     </div>
     

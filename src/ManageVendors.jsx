@@ -29,6 +29,7 @@ const cycleStatus = async (vendor) => {
   const nextIndex = (currentIndex + 1) % STATUS_OPTIONS.length;
   const nextStatus = STATUS_OPTIONS[nextIndex];
 
+
   try {
     await axios.patch(
       `${API}/api/pride-vendors/${vendor.id}`,
@@ -127,6 +128,50 @@ const addListItem = (type) => {
   }));
 };
 
+const TAG_TEXT = "LGBTQIA+ Owned";
+
+const normalizeDescription = (text) =>
+  (text || "")
+    .replace(/\s+/g, " ")
+    .replace(/\s+([.,!?])/g, "$1")
+    .trim();
+
+const toggleEditLgbtqOwned = () => {
+  setEditForm((prev) => {
+    const current = prev.description || "";
+    const normalized = normalizeDescription(current);
+
+    const endsWithTag =
+      normalized === TAG_TEXT || normalized.endsWith(` ${TAG_TEXT}`);
+
+    if (endsWithTag) {
+      const cleaned = normalizeDescription(
+        normalized.replace(new RegExp(`(?:^|\\s)${TAG_TEXT}$`), "")
+      );
+
+      return {
+        ...prev,
+        description: cleaned,
+      };
+    }
+
+    const separator = normalized ? " " : "";
+    const nextDescription = `${normalized}${separator}${TAG_TEXT}`;
+
+    if (nextDescription.length > 1000) {
+      toast.error("❌ Description is too long to append LGBTQIA+ Owned");
+      return prev;
+    }
+
+    return {
+      ...prev,
+      description: nextDescription,
+    };
+  });
+};
+
+const isEditLgbtqOwned = normalizeDescription(editForm.description).endsWith(TAG_TEXT);
+
 const removeListItem = (type, index) => {
   setEditForm((prev) => ({
     ...prev,
@@ -177,6 +222,21 @@ const removeListItem = (type, index) => {
     }
   };
 
+  const [searchTerm, setSearchTerm] = useState("");
+const [statusFilter, setStatusFilter] = useState("");
+  const filteredVendors = vendors.filter((v) => {
+  const matchesSearch =
+    !searchTerm ||
+    v.company_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    v.vendor_type?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    v.contact_name?.toLowerCase().includes(searchTerm.toLowerCase());
+
+  const matchesStatus =
+    !statusFilter || v.status === statusFilter;
+
+  return matchesSearch && matchesStatus;
+});
+
   /* ───────────────── UI States ───────────────── */
   if (loading) {
     return <p className="text-yellow-200">Loading vendors…</p>;
@@ -193,11 +253,45 @@ const removeListItem = (type, index) => {
   /* ───────────────── Render ───────────────── */
   return (
     <div className="w-full space-y-4">
- 
+ <div className="flex flex-col md:flex-row gap-3 mb-4">
+
+  {/* 🔍 SEARCH */}
+  <input
+    type="text"
+    placeholder="Search vendors..."
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+    className="
+      flex-1 px-4 py-2 rounded-full
+      bg-black border-2 border-yellow-400
+      text-yellow-100 placeholder-yellow-300/60
+      focus:outline-none focus:ring-2 focus:ring-yellow-300
+    "
+  />
+
+  {/* 📊 STATUS FILTER */}
+  <select
+    value={statusFilter}
+    onChange={(e) => setStatusFilter(e.target.value)}
+    className="
+      px-4 py-2 rounded-full
+      bg-black border-2 border-yellow-400
+      text-yellow-100 font-bold
+      text-center
+    "
+  >
+    <option value="">All Statuses</option>
+    {STATUS_OPTIONS.map((s) => (
+      <option key={s} value={s}>
+        {s}
+      </option>
+    ))}
+  </select>
+
+</div>
 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
 
-      {vendors.map((v) => (
-        <div
+{filteredVendors.map((v) => (        <div
           key={v.id}
           className="bg-black/60 border border-yellow-500/30 rounded-xl p-4 shadow-lg"
         >
@@ -364,7 +458,57 @@ const removeListItem = (type, index) => {
                   className="px-3 py-2 bg-black border border-yellow-400 text-yellow-100 rounded"
                 />
               </div>
+{/* 📝 Description */}
+<div className="space-y-1">
+  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
+    <label className="text-sm font-bold text-yellow-200">
+      Description
+    </label>
 
+    <button
+      type="button"
+      onClick={toggleEditLgbtqOwned}
+      className={`
+        self-start sm:self-auto
+        px-4 py-2 rounded-full text-xs sm:text-sm font-bold
+        border transition-all duration-300
+        ${
+          isEditLgbtqOwned
+            ? "bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-400 text-white border-pink-300 shadow-[0_0_18px_rgba(236,72,153,0.35)]"
+            : "bg-black/40 text-yellow-200 border-yellow-400/40 hover:bg-yellow-400/10"
+        }
+      `}
+    >
+      {isEditLgbtqOwned ? "✅ LGBTQIA+ Owned" : "🏳️‍🌈 Add LGBTQIA+ Owned"}
+    </button>
+  </div>
+
+  <textarea
+    value={editForm.description || ""}
+    onChange={(e) => {
+      if (e.target.value.length > 1000) return;
+      setEditForm({ ...editForm, description: e.target.value });
+    }}
+    placeholder="Describe this vendor..."
+    className="
+      w-full px-3 py-2
+      bg-black border border-yellow-400
+      text-yellow-100 rounded
+      min-h-[100px]
+    "
+  />
+
+  <div
+    className={`
+      text-right text-xs
+      ${(editForm.description || "").length > 900
+        ? "text-red-400"
+        : "text-yellow-300/70"}
+    `}
+  >
+    {(editForm.description || "").length}/1000
+  </div>
+</div>
               {/* Status */}
               <select
                 value={editForm.status}
@@ -416,27 +560,28 @@ const removeListItem = (type, index) => {
            <div className="grid grid-cols-1 md:grid-cols-[120px_1fr_auto] gap-4 items-start">
 
   {/* 🖼 IMAGE (CONTAINED, NOT CROPPED) */}
-  {v.image_url && (
-    <div className="
-      w-full md:w-[120px]
-      h-[100px]
-      bg-black/40
-      border border-yellow-400/20
-      rounded-xl
-      flex items-center justify-center
-      p-2
-    ">
-      <img
-        src={v.image_url}
-        alt={v.company_name}
-        className="
-          max-h-full max-w-full
-          object-contain
-        "
-      />
-    </div>
-  )}
-
+  <div className="
+  w-full md:w-[120px]
+  h-[100px]
+  bg-black/40
+  border border-yellow-400/20
+  rounded-xl
+  flex items-center justify-center
+  p-2
+">
+  <img
+    src={
+      v.image_url && v.image_url.trim() !== ""
+        ? v.image_url
+        : "https://static.vecteezy.com/system/resources/thumbnails/008/214/517/small_2x/abstract-geometric-logo-or-infinity-line-logo-for-your-company-free-vector.jpg"
+    }
+    alt={v.company_name}
+    className={`
+      max-h-full max-w-full object-contain
+      ${!v.image_url ? "" : ""}
+    `}
+  />
+</div>
   {/* 📋 MAIN INFO */}
   <div className="space-y-2 min-w-0">
 

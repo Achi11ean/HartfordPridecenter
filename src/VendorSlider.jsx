@@ -13,18 +13,46 @@ import {
 import { SiTiktok } from "react-icons/si";
 const API = "https://singspacebackend.onrender.com";
 const PRIDE_ID = 2; // 🔒 hard-coded (global Pride)
-
+const VENDOR_TYPES = [
+  "Merchandise",
+  "Arts and Crafts",
+  "Wellness or Beauty",
+  "Travel or Tourism Agency",
+  "Food and Beverage",
+  "Community Service or Nonprofit",
+  "Political or Activism",
+  "Clothing or Fashion",
+  "Jewelry or Accessories",
+  "Home Goods or Decor",
+  "Digital Products or Services",
+  "Photography or Videography",
+  "Music or Entertainment",
+  "Performing Arts (Theatre, Dance, Drag)",
+  "Health or Fitness",
+  "Spiritual or Holistic",
+  "Education or Workshops",
+  "Technology or IT Services",
+  "Business Services (Marketing, Finance, Legal)",
+  "Pet Services or Products",
+  "Local Small Business",
+  "Tattoo or Piercing",
+  "Handmade or Custom Goods",
+  "Vintage or Thrift",
+  "LGBTQIA+ Resources",
+  "Event Services (Planning, Rentals, Staffing)",
+  "Nonprofit Fundraising or Outreach",
+  "Other",
+];
 export default function VendorSlider() {
   const [vendors, setVendors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeVendor, setActiveVendor] = useState(null);
-const sliderRef = useRef(null);
-const containerRef = useRef(null); // 🔥 NEW
+  const [searchTerm, setSearchTerm] = useState("");
 const isLgbtqOwnedVendor = (vendor) =>
   (vendor.description || "").includes("LGBTQIA+ Owned");
-const [dragLimits, setDragLimits] = useState({ left: 0, right: 0 }); // 🔥 NEW
-const isSingleVendor = vendors.length === 1;
-
+const availableTypes = [
+  ...new Set(vendors.map(v => v.vendor_type).filter(Boolean))
+];
   useEffect(() => {
     const fetchVendors = async () => {
       try {
@@ -50,8 +78,57 @@ const isSingleVendor = vendors.length === 1;
     fetchVendors();
   }, []);
 
+const [selectedType, setSelectedType] = useState("all");
 
+const filteredVendors = vendors.filter((v) => {
+  const matchesType =
+    selectedType === "all" ||
+    v.vendor_type === selectedType;
 
+  const search = searchTerm.toLowerCase().trim();
+
+  const matchesSearch =
+    !search ||
+    v.company_name?.toLowerCase().includes(search) ||
+    v.vendor_type?.toLowerCase().includes(search) ||
+    v.description?.toLowerCase().includes(search);
+
+  return matchesType && matchesSearch;
+});
+const isSingleVendor = filteredVendors.length === 1
+const row1 = filteredVendors.filter((_, i) => i % 2 === 0);
+const row2 = filteredVendors.filter((_, i) => i % 2 === 1);
+const VendorRow = ({ items }) => (
+  <motion.div
+    className="flex gap-4 w-max mb-4"
+    drag="x"
+    dragConstraints={dragLimits}
+    dragElastic={0.05}
+    dragMomentum={false}
+  >
+    {items.map((v) => (
+      <motion.button
+        key={v.id}
+        whileHover={{ scale: 1.04, y: -4 }}
+        whileTap={{ scale: 0.98 }}
+        onClick={() => setActiveVendor(v)}
+        className="
+          group
+          overflow-hidden
+          flex flex-col
+          flex-shrink-0
+          w-[280px]
+          rounded-3xl
+          border border-white
+          bg-black
+          shadow-[0_10px_40px_rgba(0,0,0,0.65)]
+        "
+      >
+        {/* existing card content */}
+      </motion.button>
+    ))}
+  </motion.div>
+);
   const getWebsites = (v) => {
   if (v.websites?.length) return v.websites;
   if (v.website_url) return v.website_url.split(",").map(s => s.trim());
@@ -106,24 +183,6 @@ const getPlatform = (url) => {
 };
 
 
-
-useEffect(() => {
-  if (!sliderRef.current || !containerRef.current) return;
-
-  const sliderWidth = sliderRef.current.scrollWidth;
-  const containerWidth = containerRef.current.offsetWidth;
-
-  const maxDrag = sliderWidth - containerWidth;
-
-  setDragLimits({
-    left: -Math.max(0, maxDrag),
-    right: 0,
-  });
-}, [vendors]);
-
-
-
-
   if (loading) {
     return (
       <p className="text-center text-sm text-neutral-400">
@@ -142,192 +201,217 @@ useEffect(() => {
 
 
 
-
   return (
     <>
       {/* ================= SLIDER ================= */}
-<div ref={containerRef} className="relative w-full overflow-hidden">
-
-  {/* ⭐ LGBTQIA+ Notice */}
-  <div className="
-    text-left mb-2
-    text-xs sm:text-sm
-    text-yellow-200/80
-    flex  gap-2
-  ">
-    <span className="animate-bounce text-yellow-400">⭐</span>
-    <span>
-      Cards with a star in the top left are LGBTQIA+ owned 🌈
-    </span>
-  </div>
-
-  <motion.div
-  ref={sliderRef}
-  className={`flex gap-4 ${
-    isSingleVendor ? "justify-center cursor-default" : "cursor-grab active:cursor-grabbing"
-  }`}
-  drag={isSingleVendor ? false : "x"}
-dragConstraints={isSingleVendor ? undefined : dragLimits}
-dragElastic={0.05}
-dragMomentum={false}
-whileTap={isSingleVendor ? undefined : { scale: 0.98 }}
->
-
-   {vendors.map((v) => (
-  <motion.button
-    key={v.id}
-    whileHover={{
-      scale: 1.04,
-      y: -4,
-    }}
-    whileTap={{ scale: 0.98 }}
-    onClick={() => setActiveVendor(v)}
+<div className="relative w-full">
+<div className="mb-4">
+  <select
+    value={selectedType}
+    onChange={(e) => setSelectedType(e.target.value)}
     className="
-      group
-      relative
-      overflow-hidden
-
-      flex-shrink-0
-
-      w-[320px]
-      sm:w-[320px]
-
-      h-[200px]
-      sm:h-[220px]
-bg-white
-      rounded-3xl
-border border-white
-      shadow-[0_10px_40px_rgba(0,0,0,0.65)]
-
-      transition-all
-      duration-500
+      w-full sm:w-auto
+      px-4 py-2 rounded-xl
+      bg-black text-yellow-200
+      border border-yellow-400/40
+      font-bold
     "
   >
-
-    {/* BACKGROUND IMAGE */}
-    {v.image_url ? (
-      <img
-        src={v.image_url}
-        alt={v.company_name}
-        className="
-          absolute inset-0
-          w-full h-full
-          object-cover
-
-          transition-transform
-          duration-700
-
-          group-hover:scale-110
-        "
-      />
-    ) : (
-      <div
-        className="
-          absolute inset-0
-          bg-gradient-to-br
-          from-neutral-900
-          via-black
-          to-neutral-800
-        "
-      />
-    )}
-
-    {/* DARK OVERLAY */}
-    <div
-      className="
-        absolute inset-0
-
-        bg-gradient-to-t
-        from-black
-        via-black/40
-        to-black/10
-      "
-    />
-
-    {/* LGBTQ BADGE */}
-    {isLgbtqOwnedVendor(v) && (
-      <div
-        className="
-          absolute
-          top-3
-          left-3
-          z-20
-
-          h-6
-          w-6
-
-          rounded-full
-
-          bg-gradient-to-br
-          from-pink-500
-          via-yellow-400
-          to-cyan-400
-text-transparent bg-clip-text
-          flex items-center justify-center
-
-          text-black
-          text-md
-
-          shadow-[0_0_25px_rgba(255,255,255,0.45)]
-
-          border-2 border-white
-        "
-        title="LGBTQIA+ Owned"
-      >
-        ⭐️
-      </div>
-    )}
-
-    {/* VENDOR TYPE */}
-
-    {/* TITLE */}
-    <div
-      className="
-        absolute bottom-0 left-0 right-0
-        z-20
-
-        p-4 sm:p-5
-
-        flex items-end justify-end
-      "
-    >
-      <h3
-        className="
-          text-right
-
-          text-white
-          font-black
-
-          text-lg
-          sm:text-2xl
-
-          leading-tight
-
-          drop-shadow-[0_4px_20px_rgba(0,0,0,0.9)]
-
-          max-w-[85%]
-
-          group-hover:text-yellow-200
-
-          transition-all
-          duration-300
-        "
-      >
-        {v.company_name}
-      </h3>
-    </div>
-
-  </motion.button>
+    <option value="all">All Vendor Types</option>
+    {availableTypes.map((type) => (
+  <option key={type} value={type}>
+    {type}
+  </option>
 ))}
-        </motion.div>
+  </select>
+</div>
+<div className="mt-3">
+  <input
+    type="text"
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+placeholder="🔍 Search company, category, or keyword..."
+    className="
+      w-full
+      px-4 py-3
+      rounded-xl
+      bg-black
+      text-yellow-100
+      placeholder-yellow-300/50
+      border border-yellow-400/40
+      focus:outline-none
+      focus:border-yellow-300
+      focus:ring-2
+      focus:ring-yellow-400/30
+      transition-all
+    "
+  />
+</div>
+<div
+  className="
+    text-left mb-2 mt-4
+    text-xs sm:text-sm
+    text-yellow-200/80
+    flex gap-2
+  "
+>
+  <span className="animate-bounce text-yellow-400">⭐</span>
+  <span>
+    Cards with a star in the top left are LGBTQIA+ owned 🌈
+  </span>
+  
+</div>
+<p className="mt-2  mb-2 text-sm text-yellow-200/80">
+  Showing <span className="font-bold text-yellow-300">
+    {filteredVendors.length}
+  </span>{" "}
+  vendor{filteredVendors.length !== 1 ? "s" : ""}
+  {selectedType !== "all" && (
+    <>
+      {" "}in{" "}
+      <span className="font-bold text-yellow-300">
+        {selectedType}
+      </span>
+    </>
+  )}
+</p>
+{filteredVendors.length === 0 && (
+  <div
+    className="
+      text-center
+      py-8
+      text-yellow-200/70
+      italic
+      border border-yellow-400/20
+      rounded-2xl
+      bg-black/30
+      mb-4
+    "
+  >
+    🔍 No vendors match your search.
+  </div>
+)}
 
+
+
+
+<div className="space-y-4">{[row1, row2]
+  .filter((row) => row.length > 0)
+  .map((row, rowIndex) => (
+<div
+  key={rowIndex}
+ className={`
+  flex gap-3
+  overflow-x-auto
+  no-scrollbar
+  pb-2
+  
+  scroll-smooth
+  overscroll-x-contain
+    ${
+      isSingleVendor
+        ? "justify-center"
+        : ""
+    }
+  `}
+>
+      {row.map((v) => (
+    <motion.button
+  key={v.id}
+  onClick={() => setActiveVendor(v)}
+  whileHover={{ scale: 1.04, y: -4 }}
+  whileTap={{ scale: 0.98 }}  className="
+    snap-start
+    group
+    overflow-hidden
+    flex flex-col
+    flex-shrink-0
+    w-[280px]
+    rounded-lg
+    border border-white
+    bg-black
+    shadow-[0_10px_40px_rgba(0,0,0,0.65)]
+    transition-all
+    duration-500
+  "
+>
+          {/* BACKGROUND IMAGE */}
+          <div className="relative h-[180px] overflow-hidden">
+            {v.image_url ? (
+              <img
+                src={v.image_url}
+                alt={v.company_name}
+                className="
+                  w-full h-full
+                  object-cover
+                  transition-transform
+                  duration-700
+                  group-hover:scale-110
+                "
+              />
+            ) : (
+              <div
+                className="
+                  w-full h-full
+                  bg-gradient-to-br
+                  from-neutral-900
+                  via-black
+                  to-neutral-800
+                "
+              />
+            )}
+
+            {isLgbtqOwnedVendor(v) && (
+              <div
+                className="
+                  absolute top-3 left-3 z-20
+                  h-6 w-6 rounded-full
+                  border-2 border-white
+                  bg-white
+                  flex items-center justify-center
+                "
+              >
+                ⭐️
+              </div>
+            )}
+          </div>
+
+          {/* DARK OVERLAY */}
+          <div className="p-2 text-center bg-black">
+<h3
+  className={`
+    text-white
+    font-black
+    font-serif
+    leading-tight
+    group-hover:text-yellow-200
+    transition-color border-b
+    ${
+      (v.company_name?.length || 0) > 10
+        ? "text-sm sm:text-lg"
+        : "text-lg sm:text-xl"
+    }
+  `}
+>
+  {v.company_name}
+</h3>
+            {v.vendor_type && (
+              <p className="mt-1 italic  text-xs text-yellow-300">
+                {v.vendor_type}
+              </p>
+            )}
+          </div>
+        </motion.button>
+      ))}
+</div>  ))}
+</div>
   {!isSingleVendor && (
   <div className="mt-2 text-center text-[18px] text-white">
     ← swipe to see more →
   </div>
 )}
-
-                {/* <div className="text-center mt-4 shadow-xl">
+{/* 
+                <div className="text-center mt-4 shadow-xl">
                   <h2 className="text-3xl font-bold text-yellow-300 mb-1 border-b">
                     Become a Vendor
                   </h2>
@@ -395,7 +479,7 @@ text-transparent bg-clip-text
               </div>
 
               {/* NAME */}
-              <h2 className="text-3xl font-black text-center mb-1">
+              <h2 className="text-3xl font-black  text-center mb-1">
                 {activeVendor.company_name}
               </h2>
 
