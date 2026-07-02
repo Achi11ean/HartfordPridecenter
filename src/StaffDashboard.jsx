@@ -10,7 +10,8 @@ import CreateVendor from "./CreateVendor";
 import ManageVendors from "./ManageVendors";
 import ManageContacts from "./ManageContacts";
 import AdminMessaging from "./AdminMessaging";
-
+import Contacts from "./ManageContacts";
+import ManageSubscribers from "./ManageSubscribers"; // Import ManageSubscribers
 export default function StaffDashboard() {
   const navigate = useNavigate();
 const [vendorsSubTab, setVendorsSubTab] = useState("add");
@@ -69,6 +70,7 @@ const [vendorsSubTab, setVendorsSubTab] = useState("add");
           ["dashboard", "Dashboard"],
           ["sponsors", "Sponsors"],
           ["volunteers", "Volunteers"],
+          ["subscribers", "Subscribers"],
           ["vendors", "Vendors"],
           ["contacts", "Contacts"],
           ["messaging", "Messaging"],
@@ -103,6 +105,9 @@ const [vendorsSubTab, setVendorsSubTab] = useState("add");
 
         {/* VOLUNTEERS */}
         {activeTab === "volunteers" && <Volunteers />}
+
+
+        {activeTab === "subscribers" && <ManageSubscribers />}
 
         {/* VENDORS */}
         {activeTab === "vendors" && (
@@ -170,6 +175,8 @@ const [vendorsSubTab, setVendorsSubTab] = useState("add");
           </div>
         )}
 
+        {/* CONTACTS */}
+        {activeTab === "contacts" && <Contacts />}
       </div>
     </div>
   </div>
