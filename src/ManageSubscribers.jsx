@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
-
+import EmailSubscriber from "./EmailSubscribe";
 export default function ManageSubscribers() {
   const [subs, setSubs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -86,15 +86,8 @@ useEffect(() => {
   return (
     <div className="mt-10 max-w-6xl mx-auto text-white">
       {/* Title */}
-      <motion.h1
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="text-3xl font-extrabold text-yellow-300 mb-6"
-      >
-        Email Subscribers 📧
-      </motion.h1>
 
+<EmailSubscriber/>
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3 items-center justify-between mb-6">
         <input

@@ -231,6 +231,7 @@ export const EVENT_TYPE_IMAGE_MAP = {
   fireworks: [
     "https://cdn.britannica.com/82/203482-050-E2ABDA79/People-fireworks.jpg",
     "https://news.northeastern.edu/wp-content/uploads/2017/07/Fireworks_1400.jpg?w=1024",
+    "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdWxocmVodXZ1bGExODZyMXZoMDhjcHhlcW5iOWh2ejhlOHlpM2hneiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/13n4Hd98ewKJsQ/giphy.gif"
   ],
   halloween: [
     "https://media.istockphoto.com/id/603271570/photo/couple-dancing-at-the-party.jpg?s=612x612&w=0&k=20&c=3UiceEfj73QYNBgu6s7OP0FNtFJ9oyrtWtDDYQ-PDCc=",
