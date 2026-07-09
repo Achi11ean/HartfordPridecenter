@@ -21,6 +21,8 @@ import Resources from "./Resources";
 import SponsorInvitationPage from "./SponsorInvitationPage";
 import PrideServicePage from "./PrideServicePage";
 import FundersPage from "./FundersPage";
+import SponsorInvitation from "./SponsorInvitation";
+import Donations from "./Donations";
 function App() {
   return (
     <Router>
@@ -31,12 +33,14 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/services" element={<Services />} />
         <Route path="/ourteam" element={<OurTeam />} />
+        <Route path="/donations" element={<Donations/>}/>
         <Route path="/contact" element={<ContactPageTemplate />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/volunteer" element={<Volunteer />} />
         <Route path="/donate" element={<Donate />} />
         <Route path="/events" element={<Events />} />
         <Route path="/pride" element={<HartfordCityPride />} />
+        <Route path="/support" element={<SponsorInvitation/>}/>
                 <Route path="/donate" element={<Donate />} />
         <Route path="/admin-signup" element={<AdminSignup />} />
         <Route path="/login" element={<Login />} />

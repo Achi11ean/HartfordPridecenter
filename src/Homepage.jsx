@@ -194,7 +194,7 @@ export default function HomePage() {
         {[
           { label: "About Us", to: "/about" },
           { label: "Resources", to: "/resources" },
-          { label: "Donate", href: "https://givebutter.com/lgbtqadvocacy" },
+          { label: "Donate", href: "/support" },
           { label: "Sponsors", to: "/sponsors" },
         ].map((btn, i) =>
           btn.href ? (
