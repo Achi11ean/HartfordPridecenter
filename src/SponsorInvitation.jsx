@@ -249,6 +249,7 @@ function SpectrumRule({ className = "" }) {
 export default function SponsorInvitation() {
   const [activeFund, setActiveFund] = useState(null);
   const closeButtonRef = useRef(null);
+  const year = new Date().getFullYear();
 
   const closeModal = () => setActiveFund(null);
 
@@ -518,142 +519,117 @@ export default function SponsorInvitation() {
       {/* ============================================================ */}
       {/*  FOOTER — same ink, same surfaces, same type, spectrum rule  */}
       {/* ============================================================ */}
-      <footer style={{ background: SURFACE }}>
-        <SpectrumRule />
-
-        <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
-          {/* Brand */}
-          <div className="mb-10 max-w-md sm:mb-12">
-            <p
-              className="mb-2 text-2xl font-extrabold tracking-tight"
-              style={{ fontFamily: FONT_DISPLAY }}
-            >
-              Karaoverse
-            </p>
-            <p
-              className="mb-3 text-xs font-semibold uppercase tracking-[0.18em]"
-              style={{ color: MUTED }}
-            >
-              The Entertainment Empire
-            </p>
-            <p className="text-sm leading-relaxed" style={{ color: MUTED }}>
-              Connecting singers, DJs, venues, and artists across the United
-              States. Say NoMo to FoMo with Karaoverse!
-            </p>
-          </div>
-
-          {/* Nav columns — 2-up on phones, 4-up on desktop */}
-          <nav
-            className="grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-4"
-            aria-label="Footer"
-          >
-            {FOOTER_NAV.map((col) => (
-              <div key={col.heading} style={{ "--hue": col.hue }}>
-                <h4
-                  className="mb-3.5 flex items-center gap-2 text-sm font-bold tracking-tight"
-                  style={{ fontFamily: FONT_DISPLAY }}
-                >
-                  <span
-                    className="h-2 w-2 rounded-full"
-                    style={{ background: col.hue }}
-                    aria-hidden="true"
-                  />
-                  {col.heading}
-                </h4>
-                <ul className="space-y-0.5">
-                  {col.links.map((link) => (
-                    <li key={link.to}>
-                      <Link
-                        to={link.to}
-                        className={`cd-foot-link -mx-2 block rounded-lg px-2 py-2 text-sm no-underline transition-colors sm:py-1.5 ${FOCUS}`}
-                      >
-                        {link.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </nav>
-
-          {/* Contact + social */}
-          <div
-            className="mt-12 flex flex-col items-center gap-5 rounded-2xl border p-6 text-center sm:flex-row sm:justify-between sm:text-left"
-            style={{ background: SURFACE_2, borderColor: LINE }}
-          >
-            <div>
-              <h4
-                className="mb-1 text-base font-bold"
-                style={{ fontFamily: FONT_DISPLAY }}
-              >
-                Get in touch
-              </h4>
-              <p className="text-sm" style={{ color: MUTED }}>
-                United States ·{" "}
-                <a
-                  href="mailto:karaoverse@gmail.com"
-                  className={`font-semibold underline underline-offset-2 ${FOCUS}`}
-                  style={{ color: TEXT }}
-                >
-                  karaoverse@gmail.com
-                </a>
-              </p>
+       <footer className="relative  overflow-hidden border-t border-pink-200">
+    
+      {/* FESTIVAL PRIDE BACKGROUND */}
+      <div className="absolute inset-0 bg-gradient-to-br from-pink-100 via-yellow-50 to-cyan-100" />
+      <div className="absolute -top-16 -left-10 w-60 h-60 bg-pink-300/30 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-72 h-72 bg-cyan-300/30 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-10 right-[30%] w-60 h-60 bg-yellow-300/20 rounded-full blur-3xl pointer-events-none" />
+    
+    
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-16">
+    
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+    
+          {/* ORG */}
+          <div>
+            <div className="inline-block px-5 py-2 rounded-full bg-white shadow-lg text-pink-500 font-black uppercase tracking-[0.25em] text-xs sm:text-sm">
+              Hartford Pride Center 🌈
             </div>
-
-            <div className="flex items-center gap-2.5">
+    
+            <h3 className="mt-5 text-3xl sm:text-4xl font-black leading-tight text-gray-900">
+              Celebrating Community,
+              <span className="block text-pink-500">Connection & Advocacy.</span>
+            </h3>
+    
+            <p className="mt-4 text-gray-600 font-semibold leading-relaxed">
+              Year-round visibility, resources, volunteerism, wellness, advocacy,
+              sponsorship, support services, and joyful LGBTQIA+ community building
+              across Hartford and beyond.
+            </p>
+    
+            <div className="mt-6 inline-block px-5 py-3 rounded-2xl bg-white shadow-lg font-black text-pink-500 rotate-[-2deg]">
+              🌈 Everyone Is Welcome Here
+            </div>
+          </div>
+    
+          {/* LINKS */}
+          <div>
+            <h4 className="text-2xl font-black text-gray-900">Explore More</h4>
+    
+            <div className="mt-5 grid grid-cols-2 gap-3">
+              <Link to="/about" className="rounded-xl bg-white px-4 py-3 shadow-lg font-black text-pink-500 hover:scale-105 transition text-center">About</Link>
+              <Link to="/services" className="rounded-xl bg-white px-4 py-3 shadow-lg font-black text-yellow-500 hover:scale-105 transition text-center">Services</Link>
+              <Link to="/events" className="rounded-xl bg-white px-4 py-3 shadow-lg font-black text-cyan-500 hover:scale-105 transition text-center">Events</Link>
+              <Link to="/volunteer" className="rounded-xl bg-white px-4 py-3 shadow-lg font-black text-purple-500 hover:scale-105 transition text-center">Volunteer</Link>
+              <Link to="/resources" className="rounded-xl bg-white px-4 py-3 shadow-lg font-black text-pink-500 hover:scale-105 transition text-center">Resources</Link>
+              <Link to="/contact" className="rounded-xl bg-white px-4 py-3 shadow-lg font-black text-cyan-500 hover:scale-105 transition text-center">Contact</Link>
+              <Link to="/support" className="rounded-xl bg-white px-4 py-3 shadow-lg font-black text-cyan-500 hover:scale-105 transition text-center">Donate</Link>
+    
+              <Link to="/sponsors" className="rounded-xl bg-white px-4 py-3 shadow-lg font-black text-purple-500 hover:scale-105 transition text-center">Sponsors</Link>
+            </div>
+          </div>
+    
+          {/* CONTACT */}
+          <div>
+            <h4 className="text-2xl font-black text-gray-900">Stay Connected</h4>
+    
+            <p className="mt-5 text-gray-700 font-bold">
+              Questions, support requests, sponsorships, partnerships, or volunteer inquiries?
+            </p>
+    
+            <p className="mt-4 text-gray-700 font-black">
+              📧{" "}
               <a
-                href="https://www.instagram.com/thekaraoverse/"
+                href="mailto:david@hartfordpridecenter.org"
+                className="underline hover:text-pink-500"
+              >
+                david@hartfordpridecenter.org
+              </a>
+            </p>
+    
+            <p className="mt-3 text-gray-700 font-black">
+              📍 Hartford, Connecticut
+            </p>
+    
+            <div className="mt-6 flex items-center gap-4">
+              <a
+                href="https://www.instagram.com/hartfordpride/"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Instagram"
-                className={`cd-social inline-flex h-11 w-11 items-center justify-center rounded-xl border transition-colors ${FOCUS}`}
-                style={{ borderColor: LINE, color: MUTED }}
+                className="w-12 h-12 rounded-full bg-pink-500 text-white flex items-center justify-center shadow-xl hover:scale-110 transition"
               >
                 <FaInstagram className="text-xl" />
               </a>
+    
               <a
-                href="https://www.facebook.com/groups/549718571500039"
+                href="https://www.facebook.com/HartfordPrideCenter"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Facebook"
-                className={`cd-social inline-flex h-11 w-11 items-center justify-center rounded-xl border transition-colors ${FOCUS}`}
-                style={{ borderColor: LINE, color: MUTED }}
+                className="w-12 h-12 rounded-full bg-cyan-400 text-white flex items-center justify-center shadow-xl hover:scale-110 transition"
               >
                 <FaFacebook className="text-xl" />
               </a>
+    
               <a
-                href="mailto:karaoverse@gmail.com"
-                aria-label="Email"
-                className={`cd-social inline-flex h-11 w-11 items-center justify-center rounded-xl border transition-colors ${FOCUS}`}
-                style={{ borderColor: LINE, color: MUTED }}
+                href="mailto:david@hartfordpridecenter.org"
+                className="w-12 h-12 rounded-full bg-yellow-400 text-white flex items-center justify-center shadow-xl hover:scale-110 transition"
               >
                 <FaEnvelope className="text-xl" />
               </a>
-              <button
-                type="button"
-                onClick={handleShare}
-                aria-label="Share"
-                className={`cd-social inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border bg-transparent transition-colors ${FOCUS}`}
-                style={{ borderColor: LINE, color: MUTED }}
-              >
-                <FaPaperPlane className="text-xl" />
-              </button>
             </div>
           </div>
         </div>
-
-        {/* Bottom bar */}
-        <SpectrumRule className="opacity-40" />
-        <div
-          className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-4 py-5 text-xs sm:flex-row sm:px-6"
-          style={{ color: MUTED }}
-        >
-          <p>© {new Date().getFullYear()} Karaoverse · The Entertainment Empire</p>
-          <Link to="/privacy" className={`cd-foot-link rounded px-1 py-1 ${FOCUS}`} style={{ "--hue": SPECTRUM[4] }}>
-            Privacy Policy
-          </Link>
+    
+        {/* BOTTOM */}
+        <div className="mt-14 border-t border-pink-200 pt-8 text-center">
+          <div className="text-sm text-gray-500 font-bold">
+            © {year} Hartford Pride Center — Built for advocacy, inclusion, and community joy.
+          </div>
         </div>
-      </footer>
+      </div>
+    </footer>
     </div>
   );
 }
