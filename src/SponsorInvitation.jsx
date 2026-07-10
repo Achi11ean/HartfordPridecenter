@@ -1,668 +1,659 @@
-import React from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { FaPaperPlane } from "react-icons/fa";
-import { FaInstagram, FaFacebook, FaEnvelope } from "react-icons/fa";
-import { FaHandshake, FaStar, FaHeart } from "react-icons/fa";
-const SPONSOR_TIERS = [
-  "Customized Tier",
-  "Community Supporter",
-  "Bronze Sponsor",
-  "Silver Sponsor",
-  "Gold Sponsor",
-  "Platinum Sponsor",
+import { FaPaperPlane, FaInstagram, FaFacebook, FaEnvelope } from "react-icons/fa";
+import React, { useEffect, useRef, useState } from "react";
+import { Heart, X, ArrowUpRight, Clock } from "lucide-react";
+import PrideHero from "./PrideHero";
+
+const SHARED_ONE_TIME_LINK = "https://buy.stripe.com/7sY8wQedb5iTgfMepGcIE06";
+
+const MONTHLY_AMOUNTS = [10, 20, 50];
+
+const FUNDS = [
+  {
+    id: "medication",
+    name: "Medication Assistance",
+    emoji: "💊",
+    hue: "#FF6B6B",
+    blurb:
+      "Help community members afford life-sustaining medications and prescription costs.",
+    oneTime: null, // falls back to SHARED_ONE_TIME_LINK
+    monthly: {
+      10: "https://buy.stripe.com/dRm8wQfhf4eP6Fc6XecIE09",
+      20: null,
+      50: null,
+    },
+  },
+  {
+    id: "programming",
+    name: "Community Programming",
+    emoji: "🤝",
+    hue: "#FFA94D",
+    blurb:
+      "Fund workshops, support groups, education, and events that bring our community together.",
+    oneTime: null,
+    monthly: { 10: null, 20: null, 50: null },
+  },
+  {
+    id: "general",
+    name: "General Support",
+    emoji: "🏳️‍🌈",
+    hue: "#FFD43B",
+    blurb:
+      "Keep the lights on and the doors open — your gift goes wherever the need is greatest.",
+    oneTime: SHARED_ONE_TIME_LINK,
+    monthly: { 10: null, 20: null, 50: null },
+  },
+  {
+    id: "pantry",
+    name: "Food Pantry",
+    emoji: "🥫",
+    hue: "#69DB7C",
+    blurb:
+      "Stock our pantry so no one has to choose between food and other essentials.",
+    oneTime: null,
+    monthly: { 10: null, 20: null, 50: null },
+  },
+  {
+    id: "transcare",
+    name: "TransCare Support System",
+    emoji: "🏳️‍⚧️",
+    hue: "#74C0FC",
+    blurb:
+      "Support gender-affirming care resources, navigation help, and community for trans folks.",
+    oneTime: null,
+    monthly: { 10: null, 20: null, 50: null },
+  },
+  {
+    id: "housing",
+    name: "Housing & Safety Resources",
+    emoji: "🏠",
+    hue: "#B197FC",
+    blurb:
+      "Provide emergency housing assistance and safety resources for LGBTQIA+ people in crisis.",
+    oneTime: null,
+    monthly: { 10: null, 20: null, 50: null },
+  },
 ];
-const ONE_TIME_LINK = "https://buy.stripe.com/7sY8wQedb5iTgfMepGcIE06";
 
-const MONTHLY_LINKS = {
-  " Supporter": "https://buy.stripe.com/00w5kw18feiS8gWgFacwg01",
-  "Bronze Sponsor": "https://buy.stripe.com/14A3co7wD7Uu9l09cIcwg06",
-    "Community Program Sponsor": "https://buy.stripe.com/14A3co7wD7Uu9l09cIcwg06",
+/* Where to send people who want an amount that isn't set up yet */
+const CONTACT_URL = "/contact";
 
-  "Sponsor Medication": "https://buy.stripe.com/dRm8wQfhf4eP6Fc6XecIE09",
-  "Friend of Hartford Pride Center": "https://buy.stripe.com/dRm14o8SRcLlaVsa9qcIE0a",
-  "Platinum Sponsor": "https://buy.stripe.com/aFa8wQ7ON5iT7Jg3L2cIE0b",
-  "Customized Tier": "#"
-};
+/* ================================================================== */
+/*  THEME — one system for the whole page                             */
+/*                                                                    */
+/*  Everything (donations + footer) now draws from the same tokens:   */
+/*  ink background, two surface levels, one hairline, one display     */
+/*  face — and the fund hues doing all the color work as a shared     */
+/*  "pride spectrum" that threads the page together.                  */
+/* ================================================================== */
+
+const INK = "#0d0a1a";
+const SURFACE = "#171226";
+const SURFACE_2 = "#1f1833";
+const LINE = "rgba(255, 255, 255, 0.09)";
+const TEXT = "#f5f2fa";
+const MUTED = "rgba(238, 233, 248, 0.64)";
+
+const FONT_BODY = "'Inter', system-ui, -apple-system, sans-serif";
+const FONT_DISPLAY = "'Bricolage Grotesque', 'Inter', sans-serif";
+
+/* The pride spectrum — derived from the fund hues so the divider in
+   the donations header, the footer's top rule, and the column accents
+   are all literally the same palette. */
+const SPECTRUM = FUNDS.map((f) => f.hue);
+const SPECTRUM_GRADIENT = `linear-gradient(90deg, ${SPECTRUM.join(", ")})`;
+
+/* Footer nav data — same rendering path for every column keeps the
+   markup small and the mobile layout predictable. Each column borrows
+   a hue from the spectrum. */
+const FOOTER_NAV = [
+  {
+    heading: "Explore",
+    hue: SPECTRUM[0],
+    links: [
+      { to: "/artists", label: "Artists" },
+      { to: "/hosts", label: "Hosts" },
+      { to: "/venues", label: "Venues" },
+      { to: "/events", label: "Events" },
+    ],
+  },
+  {
+    heading: "Creators",
+    hue: SPECTRUM[1],
+    links: [
+      { to: "/artist-tips", label: "Artist Guide" },
+      { to: "/host-tips", label: "DJ Guide" },
+      { to: "/venue-tips", label: "Venue Guide" },
+      { to: "/school-of-karaoke", label: "School of Karaoke" },
+    ],
+  },
+  {
+    heading: "Connect",
+    hue: SPECTRUM[3],
+    links: [
+      { to: "/job-postings", label: "Jobs" },
+      { to: "/From-drags-2-riches", label: "Marketplace" },
+      { to: "/bandmixer", label: "Band Mixer" },
+      { to: "/supersinger", label: "Singers" },
+      { to: "/supergamers", label: "Gamers" },
+      { to: "/karao-match", label: "KaraoMatch" },
+    ],
+  },
+  {
+    heading: "Platform",
+    hue: SPECTRUM[5],
+    links: [
+      { to: "/about", label: "About" },
+      { to: "/newsletters", label: "Newsletters" },
+      { to: "/partners", label: "Partners" },
+      { to: "/pridefestivals", label: "Pride Festivals" },
+      { to: "/volunteer", label: "Volunteers" },
+      { to: "/updates", label: "Updates" },
+      { to: "/contact", label: "Contact" },
+      { to: "/donations", label: "Donations" },
+      { to: "/feedback", label: "Feedback" },
+    ],
+  },
+];
+
+/*  The few things Tailwind can't express here: the Google Fonts
+    import, entrance keyframes, and hover states that mix the
+    runtime --hue color. Everything else lives in the markup.  */
+const hueStyles = `
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap');
+
+.cd-hue-chip {
+  background: color-mix(in srgb, var(--hue) 14%, transparent);
+  border-color: color-mix(in srgb, var(--hue) 26%, transparent);
+}
+.cd-hue-card:hover {
+  border-color: color-mix(in srgb, var(--hue) 45%, transparent);
+  box-shadow: 0 14px 34px -14px color-mix(in srgb, var(--hue) 35%, transparent);
+}
+.cd-hue-btn {
+  background: color-mix(in srgb, var(--hue) 20%, transparent);
+  border-color: color-mix(in srgb, var(--hue) 45%, transparent);
+}
+.cd-hue-btn:hover {
+  background: color-mix(in srgb, var(--hue) 32%, transparent);
+  border-color: color-mix(in srgb, var(--hue) 70%, transparent);
+}
+.cd-ghost-btn:hover {
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: ${TEXT} !important;
+}
+.cd-close-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: ${TEXT} !important;
+}
+.cd-hue-amount {
+  background: color-mix(in srgb, var(--hue) 8%, transparent);
+  border-color: color-mix(in srgb, var(--hue) 30%, transparent);
+}
+a.cd-hue-amount:hover {
+  background: color-mix(in srgb, var(--hue) 20%, transparent);
+  border-color: color-mix(in srgb, var(--hue) 60%, transparent);
+  transform: translateY(-2px);
+}
+
+/* Footer links pick up their column's hue on hover/focus */
+.cd-foot-link {
+  color: ${MUTED};
+}
+.cd-foot-link:hover,
+.cd-foot-link:focus-visible {
+  color: color-mix(in srgb, var(--hue) 75%, ${TEXT});
+}
+
+/* Social buttons share the chip treatment used on the fund cards */
+.cd-social:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: ${TEXT};
+}
+
+@keyframes cd-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes cd-rise {
+  from { opacity: 0; transform: translateY(14px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.cd-anim-fade { animation: cd-fade 0.2s ease; }
+.cd-anim-rise { animation: cd-rise 0.24s ease; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cd-anim-fade, .cd-anim-rise { animation: none; }
+  a.cd-hue-amount:hover { transform: none; }
+}
+`;
+
+/* Shared focus ring for every interactive element */
+const FOCUS =
+  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
+
+/* A 1px pride-spectrum rule — the visual thread that ties the
+   donations header, the footer, and the bottom bar together. */
+function SpectrumRule({ className = "" }) {
+  return (
+    <div
+      className={`h-px w-full ${className}`}
+      style={{ background: SPECTRUM_GRADIENT, opacity: 0.7 }}
+      aria-hidden="true"
+    />
+  );
+}
+
+/* ================================================================== */
+/*  COMPONENT                                                         */
+/* ================================================================== */
 
 export default function SponsorInvitation() {
-const handleShare = async () => {
-  const shareUrl =
-    "https://share.karaoverse.com/og/support";
+  const [activeFund, setActiveFund] = useState(null);
+  const closeButtonRef = useRef(null);
 
-  if (navigator.share) {
-    try {
-      await navigator.share({
-        title: "Support Karaoverse",
-        text:
-          "Help empower artists, venues, hosts, Pride organizations, and communities by supporting Karaoverse's mission to build the future of live entertainment!",
-        url: shareUrl,
-      });
-    } catch (err) {
-      console.log("Share cancelled");
+  const closeModal = () => setActiveFund(null);
+
+  /* Close on Escape + lock body scroll while the modal is open */
+  useEffect(() => {
+    if (!activeFund) return;
+    const onKey = (e) => e.key === "Escape" && closeModal();
+    document.addEventListener("keydown", onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    closeButtonRef.current?.focus();
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [activeFund]);
+
+  const handleShare = async () => {
+    const shareUrl = "https://share.karaoverse.com/og/support";
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "Support Karaoverse",
+          text: "Help empower artists, venues, hosts, Pride organizations, and communities by supporting Karaoverse's mission to build the future of live entertainment!",
+          url: shareUrl,
+        });
+      } catch (err) {
+        console.log("Share cancelled");
+      }
+    } else {
+      navigator.clipboard.writeText(shareUrl);
+      alert("Share link copied!");
     }
-  } else {
-    navigator.clipboard.writeText(shareUrl);
-
-    alert("Share link copied!");
-  }
-};
-  const tierDetails = {
-    "Community Supporter": {
-      monthly: "$10 / month",
-      oneTime: "$100",
-      perks: [
-        "Name listed on sponsor page",
-        "Community appreciation badge",
-        "Support local artists & venues"
-      ]
-    },
-
-    "Bronze Sponsor": {
-      monthly: "$20 / month",
-      oneTime: "$250",
-      perks: [
-        "Logo displayed on sponsor page",
-        "Sponsor listing on Karaoverse website",
-        "Recognition on Quarterly Sponsor announcements"
-      ]
-    },
-
-    "Silver Sponsor": {
-      monthly: "$50 / month",
-      oneTime: "$500",
-      perks: [
-        "Enhanced logo placement",
-        "Clickable website link",
-        "Promotion at Karaoverse Events (small)"
-      ]
-    },
-
-    "Gold Sponsor": {
-      monthly: "$100 / month",
-      oneTime: "$1,000",
-      perks: [
-        "Featured sponsor placement",
-        "Priority visibility on sponsor displays",
-        "Promotion at Karaoverse Events (Medium)"
-      ]
-    },
-
-    "Platinum Sponsor": {
-      monthly: "$250 / month",
-      oneTime: "$2,500",
-      perks: [
-        "Premium sponsor placement",
-        "Top-level brand exposure and recognition at board of innovation meetings",
-        "Promotions at Karaoverse Events (Large) "
-      ]
-    },
-
-    "Customized Tier": {
-      monthly: "Custom",
-      oneTime: "Custom",
-      perks: [
-        "Tailored sponsorship packages",
-        "Event partnerships",
-        "Custom marketing campaigns"
-      ]
-    },
-
-  
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-slate-900 to-black text-white">
+    <div
+      className="min-h-screen"
+      style={{ background: INK, color: TEXT, fontFamily: FONT_BODY }}
+    >
+      <style>{hueStyles}</style>
 
       {/* HERO */}
+      <PrideHero />
 
-      <section className="text-center pt-24 ">
-
-<section className="relative overflow-hidden border-b pt-24 pb-20">
-
-  {/* Background */}
-  <div className="absolute inset-0 bg-gradient-to-br from-fuchsia-950 via-purple-950 to-slate-950" />
-
-  {/* Rainbow Aurora */}
-  <div className="absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_top_left,rgba(239,68,68,.25),transparent_28%),radial-gradient(circle_at_top_right,rgba(249,115,22,.22),transparent_30%),radial-gradient(circle_at_center,rgba(250,204,21,.18),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(34,197,94,.18),transparent_32%),radial-gradient(circle_at_bottom_right,rgba(59,130,246,.22),transparent_30%),radial-gradient(circle_at_center_right,rgba(168,85,247,.22),transparent_35%)]" />
-
-  <div className="relative max-w-7xl mx-auto px-6">
-
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: .7 }}
-      className="grid items-center gap-16 lg:grid-cols-[1.1fr_.9fr]"
-    >
-
-      {/* LEFT */}
-      <div>
-
-        <div className="inline-flex items-center gap-3 rounded-full border border-pink-400/30 bg-white/10 backdrop-blur-xl px-5 py-2 text-xs font-black uppercase tracking-[.35em] text-pink-200">
-          🏳️‍🌈 Hartford Pride Center
-        </div>
-
-        <h1 className="mt-6 text-5xl sm:text-7xl font-black leading-none">
-
-          <span className="bg-gradient-to-r from-red-300 via-yellow-200 via-green-300 via-cyan-300 to-purple-300 bg-clip-text text-transparent">
-            Building
-          </span>
-
-          <br />
-
-          <span className="text-white">
-            Community Together
-          </span>
-
-        </h1>
-
-        <p className="mt-8 max-w-2xl text-lg sm:text-2xl leading-relaxed text-white/80">
-
-          A welcoming place where LGBTQIA+ people, families, allies,
-          and communities can connect, celebrate, find support,
-          discover resources, and create a future where everyone
-          belongs exactly as they are.
-
-        </p>
-
-        <div className="mt-10 grid gap-4 sm:grid-cols-3">
-
-          <div className="rounded-3xl border border-pink-400/20 bg-white/5 backdrop-blur-xl p-5">
-
-            <div className="text-4xl mb-3">
-              🌈
-            </div>
-
-            <h3 className="font-bold text-white">
-              Celebrate Pride
-            </h3>
-
-            <p className="text-sm text-white/70 mt-2">
-              Join events, festivals, community gatherings,
-              and moments that bring us together.
-            </p>
-
+      {/* ============================================================ */}
+      {/*  DONATIONS                                                   */}
+      {/* ============================================================ */}
+      <section className="mx-auto max-w-6xl px-4 pb-16 pt-6 sm:px-6 sm:pb-24 sm:pt-10">
+        {/* ---------- Header ---------- */}
+        <header className="mx-auto mb-10 max-w-xl text-center sm:mb-14">
+          <h2
+            className="mb-4 text-3xl font-extrabold leading-tight tracking-tight sm:mb-5 sm:text-5xl"
+            style={{ fontFamily: FONT_DISPLAY }}
+          >
+            Give where it matters most
+          </h2>
+          <div
+            className="mx-auto mb-4 flex h-1 w-32 overflow-hidden rounded-full sm:mb-5"
+            aria-hidden="true"
+          >
+            {FUNDS.map((f) => (
+              <span key={f.id} className="flex-1" style={{ background: f.hue }} />
+            ))}
           </div>
+          <p className="text-sm leading-relaxed sm:text-base" style={{ color: MUTED }}>
+            Choose the fund your support goes to. Give once, or set up a
+            monthly gift to keep these programs running all year.
+          </p>
+        </header>
 
-          <div className="rounded-3xl border border-cyan-400/20 bg-white/5 backdrop-blur-xl p-5">
-
-            <div className="text-4xl mb-3">
-              ❤️
-            </div>
-
-            <h3 className="font-bold text-white">
-              Find Support
-            </h3>
-
-            <p className="text-sm text-white/70 mt-2">
-              Access resources, programs,
-              advocacy, education, and
-              community connections.
-            </p>
-
-          </div>
-
-          <div className="rounded-3xl border border-yellow-400/20 bg-white/5 backdrop-blur-xl p-5">
-
-            <div className="text-4xl mb-3">
-              ✨
-            </div>
-
-            <h3 className="font-bold text-white">
-              Be Yourself
-            </h3>
-
-            <p className="text-sm text-white/70 mt-2">
-              Every identity is celebrated.
-              Every story matters.
-              Every voice belongs.
-            </p>
-
-          </div>
-
-        </div>
-
-        <div className="mt-10 flex flex-wrap gap-3">
-
-          <span className="rounded-full bg-red-500/20 px-4 py-2 text-sm font-semibold text-red-200">
-            🏳️‍⚧️ Trans Inclusive
-          </span>
-
-          <span className="rounded-full bg-orange-500/20 px-4 py-2 text-sm font-semibold text-orange-200">
-            🤝 Community Programs
-          </span>
-
-          <span className="rounded-full bg-yellow-500/20 px-4 py-2 text-sm font-semibold text-yellow-100">
-            💛 Advocacy
-          </span>
-
-          <span className="rounded-full bg-green-500/20 px-4 py-2 text-sm font-semibold text-green-200">
-            🌿 Wellness
-          </span>
-
-          <span className="rounded-full bg-cyan-500/20 px-4 py-2 text-sm font-semibold text-cyan-200">
-            🎉 Events
-          </span>
-
-          <span className="rounded-full bg-purple-500/20 px-4 py-2 text-sm font-semibold text-purple-200">
-            💜 Everyone Welcome
-          </span>
-
-        </div>
-
-      </div>
-
-      {/* RIGHT */}
-      <motion.div
-        initial={{ opacity: 0, scale: .9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: .25, duration: .8 }}
-        className="relative"
-      >
-
-        <div className="absolute -inset-12 rounded-full bg-gradient-to-r from-red-500/20 via-yellow-400/20 via-green-400/20 via-cyan-400/20 to-purple-500/20 blur-[120px]" />
-
-        <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 backdrop-blur-xl shadow-[0_35px_90px_rgba(0,0,0,.45)]">
-
-          <img
-            src="/PrideLogo3.jpg"
-            alt="Hartford Pride Center"
-            className="w-full object-cover"
-          />
-
-        </div>
-
-      </motion.div>
-
-    </motion.div>
-
-  </div>
-
-</section>
-<div className="flex justify-center mb-3 gap-3 mt-8">
-
-  <Link
-    to="/contact"
-    className="
-      group
-      flex-1
-      max-w-[180px]
-
-      flex items-center justify-center gap-2
-
-      rounded-2xl
-
-      px-4 py-3
-
-      bg-gradient-to-r
-      from-cyan-500
-      via-sky-500
-      to-blue-600
-
-      border border-cyan-200/30
-
-      shadow-[0_10px_30px_rgba(6,182,212,.35)]
-
-      text-white
-      font-black
-      tracking-wide
-
-      transition-all
-      duration-300
-
-      hover:scale-105
-      hover:shadow-[0_20px_45px_rgba(6,182,212,.55)]
-    "
-  >
-    <FaEnvelope className="text-lg group-hover:rotate-6 transition" />
-    <span>Contact</span>
-  </Link>
-
-  <Link
-    to="/donations"
-    className="
-      group
-      flex-1
-      max-w-[180px]
-
-      flex items-center justify-center gap-2
-
-      rounded-2xl
-
-      px-4 py-3
-
-      bg-gradient-to-r
-      from-pink-500
-      via-fuchsia-500
-      to-rose-500
-
-      border border-pink-200/30
-
-      shadow-[0_10px_30px_rgba(236,72,153,.35)]
-
-      text-white
-      font-black
-      tracking-wide
-
-      transition-all
-      duration-300
-
-      hover:scale-105
-      hover:shadow-[0_20px_45px_rgba(236,72,153,.55)]
-    "
-  >
-    <FaHeart className="text-lg group-hover:scale-125 transition" />
-    <span>Donate</span>
-  </Link>
-
-</div>
-      </section>
-
-
-      {/* TIERS GRID */}
-
-      <section className="max-w-7xl mx-auto px-2  pb-20">
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-
-          {SPONSOR_TIERS.map((tier) => {
-
-            const details = tierDetails[tier];
-
+        {/* ---------- Fund cards ---------- */}
+        <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
+          {FUNDS.map((fund) => {
+            const oneTimeLink = fund.oneTime || SHARED_ONE_TIME_LINK;
             return (
-
-              <motion.div
-                key={tier}
-                whileHover={{ y:-8 }}
-                className="
-                  bg-gradient-to-br from-purple-900 via-black to-indigo-900
-                  border border-white
-                  rounded-3xl
-                  p-8
-                  shadow-[0_0_30px_rgba(168,85,247,0.4)]
-                  flex flex-col
-                "
+              <article
+                key={fund.id}
+                className="cd-hue-card relative flex flex-col overflow-hidden rounded-2xl border transition-all duration-200 hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+                style={{
+                  "--hue": fund.hue,
+                  background: SURFACE,
+                  borderColor: LINE,
+                }}
               >
-
-                {/* TIER NAME */}
-
-                <h3 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                  <FaStar className="text-yellow-400"/>
-                  {tier}
-                </h3>
-
-
-                {/* PRICING */}
-
-                <div className="mb-6">
-
-                  <p className="text-white/70 text-sm">
-                    Monthly Support
+                <div className="h-1" style={{ background: fund.hue }} aria-hidden="true" />
+                <div className="flex flex-1 flex-col p-5 sm:p-6">
+                  <div className="mb-3 flex items-center gap-3 sm:mb-4 sm:block">
+                    <span
+                      className="cd-hue-chip inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border text-xl sm:h-12 sm:w-12 sm:text-2xl"
+                      aria-hidden="true"
+                    >
+                      {fund.emoji}
+                    </span>
+                    <h3
+                      className="text-lg font-bold tracking-tight sm:mt-4 sm:text-xl"
+                      style={{ fontFamily: FONT_DISPLAY }}
+                    >
+                      {fund.name}
+                    </h3>
+                  </div>
+                  <p
+                    className="mb-5 flex-1 text-sm leading-relaxed sm:mb-6"
+                    style={{ color: MUTED }}
+                  >
+                    {fund.blurb}
                   </p>
 
-                  <p className="text-2xl font-bold text-cyan-300">
-                    {details.monthly}
-                  </p>
-
-                  <p className="text-white/70 text-sm mt-2">
-                    One-Time Support
-                  </p>
-
-                  <p className="text-xl font-semibold text-purple-300">
-                    {details.oneTime}
-                  </p>
-
+                  <div className="flex flex-col gap-2.5 sm:flex-row">
+                    <a
+                      className={`cd-hue-btn inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl border px-3.5 py-3 text-sm font-semibold no-underline transition-colors sm:py-2.5 ${FOCUS}`}
+                      style={{ color: TEXT }}
+                      href={oneTimeLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Give once
+                      <ArrowUpRight size={15} strokeWidth={2.5} />
+                    </a>
+                    <button
+                      type="button"
+                      className={`cd-ghost-btn inline-flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-xl border bg-transparent px-3.5 py-3 text-sm font-semibold transition-colors sm:py-2.5 ${FOCUS}`}
+                      style={{ borderColor: LINE, color: MUTED }}
+                      onClick={() => setActiveFund(fund)}
+                    >
+                      Give monthly
+                    </button>
+                  </div>
                 </div>
-
-
-                {/* PERKS */}
-
-  <ul className="space-y-2 text-sm text-white/80 flex-grow mb-6">
-
-  {details.perks.map((perk,i)=>(
-    <li key={i}>
-      • {perk}
-    </li>
-  ))}
-
-</ul>
-
-
-{/* SPONSOR BUTTONS */}
-
-<div className="flex flex-col gap-3">
-
-  {/* MONTHLY */}
-
-{/* MONTHLY */}
-
-<a
-  href={tier === "Customized Tier" ? "#" : MONTHLY_LINKS[tier]}
-  target={tier === "Customized Tier" ? undefined : "_blank"}
-  rel="noopener noreferrer"
-
-  onClick={(e) => {
-    if (tier === "Customized Tier") {
-      e.preventDefault();
-
-      alert(
-`Custom Sponsorship Plan
-
-Recurring sponsorship links for custom tiers are created individually.
-
-A custom payment link will be sent upon approval.
-
-Please request a custom recurring sponsorship link through the Karaoverse contact page.`
-      );
-    }
-  }}
-
-  className="
-    text-center
-    px-4 py-2 rounded-xl
-    bg-gradient-to-r from-cyan-400 to-blue-500
-    text-black font-bold
-    hover:scale-105 transition
-  "
->
-  Monthly Sponsor
-</a>
-  {/* ONE TIME */}
-
-  <a
-    href={ONE_TIME_LINK}
-    target="_blank"
-    rel="noopener noreferrer"
-
-    className="
-      text-center
-      px-4 py-2 rounded-xl
-      border border-purple-400
-      text-purple-200 font-semibold
-      hover:bg-purple-600/30 transition
-    "
-  >
-    One-Time Support
-  </a>
-
-</div>
-
-
-
-              </motion.div>
-
+              </article>
             );
-
           })}
-
         </div>
 
+        <p
+          className="mt-10 flex items-center justify-center gap-2 px-4 text-center text-xs leading-relaxed sm:mt-11"
+          style={{ color: MUTED }}
+        >
+          <Heart size={13} className="shrink-0" aria-hidden="true" />
+          Hartford Pride Center is a 501(c)(3) nonprofit. Every dollar stays in
+          the community, and monthly gifts can be canceled anytime.
+        </p>
       </section>
 
-<section
-  className="
-    relative mt-4
-    z-10
-    bg-gradient-to-br
-    from-orange-600
-    to-black
-    text-gray-300
-    py-4
-    border-t-2
-    border-pink-600
-  "
->                <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 divide-y divide-gray-700 lg:divide-y-0 lg:divide-x lg:divide-gray-700">
-                  {/* Company Info */}
-                  <div className="pr-0 lg:pr-6">
-                    <h3 className="text-xl font-bold text-yellow-400 border-b-2 border-pink-400 text-center mb-2">
-                      {" "}
-                      - Karaoverse -<br /> The Entertainment Empire ©
-                    </h3>
-                    <p className="text-sm">
-                      Connecting singers, DJs, venues, and artists across the United
-                      States. Say NoMo to FoMo with Karaoverse!
-                    </p>
-                  </div>
-      
-                  {/* Quick Links */}
-                <div className="pt-4 sm:pt-0 lg:px-6">
-        <h4 className="text-lg font-semibold text-white mb-4">
-          Explore Karaoverse
-        </h4>
-      
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-sm">
-      
-          {/* 🎯 EXPLORE */}
-          <div>
-            <h5 className="text-yellow-400 font-bold mb-2">Explore</h5>
-            <ul className="space-y-1">
-              <li><Link to="/artists" className="hover:text-yellow-400">Artists</Link></li>
-              <li><Link to="/hosts" className="hover:text-yellow-400">Hosts</Link></li>
-              <li><Link to="/venues" className="hover:text-yellow-400">Venues</Link></li>
-              <li><Link to="/events" className="hover:text-yellow-400">Events</Link></li>
-            </ul>
-          </div>
-      
-          {/* 🎤 FOR CREATORS */}
-          <div>
-            <h5 className="text-yellow-400 font-bold mb-2">Creators</h5>
-            <ul className="space-y-1">
-              <li><Link to="/artist-tips" className="hover:text-yellow-400">Artist Guide</Link></li>
-              <li><Link to="/host-tips" className="hover:text-yellow-400">DJ Guide</Link></li>
-              <li><Link to="/venue-tips" className="hover:text-yellow-400">Venue Guide</Link></li>
-              <li><Link to="/school-of-karaoke" className="hover:text-yellow-400">School of Karaoke</Link></li>
-            </ul>
-          </div>
-      
-          {/* 💰 OPPORTUNITIES */}
-          <div>
-            <h5 className="text-yellow-400 font-bold mb-2">Connect</h5>
-            <ul className="space-y-1">
-              <li><Link to="/job-postings" className="hover:text-yellow-400">Jobs</Link></li>
-              <li><Link to="/From-drags-2-riches" className="hover:text-yellow-400">Marketplace</Link></li>
-              <li><Link to="/bandmixer" className="hover:text-yellow-400">Band Mixer</Link></li>
-      
-            </ul>
-          </div>
-      
-          {/* 🧠 PLATFORM */}
-          <div>
-            <h5 className="text-yellow-400 font-bold mb-2">Platform</h5>
-            <ul className="space-y-1">
-              <li><Link to="/about" className="hover:text-yellow-400">About</Link></li>
-                              <li><Link to="/newsletters" className="hover:text-yellow-400">Newsletters</Link></li>
-      
-              <li><Link to="/partners" className="hover:text-yellow-400">Partners</Link></li>
-              <li><Link to="/pridefestivals" className="hover:text-yellow-400">Pride Festivals</Link></li>
-                      <li><Link to="/volunteer" className="hover:text-yellow-400">Volunteers</Link></li>
-      
-              <li><Link to="/updates" className="hover:text-yellow-400">Updates</Link></li>
-              <li><Link to="/contact" className="hover:text-yellow-400">Contact</Link></li>
-              <li><Link to="/donations" className="hover:text-yellow-400">Donations</Link></li>
-                              <li><Link to="/feedback" className="hover:text-yellow-400">Feedback</Link></li>
-      
-            </ul>
-          </div>
-      
-        </div>
-      
-        {/* 🎮 BONUS ROW */}
-        <div className="mt-6 border-t border-white/10 pt-4 flex flex-wrap justify-center gap-4 text-sm">
-          <Link to="/supersinger" className="hover:text-yellow-400">
-            🎤 Singers
-          </Link>
-          <Link to="/supergamers" className="hover:text-yellow-400">
-            🎮 Gamers
-          </Link>
-          <Link to="/karao-match" className="hover:text-yellow-400">
-            🌟 KaraoMatch
-          </Link>
-        </div>
-      </div>
-      
-                  {/* Contact Info */}
-                  <div className="pt-6 sm:pt-0 lg:pl-6">
-                    <h4 className="text-lg font-semibold text-white mb-3">
-                      Get in Touch
-                    </h4>
-                    <p className="text-sm">📍 United States</p>
-                    <p className="text-sm">
-                      📧{" "}
-                      <a
-                        href="mailto:karaoverse@gmail.com"
-                        className="hover:text-pink-400 underline"
-                      >
-                        karaoverse@gmail.com
-                      </a>
-                    </p>
-                    <div className="flex text-center items-center justify-center  space-x-4 mt-6 border-t-2 pt-2 border-pink-400">
-                      <a
-                        href="https://www.instagram.com/thekaraoverse/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:text-pink-400"
-                      >
-                        <FaInstagram className="text-2xl" />
-                      </a>
-                      <a
-                        href="https://www.facebook.com/groups/549718571500039"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:text-pink-400"
-                      >
-                        <FaFacebook className="text-2xl" />
-                      </a>
-                      <a
-                        href="mailto:karaoverse@gmail.com"
-                        className="hover:text-pink-400"
-                      >
-                        <FaEnvelope className="text-2xl" />
-                      </a>
-                      <button
-        onClick={handleShare}
-        title="Share Hosts"
-        className="
-          hover:text-pink-400
-          hover:scale-110
-          transition
-        "
-      >
-        <FaPaperPlane className="text-2xl" />
-      </button>
-                    </div>
-                  </div>
-                </div>
-      
-                {/* Bottom Bar */}
-                <div className="mt-8 text-center neon-pulse text-xs text-gray-500">
-                  <Link to="/privacy" className="hover:text-pink-400">
-                    Privacy Policy
-                  </Link>
-                </div>
-              </section>
-    
+      {/* ---------- Monthly giving modal ---------- */}
+      {activeFund && (
+        <div
+          className="cd-anim-fade fixed inset-0 z-50 flex items-end justify-center p-0 backdrop-blur-sm sm:items-center sm:p-5"
+          style={{ background: "rgba(7, 5, 14, 0.72)" }}
+          onClick={closeModal}
+          role="presentation"
+        >
+          {/* Bottom sheet on mobile, centered card on larger screens */}
+          <div
+            className="cd-anim-rise relative max-h-[88vh] w-full max-w-md overflow-y-auto rounded-t-2xl border p-6 pt-8 sm:rounded-2xl sm:p-8"
+            style={{
+              "--hue": activeFund.hue,
+              background: SURFACE_2,
+              borderColor: LINE,
+              borderTopWidth: 4,
+              borderTopColor: activeFund.hue,
+            }}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="cd-modal-title"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              ref={closeButtonRef}
+              type="button"
+              className={`cd-close-btn absolute right-3.5 top-3.5 inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg border-0 bg-transparent transition-colors sm:h-9 sm:w-9 ${FOCUS}`}
+              style={{ color: MUTED }}
+              onClick={closeModal}
+              aria-label="Close"
+            >
+              <X size={18} />
+            </button>
 
+            <div className="mb-6 text-center">
+              <span
+                className="cd-hue-chip mx-auto mb-3.5 flex h-14 w-14 items-center justify-center rounded-xl border text-3xl"
+                aria-hidden="true"
+              >
+                {activeFund.emoji}
+              </span>
+              <h3
+                id="cd-modal-title"
+                className="mb-1.5 text-xl font-bold"
+                style={{ fontFamily: FONT_DISPLAY }}
+              >
+                {activeFund.name}
+              </h3>
+              <p className="text-sm" style={{ color: MUTED }}>
+                Choose your monthly gift amount
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3">
+              {MONTHLY_AMOUNTS.map((amount) => {
+                const link = activeFund.monthly?.[amount] || null;
+                const base =
+                  "flex items-center justify-between gap-1 rounded-xl border px-4 py-3.5 sm:flex-col sm:justify-center sm:px-2 sm:pb-3.5 sm:pt-4";
+                return link ? (
+                  <a
+                    key={amount}
+                    className={`cd-hue-amount ${base} no-underline transition-all ${FOCUS} motion-reduce:transition-none`}
+                    href={link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span
+                      className="text-2xl font-extrabold"
+                      style={{ fontFamily: FONT_DISPLAY, color: TEXT }}
+                    >
+                      ${amount}
+                    </span>
+                    <span
+                      className="inline-flex items-center gap-1 text-xs"
+                      style={{ color: MUTED }}
+                    >
+                      per month
+                    </span>
+                  </a>
+                ) : (
+                  <span
+                    key={amount}
+                    className={`${base} cursor-not-allowed border-dashed bg-transparent opacity-50`}
+                    style={{ borderColor: LINE }}
+                    aria-disabled="true"
+                  >
+                    <span
+                      className="text-2xl font-extrabold"
+                      style={{ fontFamily: FONT_DISPLAY, color: TEXT }}
+                    >
+                      ${amount}
+                    </span>
+                    <span
+                      className="inline-flex items-center gap-1 text-xs"
+                      style={{ color: MUTED }}
+                    >
+                      <Clock size={11} aria-hidden="true" /> coming soon
+                    </span>
+                  </span>
+                );
+              })}
+            </div>
+
+            <p
+              className="mt-5 text-center text-xs leading-relaxed"
+              style={{ color: MUTED }}
+            >
+              Want a different amount or need help setting up your gift?{" "}
+              <a
+                href={CONTACT_URL}
+                className="font-semibold underline underline-offset-2"
+                style={{ color: TEXT }}
+              >
+                Contact us
+              </a>{" "}
+              — we'll take care of it.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* ============================================================ */}
+      {/*  FOOTER — same ink, same surfaces, same type, spectrum rule  */}
+      {/* ============================================================ */}
+      <footer style={{ background: SURFACE }}>
+        <SpectrumRule />
+
+        <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+          {/* Brand */}
+          <div className="mb-10 max-w-md sm:mb-12">
+            <p
+              className="mb-2 text-2xl font-extrabold tracking-tight"
+              style={{ fontFamily: FONT_DISPLAY }}
+            >
+              Karaoverse
+            </p>
+            <p
+              className="mb-3 text-xs font-semibold uppercase tracking-[0.18em]"
+              style={{ color: MUTED }}
+            >
+              The Entertainment Empire
+            </p>
+            <p className="text-sm leading-relaxed" style={{ color: MUTED }}>
+              Connecting singers, DJs, venues, and artists across the United
+              States. Say NoMo to FoMo with Karaoverse!
+            </p>
+          </div>
+
+          {/* Nav columns — 2-up on phones, 4-up on desktop */}
+          <nav
+            className="grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-4"
+            aria-label="Footer"
+          >
+            {FOOTER_NAV.map((col) => (
+              <div key={col.heading} style={{ "--hue": col.hue }}>
+                <h4
+                  className="mb-3.5 flex items-center gap-2 text-sm font-bold tracking-tight"
+                  style={{ fontFamily: FONT_DISPLAY }}
+                >
+                  <span
+                    className="h-2 w-2 rounded-full"
+                    style={{ background: col.hue }}
+                    aria-hidden="true"
+                  />
+                  {col.heading}
+                </h4>
+                <ul className="space-y-0.5">
+                  {col.links.map((link) => (
+                    <li key={link.to}>
+                      <Link
+                        to={link.to}
+                        className={`cd-foot-link -mx-2 block rounded-lg px-2 py-2 text-sm no-underline transition-colors sm:py-1.5 ${FOCUS}`}
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </nav>
+
+          {/* Contact + social */}
+          <div
+            className="mt-12 flex flex-col items-center gap-5 rounded-2xl border p-6 text-center sm:flex-row sm:justify-between sm:text-left"
+            style={{ background: SURFACE_2, borderColor: LINE }}
+          >
+            <div>
+              <h4
+                className="mb-1 text-base font-bold"
+                style={{ fontFamily: FONT_DISPLAY }}
+              >
+                Get in touch
+              </h4>
+              <p className="text-sm" style={{ color: MUTED }}>
+                United States ·{" "}
+                <a
+                  href="mailto:karaoverse@gmail.com"
+                  className={`font-semibold underline underline-offset-2 ${FOCUS}`}
+                  style={{ color: TEXT }}
+                >
+                  karaoverse@gmail.com
+                </a>
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2.5">
+              <a
+                href="https://www.instagram.com/thekaraoverse/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className={`cd-social inline-flex h-11 w-11 items-center justify-center rounded-xl border transition-colors ${FOCUS}`}
+                style={{ borderColor: LINE, color: MUTED }}
+              >
+                <FaInstagram className="text-xl" />
+              </a>
+              <a
+                href="https://www.facebook.com/groups/549718571500039"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                className={`cd-social inline-flex h-11 w-11 items-center justify-center rounded-xl border transition-colors ${FOCUS}`}
+                style={{ borderColor: LINE, color: MUTED }}
+              >
+                <FaFacebook className="text-xl" />
+              </a>
+              <a
+                href="mailto:karaoverse@gmail.com"
+                aria-label="Email"
+                className={`cd-social inline-flex h-11 w-11 items-center justify-center rounded-xl border transition-colors ${FOCUS}`}
+                style={{ borderColor: LINE, color: MUTED }}
+              >
+                <FaEnvelope className="text-xl" />
+              </a>
+              <button
+                type="button"
+                onClick={handleShare}
+                aria-label="Share"
+                className={`cd-social inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border bg-transparent transition-colors ${FOCUS}`}
+                style={{ borderColor: LINE, color: MUTED }}
+              >
+                <FaPaperPlane className="text-xl" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom bar */}
+        <SpectrumRule className="opacity-40" />
+        <div
+          className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-4 py-5 text-xs sm:flex-row sm:px-6"
+          style={{ color: MUTED }}
+        >
+          <p>© {new Date().getFullYear()} Karaoverse · The Entertainment Empire</p>
+          <Link to="/privacy" className={`cd-foot-link rounded px-1 py-1 ${FOCUS}`} style={{ "--hue": SPECTRUM[4] }}>
+            Privacy Policy
+          </Link>
+        </div>
+      </footer>
     </div>
   );
-
 }

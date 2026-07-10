@@ -724,14 +724,14 @@ src="https://maps.google.com/maps?q=100%20Pratt%20Street%20Hartford%20CT&t=&z=17
             Contact
           </Link>
 
-          <a
-            href="https://givebutter.com/lgbtqadvocacy"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-2xl bg-white px-4 py-3 shadow-xl font-black text-yellow-500 hover:scale-105 transition text-center"
+
+          <Link
+            to="/support"
+            className="rounded-2xl bg-white px-4 py-3 shadow-xl font-black text-cyan-500 hover:scale-105 transition text-center"
           >
             Donate
-          </a>
+          </Link>
+
 
           <Link
             to="/sponsors"

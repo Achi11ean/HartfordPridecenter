@@ -387,10 +387,8 @@ bg-gradient-to-br from-indigo-950 via-black to-indigo-800
 </button>
 
 
-<a
-  href="https://givebutter.com/lgbtqadvocacy"
-  target="_blank"
-  rel="noopener noreferrer"
+<Link
+  to="/support"
   className="
     group
     flex flex-col items-center justify-center
@@ -411,7 +409,7 @@ bg-gradient-to-br from-indigo-950 via-black to-indigo-800
   <span className="text-[11px] sm:text-xs text-slate-500">
     Support
   </span>
-</a>
+</Link>
 
 </div>
 

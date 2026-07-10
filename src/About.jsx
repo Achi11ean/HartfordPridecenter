@@ -126,9 +126,9 @@ to-[#EA580C]
             Resources
           </Link>
                                 <Link
-            to="https://givebutter.com/lgbtqadvocacy"
+            to="/support"
             state={{ openSponsors: true }}
-           className="block text-center px-6 py-3 font-semibold text-black border border-black shadow-lg 
+           className="block text-center px- py-3 font-semibold text-black border border-black shadow-lg 
               bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 
               hover:from-yellow-600 hover:via-amber-500 hover:to-yellow-400
               transition-all duration-300"
