@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Heart, X, ArrowUpRight, Clock } from "lucide-react";
 import PrideHero from "./PrideHero";
 
-const SHARED_ONE_TIME_LINK = "https://buy.stripe.com/7sY8wQedb5iTgfMepGcIE06";
+const SHARED_ONE_TIME_LINK = "https://buy.stripe.com/8x24gs2cj5Mm1Sy0Gccwg0e";
 
 const MONTHLY_AMOUNTS = [10, 20, 50];
 
@@ -16,10 +16,10 @@ const FUNDS = [
     hue: "#FF6B6B",
     blurb:
       "Help community members afford life-sustaining medications and prescription costs.",
-    oneTime: null, // falls back to SHARED_ONE_TIME_LINK
+    oneTime: "https://buy.stripe.com/3cIbIUaIP0s20OugFacwg0i", // falls back to SHARED_ONE_TIME_LINK
     monthly: {
-      10: "https://buy.stripe.com/dRm8wQfhf4eP6Fc6XecIE09",
-      20: null,
+      10: null,
+      20: " https://buy.stripe.com/28E4gseZ55MmdBg4Wscwg0j",
       50: null,
     },
   },
@@ -30,8 +30,8 @@ const FUNDS = [
     hue: "#FFA94D",
     blurb:
       "Fund workshops, support groups, education, and events that bring our community together.",
-    oneTime: null,
-    monthly: { 10: null, 20: null, 50: null },
+    oneTime: "https://buy.stripe.com/28E5kwbMT8YyeFkex2cwg0h",
+    monthly: { 10: null, 20: "https://buy.stripe.com/9B6fZa2cjeiS8gWfB6cwg0g", 50: null },
   },
   {
     id: "general",
@@ -41,7 +41,7 @@ const FUNDS = [
     blurb:
       "Keep the lights on and the doors open — your gift goes wherever the need is greatest.",
     oneTime: SHARED_ONE_TIME_LINK,
-    monthly: { 10: null, 20: null, 50: null },
+    monthly: { 10: null, 20: "https://buy.stripe.com/cNi8wI18f0s2eFkex2cwg0f", 50: null },
   },
   {
     id: "pantry",
@@ -50,8 +50,8 @@ const FUNDS = [
     hue: "#69DB7C",
     blurb:
       "Stock our pantry so no one has to choose between food and other essentials.",
-    oneTime: null,
-    monthly: { 10: null, 20: null, 50: null },
+    oneTime: "https://buy.stripe.com/aFaeV69EL6Qq2WCfB6cwg0d",
+    monthly: { 10: "null", 20: "https://buy.stripe.com/dRm8wI9ELa2C40G9cIcwg0c", 50: null },
   },
   {
     id: "transcare",
@@ -60,8 +60,8 @@ const FUNDS = [
     hue: "#74C0FC",
     blurb:
       "Support gender-affirming care resources, navigation help, and community for trans folks.",
-    oneTime: null,
-    monthly: { 10: null, 20: null, 50: null },
+    oneTime: "https://buy.stripe.com/4gM9AMdV1caKdBgex2cwg0b",
+    monthly: { 10: null, 20: "https://buy.stripe.com/9B67sE3gnb6G54KagMcwg0a", 50: null },
   },
   {
     id: "housing",
@@ -70,8 +70,8 @@ const FUNDS = [
     hue: "#B197FC",
     blurb:
       "Provide emergency housing assistance and safety resources for LGBTQIA+ people in crisis.",
-    oneTime: null,
-    monthly: { 10: null, 20: null, 50: null },
+    oneTime: "https://buy.stripe.com/8x24gs3gn1w654KcoUcwg09",
+    monthly: { 10: null, 20: "https://buy.stripe.com/fZubIUeZ50s268O2Okcwg08", 50: null },
   },
 ];
 
