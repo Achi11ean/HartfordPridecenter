@@ -8,8 +8,7 @@ import OurTeam from "./OurTeam";
 import ContactPageTemplate from "./Contact";
 import Privacy from "./Privacy";
 import Volunteer from "./Volunteer";
-import Donate from "./Donate";
-import Events from "./Events";
+ import Events from "./Events";
 import HartfordCityPride from "./CapitalCityPride";
 import AdminSignup from "./AdminSignup";
 import Login from "./Login";
@@ -41,7 +40,6 @@ function App() {
         <Route path="/events" element={<Events />} />
         <Route path="/pride" element={<HartfordCityPride />} />
         <Route path="/support" element={<SponsorInvitation/>}/>
-                <Route path="/donate" element={<Donate />} />
         <Route path="/admin-signup" element={<AdminSignup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />

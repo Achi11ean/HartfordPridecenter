@@ -8,423 +8,424 @@ import {
   FaCalendarAlt,
   FaHandHoldingHeart,
   FaUsers,
+  FaArrowRight,
 } from "react-icons/fa";
 import "./App.css";
 import EmailSubscribe from "./EmailSubscribe";
+
+/* ─────────────────────────────────────────────────────────────
+   HARTFORD PRIDE CENTER — "Community Poster" redesign
+   Bright paper background, flat pride-flag color blocks,
+   huge stacked type, sticker badges, rainbow marquee.
+   Mobile-first: everything stacks to one column.
+   ───────────────────────────────────────────────────────────── */
+
+const FLAG = ["#E40303", "#FF8C00", "#FFED00", "#008026", "#004DFF", "#750787"];
+
+const fadeUp = {
+  initial: { opacity: 0, y: 24 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "-60px" },
+  transition: { duration: 0.55, ease: "easeOut" },
+};
 
 export default function HomePage() {
   const year = new Date().getFullYear();
 
   return (
-<div className="min-h-screen bg-gradient-to-br from-pink-600 via-slate-500 to-red-700 text-white">
-      {/* Top Hero */}
-<header className="relative overflow-hidden pt-10 sm:pt-16 lg:pt-28 pb-16 sm:pb-20 lg:pb-24">
+    <div className="min-h-screen bg-[#FFFBF2] text-[#181310] font-sans overflow-x-hidden">
+      {/* local styles: display font + marquee animation */}
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,400..900&display=swap');
+        .hpc-display { font-family: 'Archivo', system-ui, sans-serif; font-stretch: 87%; }
+        .hpc-body { font-family: 'Archivo', system-ui, sans-serif; }
+        @keyframes hpc-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        .hpc-marquee-track { animation: hpc-marquee 26s linear infinite; }
+        @media (prefers-reduced-motion: reduce) {
+          .hpc-marquee-track { animation: none; }
+        }
+      `}</style>
 
-  {/* ───────────────── BACKGROUND IMAGE ───────────────── */}
-  <div
-    className="absolute inset-0 bg-cover bg-center scale-105 pointer-events-none"
-    style={{
-      backgroundImage:
-        "url('https://images.pexels.com/photos/207142/pexels-photo-207142.jpeg?cs=srgb&dl=pexels-pixabay-207142.jpg&fm=jpg')",
-    }}
-  />
+      {/* ── FLAG STRIPE TOPBAR ── */}
+      <div className="flex h-2.5 w-full" aria-hidden="true">
+        {FLAG.map((c) => (
+          <div key={c} className="flex-1" style={{ backgroundColor: c }} />
+        ))}
+      </div>
 
-  {/* DARK CINEMATIC OVERLAY */}
-  <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(to_bottom_right,rgba(20,0,0,.78),rgba(0,0,0,.78),rgba(50,0,0,.74))]" />
+      {/* ── HEADER ROW ── */}
+   
+      {/* ── HERO ── */}
+      <section className="max-w-6xl mt-16  mx-auto px-4 sm:px-6 pt-10 sm:pt-16 pb-12 sm:pb-20">
+        <div className="grid lg:grid-cols-[1.2fr,0.8fr] gap-10 lg:gap-14 items-center">
+          {/* headline side */}
+          <motion.div
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65, ease: "easeOut" }}
+          >
+            <p className="inline-block rounded-full bg-[#181310] text-white text-[11px] sm:text-xs font-bold uppercase tracking-[0.25em] px-4 py-2">
+              Hartford, Connecticut · Capital Region
+            </p>
 
+            <h1 className="hpc-display mt-6 font-black uppercase leading-[0.92] tracking-tight text-[clamp(2.6rem,9vw,5.5rem)]">
+              Every
+              <span className="mx-2 inline-block -rotate-1 rounded-lg px-3" style={{ backgroundColor: "#FFED00" }}>
+                one
+              </span>
+              <br />
+              belongs
+              <br />
+              <span className="inline-block rotate-1 rounded-lg px-3 text-white" style={{ backgroundColor: "#750787" }}>
+                here.
+              </span>
+            </h1>
 
-  {/* SUBTLE GRID */}
-  <div className="absolute inset-0 opacity-[0.08] bg-[linear-gradient(rgba(255,255,255,.15)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.15)_1px,transparent_1px)] bg-[size:42px_42px] pointer-events-none" />
+            <p className="mt-6 max-w-xl text-base sm:text-lg leading-relaxed text-[#4a4038] font-medium">
+              Hartford Pride Center strengthens LGBTQIA+ visibility, safe
+              spaces, advocacy, resources, and community partnerships across
+              Hartford and the Capital Region — one unified hub, year-round.
+            </p>
 
-  <div className="relative mt-10 z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-    <div className="grid lg:grid-cols-[420px,1fr] gap-8 lg:gap-14 items-center">
-
-      {/* ───────────────── LOGO PANEL ───────────────── */}
-      <motion.div
-        initial={{ opacity: 0, y: 25 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7 }}
-        className="order-1 lg:order-1"
-      >
-        <div className="relative rounded-[2.2rem] overflow-hidden border border-white/20 bg-white/10 backdrop-blur-2xl shadow-[0_25px_80px_rgba(0,0,0,0.55)] p-4 sm:p-5">
-          <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-red-500/10 pointer-events-none" />
-
-          <img
-            src="/PrideLogo3.jpg"
-            alt="Hartford Pride Center Logo"
-            className="relative w-full  rounded-[1.7rem] object-cover shadow-2xl"
-          />
-
-          <div className="mt-4 text-center">
-            <div className="inline-block px-4 py-1 rounded-full bg-gradient-to-r from-red-500/70 via-purple-500/70 to-yellow-400/70 text-[11px] sm:text-xs font-bold uppercase tracking-[0.25em] text-white shadow-lg">
-              Community • Advocacy • Resources
+            {/* primary CTAs */}
+            <div className="mt-8 flex flex-col sm:flex-row flex-wrap gap-3">
+              <Link
+                to="/pride"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-[#181310] px-6 py-4 font-black uppercase tracking-wide text-sm text-white shadow-[4px_4px_0_#181310] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#181310] transition-all"
+                style={{ backgroundColor: "#E40303" }}
+              >
+                Capital City Pride 2026 <FaArrowRight />
+              </Link>
+              <a
+                href="https://karaoverse.com/event/capital-city-pride"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-[#181310] bg-white px-6 py-4 font-black uppercase tracking-wide text-sm shadow-[4px_4px_0_#181310] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#181310] transition-all"
+              >
+                <FaCalendarAlt /> Upcoming events
+              </a>
+              <Link
+                to="/support"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-[#181310] px-6 py-4 font-black uppercase tracking-wide text-sm shadow-[4px_4px_0_#181310] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#181310] transition-all"
+                style={{ backgroundColor: "#FFED00" }}
+              >
+                <FaHandHoldingHeart /> Donate
+              </Link>
             </div>
-          </div>
-        </div>
-      </motion.div>
+          </motion.div>
 
-      {/* ───────────────── TEXT SIDE ───────────────── */}
-      <motion.div
-        initial={{ opacity: 0, y: 28 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.15 }}
-        className="order-2 lg:order-2 text-center lg:text-left"
-      >
-        <div className="inline-flex  items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-xl text-[12px] sm:text-sm uppercase tracking-[0.25em] font-bold text-yellow-200 shadow-xl">
-          Proudly Based in Hartford, CT. A Program of CLARO Inc. 
-        </div>
+          {/* poster / logo side */}
+          <motion.div
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65, delay: 0.15, ease: "easeOut" }}
+            className="relative mx-auto w-full max-w-sm lg:max-w-none"
+          >
+            <div className="relative rotate-2 rounded-2xl border-2 border-[#181310] bg-white p-3 shadow-[8px_8px_0_#181310]">
+              <img
+                src="/PrideLogo3.jpg"
+                alt="Hartford Pride Center"
+                className="w-full rounded-xl object-cover"
+              />
+              <div className="mt-3 flex h-2 w-full overflow-hidden rounded-full" aria-hidden="true">
+                {FLAG.map((c) => (
+                  <div key={c} className="flex-1" style={{ backgroundColor: c }} />
+                ))}
+              </div>
+            </div>
 
-        <h1 className="mt-5 text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-black leading-[0.95] tracking-tight text-white drop-shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
-          Hartford Pride
-          <span className="block bg-gradient-to-r from-yellow-200 via-white to-red-200 bg-clip-text text-transparent">
-            Center
-          </span>
-        </h1>
-
-        <p className="mt-6 text-base sm:text-lg md:text-xl text-white/80 max-w-3xl leading-relaxed mx-auto lg:mx-0">
-          Strengthening LGBTQIA+ visibility, safe spaces, outreach, advocacy,
-          resources, and community partnerships throughout Hartford and the
-          surrounding Capital Region through one unified digital hub.
-        </p>
-
-        {/* <div className="mt-6 flex flex-wrap justify-center lg:justify-start gap-3 text-sm sm:text-base">
-          {["Events", "Resources", "Volunteerism", "Community Funders"].map((item) => (
+            {/* sticker badges */}
             <div
-              key={item}
-              className="px-4 py-2 rounded-full bg-white/10 border border-white/15 backdrop-blur-xl text-white/90 font-semibold shadow-lg"
+              className="absolute -top-4 -left-3 -rotate-6 rounded-full border-2 border-[#181310] px-4 py-2 text-xs font-black uppercase tracking-wider text-white shadow-[3px_3px_0_#181310]"
+              style={{ backgroundColor: "#008026" }}
             >
-              {item}
+              Community
+            </div>
+            <div
+              className="absolute -bottom-4 -right-2 rotate-3 rounded-full border-2 border-[#181310] px-4 py-2 text-xs font-black uppercase tracking-wider shadow-[3px_3px_0_#181310]"
+              style={{ backgroundColor: "#FF8C00" }}
+            >
+              Advocacy
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── RAINBOW MARQUEE (signature) ── */}
+      <div className="overflow-hidden border-y-2 border-[#181310] bg-[#181310] py-3 sm:py-4">
+        <div className="hpc-marquee-track flex w-max items-center gap-8 whitespace-nowrap">
+          {[0, 1].map((copy) => (
+            <div key={copy} className="flex items-center gap-8" aria-hidden={copy === 1}>
+              {["Seen", "Safe", "Celebrated", "Connected", "Proud", "Welcome"].map((word, i) => (
+                <span key={word} className="flex items-center gap-8">
+                  <span
+                    className="hpc-display text-2xl sm:text-3xl font-black uppercase tracking-tight"
+                    style={{ color: FLAG[i % FLAG.length] }}
+                  >
+                    {word}
+                  </span>
+                  <span className="text-white/60 text-xl">✦</span>
+                </span>
+              ))}
             </div>
           ))}
-        </div> */}
-
-        <Link
-          to="/pride"
-          className="mt-8 inline-flex justify-center items-center px-8 sm:px-10 py-4 rounded-2xl
-          bg-gradient-to-r from-red-600 via-purple-600 to-yellow-500
-          text-white font-black text-sm sm:text-base uppercase tracking-[0.15em]
-          shadow-[0_15px_40px_rgba(0,0,0,0.45)]
-          hover:scale-105 hover:brightness-110 transition duration-300 relative z-30"
-        >
-          Explore Capital City Pride 2026
-        </Link>
-
-        <div className="mt-7 grid grid-cols-1 sm:grid-cols-3 gap-4 relative z-30">
-          <Link
-            to="/contact"
-            className="rounded-2xl px-6 py-4 bg-white text-black font-bold shadow-2xl hover:scale-105 transition"
-          >
-            Contact Center
-          </Link>
-
-          <a
-            href="https://karaoverse.com/event/capital-city-pride"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-2xl px-6 py-4 bg-gradient-to-r from-yellow-300 to-amber-500 text-black font-bold shadow-2xl hover:scale-105 transition"
-          >
-            Upcoming Events
-          </a>
-
-          <Link
-            to="/funders"
-            className="rounded-2xl px-6 py-4 bg-gradient-to-r from-purple-500 to-red-500 text-white font-bold shadow-2xl hover:scale-105 transition"
-          >
-            Community Funders
-          </Link>
         </div>
-      </motion.div>
-
-    </div>
-  </div>
-</header>
-      <hr className="rainbow-hr" />
-
-      {/* Main Content */}
-<main className="relative max-w-7xl mx-auto px-1 sm:px-6 lg:px-8 py-4 sm:py-4">
-
-  {/* AMBIENT COLOR BLOOMS */}
-  <div className="absolute top-20 left-0 w-56 h-56 bg-yellow-400/10 rounded-full blur-[100px] pointer-events-none" />
-  <div className="absolute bottom-20 right-0 w-72 h-72 bg-purple-500/10 rounded-full blur-[120px] pointer-events-none" />
-
-  <section>
-    <motion.div
-      initial={{ opacity: 0, y: 18 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6 }}
-      className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/5 backdrop-blur-2xl shadow-[0_30px_90px_rgba(0,0,0,0.45)] p-3 sm:p-10 lg:p-14"
-    >
-      {/* inner glow */}
-      <div className="absolute inset-0 bg-gradient-to-br from-yellow-300/5 via-transparent to-purple-500/5 pointer-events-none" />
-
-      {/* HEADER */}
-      <div className="relative z-10 text-center">
-        <div className="inline-flex px-5 py-2 rounded-full bg-white/10 border border-white/15 text-xs sm:text-sm uppercase tracking-[0.3em] text-yellow-200 font-bold">
-          Hartford Pride Community Hub
-        </div>
-
-        <h2 className="mt-5 text-4xl sm:text-5xl lg:text-7xl font-black leading-[0.95] text-white">
-          Welcome, Friends
-          <span className="block bg-gradient-to-r from-yellow-200 via-white to-yellow-400 bg-clip-text text-transparent">
-            & Allies
-          </span>
-        </h2>
-
-        <div className="mt-5 mx-auto h-[3px] w-32 bg-gradient-to-r from-transparent via-yellow-400 to-transparent" />
-
-        <p className="mt-7 max-w-4xl mx-auto text-white/85 text-lg sm:text-xl leading-relaxed font-medium">
-          We believe every individual deserves a place where they feel seen,
-          protected, celebrated, and connected. Through advocacy, education,
-          outreach, and shared resources, Hartford Pride Center exists to
-          strengthen LGBTQIA+ visibility and community support throughout the
-          Capital Region.
-        </p>
-
-        <p className="mt-5 max-w-3xl mx-auto text-yellow-100/90 text-base sm:text-lg leading-relaxed">
-          Together we are building a more inclusive future — one where
-          authenticity shines, partnerships grow stronger, and every voice
-          matters.
-        </p>
       </div>
 
-      {/* CTA BUTTON COMMAND CENTER */}
-      <div className="relative z-10 mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-        {[
-          { label: "About Us", to: "/about" },
-          { label: "Resources", to: "/resources" },
-          { label: "Donate", href: "/support" },
-          { label: "Sponsors", to: "/sponsors" },
-        ].map((btn, i) =>
-          btn.href ? (
-            <a
-              key={i}
-              href={btn.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-2xl px-5 py-4 text-center font-black text-black
-              bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-500
-              hover:scale-105 hover:brightness-110 transition duration-300
-              shadow-[0_12px_30px_rgba(0,0,0,0.35)]"
-            >
-              {btn.label}
-            </a>
-          ) : (
-            <Link
-              key={i}
-              to={btn.to}
-              className="rounded-2xl px-5 py-4 text-center font-black text-black
-              bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-500
-              hover:scale-105 hover:brightness-110 transition duration-300
-              shadow-[0_12px_30px_rgba(0,0,0,0.35)]"
-            >
-              {btn.label}
-            </Link>
-          )
-        )}
-      </div>
+      {/* ── WHAT YOU CAN DO ── */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+        <motion.div {...fadeUp}>
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#750787]">
+            Get involved
+          </p>
+          <h2 className="hpc-display mt-2 text-3xl sm:text-5xl font-black uppercase tracking-tight">
+            What you can do here
+          </h2>
+        </motion.div>
 
-      {/* WHAT YOU CAN DO */}
-      <div className="relative z-10 mt-16">
-        <div className="text-center">
-          <h3 className="text-3xl sm:text-4xl font-black text-yellow-300">
-            Explore What You Can Do Here
-          </h3>
-          <div className="mt-4 mx-auto h-[3px] w-28 bg-gradient-to-r from-transparent via-yellow-400 to-transparent" />
-        </div>
-
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <FeatureCard
-            icon={<FaCalendarAlt className="text-3xl text-yellow-300" />}
-            title="Find Events"
-            desc="Discover upcoming pride celebrations, gatherings, and local community happenings."
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-5">
+          <ActionCard
+            color="#E40303"
+            icon={<FaCalendarAlt />}
+            title="Find events"
+            desc="Pride celebrations, gatherings, and local community happenings across the Capital Region."
+            cta="See the calendar"
             href="https://karaoverse.com/event/capital-city-pride"
           />
-
-          <FeatureCard
-            icon={<FaHandHoldingHeart className="text-3xl text-yellow-300" />}
+          <ActionCard
+            color="#008026"
+            icon={<FaHandHoldingHeart />}
             title="Volunteer"
             desc="Offer your time, your voice, and your skills to help strengthen our mission."
+            cta="Raise your hand"
             to="/volunteer"
           />
-
-          <FeatureCard
-            icon={<FaUsers className="text-3xl text-yellow-300" />}
+          <ActionCard
+            color="#004DFF"
+            icon={<FaUsers />}
             title="Connect"
             desc="Reach our team for partnerships, advocacy questions, sponsorships, or support."
+            cta="Say hello"
             to="/contact"
           />
         </div>
-      </div>
+      </section>
 
-      {/* FEATURED PARTNERSHIP SHOWCASE */}
-      <div className="relative z-10 mt-16">
-        <div className="text-center mb-5">
-          <div className="inline-block px-8 py-3 rounded-full bg-gradient-to-r from-yellow-500 via-amber-500 to-yellow-700 text-white text-xl sm:text-2xl font-black shadow-2xl">
-            Featured Community Collaboration
-          </div>
+      {/* ── MISSION BLOCK ── */}
+      <section className="border-y-2 border-[#181310]" style={{ backgroundColor: "#FFED00" }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20 text-center">
+          <motion.div {...fadeUp}>
+            <h2 className="hpc-display mx-auto max-w-3xl text-2xl sm:text-4xl font-black uppercase leading-tight tracking-tight">
+              A place where you feel seen, protected, celebrated, and connected.
+            </h2>
+            <p className="mx-auto mt-5 max-w-2xl text-base sm:text-lg font-semibold leading-relaxed text-[#4a3d00]">
+              Through advocacy, education, outreach, and shared resources, we're
+              building a more inclusive future — where authenticity shines,
+              partnerships grow stronger, and every voice matters.
+            </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              {[
+                { label: "About us", to: "/about" },
+                { label: "Resources", to: "/resources" },
+                { label: "Services", to: "/services" },
+                { label: "Sponsors", to: "/sponsors" },
+                { label: "Community funders", to: "/funders" },
+              ].map((btn) => (
+                <Link
+                  key={btn.to}
+                  to={btn.to}
+                  className="rounded-full border-2 border-[#181310] bg-white px-5 py-2.5 text-sm font-black uppercase tracking-wide hover:bg-[#181310] hover:text-white transition-colors"
+                >
+                  {btn.label}
+                </Link>
+              ))}
+            </div>
+          </motion.div>
         </div>
+      </section>
 
-        <a
+      {/* ── FEATURED COLLABORATION ── */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+        <motion.div {...fadeUp}>
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#E40303]">
+            Featured community collaboration
+          </p>
+          <h2 className="hpc-display mt-2 text-3xl sm:text-5xl font-black uppercase tracking-tight">
+            Watch what we're building
+          </h2>
+        </motion.div>
+
+        <motion.a
+          {...fadeUp}
           href="https://karaoverse.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="block group"
+          className="group mt-8 block"
         >
-          <div className="overflow-hidden rounded-[2rem] border border-white/15 shadow-[0_20px_60px_rgba(0,0,0,0.45)]">
+          <div className="rounded-2xl border-2 border-[#181310] bg-white p-2 shadow-[8px_8px_0_#181310] transition-transform group-hover:-translate-y-1">
             <video
               src="/Video.mov"
               autoPlay
               loop
               muted
               playsInline
-              className="w-full object-cover group-hover:scale-[1.02] transition duration-500"
+              className="w-full rounded-xl object-cover"
             />
+            <div className="mt-2 flex h-2 w-full overflow-hidden rounded-full" aria-hidden="true">
+              {FLAG.map((c) => (
+                <div key={c} className="flex-1" style={{ backgroundColor: c }} />
+              ))}
+            </div>
           </div>
-        </a>
-      </div>
+        </motion.a>
 
-      {/* EMAIL */}
-      <div className="relative z-10 mt-14">
-        <EmailSubscribe prideId={2} />
-      </div>
-    </motion.div>
-  </section>
-</main>
-      <hr className="rainbow-hr" />
+        {/* EMAIL */}
+        <motion.div {...fadeUp} className="mt-12 rounded-2xl border-2 border-[#181310] bg-white p-6 sm:p-8 shadow-[8px_8px_0_#181310]">
+          <h3 className="hpc-display text-xl sm:text-2xl font-black uppercase tracking-tight">
+            Stay in the loop
+          </h3>
+          <p className="mt-1 text-sm font-semibold text-[#6b5f57]">
+            Events, resources, and community news — straight to your inbox.
+          </p>
+          <div className="mt-4">
+            <EmailSubscribe prideId={2} />
+          </div>
+        </motion.div>
+      </section>
 
-      {/* Footer */}
-   <footer className="relative  overflow-hidden border-t border-pink-200">
+      {/* ── FOOTER ── */}
+      <footer className="border-t-2 border-[#181310] bg-[#181310] text-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            {/* org */}
+            <div>
+              <p className="hpc-display text-2xl font-black uppercase tracking-tight">
+                Hartford Pride Center
+              </p>
+              <p className="mt-3 text-sm leading-relaxed text-white/70 font-medium">
+                Year-round visibility, resources, volunteerism, wellness,
+                advocacy, sponsorship, support services, and joyful LGBTQIA+
+                community building across Hartford and beyond.
+              </p>
+              <div className="mt-5 flex h-2 w-32 overflow-hidden rounded-full" aria-hidden="true">
+                {FLAG.map((c) => (
+                  <div key={c} className="flex-1" style={{ backgroundColor: c }} />
+                ))}
+              </div>
+            </div>
 
-  {/* FESTIVAL PRIDE BACKGROUND */}
-  <div className="absolute inset-0 bg-gradient-to-br from-pink-100 via-yellow-50 to-cyan-100" />
-  <div className="absolute -top-16 -left-10 w-60 h-60 bg-pink-300/30 rounded-full blur-3xl pointer-events-none" />
-  <div className="absolute bottom-0 right-0 w-72 h-72 bg-cyan-300/30 rounded-full blur-3xl pointer-events-none" />
-  <div className="absolute top-10 right-[30%] w-60 h-60 bg-yellow-300/20 rounded-full blur-3xl pointer-events-none" />
+            {/* links */}
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.3em] text-white/50">
+                Explore
+              </p>
+              <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-sm font-bold">
+                <Link to="/about" className="hover:underline underline-offset-4">About</Link>
+                <Link to="/services" className="hover:underline underline-offset-4">Services</Link>
+                <Link to="/events" className="hover:underline underline-offset-4">Events</Link>
+                <Link to="/volunteer" className="hover:underline underline-offset-4">Volunteer</Link>
+                <Link to="/resources" className="hover:underline underline-offset-4">Resources</Link>
+                <Link to="/contact" className="hover:underline underline-offset-4">Contact</Link>
+                <Link to="/support" className="hover:underline underline-offset-4">Donate</Link>
+                <Link to="/sponsors" className="hover:underline underline-offset-4">Sponsors</Link>
+              </div>
+            </div>
 
+            {/* contact */}
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.3em] text-white/50">
+                Stay connected
+              </p>
+              <p className="mt-4 text-sm font-bold">
+                <a
+                  href="mailto:david@hartfordpridecenter.org"
+                  className="underline underline-offset-4 hover:text-[#FFED00]"
+                >
+                  david@hartfordpridecenter.org
+                </a>
+              </p>
+              <p className="mt-2 text-sm font-semibold text-white/70">
+                Hartford, Connecticut
+              </p>
+              <div className="mt-5 flex items-center gap-3">
+                <a
+                  href="https://www.instagram.com/hartfordpride/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-white text-lg hover:bg-white hover:text-[#181310] transition-colors"
+                >
+                  <FaInstagram />
+                </a>
+                <a
+                  href="https://www.facebook.com/HartfordPrideCenter"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Facebook"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-white text-lg hover:bg-white hover:text-[#181310] transition-colors"
+                >
+                  <FaFacebook />
+                </a>
+                <a
+                  href="mailto:david@hartfordpridecenter.org"
+                  aria-label="Email"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-white text-lg hover:bg-white hover:text-[#181310] transition-colors"
+                >
+                  <FaEnvelope />
+                </a>
+              </div>
+            </div>
+          </div>
 
-  <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-16">
-
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-
-      {/* ORG */}
-      <div>
-        <div className="inline-block px-5 py-2 rounded-full bg-white shadow-lg text-pink-500 font-black uppercase tracking-[0.25em] text-xs sm:text-sm">
-          Hartford Pride Center 🌈
+          <div className="mt-12 border-t border-white/15 pt-6 text-center text-xs font-semibold text-white/50">
+            © {year} Hartford Pride Center · A program of CLARO Inc. · Built for
+            advocacy, inclusion, and community joy.
+          </div>
         </div>
 
-        <h3 className="mt-5 text-3xl sm:text-4xl font-black leading-tight text-gray-900">
-          Celebrating Community,
-          <span className="block text-pink-500">Connection & Advocacy.</span>
-        </h3>
-
-        <p className="mt-4 text-gray-600 font-semibold leading-relaxed">
-          Year-round visibility, resources, volunteerism, wellness, advocacy,
-          sponsorship, support services, and joyful LGBTQIA+ community building
-          across Hartford and beyond.
-        </p>
-
-        <div className="mt-6 inline-block px-5 py-3 rounded-2xl bg-white shadow-lg font-black text-pink-500 rotate-[-2deg]">
-          🌈 Everyone Is Welcome Here
+        {/* bottom flag stripe */}
+        <div className="flex h-2.5 w-full" aria-hidden="true">
+          {FLAG.map((c) => (
+            <div key={c} className="flex-1" style={{ backgroundColor: c }} />
+          ))}
         </div>
-      </div>
-
-      {/* LINKS */}
-      <div>
-        <h4 className="text-2xl font-black text-gray-900">Explore More</h4>
-
-        <div className="mt-5 grid grid-cols-2 gap-3">
-          <Link to="/about" className="rounded-xl bg-white px-4 py-3 shadow-lg font-black text-pink-500 hover:scale-105 transition text-center">About</Link>
-          <Link to="/services" className="rounded-xl bg-white px-4 py-3 shadow-lg font-black text-yellow-500 hover:scale-105 transition text-center">Services</Link>
-          <Link to="/events" className="rounded-xl bg-white px-4 py-3 shadow-lg font-black text-cyan-500 hover:scale-105 transition text-center">Events</Link>
-          <Link to="/volunteer" className="rounded-xl bg-white px-4 py-3 shadow-lg font-black text-purple-500 hover:scale-105 transition text-center">Volunteer</Link>
-          <Link to="/resources" className="rounded-xl bg-white px-4 py-3 shadow-lg font-black text-pink-500 hover:scale-105 transition text-center">Resources</Link>
-          <Link to="/contact" className="rounded-xl bg-white px-4 py-3 shadow-lg font-black text-cyan-500 hover:scale-105 transition text-center">Contact</Link>
-          <Link to="/support" className="rounded-xl bg-white px-4 py-3 shadow-lg font-black text-cyan-500 hover:scale-105 transition text-center">Donate</Link>
-
-          <Link to="/sponsors" className="rounded-xl bg-white px-4 py-3 shadow-lg font-black text-purple-500 hover:scale-105 transition text-center">Sponsors</Link>
-        </div>
-      </div>
-
-      {/* CONTACT */}
-      <div>
-        <h4 className="text-2xl font-black text-gray-900">Stay Connected</h4>
-
-        <p className="mt-5 text-gray-700 font-bold">
-          Questions, support requests, sponsorships, partnerships, or volunteer inquiries?
-        </p>
-
-        <p className="mt-4 text-gray-700 font-black">
-          📧{" "}
-          <a
-            href="mailto:david@hartfordpridecenter.org"
-            className="underline hover:text-pink-500"
-          >
-            david@hartfordpridecenter.org
-          </a>
-        </p>
-
-        <p className="mt-3 text-gray-700 font-black">
-          📍 Hartford, Connecticut
-        </p>
-
-        <div className="mt-6 flex items-center gap-4">
-          <a
-            href="https://www.instagram.com/hartfordpride/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-12 h-12 rounded-full bg-pink-500 text-white flex items-center justify-center shadow-xl hover:scale-110 transition"
-          >
-            <FaInstagram className="text-xl" />
-          </a>
-
-          <a
-            href="https://www.facebook.com/HartfordPrideCenter"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-12 h-12 rounded-full bg-cyan-400 text-white flex items-center justify-center shadow-xl hover:scale-110 transition"
-          >
-            <FaFacebook className="text-xl" />
-          </a>
-
-          <a
-            href="mailto:david@hartfordpridecenter.org"
-            className="w-12 h-12 rounded-full bg-yellow-400 text-white flex items-center justify-center shadow-xl hover:scale-110 transition"
-          >
-            <FaEnvelope className="text-xl" />
-          </a>
-        </div>
-      </div>
-    </div>
-
-    {/* BOTTOM */}
-    <div className="mt-14 border-t border-pink-200 pt-8 text-center">
-      <div className="text-sm text-gray-500 font-bold">
-        © {year} Hartford Pride Center — Built for advocacy, inclusion, and community joy.
-      </div>
-    </div>
-  </div>
-</footer>
+      </footer>
     </div>
   );
 }
 
-function FeatureCard({ icon, title, desc, to }) {
-  return (
-    <Link
-      to={to}
-      className="block p-4 bg-black/40 border border-white/10 shadow-lg hover:bg-white/10 transition"
-    >
-      <div className="flex items-center gap-3">
-        <div className="p-2 bg-white/10 border border-yellow-400/20">
+/* ── Action card: flat panel with a flag-color top bar ── */
+function ActionCard({ color, icon, title, desc, cta, to, href }) {
+  const inner = (
+    <div className="flex h-full flex-col rounded-2xl border-2 border-[#181310] bg-white shadow-[6px_6px_0_#181310] transition-transform hover:-translate-y-1">
+      <div className="h-3 rounded-t-[0.9rem]" style={{ backgroundColor: color }} />
+      <div className="flex flex-1 flex-col p-6">
+        <div
+          className="flex h-12 w-12 items-center justify-center rounded-xl border-2 border-[#181310] text-xl text-white"
+          style={{ backgroundColor: color }}
+        >
           {icon}
         </div>
-        <div>
-          <p className="font-extrabold text-yellow-200">{title}</p>
-          <p className="text-sm text-yellow-100/80 font-semibold">{desc}</p>
-        </div>
+        <h3 className="hpc-display mt-4 text-xl font-black uppercase tracking-tight">
+          {title}
+        </h3>
+        <p className="mt-2 flex-1 text-sm font-semibold leading-relaxed text-[#4a4038]">
+          {desc}
+        </p>
+        <span className="mt-4 inline-flex items-center gap-2 text-sm font-black uppercase tracking-wide" style={{ color }}>
+          {cta} <FaArrowRight className="text-xs" />
+        </span>
       </div>
+    </div>
+  );
+
+  return href ? (
+    <a href={href} target="_blank" rel="noopener noreferrer" className="block h-full">
+      {inner}
+    </a>
+  ) : (
+    <Link to={to} className="block h-full">
+      {inner}
     </Link>
   );
 }

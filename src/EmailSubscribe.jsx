@@ -2,6 +2,18 @@ import React, { useState } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 
+/* ─────────────────────────────────────────────────────────────
+   EMAIL SUBSCRIBE — "Community Poster" restyle
+   Flat white panels, 2px black borders, offset shadows,
+   flag-color accents, dark text on light backgrounds.
+   All subscribe/unsubscribe logic is unchanged.
+   ───────────────────────────────────────────────────────────── */
+
+const FLAG = ["#E40303", "#FF8C00", "#FFED00", "#008026", "#004DFF", "#750787"];
+
+const inputClass =
+  "w-full rounded-xl border-2 border-[#181310] bg-white p-3 font-semibold text-[#181310] placeholder-[#9a8d84] outline-none focus:ring-4 focus:ring-[#FFED00]";
+
 export default function EmailSubscribe({ prideId = 2 }) {
   const [form, setForm] = useState({
     first_name: "",
@@ -14,18 +26,13 @@ export default function EmailSubscribe({ prideId = 2 }) {
   const [loading, setLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
 
-  // NEW — unsubscribe
+  // unsubscribe
   const [unsubscribeEmail, setUnsubscribeEmail] = useState("");
   const [unsubscribeStatus, setUnsubscribeStatus] = useState("");
   const [showUnsub, setShowUnsub] = useState(false);
   const [unsubLoading, setUnsubLoading] = useState(false);
 
-  const SUBSCRIPTION_OPTIONS = [
-    "sponsors",
-    "vendors",
-    "general",
-    "programs",
-  ];
+  const SUBSCRIPTION_OPTIONS = ["sponsors", "vendors", "general", "programs"];
 
   const handleCheckbox = (type) => {
     setForm((prev) => {
@@ -42,15 +49,15 @@ export default function EmailSubscribe({ prideId = 2 }) {
     });
   };
 
-   const submit = async (e) => {
+  const submit = async (e) => {
     e.preventDefault();
     setStatus("");
     setLoading(true);
 
-    console.log("📨 SUBMITTING TO:", 
+    console.log(
+      "📨 SUBMITTING TO:",
       `https://singspacebackend.onrender.com/api/pride/${prideId}/subscribe`
     );
-
     console.log("📦 FORM DATA:", form);
 
     try {
@@ -78,7 +85,7 @@ export default function EmailSubscribe({ prideId = 2 }) {
 
     setLoading(false);
   };
-  // 🔥 NEW: Unsubscribe logic
+
   const unsubscribe = async (e) => {
     e.preventDefault();
     setUnsubLoading(true);
@@ -90,15 +97,14 @@ export default function EmailSubscribe({ prideId = 2 }) {
         `https://singspacebackend.onrender.com/api/pride/${prideId}/subscriptions?email=${unsubscribeEmail.toLowerCase()}`
       );
 
-const results = lookup.data;
-if (!results.length) {
-  setUnsubscribeStatus("not_found");
-  return;
-}
+      const results = lookup.data;
+      if (!results.length) {
+        setUnsubscribeStatus("not_found");
+        setUnsubLoading(false);
+        return;
+      }
 
-const sub_id = results[0].id;
-
-
+      const sub_id = results[0].id;
 
       // 2️⃣ Patch to deactivate subscription
       await axios.patch(
@@ -115,60 +121,58 @@ const sub_id = results[0].id;
   };
 
   return (
-    <div className="mt-16 max-w-3xl mx-auto text-center">
-
+    <div className="mx-auto max-w-3xl text-[#181310]">
       {/* HEADER */}
-      <motion.h2
+      <motion.div
         initial={{ opacity: 0, y: 14 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="text-3xl sm:text-4xl font-extrabold text-yellow-300"
+        transition={{ duration: 0.5 }}
+        className="text-center"
       >
-        Join Our Email List ✉️
-      </motion.h2>
+        <h2 className="hpc-display text-2xl sm:text-3xl font-black uppercase tracking-tight">
+          Join our email list ✉️
+        </h2>
 
-      <p className="mt-2 text-yellow-100/80 font-semibold text-lg">
-       Subscribe to get the latest information for Hartford Pride events, news, and opportunities to get involved including Vendors, Sponsors, Funders & more! <br/> We promise to only send the good stuff — no spam, just love! 🌈
-      </p>
+        {/* flag stripe underline */}
+        <div
+          className="mx-auto mt-3 flex h-1.5 w-28 overflow-hidden rounded-full"
+          aria-hidden="true"
+        >
+          {FLAG.map((c) => (
+            <div key={c} className="flex-1" style={{ backgroundColor: c }} />
+          ))}
+        </div>
 
-      {/* Subscribe Toggle */}
-<div className="mt-8 flex flex-row flex-wrap justify-center items-center gap-3">
-  {/* Subscribe */}
-  <button
-    onClick={() => setShowForm(!showForm)}
-    className="px-4 py-3 font-bold text-yellow-900 border border-white rounded-xl
-      bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-500
-      shadow-lg shadow-amber-500/30
-      hover:from-amber-500 hover:via-yellow-400 hover:to-yellow-300
-      hover:shadow-amber-500/50
-      transition-all duration-300"
-  >
-    {showForm ? "Hide Form" : "Subscribe"}
-  </button>
+        <p className="mx-auto mt-4 max-w-xl text-sm sm:text-base font-semibold leading-relaxed text-[#4a4038]">
+          Get the latest on Hartford Pride events, news, and ways to get
+          involved — vendors, sponsors, funders &amp; more. No spam, just love. 🌈
+        </p>
+      </motion.div>
 
-  {/* Divider text */}
-  <span className="text-yellow-100/70 font-semibold text-sm sm:text-base">
-    or
-  </span>
+      {/* TOGGLES */}
+      <div className="mt-6 flex flex-row flex-wrap items-center justify-center gap-3">
+        <button
+          type="button"
+          onClick={() => setShowForm(!showForm)}
+          className="rounded-xl border-2 border-[#181310] px-5 py-3 text-sm font-black uppercase tracking-wide shadow-[4px_4px_0_#181310] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#181310] transition-all"
+          style={{ backgroundColor: "#FFED00" }}
+        >
+          {showForm ? "Hide form" : "Subscribe"}
+        </button>
 
-  {/* Unsubscribe */}
-  <button
-    onClick={() => setShowUnsub(!showUnsub)}
-    className="px-4 py-3 font-semibold border-white border rounded-xl
-      text-red-900
-      bg-gradient-to-r from-red-200 via-red-300 to-red-400
-      shadow-md shadow-red-500/20
-      hover:from-red-400 hover:via-red-300 hover:to-red-200
-      hover:shadow-red-500/40
-      transition-all duration-300"
-  >
-    {showUnsub ? "Hide" : "Unsubscribe"}
-  </button>
+        <span className="text-sm font-bold text-[#6b5f57]">or</span>
 
-</div>
+        <button
+          type="button"
+          onClick={() => setShowUnsub(!showUnsub)}
+          className="rounded-xl border-2 border-[#181310] bg-white px-5 py-3 text-sm font-black uppercase tracking-wide text-[#E40303] shadow-[4px_4px_0_#181310] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#181310] transition-all"
+        >
+          {showUnsub ? "Hide" : "Unsubscribe"}
+        </button>
+      </div>
 
-      {/* Subscribe Form */}
+      {/* SUBSCRIBE FORM */}
       <AnimatePresence>
         {showForm && (
           <motion.form
@@ -177,71 +181,99 @@ const sub_id = results[0].id;
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }}
-            transition={{ duration: 0.4 }}
-            className="mt-10 bg-black/40 border border-yellow-400/30 p-8 shadow-2xl"
+            transition={{ duration: 0.35 }}
+            className="mt-8 rounded-2xl border-2 border-[#181310] bg-[#FFFBF2] p-5 sm:p-8 text-left shadow-[6px_6px_0_#181310]"
           >
             {/* first + last name */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              <input
-                required
-                placeholder="First Name"
-                value={form.first_name}
-                onChange={(e) =>
-                  setForm({ ...form, first_name: e.target.value })
-                }
-                className="p-3 bg-white/10 border border-yellow-400/30 text-yellow-50 placeholder-yellow-200/40 outline-none"
-              />
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <label className="block">
+                <span className="mb-1 block text-xs font-black uppercase tracking-wider text-[#6b5f57]">
+                  First name
+                </span>
+                <input
+                  required
+                  placeholder="First name"
+                  value={form.first_name}
+                  onChange={(e) =>
+                    setForm({ ...form, first_name: e.target.value })
+                  }
+                  className={inputClass}
+                />
+              </label>
 
-              <input
-                required
-                placeholder="Last Name"
-                value={form.last_name}
-                onChange={(e) =>
-                  setForm({ ...form, last_name: e.target.value })
-                }
-                className="p-3 bg-white/10 border border-yellow-400/30 text-yellow-50 placeholder-yellow-200/40 outline-none"
-              />
+              <label className="block">
+                <span className="mb-1 block text-xs font-black uppercase tracking-wider text-[#6b5f57]">
+                  Last name
+                </span>
+                <input
+                  required
+                  placeholder="Last name"
+                  value={form.last_name}
+                  onChange={(e) =>
+                    setForm({ ...form, last_name: e.target.value })
+                  }
+                  className={inputClass}
+                />
+              </label>
             </div>
 
             {/* email */}
-            <input
-              required
-              type="email"
-              placeholder="Email Address"
-              value={form.email}
-              onChange={(e) =>
-                setForm({ ...form, email: e.target.value.toLowerCase() })
-              }
-              className="mt-5 p-3 w-full bg-white/10 border border-yellow-400/30 text-yellow-50 placeholder-yellow-200/40 outline-none"
-            />
+            <label className="mt-4 block">
+              <span className="mb-1 block text-xs font-black uppercase tracking-wider text-[#6b5f57]">
+                Email address
+              </span>
+              <input
+                required
+                type="email"
+                placeholder="you@example.com"
+                value={form.email}
+                onChange={(e) =>
+                  setForm({ ...form, email: e.target.value.toLowerCase() })
+                }
+                className={inputClass}
+              />
+            </label>
 
-            {/* checkboxes */}
-            <div className="mt-6 text-left grid grid-cols-2 sm:grid-cols-4 gap-y-3 gap-x-2">
-              {SUBSCRIPTION_OPTIONS.map((opt) => (
-                <label
-                  key={opt}
-                  className="flex items-center gap-2 text-yellow-200 font-semibold text-sm cursor-pointer"
-                >
-                  <input
-                    type="checkbox"
-                    checked={form.subscription_types.includes(opt)}
-                    onChange={() => handleCheckbox(opt)}
-                    className="accent-yellow-400"
-                  />
-                  {opt.charAt(0).toUpperCase() + opt.slice(1)}
-                </label>
-              ))}
+            {/* subscription pills */}
+            <div className="mt-6">
+              <span className="block text-xs font-black uppercase tracking-wider text-[#6b5f57]">
+                I&apos;m interested in
+              </span>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {SUBSCRIPTION_OPTIONS.map((opt, i) => {
+                  const active = form.subscription_types.includes(opt);
+                  const color = FLAG[i % FLAG.length];
+                  return (
+                    <label
+                      key={opt}
+                      className={`cursor-pointer select-none rounded-full border-2 border-[#181310] px-4 py-2 text-sm font-black uppercase tracking-wide transition-all ${
+                        active
+                          ? "text-white shadow-[3px_3px_0_#181310]"
+                          : "bg-white text-[#181310] hover:bg-[#f3ece1]"
+                      }`}
+                      style={active ? { backgroundColor: color } : undefined}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={active}
+                        onChange={() => handleCheckbox(opt)}
+                        className="sr-only"
+                      />
+                      {active ? "✓ " : ""}
+                      {opt.charAt(0).toUpperCase() + opt.slice(1)}
+                    </label>
+                  );
+                })}
+              </div>
             </div>
 
             {/* submit */}
             <button
               disabled={loading}
-              className="mt-8 w-full py-3 font-bold text-black border border-black shadow-lg
-                bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-500 
-                hover:from-amber-500 hover:via-yellow-400 hover:to-yellow-300
-                transition-all duration-300"
+              className="mt-8 w-full rounded-xl border-2 border-[#181310] py-3.5 font-black uppercase tracking-wide shadow-[4px_4px_0_#181310] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#181310] transition-all disabled:opacity-60 disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-[4px_4px_0_#181310]"
+              style={{ backgroundColor: "#FFED00" }}
             >
-              {loading ? "Joining..." : "Submit"}
+              {loading ? "Joining..." : "Sign me up"}
             </button>
 
             {/* messages */}
@@ -251,7 +283,8 @@ const sub_id = results[0].id;
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 6 }}
-                  className="mt-5 text-green-400 font-bold"
+                  className="mt-4 rounded-xl border-2 border-[#181310] px-4 py-3 text-center font-black text-white"
+                  style={{ backgroundColor: "#008026" }}
                 >
                   🎉 You are now subscribed!
                 </motion.p>
@@ -261,9 +294,10 @@ const sub_id = results[0].id;
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 6 }}
-                  className="mt-5 text-red-400 font-bold"
+                  className="mt-4 rounded-xl border-2 border-[#181310] px-4 py-3 text-center font-black text-white"
+                  style={{ backgroundColor: "#E40303" }}
                 >
-                  ❌ Something went wrong — please try again.
+                  Something went wrong — please try again.
                 </motion.p>
               )}
             </AnimatePresence>
@@ -271,60 +305,65 @@ const sub_id = results[0].id;
         )}
       </AnimatePresence>
 
-      {/* NEW — UNSUBSCRIBE SECTION */}
-      <div className="mt-14">
-
-
-        <AnimatePresence>
-          {showUnsub && (
-            <motion.form
-              onSubmit={unsubscribe}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -16 }}
-              transition={{ duration: 0.4 }}
-              className="mt-6 bg-black/40 border border-red-500/40 shadow-xl p-6"
-            >
+      {/* UNSUBSCRIBE */}
+      <AnimatePresence>
+        {showUnsub && (
+          <motion.form
+            key="unsubscribe-form"
+            onSubmit={unsubscribe}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.35 }}
+            className="mt-8 rounded-2xl border-2 border-[#181310] bg-white p-5 sm:p-6 text-left shadow-[6px_6px_0_#181310]"
+          >
+            <label className="block">
+              <span className="mb-1 block text-xs font-black uppercase tracking-wider text-[#6b5f57]">
+                Email to unsubscribe
+              </span>
               <input
                 required
                 type="email"
-                placeholder="Enter your email"
+                placeholder="you@example.com"
                 value={unsubscribeEmail}
                 onChange={(e) => setUnsubscribeEmail(e.target.value)}
-                className="w-full p-3 bg-white/10 border border-red-500/40 text-yellow-50 outline-none"
+                className={inputClass}
               />
+            </label>
 
-              <button
-                disabled={unsubLoading}
-                className="mt-5 w-full py-3 font-bold text-black border border-black shadow-lg
-                bg-gradient-to-r from-red-400 via-red-500 to-red-600 
-                hover:from-red-600 hover:via-red-500 hover:to-red-400 
-                transition-all duration-300"
+            <button
+              disabled={unsubLoading}
+              className="mt-5 w-full rounded-xl border-2 border-[#181310] bg-white py-3.5 font-black uppercase tracking-wide text-[#E40303] shadow-[4px_4px_0_#181310] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#181310] transition-all disabled:opacity-60"
+            >
+              {unsubLoading ? "Processing..." : "Unsubscribe"}
+            </button>
+
+            {unsubscribeStatus === "success" && (
+              <p
+                className="mt-4 rounded-xl border-2 border-[#181310] px-4 py-3 text-center font-black text-white"
+                style={{ backgroundColor: "#008026" }}
               >
-                {unsubLoading ? "Processing..." : "Unsubscribe"}
-              </button>
+                You are unsubscribed.
+              </p>
+            )}
 
-              {unsubscribeStatus === "success" && (
-                <p className="mt-4 text-green-400 font-bold">
-                  You are unsubscribed.
-                </p>
-              )}
+            {unsubscribeStatus === "not_found" && (
+              <p className="mt-4 rounded-xl border-2 border-[#181310] bg-[#FFED00] px-4 py-3 text-center font-black">
+                No subscription found for that email.
+              </p>
+            )}
 
-              {unsubscribeStatus === "not_found" && (
-                <p className="mt-4 text-yellow-400 font-bold">
-                  No subscription found for that email.
-                </p>
-              )}
-
-              {unsubscribeStatus === "error" && (
-                <p className="mt-4 text-red-400 font-bold">
-                  Something went wrong.
-                </p>
-              )}
-            </motion.form>
-          )}
-        </AnimatePresence>
-      </div>
+            {unsubscribeStatus === "error" && (
+              <p
+                className="mt-4 rounded-xl border-2 border-[#181310] px-4 py-3 text-center font-black text-white"
+                style={{ backgroundColor: "#E40303" }}
+              >
+                Something went wrong.
+              </p>
+            )}
+          </motion.form>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
