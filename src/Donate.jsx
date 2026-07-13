@@ -184,7 +184,7 @@ export default function Donate() {
           Prefer to give another way? You can also donate via Venmo or check.
         </p>
         <a
-          href="https://Hartfordpridecenter.org/donate"
+          href="https://Hartfordpridecenter.org/support"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-block px-10 py-3 rounded-full bg-gradient-to-r from-yellow-300 via-amber-200 to-yellow-500 text-black font-bold text-lg shadow-lg hover:scale-105 transition"

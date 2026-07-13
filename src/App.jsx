@@ -36,7 +36,6 @@ function App() {
         <Route path="/contact" element={<ContactPageTemplate />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/volunteer" element={<Volunteer />} />
-        <Route path="/donate" element={<Donate />} />
         <Route path="/events" element={<Events />} />
         <Route path="/pride" element={<HartfordCityPride />} />
         <Route path="/support" element={<SponsorInvitation/>}/>
