@@ -22,6 +22,7 @@ import PrideServicePage from "./PrideServicePage";
 import FundersPage from "./FundersPage";
 import SponsorInvitation from "./SponsorInvitation";
 import Donations from "./Donations";
+import Footer from "./Footer";
 function App() {
   return (
     <Router>
@@ -52,6 +53,7 @@ function App() {
 
 
       </Routes>
+      <Footer/>
     </Router>
   );
 }
