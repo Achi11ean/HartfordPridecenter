@@ -76,8 +76,10 @@ export default function HomePage() {
               <br />
               belongs
               <br />
-              <span className="inline-block rotate-1 rounded-lg px-3 text-white" style={{ backgroundColor: "#750787" }}>
-                here.
+<span
+  className="inline-block rotate-1 rounded-lg px-3 text-white"
+  style={{ backgroundColor: "#A855F7" }}
+>                here.
               </span>
             </h1>
 
@@ -88,30 +90,59 @@ export default function HomePage() {
             </p>
 
             {/* primary CTAs */}
-            <div className="mt-8 flex flex-col sm:flex-row flex-wrap gap-3">
-              <Link
-                to="/pride"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-[#181310] px-6 py-4 font-black uppercase tracking-wide text-sm text-white shadow-[4px_4px_0_#181310] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#181310] transition-all"
-                style={{ backgroundColor: "#E40303" }}
-              >
-                Capital City Pride 2026 <FaArrowRight />
-              </Link>
-              <a
-                href="https://karaoverse.com/event/capital-city-pride"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-[#181310] bg-white px-6 py-4 font-black uppercase tracking-wide text-sm shadow-[4px_4px_0_#181310] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#181310] transition-all"
-              >
-                <FaCalendarAlt /> Upcoming events
-              </a>
-              <Link
-                to="/support"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-[#181310] px-6 py-4 font-black uppercase tracking-wide text-sm shadow-[4px_4px_0_#181310] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#181310] transition-all"
-                style={{ backgroundColor: "#FFED00" }}
-              >
-                <FaHandHoldingHeart /> Donate
-              </Link>
-            </div>
+       <div className="mt-8 flex flex-col flex-wrap gap-3 sm:flex-row">
+  <Link
+    to="/pride"
+    className="
+      inline-flex items-center justify-center gap-2
+      rounded-xl border-2 border-[#181310]
+      bg-blue-500 px-6 py-4
+      text-sm font-black uppercase tracking-wide text-white
+      shadow-[4px_4px_0_#181310]
+      transition-all
+      hover:translate-x-[2px] hover:translate-y-[2px]
+      hover:bg-blue-600
+      hover:shadow-[2px_2px_0_#181310]
+    "
+  >
+    Capital City Pride 2026 <FaArrowRight />
+  </Link>
+
+  <a
+    href="https://karaoverse.com/event/capital-city-pride"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="
+      inline-flex items-center justify-center gap-2
+      rounded-xl border-2 border-[#181310]
+      bg-white px-6 py-4
+      text-sm font-black uppercase tracking-wide
+      shadow-[4px_4px_0_#181310]
+      transition-all
+      hover:translate-x-[2px] hover:translate-y-[2px]
+      hover:shadow-[2px_2px_0_#181310]
+    "
+  >
+    <FaCalendarAlt /> Upcoming events
+  </a>
+
+  <Link
+    to="/support"
+    className="
+      inline-flex items-center justify-center gap-2
+      rounded-xl border-2 border-[#181310]
+      bg-green-300 px-6 py-4
+      text-sm font-black uppercase tracking-wide text-[#181310]
+      shadow-[4px_4px_0_#181310]
+      transition-all
+      hover:translate-x-[2px] hover:translate-y-[2px]
+      hover:bg-green-400
+      hover:shadow-[2px_2px_0_#181310]
+    "
+  >
+    <FaHandHoldingHeart /> Donate
+  </Link>
+</div>
           </motion.div>
 
           {/* poster / logo side */}
