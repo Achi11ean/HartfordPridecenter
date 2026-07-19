@@ -1,7 +1,31 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Heart, X, ArrowUpRight, Clock, Share2 } from "lucide-react";
-import PrideHero from "./PrideHero";
+import { motion } from "framer-motion";
+import {
+  Heart,
+  X,
+  ArrowUpRight,
+  ArrowRight,
+  Clock,
+  Share2,
+} from "lucide-react";
 
+/* ─────────────────────────────────────────────────────────────
+   HARTFORD PRIDE CENTER — SUPPORT / SPONSOR PAGE
+   "Community Poster" redesign to match HomePage:
+   cream paper, flat pride-flag color blocks, ink outlines,
+   hard offset shadows, huge Archivo type, rainbow marquee.
+   All donation logic (Stripe links, once/monthly, amount
+   sheet, share, link validation) is unchanged.
+   ───────────────────────────────────────────────────────────── */
+
+const FLAG = ["#E40303", "#FF8C00", "#FFED00", "#008026", "#004DFF", "#750787"];
+const INK = "#181310";
+
+/* ------------------------------------------------------------------ */
+/*  DATA — Stripe links untouched.                                     */
+/*  `hue` is now the poster flag color for each card (assigned by      */
+/*  order below). `pastelHue` keeps the old soft color if you want it. */
+/* ------------------------------------------------------------------ */
 const SHARED_ONE_TIME_LINK = "https://buy.stripe.com/8x24gs2cj5Mm1Sy0Gccwg0e";
 
 const MONTHLY_AMOUNTS = [10, 20, 50];
@@ -11,7 +35,7 @@ const FUNDS = [
     id: "medication",
     name: "Medication Assistance",
     emoji: "💊",
-    hue: "#FF6B6B",
+    pastelHue: "#FF6B6B",
     blurb:
       "Help community members afford life-sustaining medications and prescription costs.",
     oneTime: "https://buy.stripe.com/3cIbIUaIP0s20OugFacwg0i",
@@ -25,7 +49,7 @@ const FUNDS = [
     id: "programming",
     name: "Community Programming",
     emoji: "🤝",
-    hue: "#FFA94D",
+    pastelHue: "#FFA94D",
     blurb:
       "Fund workshops, support groups, education, and events that bring our community together.",
     oneTime: "https://buy.stripe.com/28E5kwbMT8YyeFkex2cwg0h",
@@ -39,7 +63,7 @@ const FUNDS = [
     id: "general",
     name: "General Support",
     emoji: "🏳️‍🌈",
-    hue: "#FFD43B",
+    pastelHue: "#FFD43B",
     blurb:
       "Keep the lights on and the doors open — your gift goes wherever the need is greatest.",
     oneTime: SHARED_ONE_TIME_LINK,
@@ -53,7 +77,7 @@ const FUNDS = [
     id: "pantry",
     name: "Food Pantry",
     emoji: "🥫",
-    hue: "#69DB7C",
+    pastelHue: "#69DB7C",
     blurb:
       "Stock our pantry so no one has to choose between food and other essentials.",
     oneTime: "https://buy.stripe.com/aFaeV69EL6Qq2WCfB6cwg0d",
@@ -67,7 +91,7 @@ const FUNDS = [
     id: "transcare",
     name: "TransCare Support System",
     emoji: "🏳️‍⚧️",
-    hue: "#74C0FC",
+    pastelHue: "#74C0FC",
     blurb:
       "Support gender-affirming care resources, navigation help, and community for trans folks.",
     oneTime: "https://buy.stripe.com/4gM9AMdV1caKdBgex2cwg0b",
@@ -81,7 +105,7 @@ const FUNDS = [
     id: "housing",
     name: "Housing & Safety Resources",
     emoji: "🏠",
-    hue: "#B197FC",
+    pastelHue: "#B197FC",
     blurb:
       "Provide emergency housing assistance and safety resources for LGBTQIA+ people in crisis.",
     oneTime: "https://buy.stripe.com/8x24gs3gn1w654KcoUcwg09",
@@ -91,17 +115,14 @@ const FUNDS = [
       50: null,
     },
   },
-];
+].map((f, i) => ({ ...f, hue: FLAG[i % FLAG.length] }));
 
 const CONTACT_URL = "/contact";
-const SHARE_URL = "https://share.karaoverse.com/og/support";
+const SHARE_URL = "https://share.karaoverse.com/og/pride/support";
 
 /* ------------------------------------------------------------------ */
-/*  Link safety                                                        */
-/*                                                                     */
-/*  Config typos are the one bug class that costs real donations, so   */
-/*  every URL is validated at render instead of trusted. Catches the   */
-/*  string "null", stray whitespace, and anything non-http.            */
+/*  Link safety — config typos are the one bug class that costs real   */
+/*  donations, so every URL is validated at render instead of trusted. */
 /* ------------------------------------------------------------------ */
 const safeLink = (value) => {
   if (typeof value !== "string") return null;
@@ -109,259 +130,26 @@ const safeLink = (value) => {
   return /^https:\/\/\S+$/i.test(url) ? url : null;
 };
 
-/* ------------------------------------------------------------------ */
-/*  THEME                                                              */
-/* ------------------------------------------------------------------ */
-const INK = "#0b0817";
-const SURFACE = "rgba(255, 255, 255, 0.035)";
-const SURFACE_2 = "#171128";
-const LINE = "rgba(255, 255, 255, 0.09)";
-const TEXT = "#f5f2fa";
-const MUTED = "rgba(238, 233, 248, 0.62)";
+/* Pick ink or white text for a given flag color so labels stay legible
+   on yellow/orange as well as the darker hues. */
+const readableText = (hex) => {
+  const h = hex.replace("#", "");
+  const r = parseInt(h.slice(0, 2), 16);
+  const g = parseInt(h.slice(2, 4), 16);
+  const b = parseInt(h.slice(4, 6), 16);
+  const L = 0.299 * r + 0.587 * g + 0.114 * b;
+  return L > 150 ? INK : "#ffffff";
+};
 
-const FONT_BODY = "'Inter', system-ui, -apple-system, sans-serif";
-const FONT_DISPLAY = "'Bricolage Grotesque', 'Inter', sans-serif";
-
-const SPECTRUM = FUNDS.map((f) => f.hue);
-
-/* ------------------------------------------------------------------ */
-/*  SIGNATURE — heart comets                                           */
-/*                                                                     */
-/*  Hearts fall as shooting stars, each trailing its own fund hue, so  */
-/*  the ambient layer is literally made of the same six colors as the  */
-/*  funds below it. Canvas over DOM: one compositor layer, no reflow,  */
-/*  and it idles at ~0% CPU when the tab is hidden.                    */
-/* ------------------------------------------------------------------ */
-function HeartComets() {
-  const canvasRef = useRef(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const ctx = canvas.getContext("2d", { alpha: true });
-    let raf = null;
-    let comets = [];
-    let width = 0;
-    let height = 0;
-    let last = 0;
-
-    const rand = (min, max) => min + Math.random() * (max - min);
-
-    /* Spawn along the top and right edges so every comet crosses the
-       viewport diagonally rather than clipping a corner. */
-    const spawn = (seeded = false) => {
-      const speed = rand(120, 260);
-      const angle = rand(0.62, 0.82); // radians, down-and-left
-      const fromTop = Math.random() > 0.35;
-      const progress = seeded ? Math.random() : 0;
-      const travel = progress * height * 1.4;
-      const dx = -Math.cos(angle);
-      const dy = Math.sin(angle);
-
-      return {
-        x: (fromTop ? rand(0, width * 1.5) : width + rand(0, 200)) + dx * travel,
-        y: (fromTop ? -rand(20, 160) : rand(0, height * 0.6)) + dy * travel,
-        dx,
-        dy,
-        speed,
-        size: rand(5, 11),
-        trail: rand(60, 150),
-        alpha: rand(0.35, 0.85),
-        spin: rand(-0.5, 0.5),
-        rot: rand(-0.4, 0.4),
-        hue: SPECTRUM[Math.floor(Math.random() * SPECTRUM.length)],
-      };
-    };
-
-    const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      width = canvas.clientWidth;
-      height = canvas.clientHeight;
-      canvas.width = Math.floor(width * dpr);
-      canvas.height = Math.floor(height * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-      /* Fewer comets on phones — same density, less battery. */
-      const count = width < 640 ? 7 : width < 1100 ? 11 : 16;
-      comets = Array.from({ length: count }, () => spawn(true));
-    };
-
-    const drawHeart = (x, y, size, rot, hue, alpha) => {
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.rotate(rot);
-      ctx.scale(size, size);
-      ctx.beginPath();
-      ctx.moveTo(0, 0.36);
-      ctx.bezierCurveTo(0, 0.12, -0.52, -0.14, -0.52, -0.46);
-      ctx.bezierCurveTo(-0.52, -0.82, -0.1, -0.86, 0, -0.5);
-      ctx.bezierCurveTo(0.1, -0.86, 0.52, -0.82, 0.52, -0.46);
-      ctx.bezierCurveTo(0.52, -0.14, 0, 0.12, 0, 0.36);
-      ctx.closePath();
-      ctx.restore();
-      ctx.globalAlpha = alpha;
-      ctx.fillStyle = hue;
-      ctx.fill();
-    };
-
-    const frame = (now) => {
-      const dt = Math.min((now - last) / 1000, 0.05) || 0;
-      last = now;
-      ctx.clearRect(0, 0, width, height);
-
-      for (let i = 0; i < comets.length; i++) {
-        const c = comets[i];
-        c.x += c.dx * c.speed * dt;
-        c.y += c.dy * c.speed * dt;
-        c.rot += c.spin * dt;
-
-        const tailX = c.x - c.dx * c.trail;
-        const tailY = c.y - c.dy * c.trail;
-
-        const grad = ctx.createLinearGradient(c.x, c.y, tailX, tailY);
-        grad.addColorStop(0, c.hue);
-        grad.addColorStop(1, "rgba(255, 255, 255, 0)");
-
-        ctx.globalAlpha = c.alpha * 0.55;
-        ctx.strokeStyle = grad;
-        ctx.lineWidth = Math.max(1, c.size * 0.22);
-        ctx.lineCap = "round";
-        ctx.beginPath();
-        ctx.moveTo(c.x, c.y);
-        ctx.lineTo(tailX, tailY);
-        ctx.stroke();
-
-        drawHeart(c.x, c.y, c.size, c.rot, c.hue, c.alpha);
-
-        if (c.x < -160 || c.y > height + 160) comets[i] = spawn(false);
-      }
-
-      ctx.globalAlpha = 1;
-      raf = requestAnimationFrame(frame);
-    };
-
-    /* One static frame for reduced-motion: the hearts are still there,
-       they just aren't moving. */
-    const drawStill = () => {
-      ctx.clearRect(0, 0, width, height);
-      comets.forEach((c) => drawHeart(c.x, c.y, c.size, c.rot, c.hue, c.alpha * 0.5));
-      ctx.globalAlpha = 1;
-    };
-
-    const stop = () => {
-      if (raf) cancelAnimationFrame(raf);
-      raf = null;
-    };
-
-    const start = () => {
-      stop();
-      if (motionQuery.matches) return drawStill();
-      last = performance.now();
-      raf = requestAnimationFrame(frame);
-    };
-
-    const onResize = () => {
-      resize();
-      start();
-    };
-
-    const onVisibility = () => (document.hidden ? stop() : start());
-
-    resize();
-    start();
-
-    window.addEventListener("resize", onResize);
-    document.addEventListener("visibilitychange", onVisibility);
-    motionQuery.addEventListener?.("change", start);
-
-    return () => {
-      stop();
-      window.removeEventListener("resize", onResize);
-      document.removeEventListener("visibilitychange", onVisibility);
-      motionQuery.removeEventListener?.("change", start);
-    };
-  }, []);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      className="pointer-events-none fixed inset-0 h-full w-full"
-      style={{ zIndex: 0 }}
-      aria-hidden="true"
-    />
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  CSS the markup can't carry: font import, hue mixing, keyframes.    */
-/* ------------------------------------------------------------------ */
-const styles = `
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Inter:wght@400;500;600;700&display=swap');
-
-.cd-chip {
-  background: color-mix(in srgb, var(--hue) 16%, transparent);
-  border-color: color-mix(in srgb, var(--hue) 30%, transparent);
-}
-.cd-card {
-  transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
-}
-@media (hover: hover) {
-  .cd-card:hover {
-    transform: translateY(-3px);
-    border-color: color-mix(in srgb, var(--hue) 50%, transparent);
-    box-shadow: 0 18px 40px -18px color-mix(in srgb, var(--hue) 55%, transparent);
-  }
-  .cd-cta:hover {
-    background: color-mix(in srgb, var(--hue) 34%, transparent);
-    border-color: color-mix(in srgb, var(--hue) 72%, transparent);
-  }
-  .cd-amount:hover {
-    background: color-mix(in srgb, var(--hue) 22%, transparent);
-    border-color: color-mix(in srgb, var(--hue) 62%, transparent);
-  }
-  .cd-quiet:hover { color: ${TEXT}; border-color: rgba(255,255,255,.28); }
-}
-.cd-cta {
-  background: color-mix(in srgb, var(--hue) 20%, transparent);
-  border-color: color-mix(in srgb, var(--hue) 44%, transparent);
-  transition: background .18s ease, border-color .18s ease;
-}
-.cd-amount {
-  background: color-mix(in srgb, var(--hue) 9%, transparent);
-  border-color: color-mix(in srgb, var(--hue) 32%, transparent);
-  transition: background .18s ease, border-color .18s ease;
-}
-.cd-quiet { transition: color .18s ease, border-color .18s ease; }
-
-.cd-clamp {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-@media (min-width: 640px) { .cd-clamp { -webkit-line-clamp: 3; } }
-
-.cd-sheet { padding-bottom: max(1.5rem, env(safe-area-inset-bottom)); }
-
-@keyframes cd-fade { from { opacity: 0 } to { opacity: 1 } }
-@keyframes cd-rise {
-  from { opacity: 0; transform: translateY(18px) }
-  to { opacity: 1; transform: translateY(0) }
-}
-.cd-fade { animation: cd-fade .18s ease }
-.cd-rise { animation: cd-rise .26s cubic-bezier(.22,1,.36,1) }
-
-@media (prefers-reduced-motion: reduce) {
-  .cd-fade, .cd-rise { animation: none }
-  .cd-card:hover { transform: none }
-  * { scroll-behavior: auto }
-}
-`;
+const fadeUp = {
+  initial: { opacity: 0, y: 24 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "-60px" },
+  transition: { duration: 0.55, ease: "easeOut" },
+};
 
 const FOCUS =
-  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
+  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#181310]";
 
 /* ------------------------------------------------------------------ */
 /*  COMPONENT                                                          */
@@ -419,41 +207,199 @@ export default function SponsorInvitation() {
   }, [activeFund]);
 
   return (
-    <div
-      className="relative min-h-screen overflow-x-hidden"
-      style={{ background: INK, color: TEXT, fontFamily: FONT_BODY }}
-    >
-      <style>{styles}</style>
+    <div className="min-h-screen bg-[#FFFBF2] text-[#181310] overflow-x-hidden hpc-body">
+      {/* local styles: display font + marquee animation */}
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,400..900&display=swap');
+        .hpc-display { font-family: 'Archivo', system-ui, sans-serif; font-stretch: 87%; }
+        .hpc-body { font-family: 'Archivo', system-ui, sans-serif; }
+        @keyframes hpc-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        .hpc-marquee-track { animation: hpc-marquee 26s linear infinite; }
+        @keyframes cd-rise {
+          from { opacity: 0; transform: translateY(18px) }
+          to { opacity: 1; transform: translateY(0) }
+        }
+        .cd-rise { animation: cd-rise .26s cubic-bezier(.22,1,.36,1) }
+        @media (prefers-reduced-motion: reduce) {
+          .hpc-marquee-track { animation: none; }
+          .cd-rise { animation: none; }
+        }
+      `}</style>
 
-      <HeartComets />
+      {/* ── FLAG STRIPE TOPBAR ── */}
+      <div className="flex h-2.5 mt-10 w-full" aria-hidden="true">
+        {FLAG.map((c) => (
+          <div key={c} className="flex-1" style={{ backgroundColor: c }} />
+        ))}
+      </div>
 
-      {/* Everything above the comet field */}
-      <div className="relative" style={{ zIndex: 1 }}>
-        <PrideHero />
-
-        <section className="mx-auto max-w-5xl px-4 pb-14 pt-8 sm:px-6 sm:pb-20 sm:pt-12">
-          {/* ---------- Header ---------- */}
-          <header className="mx-auto mb-6 max-w-lg text-center sm:mb-8">
-            <h2
-              className="text-[1.75rem] font-extrabold leading-[1.1] tracking-tight sm:text-[2.75rem]"
-              style={{ fontFamily: FONT_DISPLAY }}
-            >
-              Give where it matters most
-            </h2>
-            <p
-              className="mx-auto mt-3 max-w-sm text-sm leading-relaxed sm:text-[0.95rem]"
-              style={{ color: MUTED }}
-            >
-              Six funds, one community. Pick where your gift goes.
+      {/* ── HERO ── */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-12 sm:pt-16 pb-10 sm:pb-14">
+        <div className="grid lg:grid-cols-[1.15fr,0.85fr] gap-10 lg:gap-14 items-center">
+          {/* headline side */}
+          <motion.div
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65, ease: "easeOut" }}
+          >
+            <p className="inline-block rounded-full bg-[#181310] text-white text-[11px] sm:text-xs font-bold uppercase tracking-[0.25em] px-4 py-2">
+              Support · Hartford Pride Center
             </p>
-          </header>
 
-          {/* ---------- Mode toggle ----------
-              One decision up front means each card carries a single
-              button instead of two — the whole grid gets shorter. */}
+            <h1 className="hpc-display mt-6 font-black uppercase leading-[0.92] tracking-tight text-[clamp(2.4rem,8vw,5rem)]">
+              Give where
+              <br />
+              it
+              <span
+                className="mx-2 inline-block -rotate-1 rounded-lg px-3"
+                style={{ backgroundColor: "#FFED00" }}
+              >
+                matters
+              </span>
+              <br />
+              <span
+                className="inline-block rotate-1 rounded-lg px-3 text-white"
+                style={{ backgroundColor: "#750787" }}
+              >
+                most.
+              </span>
+            </h1>
+
+            <p className="mt-6 max-w-xl text-base sm:text-lg leading-relaxed text-[#4a4038] font-medium">
+              Six funds, one community. Pick exactly where your gift goes —
+              medication, food, housing, trans care, programming, or wherever
+              the need is greatest.
+            </p>
+
+            {/* quick CTAs */}
+            <div className="mt-8 flex flex-col flex-wrap gap-3 sm:flex-row">
+              <a
+                href="#funds"
+                className="
+                  inline-flex items-center justify-center gap-2
+                  rounded-xl border-2 border-[#181310]
+                  bg-blue-500 px-6 py-4
+                  text-sm font-black uppercase tracking-wide text-white
+                  shadow-[4px_4px_0_#181310]
+                  transition-all
+                  hover:translate-x-[2px] hover:translate-y-[2px]
+                  hover:bg-blue-600
+                  hover:shadow-[2px_2px_0_#181310]
+                "
+              >
+                Choose a fund <ArrowRight size={16} />
+              </a>
+
+              <button
+                type="button"
+                onClick={handleShare}
+                className="
+                  inline-flex items-center justify-center gap-2
+                  rounded-xl border-2 border-[#181310]
+                  bg-white px-6 py-4
+                  text-sm font-black uppercase tracking-wide
+                  shadow-[4px_4px_0_#181310]
+                  transition-all
+                  hover:translate-x-[2px] hover:translate-y-[2px]
+                  hover:shadow-[2px_2px_0_#181310]
+                "
+              >
+                <Share2 size={15} /> {copied ? "Link copied" : "Share"}
+              </button>
+            </div>
+          </motion.div>
+
+          {/* poster / badge side */}
+          <motion.div
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65, delay: 0.15, ease: "easeOut" }}
+            className="relative mx-auto w-full max-w-sm lg:max-w-none"
+          >
+            <div className="relative rotate-2 rounded-2xl border-2 border-[#181310] bg-white p-6 sm:p-8 shadow-[8px_8px_0_#181310]">
+              <p className="hpc-display text-6xl sm:text-7xl font-black leading-none tracking-tight">
+                100%
+              </p>
+              <p className="mt-3 text-sm sm:text-base font-bold uppercase tracking-wide text-[#4a4038]">
+                of every dollar stays in the community
+              </p>
+              <div className="mt-6 grid grid-cols-3 gap-2">
+                {FUNDS.map((f) => (
+                  <div
+                    key={f.id}
+                    className="flex h-12 items-center justify-center rounded-lg border-2 border-[#181310] text-xl"
+                    style={{ backgroundColor: f.hue }}
+                    aria-hidden="true"
+                  >
+                    <span>{f.emoji}</span>
+                  </div>
+                ))}
+              </div>
+              <div
+                className="mt-5 flex h-2 w-full overflow-hidden rounded-full"
+                aria-hidden="true"
+              >
+                {FLAG.map((c) => (
+                  <div key={c} className="flex-1" style={{ backgroundColor: c }} />
+                ))}
+              </div>
+            </div>
+
+            {/* sticker badges */}
+            <div
+              className="absolute -top-4 -left-3 -rotate-6 rounded-full border-2 border-[#181310] px-4 py-2 text-xs font-black uppercase tracking-wider shadow-[3px_3px_0_#181310]"
+              style={{ backgroundColor: "#FFED00" }}
+            >
+              6 Funds
+            </div>
+            <div
+              className="absolute -bottom-4 -right-2 rotate-3 rounded-full border-2 border-[#181310] px-4 py-2 text-xs font-black uppercase tracking-wider text-white shadow-[3px_3px_0_#181310]"
+              style={{ backgroundColor: "#008026" }}
+            >
+              501(c)(3)
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── RAINBOW MARQUEE (signature) ── */}
+      <div className="overflow-hidden border-y-2 border-[#181310] bg-[#181310] py-3 sm:py-4">
+        <div className="hpc-marquee-track flex w-max items-center gap-8 whitespace-nowrap">
+          {[0, 1].map((copy) => (
+            <div key={copy} className="flex items-center gap-8" aria-hidden={copy === 1}>
+              {["Give", "Sustain", "Uplift", "Protect", "Nourish", "Together"].map(
+                (word, i) => (
+                  <span key={word} className="flex items-center gap-8">
+                    <span
+                      className="hpc-display text-2xl sm:text-3xl font-black uppercase tracking-tight"
+                      style={{ color: FLAG[i % FLAG.length] }}
+                    >
+                      {word}
+                    </span>
+                    <span className="text-white/60 text-xl">✦</span>
+                  </span>
+                )
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── FUNDS ── */}
+      <section id="funds" className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+        <motion.div {...fadeUp}>
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#750787]">
+            Where your gift goes
+          </p>
+          <h2 className="hpc-display mt-2 text-3xl sm:text-5xl font-black uppercase tracking-tight">
+            Pick your fund
+          </h2>
+        </motion.div>
+
+        {/* ---------- Mode toggle ---------- */}
+        <div className="mt-6 sm:mt-8">
           <div
-            className="mx-auto mb-6 grid w-full max-w-[17rem] grid-cols-2 gap-1 rounded-full border p-1 sm:mb-8"
-            style={{ borderColor: LINE, background: "rgba(255,255,255,.03)" }}
+            className="grid w-full max-w-[19rem] grid-cols-2 gap-1 rounded-full border-2 border-[#181310] bg-white p-1 shadow-[3px_3px_0_#181310]"
             role="tablist"
             aria-label="Giving frequency"
           >
@@ -469,10 +415,10 @@ export default function SponsorInvitation() {
                   role="tab"
                   aria-selected={on}
                   onClick={() => setMode(opt.id)}
-                  className={`cursor-pointer rounded-full border-0 px-3 py-2.5 text-[0.8rem] font-semibold transition-colors ${FOCUS}`}
+                  className={`cursor-pointer rounded-full px-3 py-2.5 text-[0.8rem] font-black uppercase tracking-wide transition-colors ${FOCUS}`}
                   style={{
-                    background: on ? TEXT : "transparent",
-                    color: on ? INK : MUTED,
+                    background: on ? INK : "transparent",
+                    color: on ? "#ffffff" : "#4a4038",
                   }}
                 >
                   {opt.label}
@@ -480,40 +426,48 @@ export default function SponsorInvitation() {
               );
             })}
           </div>
+        </div>
 
-          {/* ---------- Fund cards ---------- */}
-          <ul className="grid list-none grid-cols-1 gap-3 p-0 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
-            {FUNDS.map((fund) => {
-              const oneTime = safeLink(fund.oneTime) || SHARED_ONE_TIME_LINK;
-              const hasMonthly = MONTHLY_AMOUNTS.some((a) =>
-                safeLink(fund.monthly?.[a])
-              );
-              return (
-                <li
-                  key={fund.id}
-                  className="cd-card flex flex-col overflow-hidden rounded-2xl border"
-                  style={{ "--hue": fund.hue, background: SURFACE, borderColor: LINE }}
-                >
-                  <div className="flex flex-1 flex-col gap-3 p-4 sm:p-5">
+        {/* ---------- Fund cards ---------- */}
+        <ul className="mt-8 grid list-none grid-cols-1 gap-5 p-0 sm:grid-cols-2 lg:grid-cols-3">
+          {FUNDS.map((fund, i) => {
+            const oneTime = safeLink(fund.oneTime) || SHARED_ONE_TIME_LINK;
+            const hasMonthly = MONTHLY_AMOUNTS.some((a) =>
+              safeLink(fund.monthly?.[a])
+            );
+            const txt = readableText(fund.hue);
+
+            return (
+              <motion.li
+                key={fund.id}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.5, ease: "easeOut", delay: i * 0.05 }}
+                className="flex"
+              >
+                <div className="flex h-full w-full flex-col overflow-hidden rounded-2xl border-2 border-[#181310] bg-white shadow-[6px_6px_0_#181310] transition-transform hover:-translate-y-1">
+                  {/* flag-color top bar */}
+                  <div
+                    className="h-3"
+                    style={{ backgroundColor: fund.hue }}
+                    aria-hidden="true"
+                  />
+                  <div className="flex flex-1 flex-col gap-3 p-5 sm:p-6">
                     <div className="flex items-center gap-3">
                       <span
-                        className="cd-chip inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border text-lg"
+                        className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border-2 border-[#181310] text-xl"
+                        style={{ backgroundColor: fund.hue }}
                         aria-hidden="true"
                       >
                         {fund.emoji}
                       </span>
-                      <h3
-                        className="text-[1.02rem] font-bold leading-snug tracking-tight"
-                        style={{ fontFamily: FONT_DISPLAY }}
-                      >
+                      <h3 className="hpc-display text-lg font-black uppercase leading-tight tracking-tight">
                         {fund.name}
                       </h3>
                     </div>
 
-                    <p
-                      className="cd-clamp flex-1 text-[0.83rem] leading-relaxed"
-                      style={{ color: MUTED }}
-                    >
+                    <p className="flex-1 text-sm font-semibold leading-relaxed text-[#4a4038]">
                       {fund.blurb}
                     </p>
 
@@ -522,79 +476,105 @@ export default function SponsorInvitation() {
                         href={oneTime}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={`cd-cta inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-xl border text-[0.85rem] font-semibold no-underline ${FOCUS}`}
-                        style={{ color: TEXT }}
+                        className={`inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl border-2 border-[#181310] px-4 text-sm font-black uppercase tracking-wide no-underline shadow-[4px_4px_0_#181310] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#181310] ${FOCUS}`}
+                        style={{ backgroundColor: fund.hue, color: txt }}
                       >
                         Give once
-                        <ArrowUpRight size={15} strokeWidth={2.5} />
+                        <ArrowUpRight size={16} strokeWidth={2.75} />
                       </a>
                     ) : hasMonthly ? (
                       <button
                         type="button"
                         onClick={() => setActiveFund(fund)}
-                        className={`cd-cta inline-flex min-h-[44px] cursor-pointer items-center justify-center gap-1.5 rounded-xl border text-[0.85rem] font-semibold ${FOCUS}`}
-                        style={{ color: TEXT }}
+                        className={`inline-flex min-h-[48px] cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-[#181310] px-4 text-sm font-black uppercase tracking-wide shadow-[4px_4px_0_#181310] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#181310] ${FOCUS}`}
+                        style={{ backgroundColor: fund.hue, color: txt }}
                       >
                         Choose an amount
                       </button>
                     ) : (
                       <a
                         href={CONTACT_URL}
-                        className={`cd-quiet inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-xl border bg-transparent text-[0.85rem] font-semibold no-underline ${FOCUS}`}
-                        style={{ borderColor: LINE, color: MUTED }}
+                        className={`inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl border-2 border-[#181310] bg-white px-4 text-sm font-black uppercase tracking-wide text-[#181310] no-underline shadow-[4px_4px_0_#181310] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#181310] ${FOCUS}`}
                       >
-                        <Clock size={14} aria-hidden="true" />
+                        <Clock size={15} aria-hidden="true" />
                         Ask us to set it up
                       </a>
                     )}
                   </div>
-                </li>
-              );
-            })}
-          </ul>
+                </div>
+              </motion.li>
+            );
+          })}
+        </ul>
+      </section>
 
-          {/* ---------- Reassurance + share ---------- */}
-          <div className="mt-8 flex flex-col items-center gap-4 sm:mt-10">
-            <p
-              className="flex max-w-md items-start justify-center gap-2 text-center text-[0.75rem] leading-relaxed"
-              style={{ color: MUTED }}
-            >
-              <Heart size={12} className="mt-0.5 shrink-0" aria-hidden="true" />
-              <span>
-                Hartford Pride Center is a 501(c)(3) nonprofit. Every dollar stays
-                in the community, and you can cancel a monthly gift anytime.
-              </span>
+      {/* ── REASSURANCE BLOCK ── */}
+      <section className="border-y-2 border-[#181310]" style={{ backgroundColor: "#FFED00" }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16 text-center">
+          <motion.div {...fadeUp}>
+            <h2 className="hpc-display mx-auto max-w-3xl text-2xl sm:text-4xl font-black uppercase leading-tight tracking-tight">
+              Every dollar stays in the community.
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-base sm:text-lg font-semibold leading-relaxed text-[#4a3d00]">
+              Hartford Pride Center is a 501(c)(3) nonprofit. You can cancel a
+              monthly gift anytime, and your support goes directly to the people
+              who need it.
             </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <a
+                href="#funds"
+                className="rounded-full border-2 border-[#181310] bg-white px-5 py-2.5 text-sm font-black uppercase tracking-wide hover:bg-[#181310] hover:text-white transition-colors"
+              >
+                Give now
+              </a>
+              <a
+                href={CONTACT_URL}
+                className="rounded-full border-2 border-[#181310] bg-white px-5 py-2.5 text-sm font-black uppercase tracking-wide hover:bg-[#181310] hover:text-white transition-colors"
+              >
+                Contact us
+              </a>
+              <button
+                type="button"
+                onClick={handleShare}
+                className="inline-flex items-center gap-2 rounded-full border-2 border-[#181310] bg-white px-5 py-2.5 text-sm font-black uppercase tracking-wide hover:bg-[#181310] hover:text-white transition-colors"
+              >
+                <Share2 size={14} />
+                {copied ? "Copied" : "Share this page"}
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      </section>
 
-            <button
-              type="button"
-              onClick={handleShare}
-              className={`cd-quiet inline-flex min-h-[40px] cursor-pointer items-center gap-2 rounded-full border bg-transparent px-4 text-[0.78rem] font-semibold ${FOCUS}`}
-              style={{ borderColor: LINE, color: MUTED }}
-            >
-              <Share2 size={13} aria-hidden="true" />
-              {copied ? "Link copied" : "Share this page"}
-            </button>
-          </div>
-        </section>
+      {/* ── FOOTER STRIPE ── */}
+      <div className="bg-[#181310] py-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col items-center gap-2 text-center">
+          <Heart size={16} className="text-white/70" aria-hidden="true" />
+          <p className="text-xs font-semibold text-white/60">
+            Thank you for supporting Hartford Pride Center.
+          </p>
+        </div>
+      </div>
+      <div className="flex h-2.5 w-full" aria-hidden="true">
+        {FLAG.map((c) => (
+          <div key={c} className="flex-1" style={{ backgroundColor: c }} />
+        ))}
       </div>
 
       {/* ---------- Monthly amount sheet ---------- */}
       {activeFund && (
         <div
-          className="cd-fade fixed inset-0 flex items-end justify-center backdrop-blur-md sm:items-center sm:p-5"
-          style={{ background: "rgba(6, 4, 12, .74)", zIndex: 50 }}
+          className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-5"
+          style={{ background: "rgba(24, 19, 16, .55)" }}
           onClick={closeSheet}
           role="presentation"
         >
           <div
-            className="cd-rise cd-sheet relative max-h-[85vh] w-full max-w-sm overflow-y-auto rounded-t-3xl border px-5 pt-7 sm:rounded-3xl sm:px-6 sm:pb-6"
+            className="cd-rise relative max-h-[85vh] w-full max-w-sm overflow-y-auto rounded-t-3xl border-2 border-[#181310] bg-white px-5 pt-7 shadow-[0_-8px_0_#181310] sm:rounded-3xl sm:px-6 sm:pb-6 sm:shadow-[8px_8px_0_#181310]"
             style={{
-              "--hue": activeFund.hue,
-              background: SURFACE_2,
-              borderColor: LINE,
-              borderTopWidth: 3,
+              borderTopWidth: 8,
               borderTopColor: activeFund.hue,
+              paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))",
             }}
             role="dialog"
             aria-modal="true"
@@ -606,15 +586,15 @@ export default function SponsorInvitation() {
               type="button"
               onClick={closeSheet}
               aria-label="Close"
-              className={`cd-quiet absolute right-2.5 top-2.5 inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-0 bg-transparent ${FOCUS}`}
-              style={{ color: MUTED }}
+              className={`absolute right-3 top-3 inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-2 border-[#181310] bg-white text-[#181310] transition-colors hover:bg-[#181310] hover:text-white ${FOCUS}`}
             >
               <X size={18} />
             </button>
 
-            <div className="mb-5 flex items-center gap-3 pr-10">
+            <div className="mb-5 flex items-center gap-3 pr-12">
               <span
-                className="cd-chip inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border text-xl"
+                className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border-2 border-[#181310] text-xl"
+                style={{ backgroundColor: activeFund.hue }}
                 aria-hidden="true"
               >
                 {activeFund.emoji}
@@ -622,18 +602,17 @@ export default function SponsorInvitation() {
               <div>
                 <h3
                   id="cd-sheet-title"
-                  className="text-base font-bold leading-tight"
-                  style={{ fontFamily: FONT_DISPLAY }}
+                  className="hpc-display text-base font-black uppercase leading-tight tracking-tight"
                 >
                   {activeFund.name}
                 </h3>
-                <p className="mt-0.5 text-[0.78rem]" style={{ color: MUTED }}>
+                <p className="mt-0.5 text-[0.72rem] font-bold uppercase tracking-wider text-[#6b5f57]">
                   Monthly gift
                 </p>
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-2.5">
               {monthlyLinks.map(({ amount, link }) =>
                 link ? (
                   <a
@@ -641,15 +620,12 @@ export default function SponsorInvitation() {
                     href={link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`cd-amount flex min-h-[76px] flex-col items-center justify-center gap-0.5 rounded-2xl border no-underline ${FOCUS}`}
+                    className={`flex min-h-[80px] flex-col items-center justify-center gap-0.5 rounded-2xl border-2 border-[#181310] bg-white no-underline shadow-[4px_4px_0_#181310] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#181310] ${FOCUS}`}
                   >
-                    <span
-                      className="text-xl font-extrabold"
-                      style={{ fontFamily: FONT_DISPLAY, color: TEXT }}
-                    >
+                    <span className="hpc-display text-2xl font-black text-[#181310]">
                       ${amount}
                     </span>
-                    <span className="text-[0.68rem]" style={{ color: MUTED }}>
+                    <span className="text-[0.66rem] font-bold uppercase tracking-wider text-[#6b5f57]">
                       / month
                     </span>
                   </a>
@@ -657,16 +633,12 @@ export default function SponsorInvitation() {
                   <span
                     key={amount}
                     aria-disabled="true"
-                    className="flex min-h-[76px] cursor-not-allowed flex-col items-center justify-center gap-0.5 rounded-2xl border border-dashed opacity-45"
-                    style={{ borderColor: LINE }}
+                    className="flex min-h-[80px] cursor-not-allowed flex-col items-center justify-center gap-0.5 rounded-2xl border-2 border-dashed border-[#181310]/40 opacity-50"
                   >
-                    <span
-                      className="text-xl font-extrabold"
-                      style={{ fontFamily: FONT_DISPLAY, color: TEXT }}
-                    >
+                    <span className="hpc-display text-2xl font-black text-[#181310]">
                       ${amount}
                     </span>
-                    <span className="text-[0.68rem]" style={{ color: MUTED }}>
+                    <span className="text-[0.66rem] font-bold uppercase tracking-wider text-[#6b5f57]">
                       soon
                     </span>
                   </span>
@@ -674,15 +646,11 @@ export default function SponsorInvitation() {
               )}
             </div>
 
-            <p
-              className="mt-4 text-center text-[0.72rem] leading-relaxed"
-              style={{ color: MUTED }}
-            >
+            <p className="mt-5 text-center text-[0.75rem] font-semibold leading-relaxed text-[#6b5f57]">
               Want a different amount?{" "}
               <a
                 href={CONTACT_URL}
-                className="font-semibold underline underline-offset-2"
-                style={{ color: TEXT }}
+                className="font-black underline underline-offset-2 text-[#181310]"
               >
                 Contact us
               </a>{" "}

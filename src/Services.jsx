@@ -3,28 +3,42 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
 
-const API = "https://singspacebackend.onrender.com";
+/* ─────────────────────────────────────────────────────────────
+   HARTFORD PRIDE CENTER — SERVICES PAGE
+   "Community Poster" redesign to match HomePage:
+   cream paper, flat pride-flag color blocks, ink outlines,
+   hard offset shadows, huge Archivo type, rainbow marquee.
+   All data-fetching, carousel, routing, and modal logic
+   preserved.
+   ───────────────────────────────────────────────────────────── */
 
-export default function Services({
-  prideId = 2,
-  contactPath = "/contact",
-}) {
+const API = "https://singspacebackend.onrender.com";
+const FLAG = ["#E40303", "#FF8C00", "#FFED00", "#008026", "#004DFF", "#750787"];
+
+/* ink or white text for a given flag color */
+const readableText = (hex) => {
+  const h = hex.replace("#", "");
+  const r = parseInt(h.slice(0, 2), 16);
+  const g = parseInt(h.slice(2, 4), 16);
+  const b = parseInt(h.slice(4, 6), 16);
+  return 0.299 * r + 0.587 * g + 0.114 * b > 150 ? "#181310" : "#ffffff";
+};
+
+export default function Services({ prideId = 2, contactPath = "/contact" }) {
   const [services, setServices] = useState([]);
   const [selectedService, setSelectedService] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [carouselIndex, setCarouselIndex] = useState(0);
 
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const res = await axios.get(
-          `${API}/api/pride/${prideId}/services`
-        );
+        const res = await axios.get(`${API}/api/pride/${prideId}/services`);
 
         setServices(
           (res.data || []).map((s) => ({
             id: s.id,
-                slug: s.slug,          // ✅ REQUIRED
-
+            slug: s.slug, // ✅ REQUIRED
             title: s.title,
             desc: s.description,
             details: s.description,
@@ -33,7 +47,6 @@ export default function Services({
             contact_email: s.contact_email,
             url: s.url,
             service_url: s.service_url,
-
           }))
         );
       } catch (err) {
@@ -46,331 +59,340 @@ export default function Services({
     fetchServices();
   }, [prideId]);
 
+  // Hardcoded banner image to always include
+  const staticBanner =
+    "https://www.garlandcounty.org/ImageRepository/Document?documentId=260";
 
-  const [carouselIndex, setCarouselIndex] = useState(0);
+  // Build final array:
+  const carouselImages = [
+    staticBanner,
+    ...services.map((s) => s.image).filter(Boolean),
+  ];
 
+  useEffect(() => {
+    if (!carouselImages.length) return;
 
+    const id = setInterval(() => {
+      setCarouselIndex((i) => (i + 1) % carouselImages.length);
+    }, 5500);
 
-// Hardcoded banner image to always include
-const staticBanner = "https://www.garlandcounty.org/ImageRepository/Document?documentId=260";
+    return () => clearInterval(id);
+  }, [carouselImages.length]);
 
-// Build final array:
-const carouselImages = [
-  staticBanner,
-  ...services.map((s) => s.image).filter(Boolean),
-];
+  return (
+    <div className="min-h-screen w-full overflow-x-hidden bg-[#FFFBF2] text-[#181310] hpc-body">
+      {/* local styles: display font + marquee animation */}
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,400..900&display=swap');
+        .hpc-display { font-family: 'Archivo', system-ui, sans-serif; font-stretch: 87%; }
+        .hpc-body { font-family: 'Archivo', system-ui, sans-serif; }
+        @keyframes hpc-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        .hpc-marquee-track { animation: hpc-marquee 26s linear infinite; }
+        @media (prefers-reduced-motion: reduce) {
+          .hpc-marquee-track { animation: none; }
+        }
+      `}</style>
 
-useEffect(() => {
-  if (!carouselImages.length) return;
-
-  const id = setInterval(() => {
-    setCarouselIndex((i) => (i + 1) % carouselImages.length);
-  }, 5500);
-
-  return () => clearInterval(id);
-}, [carouselImages.length]);
-
-
-
-return (
-  <div
-    className="
-      min-h-screen w-full overflow-x-hidden
-      bg-gradient-to-b
-      from-[#FFF9D6] via-[#FFE87C] to-[#FACC15]
-      text-[#5A4400]
-    "
-  >
-
-  {/* ========================= HERO: IMAGE CAROUSEL ========================= */}
-{/* ========================= HERO: IMAGE CAROUSEL ========================= */}
-<section
-  className="
-    relative w-full h-[60vh]
-    overflow-hidden shadow-2xl
-    mt-14
-  "
->
-  {/* Wrapper */}
-  <div
-    className="absolute inset-0 flex transition-transform duration-[1200ms] ease-in-out"
-    style={{
-      width: `${carouselImages.length * 100}%`,
-      transform: `translateX(-${carouselIndex * (100 / carouselImages.length)}%)`,
-    }}
-  >
-    {carouselImages.map((src, index) => (
-      <div
-        key={index}
-        className="w-full h-full flex-shrink-0"
-        style={{ width: `${100 / carouselImages.length}%` }}
-      >
-        <img
-          src={src}
-          alt="slide"
-          className="w-full h-full object-cover"
-        />
+      {/* ── FLAG STRIPE TOPBAR ── */}
+      <div className="flex h-2.5 mt-10 w-full" aria-hidden="true">
+        {FLAG.map((c) => (
+          <div key={c} className="flex-1" style={{ backgroundColor: c }} />
+        ))}
       </div>
-    ))}
-  </div>
 
+      {/* ========================= HERO ========================= */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-12 sm:pt-16 pb-8 sm:pb-10">
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.65, ease: "easeOut" }}
+          className="text-center"
+        >
+          <p className="inline-block rounded-full bg-[#181310] text-white text-[11px] sm:text-xs font-bold uppercase tracking-[0.25em] px-4 py-2">
+            Powered by Karaoverse
+          </p>
 
-  {/* DARK OVERLAY FOR LEGIBILITY */}
-  <div className="absolute inset-0 bg-black/40" />
+          <h1 className="hpc-display mx-auto mt-6 max-w-4xl font-black uppercase leading-[0.92] tracking-tight text-[clamp(2.2rem,7vw,4.5rem)]">
+            Community programs
+            <br />
+            <span className="inline-block -rotate-1 rounded-lg px-3" style={{ backgroundColor: "#FFED00" }}>
+              & services
+            </span>
+          </h1>
 
+          <p className="mx-auto mt-6 max-w-2xl text-base sm:text-lg leading-relaxed text-[#4a4038] font-medium">
+            Grow your voice, find support, build community — programming and
+            services across Hartford and the Capital Region.
+          </p>
+        </motion.div>
 
-  {/* GRADIENT BLEND (top lighter / bottom slightly darker) */}
-  <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/60" />
+        {/* ---- FRAMED CAROUSEL ---- */}
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.65, delay: 0.15, ease: "easeOut" }}
+          className="mt-10 rounded-2xl border-2 border-[#181310] bg-white p-3 shadow-[8px_8px_0_#181310]"
+        >
+          <div className="relative h-[42vh] min-h-[260px] w-full overflow-hidden rounded-xl">
+            <div
+              className="absolute inset-0 flex transition-transform duration-[1200ms] ease-in-out"
+              style={{
+                width: `${carouselImages.length * 100}%`,
+                transform: `translateX(-${carouselIndex * (100 / carouselImages.length)}%)`,
+              }}
+            >
+              {carouselImages.map((src, index) => (
+                <div
+                  key={index}
+                  className="h-full flex-shrink-0"
+                  style={{ width: `${100 / carouselImages.length}%` }}
+                >
+                  <img src={src} alt="slide" className="h-full w-full object-cover" />
+                </div>
+              ))}
+            </div>
+          </div>
 
-
-
-  {/* TEXT */}
-  <div
-    className="
-      absolute bottom-12 w-full text-center px-6
-      flex flex-col items-center justify-center
-      text-white z-10
-    "
-  >
-    <h1
-      className="
-        text-4xl sm:text-6xl md:text-7xl font-black
-        drop-shadow-2xl
-      "
-    >
-      Community Programs & Services
-    </h1>
-
-    <p
-      className="
-        max-w-3xl font-semibold mt-6
-        text-base sm:text-xl md:text-2xl
-        drop-shadow-xl
-      "
-    >
-      Grow your voice, find support, build community —
-      powered through the Karaoverse platform.
-    </p>
-  </div>
-</section>
-
-
-    {/* ========================= INTRO TEXT ========================= */}
-
-
-
-    {/* ========================= SERVICE GRID ========================= */}
-    {!loading && services.length > 0 && (
-      <section
-        className="
-          max-w-7xl mx-auto px-6 mt-8
-          grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-14
-        "
-      >
-
-       
-  
-        {services.map((s) => (
-<Link
-  key={s.id}
-  to={`/services/${s.slug}`}
-  className="
-    group relative block overflow-hidden rounded-2xl
-    bg-black shadow-2xl
-    hover:scale-[1.04]
-    transition-all duration-500
-  "
->
-  {/* IMAGE */}
-  <div className="relative h-72 w-full overflow-hidden">
-    <img
-      src={s.image}
-      alt={s.title}
-      className="
-        w-full h-full object-cover
-        group-hover:scale-110
-        transition-transform duration-[2000ms] ease-out
-      "
-    />
-
-    {/* CINEMATIC OVERLAY */}
-    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-  </div>
-
-  {/* TEXT OVERLAY */}
-  <div className="absolute bottom-0 p-6 w-full">
-    <h3
-      className="
-        text-2xl font-extrabold text-white
-        drop-shadow-lg
-        translate-y-6 group-hover:translate-y-0
-        transition-all duration-500
-      "
-    >
-      {s.title}
-    </h3>
-
-    <p
-      className="
-        text-sm text-white/80 mt-2
-        opacity-0 group-hover:opacity-100
-        transition-all duration-500
-        line-clamp-2
-      "
-    >
-      {s.desc}
-    </p>
-
-    <div
-      className="
-        mt-3 text-xs uppercase font-bold tracking-widest
-        text-yellow-400
-        opacity-0 group-hover:opacity-100
-        transition-all duration-500
-      "
-    >
-      Explore →
-    </div>
-  </div>
-
-  {/* GLOW EFFECT */}
-  <div
-    className="
-      absolute inset-0 rounded-2xl
-      opacity-0 group-hover:opacity-100
-      transition duration-500
-      shadow-[0_0_60px_rgba(250,204,21,0.35)]
-      pointer-events-none
-    "
-  />
-</Link>     ))}
+          {/* flag stripe + dots */}
+          <div className="mt-3 flex items-center justify-between gap-4">
+            <div className="flex h-2 flex-1 overflow-hidden rounded-full" aria-hidden="true">
+              {FLAG.map((c) => (
+                <div key={c} className="flex-1" style={{ backgroundColor: c }} />
+              ))}
+            </div>
+            {carouselImages.length > 1 && (
+              <div className="flex shrink-0 items-center gap-1.5">
+                {carouselImages.map((_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    aria-label={`Go to slide ${i + 1}`}
+                    onClick={() => setCarouselIndex(i)}
+                    className="h-3 w-3 rounded-full border-2 border-[#181310] transition-colors"
+                    style={{
+                      backgroundColor: i === carouselIndex ? "#181310" : "transparent",
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </motion.div>
       </section>
-    )}
 
-
-    {/* ========================= NO DATA ========================= */}
-    {!loading && services.length === 0 && (
-      <p
-        className="
-          text-center text-2xl mt-40 font-bold
-          text-black/60 italic
-        "
-      >
-        ⭐️ No programs published yet — come back soon!
-      </p>
-    )}
-
-    {/* ========================= LOADING ========================= */}
-    {loading && (
-      <div className="text-center mt-32 animate-pulse text-xl text-black/70">
-        Loading programs…
+      {/* ── RAINBOW MARQUEE (signature) ── */}
+      <div className="overflow-hidden border-y-2 border-[#181310] bg-[#181310] py-3 sm:py-4">
+        <div className="hpc-marquee-track flex w-max items-center gap-8 whitespace-nowrap">
+          {[0, 1].map((copy) => (
+            <div key={copy} className="flex items-center gap-8" aria-hidden={copy === 1}>
+              {["Support", "Programs", "Wellness", "Advocacy", "Connection", "Care"].map(
+                (word, i) => (
+                  <span key={word} className="flex items-center gap-8">
+                    <span
+                      className="hpc-display text-2xl sm:text-3xl font-black uppercase tracking-tight"
+                      style={{ color: FLAG[i % FLAG.length] }}
+                    >
+                      {word}
+                    </span>
+                    <span className="text-white/60 text-xl">✦</span>
+                  </span>
+                )
+              )}
+            </div>
+          ))}
+        </div>
       </div>
-    )}
 
+      {/* ========================= SERVICE GRID ========================= */}
+      {!loading && services.length > 0 && (
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.55, ease: "easeOut" }}
+          >
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#750787]">
+              Explore
+            </p>
+            <h2 className="hpc-display mt-2 text-3xl sm:text-5xl font-black uppercase tracking-tight">
+              Our programs
+            </h2>
+          </motion.div>
 
-    {/* ========================= FOOTER QUOTE ========================= */}
-    <div className="mt-32 pb-28 text-center px-6">
-      <p
-        className="
-          text-xl md:text-2xl font-black
-          bg-gradient-to-r from-black to-yellow-900
-          bg-clip-text text-transparent
-        "
-      >
-        “Community isn’t a concept — it’s a lifeline.”
-      </p>
+          <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {services.map((s, i) => {
+              const hue = FLAG[i % FLAG.length];
+              return (
+                <motion.div
+                  key={s.id}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{ duration: 0.5, ease: "easeOut", delay: (i % 3) * 0.05 }}
+                >
+                  <Link
+                    to={`/services/${s.slug}`}
+                    className="group flex h-full flex-col overflow-hidden rounded-2xl border-2 border-[#181310] bg-white shadow-[6px_6px_0_#181310] transition-transform hover:-translate-y-1"
+                  >
+                    {/* flag-color top bar */}
+                    <div className="h-3" style={{ backgroundColor: hue }} aria-hidden="true" />
 
-      <p
-        className="
-          mt-3 text-md md:text-lg font-semibold
-          text-[#503B00]/80
-        "
-      >
-        Every profile. Every voice. Every story adds strength.
-      </p>
-    </div>{selectedService && (
-  <div
-    className="
-      fixed inset-0 bg-black/70 backdrop-blur-sm z-50
-      flex items-center justify-center p-6
-    "
-    onClick={() => setSelectedService(null)}
-  >
-    <div
-      className="
-        max-w-3xl w-full bg-white rounded-3xl
-        shadow-2xl overflow-hidden relative
-      "
-      onClick={(e) => e.stopPropagation()}
-    >
-      {/* CLOSE BUTTON */}
-      <button
-        className="
-          absolute top-3 right-3 bg-black/80 text-white
-          rounded-full w-10 h-10 text-xl font-bold shadow-lg
-          hover:bg-black/60 transition
-        "
-        onClick={() => setSelectedService(null)}
-      >
-        ✕
-      </button>
+                    {/* IMAGE */}
+                    <div className="relative h-52 w-full overflow-hidden border-b-2 border-[#181310]">
+                      <img
+                        src={s.image}
+                        alt={s.title}
+                        className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-110"
+                      />
+                    </div>
 
-      {/* IMAGE */}
-      {selectedService.image && (
-        <img
-          src={selectedService.image}
-          alt={selectedService.title}
-          className="w-full h-64 object-cover"
-        />
+                    {/* TEXT */}
+                    <div className="flex flex-1 flex-col p-5 sm:p-6">
+                      <h3 className="hpc-display text-xl font-black uppercase leading-tight tracking-tight">
+                        {s.title}
+                      </h3>
+                      <p className="mt-2 flex-1 text-sm font-semibold leading-relaxed text-[#4a4038] line-clamp-2">
+                        {s.desc}
+                      </p>
+                      <span
+                        className="mt-4 inline-flex items-center gap-2 text-sm font-black uppercase tracking-wide"
+                        style={{ color: hue }}
+                      >
+                        Explore →
+                      </span>
+                    </div>
+                  </Link>
+                </motion.div>
+              );
+            })}
+          </div>
+        </section>
       )}
 
-      <div className="p-8 text-[#503B00]">
-        <h2 className="text-4xl font-black bg-gradient-to-r from-yellow-800 to-yellow-600 bg-clip-text text-transparent">
-          {selectedService.title}
-        </h2>
-
-        <p className="mt-6 leading-relaxed text-lg whitespace-pre-line">
-          {selectedService.details}
-        </p>
-
-        {/* CONTACT INFO */}
-        <div className="mt-8 space-y-2 text-sm">
-          <p><strong>Contact Name:</strong> {selectedService.contact_name}</p>
-          <p><strong>Email:</strong> {selectedService.contact_email}</p>
+      {/* ========================= NO DATA ========================= */}
+      {!loading && services.length === 0 && (
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-20 text-center">
+          <div className="mx-auto inline-block rounded-2xl border-2 border-[#181310] bg-white px-8 py-10 shadow-[6px_6px_0_#181310]">
+            <p className="hpc-display text-2xl font-black uppercase tracking-tight">
+              ⭐️ No programs published yet
+            </p>
+            <p className="mt-2 text-sm font-semibold text-[#4a4038]">
+              Come back soon!
+            </p>
+          </div>
         </div>
+      )}
 
-        {/* BUTTON LINKS */}
-        <div className="flex-col gap-4 mt-10">
-          {selectedService.service_url && (
-            <a
-              href={selectedService.service_url}
-              target="_blank"
-              rel="noreferrer"
-              className="
-                px-6 py-3 rounded-xl font-bold text-white text-center
-                bg-yellow-600 hover:bg-yellow-500 transition
-              "
-            >
-              Visit Service Page
-            </a>
-          )}
+      {/* ========================= LOADING ========================= */}
+      {loading && (
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-24 text-center">
+          <p className="hpc-display animate-pulse text-xl font-black uppercase tracking-wide text-[#4a4038]">
+            Loading programs…
+          </p>
+        </div>
+      )}
 
-          <Link
-            to={contactPath}
-            className="
-              px-6 py-3 rounded-xl font-bold text-black text-center
-              bg-yellow-300 hover:bg-yellow-200 transition
-            "
+      {/* ========================= FOOTER QUOTE ========================= */}
+      <section className="border-y-2 border-[#181310]" style={{ backgroundColor: "#FFED00" }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.55, ease: "easeOut" }}
           >
-            Contact Us
-          </Link>
+            <h2 className="hpc-display mx-auto max-w-3xl text-2xl sm:text-4xl font-black uppercase leading-tight tracking-tight">
+              “Community isn't a concept — it's a lifeline.”
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-base sm:text-lg font-semibold leading-relaxed text-[#4a3d00]">
+              Every profile. Every voice. Every story adds strength.
+            </p>
+          </motion.div>
         </div>
+      </section>
+
+      {/* ── BOTTOM FLAG STRIPE ── */}
+      <div className="flex h-2.5 w-full" aria-hidden="true">
+        {FLAG.map((c) => (
+          <div key={c} className="flex-1" style={{ backgroundColor: c }} />
+        ))}
       </div>
+
+      {/* ========================= MODAL ========================= */}
+      {selectedService && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+          style={{ background: "rgba(24, 19, 16, .55)" }}
+          onClick={() => setSelectedService(null)}
+        >
+          <div
+            className="relative max-h-[88vh] w-full max-w-3xl overflow-y-auto rounded-2xl border-2 border-[#181310] bg-white shadow-[8px_8px_0_#181310]"
+            style={{ borderTopWidth: 8, borderTopColor: FLAG[0] }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* CLOSE BUTTON */}
+            <button
+              type="button"
+              aria-label="Close"
+              className="absolute right-3 top-3 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full border-2 border-[#181310] bg-white text-lg font-black text-[#181310] transition-colors hover:bg-[#181310] hover:text-white"
+              onClick={() => setSelectedService(null)}
+            >
+              ✕
+            </button>
+
+            {/* IMAGE */}
+            {selectedService.image && (
+              <img
+                src={selectedService.image}
+                alt={selectedService.title}
+                className="h-64 w-full border-b-2 border-[#181310] object-cover"
+              />
+            )}
+
+            <div className="p-6 sm:p-8">
+              <h2 className="hpc-display text-3xl font-black uppercase tracking-tight">
+                {selectedService.title}
+              </h2>
+
+              <p className="mt-5 whitespace-pre-line text-base leading-relaxed font-medium text-[#4a4038]">
+                {selectedService.details}
+              </p>
+
+              {/* CONTACT INFO */}
+              <div className="mt-6 space-y-1 text-sm font-semibold text-[#4a4038]">
+                <p>
+                  <strong>Contact Name:</strong> {selectedService.contact_name}
+                </p>
+                <p>
+                  <strong>Email:</strong> {selectedService.contact_email}
+                </p>
+              </div>
+
+              {/* BUTTON LINKS */}
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                {selectedService.service_url && (
+                  <a
+                    href={selectedService.service_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center justify-center rounded-xl border-2 border-[#181310] bg-blue-500 px-6 py-3 text-sm font-black uppercase tracking-wide text-white shadow-[4px_4px_0_#181310] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-blue-600 hover:shadow-[2px_2px_0_#181310]"
+                  >
+                    Visit Service Page
+                  </a>
+                )}
+
+                <Link
+                  to={contactPath}
+                  className="inline-flex items-center justify-center rounded-xl border-2 border-[#181310] bg-white px-6 py-3 text-sm font-black uppercase tracking-wide text-[#181310] shadow-[4px_4px_0_#181310] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#181310]"
+                >
+                  Contact Us
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
-  </div>
-)}
-
-  </div>
-);
-
+  );
 }
