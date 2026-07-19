@@ -13,7 +13,7 @@ import {
   SPECTRUM,
   FOCUS,
   safeLink,
-} from "./prideTheme";
+} from "./PrideTheme";
 
 const SHARED_ONE_TIME_LINK = "https://buy.stripe.com/8x24gs2cj5Mm1Sy0Gccwg0e";
 

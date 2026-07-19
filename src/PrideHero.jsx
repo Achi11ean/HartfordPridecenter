@@ -9,7 +9,7 @@ import {
   FONT_BODY,
   FONT_DISPLAY,
   SPECTRUM,
-} from "./prideTheme";
+} from "./PrideTheme";
 
 /* ------------------------------------------------------------------
    Deliberately NO background color on this section.
