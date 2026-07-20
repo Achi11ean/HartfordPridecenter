@@ -348,20 +348,20 @@ export default function DriscollFund() {
 
       {/* ── FALLING RED RIBBONS (decorative) ── */}
       <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
-        {RIBBONS.map((r, i) => (
-         
-            <img
-  src="/Driscoll.png"
-  alt=""
-  className="hpc-ribbon"
-  style={{
-    left: r.left,
-    animationDelay: r.delay,
-    animationDuration: r.duration,
-    width: r.size,
-  }}
-/>
-        ))}
+      {RIBBONS.map((r, i) => (
+  <img
+    key={`ribbon-${i}`}
+    src="/Driscoll.png"
+    alt=""
+    className="hpc-ribbon"
+    style={{
+      left: r.left,
+      animationDelay: r.delay,
+      animationDuration: r.duration,
+      width: r.size,
+    }}
+  />
+))}
       </div>
 
       {/* everything else sits above the ribbons */}
@@ -464,7 +464,7 @@ export default function DriscollFund() {
         </section>
 
         {/* ── RIBBON MARQUEE ── */}
-        <div className="overflow-hidden border-y-2 border-[#181310] bg-[#181310] py-3 sm:py-4">
+        <div className="overflow-hidden border-y-2 border-[#181310] bg-[#f6f6f6] py-3 sm:py-4">
           <div className="hpc-marquee-track flex w-max items-center gap-8 whitespace-nowrap">
             {[0, 1].map((copy) => (
               <div key={copy} className="flex items-center gap-8" aria-hidden={copy === 1}>
@@ -477,8 +477,13 @@ export default function DriscollFund() {
                       >
                         {word}
                       </span>
-                      <span className="text-xl text-white/60">🎗️</span>
-                    </span>
+<img
+  src="/Driscoll.png"
+  alt=""
+  aria-hidden="true"
+  className="h-7 w-7 shrink-0 object-contain opacity-90 select-none"
+  draggable={false}
+/>                    </span>
                   )
                 )}
               </div>
