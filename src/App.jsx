@@ -13,6 +13,7 @@ import HartfordCityPride from "./CapitalCityPride";
 import AdminSignup from "./AdminSignup";
 import Login from "./Login";
 import AdminDashboard from "./AdminDashboard";
+import DriscollFund from "./DriscollFund";
 import StaffDashboard from "./StaffDashboard";
 import Signup from "./Signup";
 import OurSponsorYellowTemplate from "./OurSponsors";
@@ -46,6 +47,7 @@ function App() {
         <Route path="/staff-dashboard" element={<StaffDashboard />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/sponsors" element={<OurSponsorYellowTemplate />} />
+        <Route path="/driscoll-fund-application" element={<DriscollFund />} />
         <Route path="/resources" element={<Resources />}/>
         <Route path="/sponsorinvitation" element={<SponsorInvitationPage/>}/>
 <Route path="/services/:slug" element={<PrideServicePage />} />
