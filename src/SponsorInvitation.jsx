@@ -33,7 +33,7 @@ const MONTHLY_AMOUNTS = [10, 20, 50];
 const FUNDS = [
   {
     id: "medication",
-    name: "Medication Assistance",
+    name: "Driscoll Fund",
     emoji: "💊",
     pastelHue: "#FF6B6B",
     blurb:
@@ -47,7 +47,7 @@ const FUNDS = [
   },
   {
     id: "programming",
-    name: "Community Programming",
+    name: "Capital City Pride",
     emoji: "🤝",
     pastelHue: "#FFA94D",
     blurb:
@@ -61,7 +61,7 @@ const FUNDS = [
   },
   {
     id: "general",
-    name: "General Support",
+    name: "Employee Resource Group Support",
     emoji: "🏳️‍🌈",
     pastelHue: "#FFD43B",
     blurb:
@@ -75,7 +75,7 @@ const FUNDS = [
   },
   {
     id: "pantry",
-    name: "Food Pantry",
+    name: "Pride Prosperity Partnership",
     emoji: "🥫",
     pastelHue: "#69DB7C",
     blurb:
@@ -89,7 +89,7 @@ const FUNDS = [
   },
   {
     id: "transcare",
-    name: "TransCare Support System",
+    name: "PRIDE Community Cares",
     emoji: "🏳️‍⚧️",
     pastelHue: "#74C0FC",
     blurb:
@@ -103,7 +103,7 @@ const FUNDS = [
   },
   {
     id: "housing",
-    name: "Housing & Safety Resources",
+    name: "Support Groups",
     emoji: "🏠",
     pastelHue: "#B197FC",
     blurb:
