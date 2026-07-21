@@ -41,7 +41,7 @@ const FUNDS = [
     oneTime: "https://buy.stripe.com/3cIbIUaIP0s20OugFacwg0i",
     monthly: {
       10: null,
-      20: "https://buy.stripe.com/28E4gseZ55MmdBg4Wscwg0j",
+      20: "https://buy.stripe.com/7sYaEQ04ba2C40Gex2cwg0k",
       50: null,
     },
   },
