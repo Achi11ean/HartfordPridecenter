@@ -166,18 +166,43 @@ export default function HomePage() {
             </div>
 
             {/* sticker badges */}
-            <div
-              className="absolute -top-4 -left-3 -rotate-6 rounded-full border-2 border-[#181310] px-4 py-2 text-xs font-black uppercase tracking-wider text-white shadow-[3px_3px_0_#181310]"
-              style={{ backgroundColor: "#008026" }}
-            >
-              Community
-            </div>
-            <div
-              className="absolute -bottom-4 -right-2 rotate-3 rounded-full border-2 border-[#181310] px-4 py-2 text-xs font-black uppercase tracking-wider shadow-[3px_3px_0_#181310]"
-              style={{ backgroundColor: "#FF8C00" }}
-            >
-              Advocacy
-            </div>
+           <Link
+  to="/kalos-gala"
+  className="
+    absolute -top-4 -left-3 -rotate-6
+    rounded-full border-2 border-[#181310]
+    px-4 py-2
+    text-xs font-black uppercase tracking-wider text-white
+    shadow-[3px_3px_0_#181310]
+    transition-all duration-200
+    hover:-translate-y-1 hover:scale-105
+    active:translate-y-0 active:scale-95
+    cursor-pointer
+    z-20
+  "
+  style={{ backgroundColor: "#008026" }}
+>
+  Kalos Gala
+</Link>
+
+<Link
+  to="/driscoll-fund-application"
+  className="
+    absolute -bottom-4 -right-2 rotate-3
+    rounded-full border-2 border-[#181310]
+    px-4 py-2
+    text-xs font-black uppercase tracking-wider
+    shadow-[3px_3px_0_#181310]
+    transition-all duration-200
+    hover:-translate-y-1 hover:scale-105
+    active:translate-y-0 active:scale-95
+    cursor-pointer
+    z-20
+  "
+  style={{ backgroundColor: "#FF8C00" }}
+>
+  Driscoll Fund
+</Link>
           </motion.div>
         </div>
       </section>

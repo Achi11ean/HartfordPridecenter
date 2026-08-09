@@ -14,6 +14,7 @@ import AdminSignup from "./AdminSignup";
 import Login from "./Login";
 import AdminDashboard from "./AdminDashboard";
 import DriscollFund from "./DriscollFund";
+import KalosGala from "./KalosGala";
 import StaffDashboard from "./StaffDashboard";
 import Signup from "./Signup";
 import OurSponsorYellowTemplate from "./OurSponsors";
@@ -38,6 +39,7 @@ function App() {
         <Route path="/contact" element={<ContactPageTemplate />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/volunteer" element={<Volunteer />} />
+        <Route path="/kalos-gala" element={<KalosGala />} />
         <Route path="/events" element={<Events />} />
         <Route path="/pride" element={<HartfordCityPride />} />
         <Route path="/support" element={<SponsorInvitation/>}/>
