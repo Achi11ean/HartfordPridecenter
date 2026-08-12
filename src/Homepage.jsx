@@ -227,7 +227,38 @@ export default function HomePage() {
           ))}
         </div>
       </div>
+{/* ── FEATURE VIDEO ── */}
+<section className="max-w-6xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12">
+  <motion.div
+    {...fadeUp}
+    className="rounded-2xl border-2 border-[#181310] bg-white p-2
+               shadow-[8px_8px_0_#181310]"
+  >
+    <video
+      src="/pridevideo.mp4"
+      autoPlay
+      loop
+      muted
+      playsInline
+      controls
+      className="w-full max-h-[650px] rounded-xl object-cover"
+    />
 
+    {/* rainbow accent */}
+    <div
+      className="mt-2 flex h-2 w-full overflow-hidden rounded-full"
+      aria-hidden="true"
+    >
+      {FLAG.map((c) => (
+        <div
+          key={c}
+          className="flex-1"
+          style={{ backgroundColor: c }}
+        />
+      ))}
+    </div>
+  </motion.div>
+</section>
       {/* ── WHAT YOU CAN DO ── */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
         <motion.div {...fadeUp}>
