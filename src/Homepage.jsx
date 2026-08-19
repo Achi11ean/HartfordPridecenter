@@ -14,10 +14,8 @@ import "./App.css";
 import EmailSubscribe from "./EmailSubscribe";
 
 /* ─────────────────────────────────────────────────────────────
-   HARTFORD PRIDE CENTER — "Community Poster" redesign
-   Bright paper background, flat pride-flag color blocks,
-   huge stacked type, sticker badges, rainbow marquee.
-   Mobile-first: everything stacks to one column.
+   HARTFORD PRIDE CENTER — "Community Poster"
+   Home + About merged into a single page.
    ───────────────────────────────────────────────────────────── */
 
 const FLAG = ["#E40303", "#FF8C00", "#FFED00", "#008026", "#004DFF", "#750787"];
@@ -28,6 +26,24 @@ const fadeUp = {
   viewport: { once: true, margin: "-60px" },
   transition: { duration: 0.55, ease: "easeOut" },
 };
+
+/* Came from the About page — needed by the "Explore the center" grid */
+const posterBtn =
+  "flex items-center justify-center rounded-xl border-2 border-[#181310] px-4 py-4 text-center text-sm font-black uppercase tracking-wide shadow-[4px_4px_0_#181310] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#181310]";
+
+const links = [
+  { label: "Services", to: "/services", bg: "#E40303", text: "#FFFFFF" },
+  { label: "Resources", to: "/resources", bg: "#FF8C00", text: "#181310" },
+  {
+    label: "Events",
+    href: "https://karaoverse.com/event/capital-city-pride",
+    bg: "#FFED00",
+    text: "#181310",
+  },
+  { label: "Volunteer", to: "/volunteer", bg: "#008026", text: "#FFFFFF" },
+  { label: "Sponsors", to: "/sponsors", bg: "#004DFF", text: "#FFFFFF" },
+  { label: "Donate", to: "/support", bg: "#750787", text: "#FFFFFF" },
+];
 
 export default function HomePage() {
   const year = new Date().getFullYear();
@@ -53,10 +69,8 @@ export default function HomePage() {
         ))}
       </div>
 
-      {/* ── HEADER ROW ── */}
-   
       {/* ── HERO ── */}
-      <section className="max-w-6xl mt-16  mx-auto px-4 sm:px-6 pt-10 sm:pt-16 pb-12 sm:pb-20">
+      <section className="max-w-6xl mt-16 mx-auto px-4 sm:px-6 pt-10 sm:pt-16 pb-12 sm:pb-20">
         <div className="grid lg:grid-cols-[1.2fr,0.8fr] gap-10 lg:gap-14 items-center">
           {/* headline side */}
           <motion.div
@@ -70,16 +84,20 @@ export default function HomePage() {
 
             <h1 className="hpc-display mt-6 font-black uppercase leading-[0.92] tracking-tight text-[clamp(2.6rem,9vw,5.5rem)]">
               Every
-              <span className="mx-2 inline-block -rotate-1 rounded-lg px-3" style={{ backgroundColor: "#FFED00" }}>
+              <span
+                className="mx-2 inline-block -rotate-1 rounded-lg px-3"
+                style={{ backgroundColor: "#FFED00" }}
+              >
                 one
               </span>
               <br />
               belongs
               <br />
-<span
-  className="inline-block rotate-1 rounded-lg px-3 text-white"
-  style={{ backgroundColor: "#A855F7" }}
->                here.
+              <span
+                className="inline-block rotate-1 rounded-lg px-3 text-white"
+                style={{ backgroundColor: "#A855F7" }}
+              >
+                here.
               </span>
             </h1>
 
@@ -90,59 +108,59 @@ export default function HomePage() {
             </p>
 
             {/* primary CTAs */}
-       <div className="mt-8 flex flex-col flex-wrap gap-3 sm:flex-row">
-  <Link
-    to="/pride"
-    className="
-      inline-flex items-center justify-center gap-2
-      rounded-xl border-2 border-[#181310]
-      bg-blue-500 px-6 py-4
-      text-sm font-black uppercase tracking-wide text-white
-      shadow-[4px_4px_0_#181310]
-      transition-all
-      hover:translate-x-[2px] hover:translate-y-[2px]
-      hover:bg-blue-600
-      hover:shadow-[2px_2px_0_#181310]
-    "
-  >
-    Capital City Pride 2026 <FaArrowRight />
-  </Link>
+            <div className="mt-8 flex flex-col flex-wrap gap-3 sm:flex-row">
+              <Link
+                to="/pride"
+                className="
+                  inline-flex items-center justify-center gap-2
+                  rounded-xl border-2 border-[#181310]
+                  bg-blue-500 px-6 py-4
+                  text-sm font-black uppercase tracking-wide text-white
+                  shadow-[4px_4px_0_#181310]
+                  transition-all
+                  hover:translate-x-[2px] hover:translate-y-[2px]
+                  hover:bg-blue-600
+                  hover:shadow-[2px_2px_0_#181310]
+                "
+              >
+                Capital City Pride 2026 <FaArrowRight />
+              </Link>
 
-  <a
-    href="https://karaoverse.com/event/capital-city-pride"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="
-      inline-flex items-center justify-center gap-2
-      rounded-xl border-2 border-[#181310]
-      bg-white px-6 py-4
-      text-sm font-black uppercase tracking-wide
-      shadow-[4px_4px_0_#181310]
-      transition-all
-      hover:translate-x-[2px] hover:translate-y-[2px]
-      hover:shadow-[2px_2px_0_#181310]
-    "
-  >
-    <FaCalendarAlt /> Upcoming events
-  </a>
+              <a
+                href="https://karaoverse.com/event/capital-city-pride"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="
+                  inline-flex items-center justify-center gap-2
+                  rounded-xl border-2 border-[#181310]
+                  bg-white px-6 py-4
+                  text-sm font-black uppercase tracking-wide
+                  shadow-[4px_4px_0_#181310]
+                  transition-all
+                  hover:translate-x-[2px] hover:translate-y-[2px]
+                  hover:shadow-[2px_2px_0_#181310]
+                "
+              >
+                <FaCalendarAlt /> Upcoming events
+              </a>
 
-  <Link
-    to="/support"
-    className="
-      inline-flex items-center justify-center gap-2
-      rounded-xl border-2 border-[#181310]
-      bg-green-300 px-6 py-4
-      text-sm font-black uppercase tracking-wide text-[#181310]
-      shadow-[4px_4px_0_#181310]
-      transition-all
-      hover:translate-x-[2px] hover:translate-y-[2px]
-      hover:bg-green-400
-      hover:shadow-[2px_2px_0_#181310]
-    "
-  >
-    <FaHandHoldingHeart /> Donate
-  </Link>
-</div>
+              <Link
+                to="/support"
+                className="
+                  inline-flex items-center justify-center gap-2
+                  rounded-xl border-2 border-[#181310]
+                  bg-green-300 px-6 py-4
+                  text-sm font-black uppercase tracking-wide text-[#181310]
+                  shadow-[4px_4px_0_#181310]
+                  transition-all
+                  hover:translate-x-[2px] hover:translate-y-[2px]
+                  hover:bg-green-400
+                  hover:shadow-[2px_2px_0_#181310]
+                "
+              >
+                <FaHandHoldingHeart /> Donate
+              </Link>
+            </div>
           </motion.div>
 
           {/* poster / logo side */}
@@ -158,7 +176,10 @@ export default function HomePage() {
                 alt="Hartford Pride Center"
                 className="w-full rounded-xl object-cover"
               />
-              <div className="mt-3 flex h-2 w-full overflow-hidden rounded-full" aria-hidden="true">
+              <div
+                className="mt-3 flex h-2 w-full overflow-hidden rounded-full"
+                aria-hidden="true"
+              >
                 {FLAG.map((c) => (
                   <div key={c} className="flex-1" style={{ backgroundColor: c }} />
                 ))}
@@ -166,43 +187,43 @@ export default function HomePage() {
             </div>
 
             {/* sticker badges */}
-           <Link
-  to="/kalos-gala"
-  className="
-    absolute -top-4 -left-3 -rotate-6
-    rounded-full border-2 border-[#181310]
-    px-4 py-2
-    text-xs font-black uppercase tracking-wider text-white
-    shadow-[3px_3px_0_#181310]
-    transition-all duration-200
-    hover:-translate-y-1 hover:scale-105
-    active:translate-y-0 active:scale-95
-    cursor-pointer
-    z-20
-  "
-  style={{ backgroundColor: "#008026" }}
->
-  Kalos Gala
-</Link>
+            <Link
+              to="/kalos-gala"
+              className="
+                absolute -top-4 -left-3 -rotate-6
+                rounded-full border-2 border-[#181310]
+                px-4 py-2
+                text-xs font-black uppercase tracking-wider text-white
+                shadow-[3px_3px_0_#181310]
+                transition-all duration-200
+                hover:-translate-y-1 hover:scale-105
+                active:translate-y-0 active:scale-95
+                cursor-pointer
+                z-20
+              "
+              style={{ backgroundColor: "#008026" }}
+            >
+              Kalos Gala
+            </Link>
 
-<Link
-  to="/driscoll-fund-application"
-  className="
-    absolute -bottom-4 -right-2 rotate-3
-    rounded-full border-2 border-[#181310]
-    px-4 py-2
-    text-xs font-black uppercase tracking-wider
-    shadow-[3px_3px_0_#181310]
-    transition-all duration-200
-    hover:-translate-y-1 hover:scale-105
-    active:translate-y-0 active:scale-95
-    cursor-pointer
-    z-20
-  "
-  style={{ backgroundColor: "#FF8C00" }}
->
-  Driscoll Fund
-</Link>
+            <Link
+              to="/driscoll-fund-application"
+              className="
+                absolute -bottom-4 -right-2 rotate-3
+                rounded-full border-2 border-[#181310]
+                px-4 py-2
+                text-xs font-black uppercase tracking-wider
+                shadow-[3px_3px_0_#181310]
+                transition-all duration-200
+                hover:-translate-y-1 hover:scale-105
+                active:translate-y-0 active:scale-95
+                cursor-pointer
+                z-20
+              "
+              style={{ backgroundColor: "#FF8C00" }}
+            >
+              Driscoll Fund
+            </Link>
           </motion.div>
         </div>
       </section>
@@ -212,92 +233,249 @@ export default function HomePage() {
         <div className="hpc-marquee-track flex w-max items-center gap-8 whitespace-nowrap">
           {[0, 1].map((copy) => (
             <div key={copy} className="flex items-center gap-8" aria-hidden={copy === 1}>
-              {["Seen", "Safe", "Celebrated", "Connected", "Proud", "Welcome"].map((word, i) => (
-                <span key={word} className="flex items-center gap-8">
-                  <span
-                    className="hpc-display text-2xl sm:text-3xl font-black uppercase tracking-tight"
-                    style={{ color: FLAG[i % FLAG.length] }}
-                  >
-                    {word}
+              {["Seen", "Safe", "Celebrated", "Connected", "Proud", "Welcome"].map(
+                (word, i) => (
+                  <span key={word} className="flex items-center gap-8">
+                    <span
+                      className="hpc-display text-2xl sm:text-3xl font-black uppercase tracking-tight"
+                      style={{ color: FLAG[i % FLAG.length] }}
+                    >
+                      {word}
+                    </span>
+                    <span className="text-white/60 text-xl">✦</span>
                   </span>
-                  <span className="text-white/60 text-xl">✦</span>
-                </span>
-              ))}
+                )
+              )}
             </div>
           ))}
         </div>
       </div>
-{/* ── FEATURE VIDEO ── */}
-<section className="max-w-6xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12">
-  <motion.div
-    {...fadeUp}
-    className="rounded-2xl border-2 border-[#181310] bg-white p-2
-               shadow-[8px_8px_0_#181310]"
-  >
-    <video
-      src="/pridevideo.mp4"
-      autoPlay
-      loop
-      muted
-      playsInline
-      controls
-      className="w-full max-h-[650px] rounded-xl object-cover"
-    />
 
-    {/* rainbow accent */}
-    <div
-      className="mt-2 flex h-2 w-full overflow-hidden rounded-full"
-      aria-hidden="true"
-    >
-      {FLAG.map((c) => (
-        <div
-          key={c}
-          className="flex-1"
-          style={{ backgroundColor: c }}
-        />
-      ))}
-    </div>
-  </motion.div>
-</section>
-      {/* ── WHAT YOU CAN DO ── */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
-        <motion.div {...fadeUp}>
-          <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#750787]">
-            Get involved
-          </p>
-          <h2 className="hpc-display mt-2 text-3xl sm:text-5xl font-black uppercase tracking-tight">
-            What you can do here
-          </h2>
+      {/* ── FEATURE VIDEO ── */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12">
+        <motion.div
+          {...fadeUp}
+          className="rounded-2xl border-2 border-[#181310] bg-white p-2 shadow-[8px_8px_0_#181310]"
+        >    <div
+            className="mb-2 flex h-2 w-full overflow-hidden rounded-full"
+            aria-hidden="true"
+          >
+            {FLAG.map((c) => (
+              <div key={c} className="flex-1" style={{ backgroundColor: c }} />
+            ))}
+          </div>
+          <video
+            src="/pridevideo.mp4"
+            autoPlay
+            loop
+         
+            playsInline
+            controls
+            className="w-full max-h-[650px] rounded-xl object-cover"
+          />
+
+          {/* rainbow accent */}
+          <div
+            className="mt-2 flex h-2 w-full overflow-hidden rounded-full"
+            aria-hidden="true"
+          >
+            {FLAG.map((c) => (
+              <div key={c} className="flex-1" style={{ backgroundColor: c }} />
+            ))}
+          </div>
         </motion.div>
+      </section>
 
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-5">
-          <ActionCard
-            color="#E40303"
-            icon={<FaCalendarAlt />}
-            title="Find events"
-            desc="Pride celebrations, gatherings, and local community happenings across the Capital Region."
-            cta="See the calendar"
-            href="https://karaoverse.com/event/capital-city-pride"
-          />
-          <ActionCard
-            color="#008026"
-            icon={<FaHandHoldingHeart />}
-            title="Volunteer"
-            desc="Offer your time, your voice, and your skills to help strengthen our mission."
-            cta="Raise your hand"
-            to="/volunteer"
-          />
-          <ActionCard
-            color="#004DFF"
-            icon={<FaUsers />}
-            title="Connect"
-            desc="Reach our team for partnerships, advocacy questions, sponsorships, or support."
-            cta="Say hello"
-            to="/contact"
-          />
+      {/* ── FLAG STRIPE DIVIDER ── */}
+      {/* <div className="flex h-2.5 w-full" aria-hidden="true">
+        {FLAG.map((c) => (
+          <div key={c} className="flex-1" style={{ backgroundColor: c }} />
+        ))}
+      </div> */}
+
+      {/* ── ABOUT HERO ── */}
+      <section className="max-w-full mx-auto px-4 sm:px-6 pt-12 sm:pt-16 pb-10 sm:pb-14">
+        <div className="grid lg:grid-cols-[1fr,1fr] gap-10 lg:gap-14 items-center">
+          {/* headline side */}
+          <motion.div {...fadeUp}>
+            <p className="inline-block rounded-full bg-[#181310] text-white text-[11px] sm:text-xs font-bold uppercase tracking-[0.25em] px-4 py-2">
+              Empower · Educate · Celebrate
+            </p>
+
+            <h2 className="hpc-display mt-6 font-black uppercase leading-[0.92] tracking-tight text-[clamp(2.6rem,9vw,5.5rem)]">
+              About
+              <br />
+              <span
+                className="inline-block -rotate-1 rounded-lg px-3"
+                style={{ backgroundColor: "#FFED00" }}
+              >
+                us.
+              </span>
+            </h2>
+
+            <p className="mt-6 max-w-xl text-base sm:text-lg leading-relaxed text-[#4a4038] font-medium">
+              Building a future where every voice is heard, every identity
+              celebrated, and every person empowered — across Hartford and the
+              Capital Region.
+            </p>
+          </motion.div>
+
+          {/* banner / poster side */}
+          <motion.div {...fadeUp} className="relative mx-auto w-full max-w-md lg:max-w-none">
+            <div className="relative rotate-2 rounded-2xl border-2 border-[#181310] bg-white p-3 shadow-[8px_8px_0_#181310]">
+              <div
+                className="h-56 sm:h-72 w-full rounded-xl bg-cover"
+                style={{
+                  backgroundImage:
+                    "url('https://wp25.s3.amazonaws.com/wp-content/uploads/2025/01/29053539/Parade-Banner.webp')",
+                  backgroundPosition: "center 25%",
+                }}
+                role="img"
+                aria-label="Community celebration banner"
+              />
+              <div
+                className="mt-3 flex h-2 w-full overflow-hidden rounded-full"
+                aria-hidden="true"
+              >
+                {FLAG.map((c) => (
+                  <div key={c} className="flex-1" style={{ backgroundColor: c }} />
+                ))}
+              </div>
+            </div>
+
+            {/* sticker badges */}
+            <div
+              className="absolute -top-4 -left-3 -rotate-6 rounded-full border-2 border-[#181310] px-4 py-2 text-xs font-black uppercase tracking-wider text-white shadow-[3px_3px_0_#181310]"
+              style={{ backgroundColor: "#750787" }}
+            >
+              Since Day One
+            </div>
+            <div
+              className="absolute -bottom-4 -right-2 rotate-3 rounded-full border-2 border-[#181310] px-4 py-2 text-xs font-black uppercase tracking-wider shadow-[3px_3px_0_#181310]"
+              style={{ backgroundColor: "#FF8C00" }}
+            >
+              Greater Hartford
+            </div>
+          </motion.div>
         </div>
       </section>
 
+      {/* ── RAINBOW MARQUEE #2 ── */}
+      {/* <div className="overflow-hidden border-y-2 border-[#181310] bg-[#181310] py-3 sm:py-4">
+        <div className="hpc-marquee-track flex w-max items-center gap-8 whitespace-nowrap">
+          {[0, 1].map((copy) => (
+            <div key={copy} className="flex items-center gap-8" aria-hidden={copy === 1}>
+              {["Empower", "Educate", "Celebrate", "Connect", "Uplift", "Belong"].map(
+                (word, i) => (
+                  <span key={word} className="flex items-center gap-8">
+                    <span
+                      className="hpc-display text-2xl sm:text-3xl font-black uppercase tracking-tight"
+                      style={{ color: FLAG[i % FLAG.length] }}
+                    >
+                      {word}
+                    </span>
+                    <span className="text-white/60 text-xl">✦</span>
+                  </span>
+                )
+              )}
+            </div>
+          ))}
+        </div>
+      </div> */}
+
+      {/* ── QUICK LINKS ── */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-4 sm:py-16">
+        {/* <motion.div {...fadeUp}>
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#750787]">
+            Jump to
+          </p>
+          <h2 className="hpc-display mt-2 text-2xl sm:text-4xl font-black uppercase tracking-tight">
+            Explore the center
+          </h2>
+        </motion.div> */}
+
+        <nav aria-label="Primary">
+          <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+            {links.map((l) =>
+              l.href ? (
+                <a
+                  key={l.label}
+                  href={l.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={posterBtn}
+                  style={{ backgroundColor: l.bg, color: l.text }}
+                >
+                  {l.label}
+                </a>
+              ) : (
+                <Link
+                  key={l.label}
+                  to={l.to}
+                  className={posterBtn}
+                  style={{ backgroundColor: l.bg, color: l.text }}
+                >
+                  {l.label}
+                </Link>
+              )
+            )}
+          </div>
+
+          {/* Meet Our Team — full-width feature button */}
+          <Link
+            to="/ourteam"
+            className="mt-4 flex w-full items-center justify-center gap-3 rounded-xl border-2 border-[#181310] bg-white px-6 py-5 text-lg font-black uppercase tracking-wide shadow-[6px_6px_0_#181310] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[3px_3px_0_#181310]"
+          >
+            Meet Our Team <span aria-hidden="true">🧑‍🧑‍🧒‍🧒</span>
+          </Link>
+        </nav>
+      </section>
+
+      {/* ── MISSION + VALUES ── */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-14 sm:pb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {/* Mission */}
+          <motion.article
+            {...fadeUp}
+            className="flex flex-col overflow-hidden rounded-2xl border-2 border-[#181310] bg-white shadow-[6px_6px_0_#181310]"
+          >
+            <div className="h-3" style={{ backgroundColor: "#E40303" }} aria-hidden="true" />
+            <div className="p-6 md:p-8">
+              <h3 className="hpc-display text-2xl sm:text-3xl font-black uppercase tracking-tight">
+                Our Mission
+              </h3>
+              <p className="mt-3 text-base leading-relaxed font-medium text-[#4a4038]">
+                To create a welcoming and affirming space for all members of the
+                LGBTQIA+ community by fostering connection, promoting
+                self-expression, and providing essential resources that empower
+                individuals and strengthen our collective voice in Greater
+                Hartford.
+              </p>
+            </div>
+          </motion.article>
+
+          {/* Values */}
+          <motion.article
+            {...fadeUp}
+            className="flex flex-col overflow-hidden rounded-2xl border-2 border-[#181310] bg-white shadow-[6px_6px_0_#181310]"
+          >
+            <div className="h-3" style={{ backgroundColor: "#004DFF" }} aria-hidden="true" />
+            <div className="p-6 md:p-8">
+              <h3 className="hpc-display text-2xl sm:text-3xl font-black uppercase tracking-tight">
+                Our Values
+              </h3>
+              <p className="mt-3 text-base leading-relaxed font-medium text-[#4a4038]">
+                We believe in authenticity, inclusivity, and collaboration.
+                Through creativity and compassion, we build bridges across
+                communities and celebrate the beauty of being unapologetically
+                ourselves. Together, we thrive.
+              </p>
+            </div>
+          </motion.article>
+        </div>
+      </section>
+
+   
       {/* ── MISSION BLOCK ── */}
       <section className="border-y-2 border-[#181310]" style={{ backgroundColor: "#FFED00" }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20 text-center">
@@ -310,23 +488,7 @@ export default function HomePage() {
               building a more inclusive future — where authenticity shines,
               partnerships grow stronger, and every voice matters.
             </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
-              {[
-                { label: "About us", to: "/about" },
-                { label: "Resources", to: "/resources" },
-                { label: "Services", to: "/services" },
-                { label: "Sponsors", to: "/sponsors" },
-                { label: "Community funders", to: "/funders" },
-              ].map((btn) => (
-                <Link
-                  key={btn.to}
-                  to={btn.to}
-                  className="rounded-full border-2 border-[#181310] bg-white px-5 py-2.5 text-sm font-black uppercase tracking-wide hover:bg-[#181310] hover:text-white transition-colors"
-                >
-                  {btn.label}
-                </Link>
-              ))}
-            </div>
+          
           </motion.div>
         </div>
       </section>
@@ -358,7 +520,10 @@ export default function HomePage() {
               playsInline
               className="w-full rounded-xl object-cover"
             />
-            <div className="mt-2 flex h-2 w-full overflow-hidden rounded-full" aria-hidden="true">
+            <div
+              className="mt-2 flex h-2 w-full overflow-hidden rounded-full"
+              aria-hidden="true"
+            >
               {FLAG.map((c) => (
                 <div key={c} className="flex-1" style={{ backgroundColor: c }} />
               ))}
@@ -367,7 +532,10 @@ export default function HomePage() {
         </motion.a>
 
         {/* EMAIL */}
-        <motion.div {...fadeUp} className="mt-12 rounded-2xl border-2 border-[#181310] bg-white p-6 sm:p-8 shadow-[8px_8px_0_#181310]">
+        <motion.div
+          {...fadeUp}
+          className="mt-12 rounded-2xl border-2 border-[#181310] bg-white p-6 sm:p-8 shadow-[8px_8px_0_#181310]"
+        >
           <h3 className="hpc-display text-xl sm:text-2xl font-black uppercase tracking-tight">
             Stay in the loop
           </h3>
@@ -379,6 +547,10 @@ export default function HomePage() {
           </div>
         </motion.div>
       </section>
+
+      {/* ══════════════ ABOUT (merged in from the About page) ══════════════ */}
+
+
 
       {/* ── FOOTER ── */}
       <footer className="border-t-2 border-[#181310] bg-[#181310] text-white">
@@ -394,7 +566,10 @@ export default function HomePage() {
                 advocacy, sponsorship, support services, and joyful LGBTQIA+
                 community building across Hartford and beyond.
               </p>
-              <div className="mt-5 flex h-2 w-32 overflow-hidden rounded-full" aria-hidden="true">
+              <div
+                className="mt-5 flex h-2 w-32 overflow-hidden rounded-full"
+                aria-hidden="true"
+              >
                 {FLAG.map((c) => (
                   <div key={c} className="flex-1" style={{ backgroundColor: c }} />
                 ))}
@@ -407,7 +582,6 @@ export default function HomePage() {
                 Explore
               </p>
               <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-sm font-bold">
-                <Link to="/about" className="hover:underline underline-offset-4">About</Link>
                 <Link to="/services" className="hover:underline underline-offset-4">Services</Link>
                 <Link to="/events" className="hover:underline underline-offset-4">Events</Link>
                 <Link to="/volunteer" className="hover:underline underline-offset-4">Volunteer</Link>
@@ -415,6 +589,7 @@ export default function HomePage() {
                 <Link to="/contact" className="hover:underline underline-offset-4">Contact</Link>
                 <Link to="/support" className="hover:underline underline-offset-4">Donate</Link>
                 <Link to="/sponsors" className="hover:underline underline-offset-4">Sponsors</Link>
+                <Link to="/ourteam" className="hover:underline underline-offset-4">Our Team</Link>
               </div>
             </div>
 
@@ -499,7 +674,10 @@ function ActionCard({ color, icon, title, desc, cta, to, href }) {
         <p className="mt-2 flex-1 text-sm font-semibold leading-relaxed text-[#4a4038]">
           {desc}
         </p>
-        <span className="mt-4 inline-flex items-center gap-2 text-sm font-black uppercase tracking-wide" style={{ color }}>
+        <span
+          className="mt-4 inline-flex items-center gap-2 text-sm font-black uppercase tracking-wide"
+          style={{ color }}
+        >
           {cta} <FaArrowRight className="text-xs" />
         </span>
       </div>

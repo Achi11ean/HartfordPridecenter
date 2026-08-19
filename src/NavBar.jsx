@@ -15,8 +15,10 @@ const NAV_ITEMS = [
   { name: "Home", path: "/" },
   { name: "About", path: "/about" },
   { name: "Services", path: "/services" },
-  { name: "Funders", path: "/funders" },
-  { name: "Events", path: "https://karaoverse.com/events", external: true },
+  // { name: "Funders", path: "/funders" },
+    { name: "Driscoll", path: "/driscoll-fund-application" },
+
+  { name: "Events", path: "/events"},
   { name: "Pride", path: "/pride" },
   { name: "Contact", path: "/contact" },
 ];
