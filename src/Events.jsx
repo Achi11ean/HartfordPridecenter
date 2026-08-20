@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   FaCalendarAlt,
   FaMapMarkerAlt,
@@ -11,6 +11,7 @@ import {
   FaTicketAlt,
   FaRedoAlt,
   FaUsers,
+  FaTimes,
 } from "react-icons/fa";
 import PastEvents from "./PastEvents";
 /* ─────────────────────────────────────────────────────────────
@@ -22,7 +23,7 @@ const API_BASE = "https://singspacebackend.onrender.com";
 const PRIDE_ID = 2; // Capital City Pride
 
 /* If you have a detail route like /events/:slug, set this to "/events".
-   Leave "" and cards will only link out to Eventbrite. */
+   Leave "" and cards open the in-page detail modal instead. */
 const EVENT_DETAIL_BASE = "";
 
 const FLAG = ["#E40303", "#FF8C00", "#FFED00", "#008026", "#004DFF", "#750787"];
@@ -59,6 +60,13 @@ function parseDateOnly(s) {
   if (!m) return null;
   const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
   return Number.isNaN(d.getTime()) ? null : d;
+}
+
+/* Date → "YYYY-MM-DD" in LOCAL time (toISOString would shift the day) */
+function isoDate(d) {
+  if (!d) return undefined;
+  const p = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
 }
 
 /* "HH:MM" → "8:00 PM" */
@@ -143,9 +151,7 @@ function nextOccurrence(e) {
 
   if (weekdayIdx < 0) return null;
 
-  const pattern = String(
-    e.recurrence_pattern || "weekly"
-  ).toLowerCase();
+  const pattern = String(e.recurrence_pattern || "weekly").toLowerCase();
 
   // Monthly
   const ordinal = pattern.match(
@@ -153,35 +159,19 @@ function nextOccurrence(e) {
   );
 
   if (ordinal || /month/.test(pattern)) {
-    return nextMonthlyOrdinal(
-      today,
-      weekdayIdx,
-      ordinal ? ordinal[1] : "first"
-    );
+    return nextMonthlyOrdinal(today, weekdayIdx, ordinal ? ordinal[1] : "first");
   }
 
   // Weekly / bi-weekly
   const d = new Date(today);
 
-  d.setDate(
-    d.getDate() +
-      ((weekdayIdx - d.getDay() + 7) % 7)
-  );
+  d.setDate(d.getDate() + ((weekdayIdx - d.getDay() + 7) % 7));
 
-  if (
-    /bi-?weekly|every other|fortnight|two weeks|2 weeks/.test(
-      pattern
-    )
-  ) {
-    const anchor = parseDateOnly(
-      e.recurrence_anchor_date
-    );
+  if (/bi-?weekly|every other|fortnight|two weeks|2 weeks/.test(pattern)) {
+    const anchor = parseDateOnly(e.recurrence_anchor_date);
 
     if (anchor) {
-      const weeks = Math.round(
-        (d - anchor) /
-          (7 * 24 * 60 * 60 * 1000)
-      );
+      const weeks = Math.round((d - anchor) / (7 * 24 * 60 * 60 * 1000));
 
       if (Math.abs(weeks % 2) === 1) {
         d.setDate(d.getDate() + 7);
@@ -191,6 +181,7 @@ function nextOccurrence(e) {
 
   return d;
 }
+
 function recurrenceLabel(e) {
   if (!e.recurring) return null;
   const day = e.recurring_day ? titleCase(e.recurring_day) : null;
@@ -223,11 +214,23 @@ function mapsUrl(e) {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
 }
 
+function longDate(d) {
+  return d.toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
 export default function Events() {
   const [events, setEvents] = useState([]);
   const [status, setStatus] = useState("loading"); // loading | ready | error
   const [errorMsg, setErrorMsg] = useState("");
   const [showPast, setShowPast] = useState(false);
+
+  /* the event currently open in the detail modal: { raw, when, color } */
+  const [selected, setSelected] = useState(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -255,49 +258,24 @@ export default function Events() {
 
   /* Re-sort by real next occurrence — the API's date-asc-nulls-last
      ordering buries recurring events, which have no `date` at all. */
- const upcoming = useMemo(() => {
-  const today = startOfToday();
+  const upcoming = useMemo(() => {
+    const today = startOfToday();
 
-  return events
-    .map((raw) => {
-      const when = nextOccurrence(raw);
+    return events
+      .map((raw) => ({ raw, when: nextOccurrence(raw) }))
 
-      console.log("EVENT DATE CHECK:", {
-        id: raw.id,
-        venue: raw.venue_name,
-        rawDate: raw.date,
-        recurring: raw.recurring,
-        calculatedDate: when,
-        today,
-        showing:
-          !!when && when >= today,
-      });
+      // STRICT:
+      // no valid date = don't show
+      // old date = don't show
+      .filter(
+        ({ when }) =>
+          when && when >= today && when.getFullYear() === today.getFullYear()
+      )
 
-      return {
-        raw,
-        when,
-      };
-    })
+      .sort((a, b) => a.when - b.when);
+  }, [events]);
 
-    // STRICT:
-    // no valid date = don't show
-    // old date = don't show
-  .filter(({ when }) => {
-  return (
-    when &&
-    when >= today &&
-    when.getFullYear() === today.getFullYear()
-  );
-})
-
-    .sort((a, b) => {
-      return a.when - b.when;
-    });
-}, [events]);
-
-const nextUp = upcoming[0] || null;
-
-
+  const nextUp = upcoming[0] || null;
 
   return (
     <div className="min-h-screen bg-[#FFFBF2] text-[#181310] font-sans overflow-x-hidden">
@@ -363,8 +341,6 @@ const nextUp = upcoming[0] || null;
               celebrations — one-offs and the weeklies you can count on.
               Everything here is live from our events board.
             </p>
-
-          
           </motion.div>
 
           {/* next-up poster side */}
@@ -375,7 +351,11 @@ const nextUp = upcoming[0] || null;
             className="relative mx-auto w-full max-w-sm lg:max-w-none"
           >
             <div className="relative rotate-2 rounded-2xl border-2 border-[#181310] bg-white p-3 shadow-[8px_8px_0_#181310]">
-              <NextUpPanel status={status} entry={nextUp} />
+              <NextUpPanel
+                status={status}
+                entry={nextUp}
+                onOpen={() => nextUp && setSelected({ ...nextUp, color: "#FFED00" })}
+              />
               <div
                 className="mt-3 flex h-2 w-full overflow-hidden rounded-full"
                 aria-hidden="true"
@@ -484,24 +464,29 @@ const nextUp = upcoming[0] || null;
                 Nothing on the board yet
               </h3>
               <p className="mx-auto mt-2 max-w-md text-sm font-semibold text-[#4a4038]">
-                The next round of events is still being booked. Check our past events, or head straight to Karaoverse to find local community events in your area.
+                The next round of events is still being booked. Check our past
+                events, or head straight to Karaoverse to find local community
+                events in your area.
               </p>
-   
             </div>
           )}
 
           {status === "ready" && upcoming.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {upcoming.map(({ raw, when }, i) => (
-                <EventCard key={raw.id} event={raw} when={when} index={i} />
+                <EventCard
+                  key={raw.id}
+                  event={raw}
+                  when={when}
+                  index={i}
+                  onOpen={setSelected}
+                />
               ))}
             </div>
           )}
-
-          {/* past events, collapsed by default */}
-      
         </div>
       </section>
+
       <PastEvents />
 
       {/* ── PROUD PARTNER ── */}
@@ -632,12 +617,15 @@ const nextUp = upcoming[0] || null;
           <div key={c} className="flex-1" style={{ backgroundColor: c }} />
         ))}
       </div>
+
+      {/* ── DETAIL MODAL ── */}
+      <EventDetailModal entry={selected} onClose={() => setSelected(null)} />
     </div>
   );
 }
 
 /* ── One event, poster-card style ─────────────────────────── */
-function EventCard({ event, when, index, isPast = false }) {
+export function EventCard({ event, when, index, isPast = false, onOpen }) {
   const color = FLAG[index % FLAG.length];
   const light = color === "#FFED00";
   const ink = light ? "#181310" : "#FFFFFF";
@@ -653,10 +641,18 @@ function EventCard({ event, when, index, isPast = false }) {
   const detailTo =
     EVENT_DETAIL_BASE && event.slug ? `${EVENT_DETAIL_BASE}/${event.slug}` : null;
 
+  const open = () => onOpen?.({ raw: event, when, color, isPast });
+
+  /* links inside the card stop propagation, so this only fires on the card body */
+  const stop = (e) => e.stopPropagation();
+
   return (
     <motion.article
       {...fadeUp}
-      className="flex h-full flex-col overflow-hidden rounded-2xl border-2 border-[#181310] bg-white shadow-[6px_6px_0_#181310] transition-transform hover:-translate-y-1"
+      onClick={onOpen ? open : undefined}
+      className={`flex h-full flex-col overflow-hidden rounded-2xl border-2 border-[#181310] bg-white shadow-[6px_6px_0_#181310] transition-transform hover:-translate-y-1 ${
+        onOpen ? "cursor-pointer" : ""
+      }`}
     >
       <div className="h-3" style={{ backgroundColor: color }} aria-hidden="true" />
 
@@ -669,17 +665,17 @@ function EventCard({ event, when, index, isPast = false }) {
           >
             {when ? (
               <>
-             <span className="hpc-display text-[10px] font-black uppercase tracking-widest">
-  {when.toLocaleDateString("en-US", { month: "short" })}
-</span>
+                <span className="hpc-display text-[10px] font-black uppercase tracking-widest">
+                  {when.toLocaleDateString("en-US", { month: "short" })}
+                </span>
 
-<span className="hpc-display text-2xl font-black leading-none">
-  {when.getDate()}
-</span>
+                <span className="hpc-display text-2xl font-black leading-none">
+                  {when.getDate()}
+                </span>
 
-<span className="hpc-display mt-0.5 text-[9px] font-black tracking-wider opacity-70">
-  {when.getFullYear()}
-</span>
+                <span className="hpc-display mt-0.5 text-[9px] font-black tracking-wider opacity-70">
+                  {when.getFullYear()}
+                </span>
               </>
             ) : (
               <span className="hpc-display text-xs font-black uppercase tracking-widest">
@@ -690,7 +686,20 @@ function EventCard({ event, when, index, isPast = false }) {
 
           <div className="min-w-0">
             <h3 className="hpc-display text-lg font-black uppercase leading-tight tracking-tight">
-              {event.venue_name}
+              {onOpen ? (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    open();
+                  }}
+                  className="text-left uppercase outline-none hover:underline underline-offset-4 focus-visible:rounded focus-visible:ring-2 focus-visible:ring-[#181310] focus-visible:ring-offset-2"
+                >
+                  {event.venue_name}
+                </button>
+              ) : (
+                event.venue_name
+              )}
             </h3>
             {(event.city || event.state) && (
               <p
@@ -728,13 +737,8 @@ function EventCard({ event, when, index, isPast = false }) {
           {when && (
             <p className="flex items-center gap-2">
               <FaCalendarAlt className="shrink-0 text-xs opacity-60" />
-              <time dateTime={when.toISOString().slice(0, 10)}>
-              {when.toLocaleDateString("en-US", {
-  weekday: "long",
-  month: "long",
-  day: "numeric",
-  year: "numeric",
-})}
+              <time dateTime={isoDate(when)}>
+                {longDate(when)}
                 {!event.date && event.recurring && (
                   <span className="ml-1 font-medium text-[#9c9089]">(next)</span>
                 )}
@@ -769,11 +773,26 @@ function EventCard({ event, when, index, isPast = false }) {
 
         {/* actions */}
         <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 pt-4">
+          {onOpen && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                open();
+              }}
+              className="inline-flex items-center gap-2 text-sm font-black uppercase tracking-wide hover:underline underline-offset-4"
+              style={{ color: light ? "#181310" : color }}
+            >
+              View details <FaArrowRight className="text-xs" />
+            </button>
+          )}
+
           {event.eventbrite_url && !isPast && (
             <a
               href={event.eventbrite_url}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={stop}
               className="inline-flex items-center gap-2 text-sm font-black uppercase tracking-wide hover:underline underline-offset-4"
               style={{ color: light ? "#181310" : color }}
             >
@@ -784,10 +803,11 @@ function EventCard({ event, when, index, isPast = false }) {
           {detailTo && (
             <Link
               to={detailTo}
+              onClick={stop}
               className="inline-flex items-center gap-2 text-sm font-black uppercase tracking-wide hover:underline underline-offset-4"
               style={{ color: light ? "#181310" : color }}
             >
-              Details <FaArrowRight className="text-xs" />
+              Full page <FaArrowRight className="text-xs" />
             </Link>
           )}
 
@@ -796,6 +816,7 @@ function EventCard({ event, when, index, isPast = false }) {
               href={mapsUrl(event)}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={stop}
               className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wider text-[#9c9089] hover:text-[#181310]"
             >
               Directions <FaExternalLinkAlt className="text-[9px]" />
@@ -807,8 +828,270 @@ function EventCard({ event, when, index, isPast = false }) {
   );
 }
 
+/* ── Full detail modal ────────────────────────────────────── */
+export function EventDetailModal({ entry, onClose }) {
+  const closeRef = useRef(null);
+
+  useEffect(() => {
+    if (!entry) return undefined;
+
+    const onKey = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+
+    document.addEventListener("keydown", onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    closeRef.current?.focus();
+
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [entry, onClose]);
+
+  const event = entry?.raw;
+  const when = entry?.when;
+  const color = entry?.color || "#750787";
+  const light = color === "#FFED00";
+  const ink = light ? "#181310" : "#FFFFFF";
+
+  const types = event ? eventTypes(event) : [];
+  const repeat = event ? recurrenceLabel(event) : null;
+  const times = event ? timeRange(event) : null;
+  const address = event ? fullAddress(event) : "";
+  const artistCount =
+    event && Array.isArray(event.related_artist_ids)
+      ? event.related_artist_ids.length
+      : 0;
+
+  return (
+    <AnimatePresence>
+      {entry && (
+        <div className="fixed inset-0 z-[100] flex items-end justify-center sm:items-center sm:p-6">
+          {/* backdrop */}
+          <motion.button
+            type="button"
+            aria-label="Close details"
+            onClick={onClose}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
+            className="absolute inset-0 h-full w-full cursor-default bg-[#181310]/70 backdrop-blur-sm"
+          />
+
+          {/* panel */}
+          <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="event-detail-title"
+            initial={{ opacity: 0, y: 40, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 30, scale: 0.98 }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
+            className="relative flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-3xl border-2 border-[#181310] bg-[#FFFBF2] shadow-[8px_8px_0_#181310] sm:rounded-2xl"
+          >
+            {/* flag stripe */}
+            <div className="flex h-2.5 w-full shrink-0" aria-hidden="true">
+              {FLAG.map((c) => (
+                <div key={c} className="flex-1" style={{ backgroundColor: c }} />
+              ))}
+            </div>
+
+            {/* close sticker */}
+            <button
+              ref={closeRef}
+              type="button"
+              onClick={onClose}
+              aria-label="Close details"
+              className="absolute right-4 top-6 z-10 flex h-10 w-10 items-center justify-center rounded-full border-2 border-[#181310] bg-white text-sm shadow-[3px_3px_0_#181310] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0_#181310] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#181310] focus-visible:ring-offset-2"
+            >
+              <FaTimes />
+            </button>
+
+            <div className="overflow-y-auto p-6 sm:p-8">
+              {/* header */}
+              <div className="flex items-start gap-4 pr-12">
+                <div
+                  className="flex h-20 w-20 shrink-0 flex-col items-center justify-center rounded-xl border-2 border-[#181310] shadow-[4px_4px_0_#181310]"
+                  style={{ backgroundColor: color, color: ink }}
+                >
+                  {when ? (
+                    <>
+                      <span className="hpc-display text-[11px] font-black uppercase tracking-widest">
+                        {when.toLocaleDateString("en-US", { month: "short" })}
+                      </span>
+                      <span className="hpc-display text-3xl font-black leading-none">
+                        {when.getDate()}
+                      </span>
+                      <span className="hpc-display mt-0.5 text-[10px] font-black tracking-wider opacity-70">
+                        {when.getFullYear()}
+                      </span>
+                    </>
+                  ) : (
+                    <span className="hpc-display text-sm font-black uppercase tracking-widest">
+                      TBA
+                    </span>
+                  )}
+                </div>
+
+                <div className="min-w-0">
+                  <h2
+                    id="event-detail-title"
+                    className="hpc-display text-2xl font-black uppercase leading-tight tracking-tight sm:text-3xl"
+                  >
+                    {event.venue_name}
+                  </h2>
+                  {(event.city || event.state) && (
+                    <p
+                      className="mt-1.5 text-xs font-black uppercase tracking-[0.2em]"
+                      style={{ color: light ? "#181310" : color }}
+                    >
+                      {[event.city, event.state].filter(Boolean).join(", ")}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* chips */}
+              {(types.length > 0 || repeat) && (
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {types.map((t) => (
+                    <span
+                      key={t}
+                      className="rounded-full border-2 border-[#181310] px-3 py-1 text-[10px] font-black uppercase tracking-wider"
+                      style={{ backgroundColor: color, color: ink }}
+                    >
+                      {t}
+                    </span>
+                  ))}
+                  {repeat && (
+                    <span className="inline-flex items-center gap-1.5 rounded-full border-2 border-[#181310] bg-white px-3 py-1 text-[10px] font-black uppercase tracking-wider">
+                      <FaRedoAlt className="text-[8px]" /> {repeat}
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {/* facts */}
+              <dl className="mt-6 grid gap-4 sm:grid-cols-2">
+                <DetailRow icon={<FaCalendarAlt />} label="Date">
+                  {when ? (
+                    <time dateTime={isoDate(when)}>
+                      {longDate(when)}
+                      {!event.date && event.recurring && (
+                        <span className="ml-1 font-medium text-[#9c9089]">
+                          (next occurrence)
+                        </span>
+                      )}
+                    </time>
+                  ) : (
+                    "To be announced"
+                  )}
+                </DetailRow>
+
+                {times && (
+                  <DetailRow icon={<FaClock />} label="Time">
+                    {times}
+                  </DetailRow>
+                )}
+
+                {address && (
+                  <DetailRow icon={<FaMapMarkerAlt />} label="Where">
+                    {address}
+                  </DetailRow>
+                )}
+
+                {artistCount > 0 && (
+                  <DetailRow icon={<FaUsers />} label="On the bill">
+                    {artistCount} {artistCount === 1 ? "artist" : "artists"}
+                  </DetailRow>
+                )}
+
+                {event.host && (
+                  <DetailRow icon={<FaMicrophoneAlt />} label="Hosted by">
+                    {event.host}
+                  </DetailRow>
+                )}
+              </dl>
+
+              {/* full notes — no clamp */}
+              {event.notes && (
+                <div className="mt-6 rounded-2xl border-2 border-[#181310] bg-white p-5 shadow-[4px_4px_0_#181310]">
+                  <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#9c9089]">
+                    About this event
+                  </p>
+                  <p className="mt-2 whitespace-pre-line text-sm font-medium leading-relaxed text-[#4a4038]">
+                    {event.notes}
+                  </p>
+                </div>
+              )}
+
+              {/* actions */}
+              <div className="mt-7 flex flex-wrap gap-3">
+                {event.eventbrite_url && !entry.isPast && (
+                  <a
+                    href={event.eventbrite_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-xl border-2 border-[#181310] bg-[#181310] px-5 py-3 text-sm font-black uppercase tracking-wide text-white shadow-[4px_4px_0_#181310] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#181310]"
+                  >
+                    <FaTicketAlt className="text-xs" /> Get tickets
+                  </a>
+                )}
+
+                {address && (
+                  <a
+                    href={mapsUrl(event)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-xl border-2 border-[#181310] bg-white px-5 py-3 text-sm font-black uppercase tracking-wide shadow-[4px_4px_0_#181310] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#181310]"
+                  >
+                    Directions <FaExternalLinkAlt className="text-[10px]" />
+                  </a>
+                )}
+
+                {EVENT_DETAIL_BASE && event.slug && (
+                  <Link
+                    to={`${EVENT_DETAIL_BASE}/${event.slug}`}
+                    className="inline-flex items-center gap-2 rounded-xl border-2 border-[#181310] bg-white px-5 py-3 text-sm font-black uppercase tracking-wide shadow-[4px_4px_0_#181310] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#181310]"
+                  >
+                    Full page <FaArrowRight className="text-xs" />
+                  </Link>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+function DetailRow({ icon, label, children }) {
+  return (
+    <div className="flex items-start gap-3">
+      <span
+        className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border-2 border-[#181310] bg-white text-xs"
+        aria-hidden="true"
+      >
+        {icon}
+      </span>
+      <div className="min-w-0">
+        <dt className="text-[10px] font-black uppercase tracking-[0.2em] text-[#9c9089]">
+          {label}
+        </dt>
+        <dd className="mt-0.5 text-sm font-semibold leading-snug text-[#181310]">
+          {children}
+        </dd>
+      </div>
+    </div>
+  );
+}
+
 /* ── Hero "next up" panel ─────────────────────────────────── */
-function NextUpPanel({ status, entry }) {
+function NextUpPanel({ status, entry, onOpen }) {
   if (status === "loading") {
     return (
       <div className="h-56 w-full animate-pulse rounded-xl border-2 border-dashed border-[#181310]/25 bg-[#000000]" />
@@ -831,7 +1114,11 @@ function NextUpPanel({ status, entry }) {
   const types = eventTypes(event);
 
   return (
-    <div className="flex h-56 flex-col justify-center rounded-xl bg-[#181310] p-6">
+    <button
+      type="button"
+      onClick={onOpen}
+      className="flex h-56 w-full flex-col justify-center rounded-xl bg-[#181310] p-6 text-left transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFED00] focus-visible:ring-offset-2"
+    >
       {when ? (
         <p className="hpc-display text-5xl font-black uppercase leading-none tracking-tight text-[#FFED00]">
           {when.toLocaleDateString("en-US", { month: "short" })} {when.getDate()}
@@ -855,7 +1142,11 @@ function NextUpPanel({ status, entry }) {
           {[types[0], repeat].filter(Boolean).join(" · ")}
         </p>
       )}
-    </div>
+
+      <span className="mt-4 text-[10px] font-black uppercase tracking-[0.25em] text-[#FFED00]/80">
+        Tap for details →
+      </span>
+    </button>
   );
 }
 
