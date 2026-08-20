@@ -341,6 +341,8 @@ state: prev.state || parsed.state,
       : "";
 
     return {
+            pride_id: 2,
+
       ...formData,
     event_type: formData.event_type.join(","),
 
@@ -381,8 +383,8 @@ state: prev.state || parsed.state,
 
     try {
       const payload = buildPayload();
-      await axios.post(
-        "https://singspacebackend.onrender.com/event-submissions",
+           await axios.post(
+        "https://singspacebackend.onrender.com/event-submissions/pride",
         payload
       );
 setShowSuccessModal(true);
