@@ -223,6 +223,144 @@ function longDate(d) {
   });
 }
 
+/* ── links buried in free-text notes ─────────────────────────
+   Organizers paste raw URLs into `notes`. We pull them out,
+   give each one a human label, and render them as real links
+   instead of showing a wall of https://...
+   ───────────────────────────────────────────────────────────── */
+
+/* fresh regex per call so a stale lastIndex can never bite us */
+const urlRe = () => /\b(?:https?:\/\/|www\.)[^\s<>"'()[\]]+/gi;
+
+function normalizeHref(raw) {
+  const trimmed = String(raw).replace(/[.,;:!?)\]}'"]+$/, "");
+  return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+}
+
+/* "Tickets" when it's a ticketing host, something recognizable
+   when it's a known platform, "More info" otherwise. */
+function linkLabel(href) {
+  let host = "";
+  let path = "";
+  try {
+    const u = new URL(href);
+    host = u.hostname.replace(/^www\./, "").toLowerCase();
+    path = u.pathname.toLowerCase();
+  } catch {
+    return "More info";
+  }
+
+  if (
+    /eventbrite|ticketmaster|tickettailor|seetickets|showclix|etix|axs\.com|dice\.fm|universe\.com|posh\.vip|prekindle|eventzilla|ticketweb|withfriends/.test(
+      host
+    ) ||
+    /^tickets?\./.test(host) ||
+    /\/(tickets?|rsvp|register|checkout)\b/.test(path)
+  ) {
+    return "Tickets";
+  }
+
+  if (/facebook\.com|fb\.me|fb\.com/.test(host)) return "Facebook event";
+  if (/instagram\.com/.test(host)) return "Instagram";
+  if (/linktr\.ee|beacons\.ai|lnk\.bio|linkin\.bio/.test(host)) return "All links";
+  if (/gofundme|donorbox|givebutter|paypal\.me|venmo\.com/.test(host)) return "Donate";
+  if (/maps\.app\.goo\.gl|goo\.gl\/maps/.test(host + path)) return "Map";
+  if (/karaoverse\.com/.test(host)) return "View on Karaoverse";
+
+  return "More info";
+}
+
+/* URL-ish fields the record might also carry */
+const LINK_FIELDS = [
+  "website",
+  "website_url",
+  "url",
+  "link",
+  "info_url",
+  "more_info_url",
+  "ticket_url",
+  "tickets_url",
+  "facebook_url",
+  "instagram_url",
+];
+
+/* Every link worth a button: scraped out of `notes`, plus any URL
+   fields on the record. `eventbrite_url` is excluded — it already
+   has its own dedicated button. */
+function eventLinks(event) {
+  if (!event) return [];
+
+  const fromNotes = String(event.notes || "").match(urlRe()) || [];
+
+  const fromFields = LINK_FIELDS.filter(
+    (f) =>
+      typeof event[f] === "string" && /^(https?:\/\/|www\.)/i.test(event[f].trim())
+  ).map((f) => event[f].trim());
+
+  const key = (h) => h.toLowerCase().replace(/\/+$/, "");
+  const skip = new Set(event.eventbrite_url ? [key(event.eventbrite_url)] : []);
+  const seen = new Set();
+
+  const tagged = [
+    ...fromNotes.map((raw) => ({ raw, source: "notes" })),
+    ...fromFields.map((raw) => ({ raw, source: "field" })),
+  ];
+
+  return tagged.reduce((out, { raw, source }) => {
+    const href = normalizeHref(raw);
+    const k = key(href);
+    if (skip.has(k) || seen.has(k)) return out;
+    seen.add(k);
+    out.push({ href, label: linkLabel(href), source });
+    return out;
+  }, []);
+}
+
+/* Notes rendered with every bare URL swapped for a labeled link.
+   Done in place rather than stripping the URL out, so a sentence like
+   "Get tickets at <url> — see you there!" keeps reading properly. */
+function LinkedNotes({ text, className = "", accent = "#004DFF", onLinkClick }) {
+  if (!text) return null;
+
+  const src = String(text);
+  const nodes = [];
+  const re = urlRe();
+  let last = 0;
+  let key = 0;
+  let m;
+
+  while ((m = re.exec(src)) !== null) {
+    if (m.index > last) nodes.push(src.slice(last, m.index));
+
+    // punctuation the match swallowed belongs to the sentence, not the URL
+    const cleaned = m[0].replace(/[.,;:!?)\]}'"]+$/, "");
+    const tail = m[0].slice(cleaned.length);
+    const href = normalizeHref(cleaned);
+
+    nodes.push(
+      <a
+        key={`lk${key++}`}
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={onLinkClick}
+        title={href}
+        className="font-black underline decoration-2 underline-offset-2 hover:opacity-70"
+        style={{ color: accent }}
+      >
+        {linkLabel(href)}
+      </a>
+    );
+
+    if (tail) nodes.push(tail);
+    last = re.lastIndex;
+  }
+
+  if (last < src.length) nodes.push(src.slice(last));
+
+  return <p className={className}>{nodes}</p>;
+}
+
 export default function Events() {
   const [events, setEvents] = useState([]);
   const [status, setStatus] = useState("loading"); // loading | ready | error
@@ -634,6 +772,9 @@ export function EventCard({ event, when, index, isPast = false, onOpen }) {
   const repeat = recurrenceLabel(event);
   const times = timeRange(event);
   const address = fullAddress(event);
+  const links = eventLinks(event).filter(
+    (l) => !(isPast && l.label === "Tickets")
+  );
   const artistCount = Array.isArray(event.related_artist_ids)
     ? event.related_artist_ids.length
     : 0;
@@ -765,11 +906,12 @@ export function EventCard({ event, when, index, isPast = false, onOpen }) {
           )}
         </div>
 
-        {event.notes && (
-          <p className="hpc-clamp-3 mt-3 text-sm font-medium leading-relaxed text-[#6b5f57]">
-            {event.notes}
-          </p>
-        )}
+        <LinkedNotes
+          text={event.notes}
+          onLinkClick={stop}
+          accent={light ? "#181310" : color}
+          className="hpc-clamp-3 mt-3 text-sm font-medium leading-relaxed text-[#6b5f57]"
+        />
 
         {/* actions */}
         <div className="mt-auto flex flex-wrap items-center gap-x-4 gap-y-2 pt-4">
@@ -799,6 +941,21 @@ export function EventCard({ event, when, index, isPast = false, onOpen }) {
               <FaTicketAlt className="text-xs" /> Tickets
             </a>
           )}
+
+          {links.slice(0, 2).map(({ href, label }) => (
+            <a
+              key={href}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={stop}
+              className="inline-flex items-center gap-2 text-sm font-black uppercase tracking-wide hover:underline underline-offset-4"
+              style={{ color: light ? "#181310" : color }}
+            >
+              {label === "Tickets" && <FaTicketAlt className="text-xs" />}
+              {label} <FaExternalLinkAlt className="text-[9px]" />
+            </a>
+          ))}
 
           {detailTo && (
             <Link
@@ -864,6 +1021,22 @@ export function EventDetailModal({ entry, onClose }) {
     event && Array.isArray(event.related_artist_ids)
       ? event.related_artist_ids.length
       : 0;
+
+  const allLinks = eventLinks(event).filter(
+    (l) => !(entry?.isPast && l.label === "Tickets")
+  );
+
+  /* no eventbrite_url on the record? then a ticket link found in the
+     notes becomes the primary (filled) button instead — worth repeating
+     even if it also appears inline, since it's the main action */
+  const primaryLink =
+    !event?.eventbrite_url && allLinks.find((l) => l.label === "Tickets");
+
+  /* the full notes are visible here with their links already inline,
+     so only links from dedicated URL fields need their own button */
+  const secondaryLinks = allLinks.filter(
+    (l) => l !== primaryLink && l.source === "field"
+  );
 
   return (
     <AnimatePresence>
@@ -1022,9 +1195,11 @@ export function EventDetailModal({ entry, onClose }) {
                   <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#9c9089]">
                     About this event
                   </p>
-                  <p className="mt-2 whitespace-pre-line text-sm font-medium leading-relaxed text-[#4a4038]">
-                    {event.notes}
-                  </p>
+                  <LinkedNotes
+                    text={event.notes}
+                    accent={light ? "#181310" : color}
+                    className="mt-2 whitespace-pre-line text-sm font-medium leading-relaxed text-[#4a4038]"
+                  />
                 </div>
               )}
 
@@ -1040,6 +1215,30 @@ export function EventDetailModal({ entry, onClose }) {
                     <FaTicketAlt className="text-xs" /> Get tickets
                   </a>
                 )}
+
+                {primaryLink && (
+                  <a
+                    href={primaryLink.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-xl border-2 border-[#181310] bg-[#181310] px-5 py-3 text-sm font-black uppercase tracking-wide text-white shadow-[4px_4px_0_#181310] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#181310]"
+                  >
+                    <FaTicketAlt className="text-xs" /> Get tickets
+                  </a>
+                )}
+
+                {secondaryLinks.map(({ href, label }) => (
+                  <a
+                    key={href}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-xl border-2 border-[#181310] bg-white px-5 py-3 text-sm font-black uppercase tracking-wide shadow-[4px_4px_0_#181310] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#181310]"
+                  >
+                    {label === "Tickets" && <FaTicketAlt className="text-xs" />}
+                    {label} <FaExternalLinkAlt className="text-[10px]" />
+                  </a>
+                ))}
 
                 {address && (
                   <a
