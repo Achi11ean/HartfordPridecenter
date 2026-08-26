@@ -16,7 +16,7 @@ const NAV_ITEMS = [
   { name: "About", path: "/about" },
   { name: "Services", path: "/services" },
   // { name: "Funders", path: "/funders" },
-    { name: "Driscoll", path: "/driscoll-fund-application" },
+    { name: "Driscoll", path: "/driscoll-funds" },
 
   { name: "Events", path: "/events"},
   { name: "Pride", path: "/pride" },

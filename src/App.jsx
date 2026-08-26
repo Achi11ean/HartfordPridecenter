@@ -25,6 +25,7 @@ import FundersPage from "./FundersPage";
 import SponsorInvitation from "./SponsorInvitation";
 import Donations from "./Donations";
 import Footer from "./Footer";
+import DriscollFunds from "./DriscollFunds";
 function App() {
   return (
     <Router>
@@ -40,6 +41,7 @@ function App() {
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/volunteer" element={<Volunteer />} />
         <Route path="/kalos-gala" element={<KalosGala />} />
+        <Route path="/driscoll-funds" element={<DriscollFunds />} />  
         <Route path="/events" element={<Events />} />
         <Route path="/pride" element={<HartfordCityPride />} />
         <Route path="/support" element={<SponsorInvitation/>}/>

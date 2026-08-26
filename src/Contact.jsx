@@ -469,6 +469,10 @@ export default function ContactPageTemplate() {
                 <optgroup label="General">
                   <option value="I want to volunteer">I want to volunteer</option>
                   <option value="I want to Partner">I want to Partner</option>
+                                    <option value="I want to discuss the Driscoll Fund">I want to discuss the Driscoll Fund</option>
+                                                                        <option value="I want to discuss the Kalos Gala">I want to discuss the Kalos Gala</option>
+
+
                 </optgroup>
 
                 {services.length > 0 && (
