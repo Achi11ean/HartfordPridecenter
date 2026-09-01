@@ -17,6 +17,12 @@ const IMAGES = {
   remembering: "/photo4.jpeg",        // Thomas Driscoll & partner             ~ 1000 x 1000
 };
 
+const TIER_CHECKOUT = {
+  Champion: "https://buy.stripe.com/aFa14geZ56Qq40G3Socwg0l",
+  Hero: "https://buy.stripe.com/28E6oA18fdeO40G88Ecwg0m",
+  Partner: "https://buy.stripe.com/aFa14g2cjdeOeFk9cIcwg0n",
+  Supporter: "https://buy.stripe.com/aFa8wI9EL5MmfJo60wcwg0o",
+};
 /* ============================================================================
    2. LINKS — swap these for your routes / anchors / external URLs.
    ============================================================================ */
@@ -534,20 +540,25 @@ export default function DriscollFunds() {
             </p>
 
             <ul className="df-tiers">
-              {TIERS.map((tier) => (
-                <li key={tier.name} className={"df-tier df-tier--" + tier.theme}>
-                  <span className="df-tier__icon">
-                    <Icon name={tier.icon} size={34} stroke={1.4} />
-                  </span>
-                  <h3 className="df-tier__name">{tier.name}</h3>
-                  <p className="df-tier__price">{tier.price}</p>
-                  <p className="df-tier__blurb">{tier.blurb}</p>
-                  <a href={LINKS.foundingPartner} className="df-tier__btn">
-                    View details
-                  </a>
-                </li>
-              ))}
-            </ul>
+  {TIERS.map((tier) => (
+    <li key={tier.name} className={"df-tier df-tier--" + tier.theme}>
+      <span className="df-tier__icon">
+        <Icon name={tier.icon} size={34} stroke={1.4} />
+      </span>
+      <h3 className="df-tier__name">{tier.name}</h3>
+      <p className="df-tier__price">{tier.price}</p>
+      <p className="df-tier__blurb">{tier.blurb}</p>
+      
+       <a href={TIER_CHECKOUT[tier.name] ?? LINKS.foundingPartner}
+        className="df-tier__btn"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Become a {tier.name}
+      </a>
+    </li>
+  ))}
+</ul>
 
             {/* <div className="df-sponsor__all">
               <a href={LINKS.allBenefits} className="df-btn df-btn--outline">
