@@ -70,8 +70,7 @@ const EMPLOYMENT = [
 ];
 
 const handleShare = async () => {
-  const shareUrl =
-    "https://share.karaoverse.com/og/driscoll-fund";
+  const shareUrl = "https://share.karaoverse.com/og/driscoll-fund";
 
   if (navigator.share) {
     try {
@@ -89,6 +88,7 @@ const handleShare = async () => {
     alert("Share link copied!");
   }
 };
+
 const AGE_RANGES = [
   "Under 18",
   "18–24",
@@ -185,7 +185,8 @@ export default function DriscollFund() {
   const toggleRace = (value) => {
     setRaceSelections((prev) => {
       // "Prefer not to disclose" is exclusive
-      if (value === "Prefer not to disclose") return prev.includes(value) ? [] : [value];
+      if (value === "Prefer not to disclose")
+        return prev.includes(value) ? [] : [value];
       const next = prev.filter((r) => r !== "Prefer not to disclose");
       return next.includes(value)
         ? next.filter((r) => r !== value)
@@ -244,7 +245,9 @@ export default function DriscollFund() {
       return;
     }
     if (!reimbursementAck) {
-      setStatus("❗ Please acknowledge that the Driscoll Fund is a reimbursement program.");
+      setStatus(
+        "❗ Please acknowledge that the Driscoll Fund is a reimbursement program."
+      );
       return;
     }
     if (!termsAccepted) {
@@ -345,8 +348,8 @@ export default function DriscollFund() {
         }
         /* gentle bob for the gala ticket badge */
         @keyframes hpc-bob {
-          0%, 100% { transform: rotate(-3deg) translateY(0); }
-          50%      { transform: rotate(-3deg) translateY(-4px); }
+          0%, 100% { transform: translateY(0); }
+          50%      { transform: translateY(-4px); }
         }
         .hpc-bob { animation: hpc-bob 3.2s ease-in-out infinite; }
         @media (prefers-reduced-motion: reduce) {
@@ -357,21 +360,24 @@ export default function DriscollFund() {
       `}</style>
 
       {/* ── FALLING RED RIBBONS (decorative) ── */}
-      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
-      {RIBBONS.map((r, i) => (
-  <img
-    key={`ribbon-${i}`}
-    src="/Driscoll.png"
-    alt=""
-    className="hpc-ribbon"
-    style={{
-      left: r.left,
-      animationDelay: r.delay,
-      animationDuration: r.duration,
-      width: r.size,
-    }}
-  />
-))}
+      <div
+        className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
+        aria-hidden="true"
+      >
+        {RIBBONS.map((r, i) => (
+          <img
+            key={`ribbon-${i}`}
+            src="/Driscoll.png"
+            alt=""
+            className="hpc-ribbon"
+            style={{
+              left: r.left,
+              animationDelay: r.delay,
+              animationDuration: r.duration,
+              width: r.size,
+            }}
+          />
+        ))}
       </div>
 
       {/* everything else sits above the ribbons */}
@@ -383,45 +389,94 @@ export default function DriscollFund() {
           ))}
         </div>
 
-        {/* ── HERO ── */}
-        <section className="mx-auto max-w-6xl px-4 pb-8 pt-12 sm:px-6 sm:pb-10 sm:pt-16">
-          <div className="grid items-center gap-10 lg:grid-cols-[1fr,1fr] lg:gap-14">
-            {/* LEFT COLUMN — headline, gala ticket, share */}
+        {/* ══════════════════════════════════════════════════════
+            HERO — two real columns on desktop, stacked on mobile.
+            LEFT  : eyebrow, headline, lede, actions
+            RIGHT : framed banner
+            ══════════════════════════════════════════════════════ */}
+        <section className="mx-auto max-w-6xl px-4 pb-10 pt-10 sm:px-6 sm:pb-12 sm:pt-14">
+          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
+            {/* ── LEFT: copy + actions ── */}
             <motion.div
               initial={{ opacity: 0, y: 28 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.65, ease: "easeOut" }}
+              className="min-w-0"
             >
               <p className="inline-block rounded-full bg-[#181310] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.25em] text-white sm:text-xs">
-                ·🧸 The Driscoll Fund ·
+                🧸 The Driscoll Fund
               </p>
 
-              <h1 className="hpc-display mt-6 font-black uppercase leading-[0.92] tracking-tight text-[clamp(2.4rem,8vw,5rem)]">
+              <h1 className="hpc-display mt-5 font-black uppercase leading-[0.92] tracking-tight text-[clamp(2.15rem,7vw,4.5rem)] sm:mt-6">
                 Apply for
                 <br />
                 <span
-                  className="inline-block -rotate-1 rounded-lg px-3 text-white"
+                  className="mt-1 inline-block -rotate-1 rounded-lg px-3 text-white"
                   style={{ backgroundColor: RED }}
                 >
                   support.
                 </span>
               </h1>
 
-              <p className="mt-6 max-w-xl text-base font-medium leading-relaxed text-[#4a4038] sm:text-lg">
+              <p className="mt-6 max-w-[46ch] text-base font-medium leading-relaxed text-[#4a4038] sm:text-lg">
                 Financial assistance for people living with HIV across Greater
                 Hartford — because no one should have to choose between care,
                 keeping the lights on, or food on the table.
               </p>
-        {/* framed banner (uses /Driscoll2.jpg from your public folder) */}
+
+              {/* actions: primary jumps to the form, secondary shares the page */}
+              <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+                <motion.a
+                  href="#apply"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="
+                    inline-flex items-center justify-center gap-2
+                    rounded-xl border-2 border-[#181310]
+                    px-6 py-3.5 text-sm font-black uppercase tracking-wide
+                    text-white shadow-[4px_4px_0_#181310]
+                    transition-all sm:text-base
+                    hover:translate-x-[2px] hover:translate-y-[2px]
+                    hover:bg-[#C1121F] hover:shadow-[2px_2px_0_#181310]
+                    focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#E40303]/30
+                  "
+                  style={{ backgroundColor: RED }}
+                >
+                  🎗️ Start your application
+                </motion.a>
+
+                <motion.button
+                  type="button"
+                  onClick={handleShare}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  aria-label="Share the Driscoll Fund"
+                  className="
+                    inline-flex items-center justify-center gap-2
+                    rounded-xl border-2 border-[#181310] bg-white
+                    px-6 py-3.5 text-sm font-black uppercase tracking-wide
+                    text-[#181310] shadow-[4px_4px_0_#181310]
+                    transition-all sm:text-base
+                    hover:translate-x-[2px] hover:translate-y-[2px]
+                    hover:bg-[#F4B942] hover:shadow-[2px_2px_0_#181310]
+                    focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#E40303]/30
+                  "
+                >
+                  🧸 Share
+                </motion.button>
+              </div>
+            </motion.div>
+
+            {/* ── RIGHT: framed banner (/Driscoll2.jpg) ── */}
             <motion.div
               initial={{ opacity: 0, y: 28 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.65, delay: 0.15, ease: "easeOut" }}
-              className="relative mx-auto mt-10 w-full max-w-md lg:max-w-none"
+              className="relative mx-auto w-full max-w-md lg:mx-0 lg:max-w-none"
             >
               <div className="relative rotate-2 rounded-2xl border-2 border-[#181310] bg-white p-3 shadow-[8px_8px_0_#181310]">
                 <div
-                  className="h-52 w-full rounded-xl bg-contain bg-center bg-no-repeat sm:h-64"
+                  className="aspect-[4/3] w-full rounded-xl bg-contain bg-center bg-no-repeat"
                   style={{ backgroundImage: "url('/Driscoll2.jpg')" }}
                   role="img"
                   aria-label="The Driscoll Fund"
@@ -432,138 +487,115 @@ export default function DriscollFund() {
                   aria-hidden="true"
                 >
                   {STRIPE.map((c, i) => (
-                    <div key={i} className="flex-1" style={{ backgroundColor: c }} />
+                    <div
+                      key={i}
+                      className="flex-1"
+                      style={{ backgroundColor: c }}
+                    />
                   ))}
                 </div>
               </div>
 
-       <button
-  type="button"
-  onClick={handleShare}
-  aria-label="Share the Driscoll Fund"
-  title="Share the Driscoll Fund"
-  className="absolute -top-4 -right-2 rotate-3 cursor-pointer rounded-full border-2 border-[#181310] px-4 py-2 text-xs font-black uppercase tracking-wider text-white shadow-[3px_3px_0_#181310] transition-all duration-200 hover:rotate-0 hover:-translate-y-0.5 active:translate-y-[1px] active:shadow-[1px_1px_0_#181310]"
-  style={{ backgroundColor: TEDDY }}
->
-  Share  🧸
-</button>
+              <div
+                className="absolute -bottom-4 -left-2 -rotate-3 rounded-full border-2 border-[#181310] px-4 py-2 text-[11px] font-black uppercase tracking-wider text-white shadow-[3px_3px_0_#181310] sm:text-xs"
+                style={{ backgroundColor: TEDDY }}
+                aria-hidden="true"
+              >
+                Greater Hartford 🎗️
+              </div>
             </motion.div>
-              {/* ══════════════ GALA TICKET STUB ══════════════
-                  Cute torn-ticket card that sends people to the fund
-                  page for tickets + full event details.
-                  TODO: swap the date/venue line below for the real ones. */}
-              <div className="relative mt-16 max-w-xl">
-                {/* little bobbing ticket badge */}
-                <div
-                  className="hpc-bob absolute -left-2 -top-4 z-10 rounded-full border-2 border-[#181310] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-[#181310] shadow-[3px_3px_0_#181310] sm:-right-3 sm:text-[11px]"
-                  style={{ backgroundColor: GOLD }}
-                >
-                  🎟️ You're invited
-                </div>
+          </div>
+        </section>
 
-                <div className="overflow-hidden rounded-2xl border-2 border-[#181310] bg-white shadow-[6px_6px_0_#181310]">
-                  {/* top stripe */}
-                  <div className="flex h-2 w-full" aria-hidden="true">
-                    {STRIPE.map((c, i) => (
-                      <div key={i} className="flex-1" style={{ backgroundColor: c }} />
-                    ))}
-                  </div>
+        {/* ══════════════ GALA TICKET STUB ══════════════
+            Full-width band under the hero so it stops competing
+            with the headline column.
+            TODO: swap the date/venue line for the real ones. */}
+        <section className="mx-auto max-w-6xl px-4 pb-14 pt-2 sm:px-6 sm:pb-16">
+          <div className="relative mx-auto mt-6 max-w-3xl">
+            {/* little bobbing ticket badge */}
+            <div
+              className="hpc-bob absolute -top-4 left-4 z-10 rounded-full border-2 border-[#181310] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-[#181310] shadow-[3px_3px_0_#181310] sm:left-auto sm:right-6 sm:text-[11px]"
+              style={{ backgroundColor: GOLD }}
+            >
+              🎟️ You're invited
+            </div>
 
-                  {/* ticket body */}
-                  <div className="p-5 sm:p-6">
-                    <h2 className="hpc-display text-2xl font-black uppercase leading-[0.95] tracking-tight sm:text-3xl">
-                      The Driscoll Fund
-                      <br />
-                      <span
-                        className="mt-1 inline-block rotate-1 rounded-lg px-2 text-white"
-                        style={{ backgroundColor: TEDDY }}
-                      >
-                        Gala 🧸
-                      </span>
-                    </h2>
-
-                    <p className="mt-4 text-sm font-medium leading-relaxed text-[#4a4038] sm:text-base">
-                      Once a year we throw a night of celebration in Tom's honor —
-                      good food, good company, and a whole room of people who show
-                      up for each other. Every ticket and sponsorship goes straight
-                      back into the assistance this page provides.
-                    </p>
-
-                    <p className="mt-3 text-xs font-black uppercase tracking-[0.16em] text-[#6b5f57] sm:text-[13px]">
-                      Date, venue &amp; ticket tiers · all on the fund page
-                    </p>
-                  </div>
-
-                  {/* perforated tear line with punched notches */}
-                  <div className="relative" aria-hidden="true">
-                    <div className="border-t-2 border-dashed border-[#181310]" />
-                    <span className="absolute -left-2.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full border-2 border-[#181310] bg-[#FFFBF2]" />
-                    <span className="absolute -right-2.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full border-2 border-[#181310] bg-[#FFFBF2]" />
-                  </div>
-
-                  {/* stub with the CTA */}
-                  <div className="flex flex-wrap items-center justify-between gap-4 bg-[#FFFBF2] p-5 sm:p-6">
-                    <div className="min-w-0">
-                      <div className="hpc-display text-base font-black uppercase leading-none tracking-tight sm:text-lg">
-                        Tickets &amp; sponsorships
-                      </div>
-                      <div className="mt-1.5 text-xs font-semibold text-[#6b5f57]">
-                        Plus everything else the fund does.
-                      </div>
-                    </div>
-
-                    <motion.a
-                      href={FUND_PAGE}
-                      whileHover={{ scale: 1.03 }}
-                      whileTap={{ scale: 0.97 }}
-                      className="
-                        inline-flex shrink-0 items-center gap-2
-                        rounded-xl border-2 border-[#181310]
-                        px-5 py-3 text-sm font-black uppercase tracking-wide
-                        text-white shadow-[4px_4px_0_#181310]
-                        transition-all
-                        hover:translate-x-[2px] hover:translate-y-[2px]
-                        hover:bg-[#C1121F] hover:shadow-[2px_2px_0_#181310]
-                        focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#E40303]/30
-                      "
-                      style={{ backgroundColor: RED }}
-                    >
-                      🎗️ Get gala tickets
-                    </motion.a>
-                  </div>
-                </div>
+            <div className="overflow-hidden rounded-2xl border-2 border-[#181310] bg-white shadow-[6px_6px_0_#181310]">
+              {/* top stripe */}
+              <div className="flex h-2 w-full" aria-hidden="true">
+                {STRIPE.map((c, i) => (
+                  <div
+                    key={i}
+                    className="flex-1"
+                    style={{ backgroundColor: c }}
+                  />
+                ))}
               </div>
 
-              {/* share */}
-              {/* <div className="mt-6 flex flex-wrap justify-center gap-4 sm:justify-start">
-                <motion.button
-                  type="button"
-                  onClick={handleShare}
+              {/* ticket body */}
+              <div className="p-5 pt-7 sm:p-7">
+                <h2 className="hpc-display text-2xl font-black uppercase leading-[0.95] tracking-tight sm:text-3xl">
+                  The Driscoll Fund
+                  <br />
+                  <span
+                    className="mt-1 inline-block rotate-1 rounded-lg px-2 text-white"
+                    style={{ backgroundColor: TEDDY }}
+                  >
+                    Gala 🧸
+                  </span>
+                </h2>
+
+                <p className="mt-4 max-w-[65ch] text-sm font-medium leading-relaxed text-[#4a4038] sm:text-base">
+                  Once a year we throw a night of celebration in Tom's honor —
+                  good food, good company, and a whole room of people who show up
+                  for each other. Every ticket and sponsorship goes straight back
+                  into the assistance this page provides.
+                </p>
+
+                <p className="mt-3 text-xs font-black uppercase tracking-[0.16em] text-[#6b5f57] sm:text-[13px]">
+                  Date, venue &amp; ticket tiers · all on the fund page
+                </p>
+              </div>
+
+              {/* perforated tear line with punched notches */}
+              <div className="relative" aria-hidden="true">
+                <div className="border-t-2 border-dashed border-[#181310]" />
+                <span className="absolute -left-2.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full border-2 border-[#181310] bg-[#FFFBF2]" />
+                <span className="absolute -right-2.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full border-2 border-[#181310] bg-[#FFFBF2]" />
+              </div>
+
+              {/* stub with the CTA */}
+              <div className="flex flex-col gap-4 bg-[#FFFBF2] p-5 sm:flex-row sm:items-center sm:justify-between sm:p-7">
+                <div className="min-w-0">
+                  <div className="hpc-display text-base font-black uppercase leading-none tracking-tight sm:text-lg">
+                    Tickets &amp; sponsorships
+                  </div>
+                  <div className="mt-1.5 text-xs font-semibold text-[#6b5f57]">
+                    Plus everything else the fund does.
+                  </div>
+                </div>
+
+                <motion.a
+                  href={FUND_PAGE}
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   className="
-                    inline-flex items-center gap-2
-                    rounded-xl justify-center
-                    border-2 border-[#181310]
-                    bg-[#181310]
-                    px-6 py-3
-                    text-sm sm:text-base
-                    font-black uppercase tracking-wide
-                    text-white
-                    shadow-[4px_4px_0_#181310]
+                    inline-flex shrink-0 items-center justify-center gap-2
+                    rounded-xl border-2 border-[#181310]
+                    px-5 py-3 text-sm font-black uppercase tracking-wide
+                    text-white shadow-[4px_4px_0_#181310]
                     transition-all
-                    hover:bg-[#E40303]
-                    hover:translate-x-[2px]
-                    hover:translate-y-[2px]
-                    hover:shadow-[2px_2px_0_#181310]
+                    hover:translate-x-[2px] hover:translate-y-[2px]
+                    hover:bg-[#C1121F] hover:shadow-[2px_2px_0_#181310]
+                    focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#E40303]/30
                   "
+                  style={{ backgroundColor: RED }}
                 >
-                  ❤️ Share Application
-                </motion.button>
-              </div> */}
-            </motion.div>
-
-    
+                  🎗️ Get gala tickets
+                </motion.a>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -571,7 +603,11 @@ export default function DriscollFund() {
         <div className="overflow-hidden border-y-2 border-[#181310] bg-[#f6f6f6] py-3 sm:py-4">
           <div className="hpc-marquee-track flex w-max items-center gap-8 whitespace-nowrap">
             {[0, 1].map((copy) => (
-              <div key={copy} className="flex items-center gap-8" aria-hidden={copy === 1}>
+              <div
+                key={copy}
+                className="flex items-center gap-8"
+                aria-hidden={copy === 1}
+              >
                 {["Care", "Dignity", "Support", "Relief", "Community", "Hope"].map(
                   (word, i) => (
                     <span key={word} className="flex items-center gap-8">
@@ -581,13 +617,14 @@ export default function DriscollFund() {
                       >
                         {word}
                       </span>
-<img
-  src="/Driscoll.png"
-  alt=""
-  aria-hidden="true"
-  className="h-7 w-7 shrink-0 object-contain opacity-90 select-none"
-  draggable={false}
-/>                    </span>
+                      <img
+                        src="/Driscoll.png"
+                        alt=""
+                        aria-hidden="true"
+                        className="h-7 w-7 shrink-0 select-none object-contain opacity-90"
+                        draggable={false}
+                      />
+                    </span>
                   )
                 )}
               </div>
@@ -598,14 +635,14 @@ export default function DriscollFund() {
         {/* ── CONTENT ── */}
         <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-16">
           {/* ══════════════ WHO TOM WAS ══════════════
-              Photo lives at /photo1.jpg in your public folder.
+              Photo lives at /photo1.jpeg in your public folder.
               TODO: replace the two paragraphs with Tom's real story. */}
           <motion.div
             initial={{ opacity: 0, y: 18 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.5 }}
-            className="mb-12 grid items-center gap-10 sm:mb-14 lg:grid-cols-[minmax(0,420px),1fr] lg:gap-14"
+            className="mb-12 grid items-center gap-12 sm:mb-14 lg:grid-cols-[minmax(0,420px)_1fr] lg:gap-14"
           >
             {/* polaroid */}
             <div className="relative mx-auto w-full max-w-sm lg:max-w-none">
@@ -657,24 +694,24 @@ export default function DriscollFund() {
                 Who we named
                 <br />
                 <span
-                  className="inline-block -rotate-1 rounded-lg px-3 text-white"
+                  className="mt-1 inline-block -rotate-1 rounded-lg px-3 text-white"
                   style={{ backgroundColor: TEDDY }}
                 >
                   the fund for.
                 </span>
               </h2>
 
-              <div className="mt-6 space-y-4 text-sm font-medium leading-relaxed text-[#4a4038] sm:text-base">
+              <div className="mt-6 max-w-[68ch] space-y-4 text-sm font-medium leading-relaxed text-[#4a4038] sm:text-base">
                 <p>
-                  Tom Driscoll believed that nobody facing HIV should have to face it
-                  alone — and he spent his life making sure the people around him
-                  didn't have to. He showed up with rides to appointments, groceries,
-                  a phone number that always picked up, and a kind of stubborn warmth
-                  that made a hard diagnosis feel survivable.
+                  Tom Driscoll believed that nobody facing HIV should have to face
+                  it alone — and he spent his life making sure the people around
+                  him didn't have to. He showed up with rides to appointments,
+                  groceries, a phone number that always picked up, and a kind of
+                  stubborn warmth that made a hard diagnosis feel survivable.
                 </p>
                 <p>
-                  The Driscoll Fund carries that forward in the most practical way we
-                  know how: real dollars for rent, utilities, transportation,
+                  The Driscoll Fund carries that forward in the most practical way
+                  we know how: real dollars for rent, utilities, transportation,
                   medication, and food, for our neighbors living with HIV across
                   Greater Hartford. Every application we approve is another day
                   someone doesn't have to choose between care and getting by.
@@ -705,7 +742,7 @@ export default function DriscollFund() {
               <div className="hpc-display text-xl font-black uppercase leading-tight tracking-tight sm:text-2xl">
                 🎗️ July is HIV Awareness Month
               </div>
-              <div className="mt-4 space-y-4 text-sm font-medium leading-relaxed text-[#4a4038] sm:text-base">
+              <div className="mt-4 max-w-[68ch] space-y-4 text-sm font-medium leading-relaxed text-[#4a4038] sm:text-base">
                 <p>
                   It's a time to recognize the progress we've made, confront the
                   challenges that remain, and recommit ourselves to ensuring that
@@ -716,11 +753,11 @@ export default function DriscollFund() {
                   continue to prevent people from accessing life-saving care.
                 </p>
                 <p>
-                  At the Hartford Pride Center, a program of CLARO, Inc., we believe
-                  no one should have to choose between paying for medication, keeping
-                  the lights on, or putting food on the table. Yet for far too many
-                  people living with HIV across Greater Hartford, these impossible
-                  decisions remain a daily reality.
+                  At the Hartford Pride Center, a program of CLARO, Inc., we
+                  believe no one should have to choose between paying for
+                  medication, keeping the lights on, or putting food on the table.
+                  Yet for far too many people living with HIV across Greater
+                  Hartford, these impossible decisions remain a daily reality.
                 </p>
               </div>
             </div>
@@ -728,13 +765,17 @@ export default function DriscollFund() {
 
           {/* ================= APPLICATION FORM ================= */}
           <motion.form
+            id="apply"
             onSubmit={handleSubmit}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-2xl border-2 border-[#181310] bg-white p-5 shadow-[8px_8px_0_#181310] sm:p-8"
+            className="scroll-mt-24 rounded-2xl border-2 border-[#181310] bg-white p-5 shadow-[8px_8px_0_#181310] sm:p-8"
           >
             {/* top stripe */}
-            <div className="mb-6 flex h-2 w-full overflow-hidden rounded-full" aria-hidden="true">
+            <div
+              className="mb-6 flex h-2 w-full overflow-hidden rounded-full"
+              aria-hidden="true"
+            >
               {STRIPE.map((c, i) => (
                 <div key={i} className="flex-1" style={{ backgroundColor: c }} />
               ))}
@@ -997,8 +1038,8 @@ export default function DriscollFund() {
                   className="mt-1 h-5 w-5 rounded accent-[#E40303]"
                 />
                 <span className="text-sm font-semibold text-[#4a4038]">
-                  I understand the Driscoll Fund is a reimbursement program and I may
-                  be asked to provide documentation for the expenses in this
+                  I understand the Driscoll Fund is a reimbursement program and I
+                  may be asked to provide documentation for the expenses in this
                   application.
                 </span>
               </label>
