@@ -33,6 +33,9 @@ const PUBLIC_KEY = "BDPsT3cNRMnCg-OaU";
 /* topic is fixed for this page */
 const FIXED_TOPIC = "Driscoll Fund Application";
 
+/* where gala tickets + full fund info live */
+const FUND_PAGE = "/driscoll-funds";
+
 /* warm palette: red ribbon + teddy brown + gold */
 const RED = "#E40303";
 const RED_DEEP = "#C1121F";
@@ -340,9 +343,16 @@ export default function DriscollFund() {
           animation-iteration-count: infinite;
           opacity: .55; will-change: transform; user-select: none;
         }
+        /* gentle bob for the gala ticket badge */
+        @keyframes hpc-bob {
+          0%, 100% { transform: rotate(-3deg) translateY(0); }
+          50%      { transform: rotate(-3deg) translateY(-4px); }
+        }
+        .hpc-bob { animation: hpc-bob 3.2s ease-in-out infinite; }
         @media (prefers-reduced-motion: reduce) {
           .hpc-marquee-track { animation: none; }
           .hpc-ribbon { display: none; }
+          .hpc-bob { animation: none; }
         }
       `}</style>
 
@@ -376,6 +386,7 @@ export default function DriscollFund() {
         {/* ── HERO ── */}
         <section className="mx-auto max-w-6xl px-4 pb-8 pt-12 sm:px-6 sm:pb-10 sm:pt-16">
           <div className="grid items-center gap-10 lg:grid-cols-[1fr,1fr] lg:gap-14">
+            {/* LEFT COLUMN — headline, gala ticket, share */}
             <motion.div
               initial={{ opacity: 0, y: 28 }}
               animate={{ opacity: 1, y: 0 }}
@@ -401,39 +412,12 @@ export default function DriscollFund() {
                 Hartford — because no one should have to choose between care,
                 keeping the lights on, or food on the table.
               </p>
-            </motion.div>
-<div className=" flex justify-center flex-wrap gap-4">
-  <motion.button
-    type="button"
-    onClick={handleShare}
-    whileHover={{ scale: 1.03 }}
-    whileTap={{ scale: 0.97 }}
-    className="
-      inline-flex items-center gap-2
-      rounded-xl justify-center
-      border-2 border-[#181310]
-      bg-[#181310]
-      px-6 py-3
-      text-sm sm:text-base
-      font-black uppercase tracking-wide
-      text-white
-      shadow-[4px_4px_0_#181310]
-      transition-all
-      hover:bg-[#E40303]
-      hover:translate-x-[2px]
-      hover:translate-y-[2px]
-      hover:shadow-[2px_2px_0_#181310]
-    "
-  >
-    ❤️ Share Application
-  </motion.button>
-</div>
-            {/* framed banner (uses /Driscoll2.jpg from your public folder) */}
+        {/* framed banner (uses /Driscoll2.jpg from your public folder) */}
             <motion.div
               initial={{ opacity: 0, y: 28 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.65, delay: 0.15, ease: "easeOut" }}
-              className="relative mx-auto w-full max-w-md lg:max-w-none"
+              className="relative mx-auto mt-10 w-full max-w-md lg:max-w-none"
             >
               <div className="relative rotate-2 rounded-2xl border-2 border-[#181310] bg-white p-3 shadow-[8px_8px_0_#181310]">
                 <div
@@ -453,13 +437,133 @@ export default function DriscollFund() {
                 </div>
               </div>
 
-              <div
-                className="absolute -bottom-4 -right-2 rotate-3 rounded-full border-2 border-[#181310] px-4 py-2 text-xs font-black uppercase tracking-wider text-white shadow-[3px_3px_0_#181310]"
-                style={{ backgroundColor: TEDDY }}
-              >
-                Here for you 🧸
-              </div>
+       <button
+  type="button"
+  onClick={handleShare}
+  aria-label="Share the Driscoll Fund"
+  title="Share the Driscoll Fund"
+  className="absolute -top-4 -right-2 rotate-3 cursor-pointer rounded-full border-2 border-[#181310] px-4 py-2 text-xs font-black uppercase tracking-wider text-white shadow-[3px_3px_0_#181310] transition-all duration-200 hover:rotate-0 hover:-translate-y-0.5 active:translate-y-[1px] active:shadow-[1px_1px_0_#181310]"
+  style={{ backgroundColor: TEDDY }}
+>
+  Share  🧸
+</button>
             </motion.div>
+              {/* ══════════════ GALA TICKET STUB ══════════════
+                  Cute torn-ticket card that sends people to the fund
+                  page for tickets + full event details.
+                  TODO: swap the date/venue line below for the real ones. */}
+              <div className="relative mt-16 max-w-xl">
+                {/* little bobbing ticket badge */}
+                <div
+                  className="hpc-bob absolute -left-2 -top-4 z-10 rounded-full border-2 border-[#181310] px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-[#181310] shadow-[3px_3px_0_#181310] sm:-right-3 sm:text-[11px]"
+                  style={{ backgroundColor: GOLD }}
+                >
+                  🎟️ You're invited
+                </div>
+
+                <div className="overflow-hidden rounded-2xl border-2 border-[#181310] bg-white shadow-[6px_6px_0_#181310]">
+                  {/* top stripe */}
+                  <div className="flex h-2 w-full" aria-hidden="true">
+                    {STRIPE.map((c, i) => (
+                      <div key={i} className="flex-1" style={{ backgroundColor: c }} />
+                    ))}
+                  </div>
+
+                  {/* ticket body */}
+                  <div className="p-5 sm:p-6">
+                    <h2 className="hpc-display text-2xl font-black uppercase leading-[0.95] tracking-tight sm:text-3xl">
+                      The Driscoll Fund
+                      <br />
+                      <span
+                        className="mt-1 inline-block rotate-1 rounded-lg px-2 text-white"
+                        style={{ backgroundColor: TEDDY }}
+                      >
+                        Gala 🧸
+                      </span>
+                    </h2>
+
+                    <p className="mt-4 text-sm font-medium leading-relaxed text-[#4a4038] sm:text-base">
+                      Once a year we throw a night of celebration in Tom's honor —
+                      good food, good company, and a whole room of people who show
+                      up for each other. Every ticket and sponsorship goes straight
+                      back into the assistance this page provides.
+                    </p>
+
+                    <p className="mt-3 text-xs font-black uppercase tracking-[0.16em] text-[#6b5f57] sm:text-[13px]">
+                      Date, venue &amp; ticket tiers · all on the fund page
+                    </p>
+                  </div>
+
+                  {/* perforated tear line with punched notches */}
+                  <div className="relative" aria-hidden="true">
+                    <div className="border-t-2 border-dashed border-[#181310]" />
+                    <span className="absolute -left-2.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full border-2 border-[#181310] bg-[#FFFBF2]" />
+                    <span className="absolute -right-2.5 top-1/2 h-5 w-5 -translate-y-1/2 rounded-full border-2 border-[#181310] bg-[#FFFBF2]" />
+                  </div>
+
+                  {/* stub with the CTA */}
+                  <div className="flex flex-wrap items-center justify-between gap-4 bg-[#FFFBF2] p-5 sm:p-6">
+                    <div className="min-w-0">
+                      <div className="hpc-display text-base font-black uppercase leading-none tracking-tight sm:text-lg">
+                        Tickets &amp; sponsorships
+                      </div>
+                      <div className="mt-1.5 text-xs font-semibold text-[#6b5f57]">
+                        Plus everything else the fund does.
+                      </div>
+                    </div>
+
+                    <motion.a
+                      href={FUND_PAGE}
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.97 }}
+                      className="
+                        inline-flex shrink-0 items-center gap-2
+                        rounded-xl border-2 border-[#181310]
+                        px-5 py-3 text-sm font-black uppercase tracking-wide
+                        text-white shadow-[4px_4px_0_#181310]
+                        transition-all
+                        hover:translate-x-[2px] hover:translate-y-[2px]
+                        hover:bg-[#C1121F] hover:shadow-[2px_2px_0_#181310]
+                        focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#E40303]/30
+                      "
+                      style={{ backgroundColor: RED }}
+                    >
+                      🎗️ Get gala tickets
+                    </motion.a>
+                  </div>
+                </div>
+              </div>
+
+              {/* share */}
+              {/* <div className="mt-6 flex flex-wrap justify-center gap-4 sm:justify-start">
+                <motion.button
+                  type="button"
+                  onClick={handleShare}
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="
+                    inline-flex items-center gap-2
+                    rounded-xl justify-center
+                    border-2 border-[#181310]
+                    bg-[#181310]
+                    px-6 py-3
+                    text-sm sm:text-base
+                    font-black uppercase tracking-wide
+                    text-white
+                    shadow-[4px_4px_0_#181310]
+                    transition-all
+                    hover:bg-[#E40303]
+                    hover:translate-x-[2px]
+                    hover:translate-y-[2px]
+                    hover:shadow-[2px_2px_0_#181310]
+                  "
+                >
+                  ❤️ Share Application
+                </motion.button>
+              </div> */}
+            </motion.div>
+
+    
           </div>
         </section>
 
@@ -493,6 +597,101 @@ export default function DriscollFund() {
 
         {/* ── CONTENT ── */}
         <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-16">
+          {/* ══════════════ WHO TOM WAS ══════════════
+              Photo lives at /photo1.jpg in your public folder.
+              TODO: replace the two paragraphs with Tom's real story. */}
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.5 }}
+            className="mb-12 grid items-center gap-10 sm:mb-14 lg:grid-cols-[minmax(0,420px),1fr] lg:gap-14"
+          >
+            {/* polaroid */}
+            <div className="relative mx-auto w-full max-w-sm lg:max-w-none">
+              {/* tape */}
+              <div
+                className="absolute -top-3 left-1/2 z-10 h-6 w-24 -translate-x-1/2 -rotate-2 rounded-sm border-2 border-[#181310] opacity-90"
+                style={{ backgroundColor: GOLD }}
+                aria-hidden="true"
+              />
+
+              <div className="-rotate-2 rounded-2xl border-2 border-[#181310] bg-white p-3 pb-4 shadow-[8px_8px_0_#181310]">
+                <img
+                  src="/photo1.jpeg"
+                  alt="Tom Driscoll"
+                  loading="lazy"
+                  className="h-72 w-full rounded-xl border-2 border-[#181310] object-cover sm:h-80"
+                />
+
+                <div className="mt-4 flex items-end justify-between gap-3 px-1">
+                  <div className="min-w-0">
+                    <div className="hpc-display text-xl font-black uppercase leading-none tracking-tight">
+                      Tom Driscoll
+                    </div>
+                    <div className="mt-1.5 text-[11px] font-black uppercase tracking-[0.2em] text-[#6b5f57]">
+                      The name behind the fund
+                    </div>
+                  </div>
+                  <img
+                    src="/Driscoll.png"
+                    alt=""
+                    aria-hidden="true"
+                    className="h-8 w-8 shrink-0 object-contain"
+                    draggable={false}
+                  />
+                </div>
+              </div>
+
+              <div
+                className="absolute -bottom-6 -left-1 -rotate-3 rounded-full border-2 border-[#181310] px-4 py-2 text-xs font-black uppercase tracking-wider text-white shadow-[3px_3px_0_#181310]"
+                style={{ backgroundColor: RED }}
+              >
+                In his memory 🎗️
+              </div>
+            </div>
+
+            {/* story */}
+            <div>
+              <h2 className="hpc-display text-2xl font-black uppercase leading-[0.95] tracking-tight sm:text-4xl">
+                Who we named
+                <br />
+                <span
+                  className="inline-block -rotate-1 rounded-lg px-3 text-white"
+                  style={{ backgroundColor: TEDDY }}
+                >
+                  the fund for.
+                </span>
+              </h2>
+
+              <div className="mt-6 space-y-4 text-sm font-medium leading-relaxed text-[#4a4038] sm:text-base">
+                <p>
+                  Tom Driscoll believed that nobody facing HIV should have to face it
+                  alone — and he spent his life making sure the people around him
+                  didn't have to. He showed up with rides to appointments, groceries,
+                  a phone number that always picked up, and a kind of stubborn warmth
+                  that made a hard diagnosis feel survivable.
+                </p>
+                <p>
+                  The Driscoll Fund carries that forward in the most practical way we
+                  know how: real dollars for rent, utilities, transportation,
+                  medication, and food, for our neighbors living with HIV across
+                  Greater Hartford. Every application we approve is another day
+                  someone doesn't have to choose between care and getting by.
+                </p>
+              </div>
+
+              <div
+                className="mt-6 flex h-2 w-40 overflow-hidden rounded-full border-2 border-[#181310]"
+                aria-hidden="true"
+              >
+                {STRIPE.map((c, i) => (
+                  <div key={i} className="flex-1" style={{ backgroundColor: c }} />
+                ))}
+              </div>
+            </div>
+          </motion.div>
+
           {/* awareness blurb */}
           <motion.div
             initial={{ opacity: 0, y: 18 }}
