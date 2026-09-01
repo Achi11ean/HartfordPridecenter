@@ -1,5 +1,5 @@
 import React from "react";
-
+import { FaPaperPlane } from "react-icons/fa";
 /* ============================================================================
    1. IMAGE SLOTS — paste your image URLs (or imported assets) here.
    Any slot left as "" renders a labeled dashed placeholder box instead,
@@ -32,6 +32,27 @@ const LINKS = {
   pride: "/pride",
   facebook: "https://www.facebook.com/HartfordPrideCenter",
   instagram: "https://www.instagram.com/hartfordpride/",
+};
+
+const handleShare = async () => {
+  const shareUrl =
+    "https://share.karaoverse.com/og/driscoll-fund-page";
+
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: "🧸 Driscoll Fund",
+        text:
+          "Honoring the legacy of Thomas Driscoll and supporting people living with HIV across Greater Hartford with compassion, dignity, and hope.",
+        url: shareUrl,
+      });
+    } catch (err) {
+      console.log("Share cancelled");
+    }
+  } else {
+    await navigator.clipboard.writeText(shareUrl);
+    alert("Share link copied!");
+  }
 };
 
 /* ============================================================================
@@ -462,7 +483,47 @@ export default function DriscollFunds() {
             </div>
           </div>
         </section>
+{/* ----------------------------------------------- APPLY FOR SUPPORT */}
+<section className="df-apply">
+  <div className="df-container">
+    <div className="df-apply__card">
+      <div className="df-apply__icon" aria-hidden="true">
+        <Icon name="heart" size={38} stroke={1.4} />
+      </div>
 
+      <div className="df-apply__copy">
+        <p className="df-eyebrow">The Driscoll Fund Is Here to Help</p>
+
+        <h2 className="df-apply__title">Apply for Support</h2>
+
+        <p className="df-apply__text">
+          If you are living with HIV and experiencing financial hardship,
+          The Driscoll Fund may be able to help with urgent needs that can
+          stand in the way of staying healthy, stable, and connected to care.
+        </p>
+
+        <p className="df-apply__note">
+          Submit a confidential application to request assistance and learn
+          whether you qualify for support.
+        </p>
+      </div>
+
+      <div className="df-apply__action">
+        <a
+          href="/driscoll-fund-application"
+          className="df-apply__btn"
+        >
+          Apply for Support
+          <span aria-hidden="true">→</span>
+        </a>
+
+        <span className="df-apply__small">
+          Confidential application
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
         {/* ----------------------------------------------------- SPONSORSHIPS */}
         <section className="df-sponsor" id="sponsorship-benefits">
           <div className="df-container">
@@ -580,14 +641,34 @@ export default function DriscollFunds() {
           <div>
             <h3 className="df-footer__head">Follow Us</h3>
             <div className="df-social">
-              <a href={LINKS.facebook} aria-label="Facebook">
-                <Icon name="facebook" size={18} />
-              </a>
-              <a href={LINKS.instagram} aria-label="Instagram">
-                <Icon name="instagram" size={18} />
-              </a>
-      
-            </div>
+  <a
+    href={LINKS.facebook}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Facebook"
+  >
+    <Icon name="facebook" size={18} />
+  </a>
+
+  <a
+    href={LINKS.instagram}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Instagram"
+  >
+    <Icon name="instagram" size={18} />
+  </a>
+
+  <button
+    type="button"
+    onClick={handleShare}
+    className="df-social__share"
+    aria-label="Share the Driscoll Fund"
+    title="Share"
+  >
+    <FaPaperPlane size={15} />
+  </button>
+</div>
             <p className="df-footer__copy">
               &copy; {new Date().getFullYear()} Hartford Pride Center
               <br />
@@ -900,6 +981,164 @@ const CSS = `
 .df-help__icon { color: var(--red); display: flex; }
 .df-help p { font-size: 13px; font-weight: 600; line-height: 1.4; color: #2B2B2B; }
 
+
+
+
+
+
+
+/* --------------------------------------------------------- APPLY FOR SUPPORT */
+
+.df-apply {
+  position: relative;
+  padding: 20px 0 62px;
+  background: #fff;
+}
+
+.df-apply__card {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 26px;
+  padding: 34px 38px;
+  overflow: hidden;
+  border: 1px solid rgba(200, 16, 46, 0.18);
+  border-radius: 10px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(200, 16, 46, 0.055),
+      rgba(200, 16, 46, 0.015) 55%,
+      #fff
+    );
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.055);
+}
+
+.df-apply__card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  background: var(--red);
+}
+
+.df-apply__icon {
+  display: grid;
+  place-items: center;
+  width: 70px;
+  height: 70px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(200, 16, 46, 0.18);
+}
+
+.df-apply__copy {
+  min-width: 0;
+}
+
+.df-apply__copy .df-eyebrow {
+  margin-bottom: 7px;
+}
+
+.df-apply__title {
+  margin: 0 0 10px;
+  font-family: var(--serif);
+  font-size: clamp(26px, 3.4vw, 34px);
+  font-weight: 500;
+  line-height: 1.15;
+  color: var(--ink);
+}
+
+.df-apply__text {
+  max-width: 62ch;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--body);
+}
+
+.df-apply__note {
+  margin: 8px 0 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: #777;
+}
+
+.df-apply__action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  min-width: 190px;
+}
+
+.df-apply__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  padding: 14px 22px;
+  border-radius: 4px;
+  background: var(--red);
+  color: #fff !important;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 0 7px 18px rgba(200, 16, 46, 0.18);
+  transition:
+    background-color .18s ease,
+    transform .18s ease,
+    box-shadow .18s ease;
+}
+
+.df-apply__btn:hover {
+  background: var(--red-dark);
+  color: #fff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(200, 16, 46, 0.24);
+}
+
+.df-apply__small {
+  font-size: 10.5px;
+  color: #888;
+  letter-spacing: 0.03em;
+}
+
+@media (max-width: 760px) {
+  .df-apply {
+    padding: 10px 0 48px;
+  }
+
+  .df-apply__card {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 28px 25px;
+  }
+
+  .df-apply__icon {
+    width: 58px;
+    height: 58px;
+  }
+
+  .df-apply__action {
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .df-apply__btn {
+    width: 100%;
+  }
+}
+
+
 /* -------------------------------------------------------------- REMEMBERING */
 .df-remember { position: relative; overflow: hidden; padding: 34px 0 62px; }
 .df-ribbon--remember { top: 0; left: -18%; width: 48%; height: 100%; }
@@ -1103,7 +1342,26 @@ const CSS = `
 
   .df-footer__grid { grid-template-columns: 1fr; gap: 28px; }
 }
+.df-social a,
+.df-social__share {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ink);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color .18s ease, transform .18s ease;
+}
 
+.df-social a:hover,
+.df-social__share:hover {
+  background: var(--red);
+  transform: translateY(-1px);
+}
 @media (prefers-reduced-motion: reduce) {
   .df *, .df *::before, .df *::after {
     transition-duration: .01ms !important;
