@@ -6,33 +6,32 @@ import React from "react";
    so the layout stays intact while you gather assets.
    ============================================================================ */
 const IMAGES = {
-  prideLogo: "",          // Hartford Pride Center logo (footer)   ~ 150 x 60
+  prideLogo: "/PrideLogo3.jpg",          // Hartford Pride Center logo (footer)   ~ 150 x 60
   fundLogo: "/Driscoll2.jpg",           // The Driscoll Fund ribbon/heart logo   ~ 260 x 180
 
-  heroPhoto1: "",         // Portrait — man with backpack          ~ 800 x 1000
-  heroPhoto2: "",         // Two men outdoors                      ~ 800 x 1000
-  heroPhoto3: "",         // Two people at a table                 ~ 1000 x 800
-  heroPhoto4: "",         // Portrait — man, hand at chin          ~ 800 x 1000
+  heroPhoto1: "/photo1.jpeg",         // Portrait — man with backpack          ~ 800 x 1000
+  heroPhoto2: "/photo2.jpeg",         // Two men outdoors                      ~ 800 x 1000
+  heroPhoto3: "/photo3.jpeg",         // Two people at a table                 ~ 1000 x 800
+  heroPhoto4: "/photo4.jpeg",         // Portrait — man, hand at chin          ~ 8００ x 1０００
 
-  remembering: "",        // Thomas Driscoll & partner             ~ 1000 x 1000
+  remembering: "/photo4.jpeg",        // Thomas Driscoll & partner             ~ 1000 x 1000
 };
 
 /* ============================================================================
    2. LINKS — swap these for your routes / anchors / external URLs.
    ============================================================================ */
 const LINKS = {
-  donate: "#donate",
-  rsvp: "#rsvp",
-  foundingPartner: "#founding-partner",
+  donate: "/support",
+  rsvp: "https://checkout.square.site/merchant/MLQJ7Y1XPR6JD/checkout/7AFIF6HO5DSKNKFBPGOCIX7V?src=webqr",
+  foundingPartner: "/contact",
   allBenefits: "#sponsorship-benefits",
-  about: "#about",
-  programs: "#programs",
-  getInvolved: "#get-involved",
-  events: "#events",
-  news: "#news",
-  facebook: "#",
-  instagram: "#",
-  linkedin: "#",
+  about: "/about",
+  programs: "/services",
+  getInvolved: "/contact",
+  events: "/events",
+  pride: "/pride",
+  facebook: "https://www.facebook.com/HartfordPrideCenter",
+  instagram: "https://www.instagram.com/hartfordpride/",
 };
 
 /* ============================================================================
@@ -215,12 +214,7 @@ const Icon = ({ name, size = 24, stroke = 1.6 }) => {
           <path d="M12 6.9a5.1 5.1 0 1 0 0 10.2 5.1 5.1 0 0 0 0-10.2m0 8.4a3.3 3.3 0 1 1 0-6.6 3.3 3.3 0 0 1 0 6.6M18.5 6.7a1.2 1.2 0 1 1-2.4 0 1.2 1.2 0 0 1 2.4 0M16.2 3.1H7.8A4.7 4.7 0 0 0 3.1 7.8v8.4a4.7 4.7 0 0 0 4.7 4.7h8.4a4.7 4.7 0 0 0 4.7-4.7V7.8a4.7 4.7 0 0 0-4.7-4.7m2.9 13.1a2.9 2.9 0 0 1-2.9 2.9H7.8a2.9 2.9 0 0 1-2.9-2.9V7.8a2.9 2.9 0 0 1 2.9-2.9h8.4a2.9 2.9 0 0 1 2.9 2.9z" />
         </svg>
       );
-    case "linkedin":
-      return (
-        <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
-          <path d="M6.9 20.4H3.6V9.7h3.3zM5.25 8.2a1.94 1.94 0 1 1 0-3.88 1.94 1.94 0 0 1 0 3.88M20.4 20.4h-3.3v-5.2c0-1.24-.02-2.84-1.73-2.84-1.73 0-2 1.35-2 2.75v5.29H10.1V9.7h3.16v1.46h.05a3.46 3.46 0 0 1 3.12-1.71c3.33 0 3.95 2.2 3.95 5.05z" />
-        </svg>
-      );
+ 
     default:
       return null;
   }
@@ -342,50 +336,78 @@ export default function DriscollFunds() {
         </section>
 
         {/* -------------------------------------------------- EVENT OVERVIEW */}
-        <section className="df-overview" id="event">
-          <Ribbon className="df-ribbon--overview" />
-          <div className="df-container df-overview__grid">
-            <div>
-              <p className="df-eyebrow">An Evening of Community, Remembrance &amp; Hope</p>
-              <h2 className="df-h2">Event Overview</h2>
-              <p className="df-body">
-                Join us as we come together to celebrate the launch of The Driscoll Fund&mdash;a lifeline for
-                individuals living with HIV in Greater Hartford.
-              </p>
-              <p className="df-body">
-                The evening will include cocktails, dinner, a special presentation honoring Thomas Driscoll&rsquo;s
-                legacy, a fundraising appeal, live performances, and a VIP afterparty.
-              </p>
-            </div>
+<section className="df-overview" id="event">
+  <Ribbon className="df-ribbon--overview" />
 
-            <div className="df-details">
-              <div className="df-details__row">
-                <span className="df-details__icon">
-                  <Icon name="calendar" size={26} />
-                </span>
-                <p>Friday, September 18, 2026</p>
-              </div>
-              <div className="df-details__row">
-                <span className="df-details__icon">
-                  <Icon name="clock" size={26} />
-                </span>
-                <p>6:00 PM</p>
-              </div>
-              <div className="df-details__row">
-                <span className="df-details__icon">
-                  <Icon name="pin" size={26} />
-                </span>
-                <p>
-                  Giuseppe&rsquo;s Place
-                  <br />
-                  124 Court Street
-                  <br />
-                  Middletown, CT 06457
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+  <div className="df-container df-overview__grid">
+    <div>
+      <p className="df-eyebrow">
+        An Evening of Community, Remembrance &amp; Hope
+      </p>
+
+      <h2 className="df-h2">Event Overview</h2>
+
+      <p className="df-body">
+        Join us as we come together to celebrate the launch of The Driscoll
+        Fund&mdash;a lifeline for individuals living with HIV in Greater
+        Hartford.
+      </p>
+
+      <p className="df-body">
+        The evening will include cocktails, dinner, a special presentation
+        honoring Thomas Driscoll&rsquo;s legacy, a fundraising appeal, live
+        performances, and a VIP afterparty.
+      </p>
+
+      {/* Ticket CTA */}
+      <div className="mt-7">
+        <p className="mb-3 text-sm font-semibold uppercase tracking-[0.16em]">
+          Tickets Now Available · $25–$50
+        </p>
+
+<a
+  href={LINKS.rsvp}
+  target="_blank"
+  rel="noopener noreferrer"
+  className=" mt-2 df-ticket-btn"
+>
+  Buy Tickets Now
+  <span aria-hidden="true">→</span>
+</a>
+  
+      </div>
+    </div>
+
+    <div className="df-details">
+      <div className="df-details__row">
+        <span className="df-details__icon">
+          <Icon name="calendar" size={26} />
+        </span>
+        <p>Friday, September 18, 2026</p>
+      </div>
+
+      <div className="df-details__row">
+        <span className="df-details__icon">
+          <Icon name="clock" size={26} />
+        </span>
+        <p>6:00 PM</p>
+      </div>
+
+      <div className="df-details__row">
+        <span className="df-details__icon">
+          <Icon name="pin" size={26} />
+        </span>
+        <p>
+          Giuseppe&rsquo;s Place
+          <br />
+          124 Court Street
+          <br />
+          Middletown, CT 06457
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
 
         {/* ------------------------------------------------ HOW THE FUND HELPS */}
         <section className="df-helps">
@@ -466,11 +488,11 @@ export default function DriscollFunds() {
               ))}
             </ul>
 
-            <div className="df-sponsor__all">
+            {/* <div className="df-sponsor__all">
               <a href={LINKS.allBenefits} className="df-btn df-btn--outline">
                 View all sponsorship benefits
               </a>
-            </div>
+            </div> */}
           </div>
         </section>
 
@@ -550,7 +572,7 @@ export default function DriscollFunds() {
                 <a href={LINKS.events}>Events</a>
               </li>
               <li>
-                <a href={LINKS.news}>News</a>
+                <a href={LINKS.pride}>Pride</a>
               </li>
             </ul>
           </div>
@@ -564,9 +586,7 @@ export default function DriscollFunds() {
               <a href={LINKS.instagram} aria-label="Instagram">
                 <Icon name="instagram" size={18} />
               </a>
-              <a href={LINKS.linkedin} aria-label="LinkedIn">
-                <Icon name="linkedin" size={18} />
-              </a>
+      
             </div>
             <p className="df-footer__copy">
               &copy; {new Date().getFullYear()} Hartford Pride Center
@@ -705,6 +725,34 @@ const CSS = `
 }
 .df-body:last-child { margin-bottom: 0; }
 
+.df-ticket-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border-radius: 999px;
+  background: var(--red);
+  color: #fff !important;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  box-shadow: 0 8px 20px rgba(200, 16, 46, 0.2);
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.df-ticket-btn:hover {
+  background: var(--red-dark);
+  color: #fff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(200, 16, 46, 0.28);
+}
 /* -------------------------------------------------------------------- HERO */
 .df-hero {
   position: relative;
