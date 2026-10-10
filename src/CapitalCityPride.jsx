@@ -1,852 +1,318 @@
-import { Link } from "react-router-dom";
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import SponsorSlider from "./SponsorSlider";
-import PublicFundersSection from "./PublicFundersSection";
-import VendorSlider from "./VendorSlider";
-import AnnualPrideEventDetails from "./AnnualPrideEventDetails";
-import PrideItinerary from "./PrideItinerary";
-import { FaPaperPlane } from "react-icons/fa";
-import {
-  FaInstagram,
-  FaFacebook,
-  FaEnvelope,
-  FaCalendarAlt,
-  FaMapMarkerAlt,
-} from "react-icons/fa";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
-import SponsorInvitationPage from "./SponsorInvitationPage";
+import axios from "axios";
+
+import { Link } from "react-router-dom";
+
+import { motion, useReducedMotion } from "framer-motion";
+
+import { FaCalendarAlt, FaEnvelope, FaFacebook, FaInstagram, FaPaperPlane } from "react-icons/fa";
+
+import AnnualPrideEventDetails from "./AnnualPrideEventDetails";
+
+import SponsorSlider from "./SponsorSlider";
+
+import VendorSlider from "./VendorSlider";
+
+import PublicFundersSection from "./PublicFundersSection";
+
+// Single-file page replacement. Existing child components remain separate.
+
+const API = "https://singspacebackend.onrender.com";
+
+const INKS = ["#a52d59", "#995120", "#7b651c", "#28694e", "#365fab", "#80509b"];
+
+function safeHref(value) {
+
+  if (typeof value !== "string" || !value.trim()) return "";
+
+  const raw = value.trim();
+
+  if (/^[a-z][a-z\d+.-]*:/i.test(raw) && !/^https?:/i.test(raw)) return "";
+
+  try { const url = new URL(/^https?:\/\//i.test(raw) ? raw : `https://${raw}`); return ["https:", "http:"].includes(url.protocol) ? url.href : ""; } catch { return ""; }
+
+}
+
+function formatDate(value) {
+
+  if (!value) return "Date to be announced";
+
+  const date = new Date(/^\d{4}-\d{2}-\d{2}$/.test(value) ? `${value}T00:00:00` : value);
+
+  return Number.isNaN(date.getTime()) ? "Date to be announced" : date.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" });
+
+}
+
+function usePrideResource(path, enabled = true) {
+
+  const [state, setState] = useState({ data: null, loading: enabled, error: "" });
+
+  const [attempt, setAttempt] = useState(0);
+
+  useEffect(() => {
+
+    if (!enabled) return;
+
+    let current = true;
+
+    const controller = new AbortController();
+
+    setState(previous => ({ ...previous, loading: true, error: "" }));
+
+    axios.get(`${API}${path}`, { signal: controller.signal }).then(response => {
+
+      if (current) setState({ data: response.data, loading: false, error: "" });
+
+    }).catch(error => {
+
+      if (current && error.code !== "ERR_CANCELED") setState({ data: null, loading: false, error: "This part of the community board couldn’t load. Please try again." });
+
+    });
+
+    return () => { current = false; controller.abort(); };
+
+  }, [path, enabled, attempt]);
+
+  return { ...state, retry: () => setAttempt(value => value + 1) };
+
+}
+
+function Reveal({ children, className = "" }) {
+
+  const reduced = useReducedMotion();
+
+  return <motion.div className={className} initial={reduced ? false : { opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: "some", margin: "0px 0px -24px 0px" }} transition={{ duration: reduced ? 0 : .6, ease: "easeOut" }}>{children}</motion.div>;
+
+}
+
+function Section({ id, tone = "cream", eyebrow, title, intro, children, extra }) {
+
+  return <section id={id} className={`hcp3-scope hcp3-band hcp3-band-${tone}`}><Reveal className="hcp3-container"><header className="hcp3-section-head"><div>{eyebrow && <p className="hcp3-eyebrow">{eyebrow}</p>}<h2>{title}</h2>{intro && <p className="hcp3-intro">{intro}</p>}</div>{extra}</header>{children}</Reveal></section>;
+
+}
+
+function CommunityImage({ src, alt, className = "", eager = false }) {
+
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => setFailed(false), [src]);
+
+  return src && !failed ? <img className={className} src={src} alt={alt} loading={eager ? "eager" : "lazy"} onError={() => setFailed(true)}/> : <span className={`hcp3-image-fallback ${className}`} role="img" aria-label={alt}><span aria-hidden="true">✦</span><span>{alt}</span></span>;
+
+}
+
+function ExternalLink({ href, children, className = "hcp3-inline-link", fallback = false }) {
+
+  const safe = safeHref(href);
+
+  return safe ? <a className={className} href={safe} target="_blank" rel="noopener noreferrer">{children}</a> : fallback ? <span className={className}>{children}</span> : null;
+
+}
+
+const VALUES = ["Trans inclusive", "Community programs", "Advocacy", "Wellness", "Events", "Everyone welcome"];
+
+// Transparent section: a parent's heart-comet canvas can continue behind the hero.
+
+// The supplied festival page provides the shared light background.
+
+function PrideHero({ festival = false, date, children, appearance = "light" }) {
+
+  return <section className={`hcp3-scope hcp3-hero${appearance === "dark" ? " hcp3-hero-dark" : ""}`}><div className="hcp3-hero-aurora" aria-hidden="true"/><div className="hcp3-container"><Reveal className="hcp3-hero-grid"><div className="hcp3-hero-copy"><p className="hcp3-eyebrow">Hartford Pride Center · Connecticut</p><h1>{festival ? <>Capital City Pride.<br/><em>All heart. All of us.</em></> : <>Building community,<br/><em>together.</em></>}</h1><p>{festival ? "Hartford’s Pride celebration — a place for queer joy, local creativity, and the people who make this city feel like home." : "A welcoming place where LGBTQIA+ people, families, and allies connect, find support, and build a future where everyone belongs exactly as they are."}</p>{date && <div className="hcp3-hero-date">{date}</div>}<ul className="hcp3-values">{VALUES.map((value, index) => <li key={value} style={{ "--value-ink": INKS[index] }}>{value}</li>)}</ul></div><figure className="hcp3-hero-logo"><CommunityImage eager src={festival ? "/ccp.jpg" : "/PrideLogo3.jpg"} alt={festival ? "Capital City Pride" : "Hartford Pride Center"}/><figcaption>A little more joy. A lot more belonging.</figcaption></figure></Reveal></div>{children}</section>;
+
+}
+
+const MENU_COLORS = ["#ff6b7b", "#ffac65", "#ffe078", "#80e2ad", "#8cbcff", "#cf9fff"];
+const MENU_INKS = ["#8b1930", "#803900", "#645000", "#155437", "#214880", "#593178"];
+const MENU_ITEMS = [["The day", "details"], ["Itinerary", "itinerary"], ["Talent", "talent"], ["Sponsors", "sponsors"], ["Vendors", "vendors"], ["Funders", "funders"]];
+
+function PrideQuickNav() {
+  const reduced = useReducedMotion();
+  const [introduced, setIntroduced] = useState(false);
+  return <motion.nav
+    className={`hcp3-quick-nav${introduced && !reduced ? " hcp3-nav-introduced" : ""}`}
+    aria-label="Explore the Pride celebration"
+    viewport={{ once: true, amount: .6 }}
+    onViewportEnter={() => setIntroduced(true)}
+  >
+    <p className="hcp3-nav-caption">Your Pride day <span>Explore · swipe to browse ↔</span></p>
+    <div className="hcp3-nav-links" tabIndex={0} role="region" aria-label="Pride section links, scroll horizontally">
+      {MENU_ITEMS.map(([label, target], index) => <a
+        key={target} href={`#pride-${target}`}
+        style={{ "--menu-color": MENU_COLORS[index], "--menu-ink": MENU_INKS[index], "--menu-delay": `${.25 + index * .9}s` }}
+        onClick={event => {
+          const section = document.getElementById(`pride-${target}`);
+          if (!section) return;
+          event.preventDefault();
+          const page = event.currentTarget.closest(".hcp3-page");
+          const clearance = page ? parseFloat(getComputedStyle(page).paddingTop) : 144;
+          window.scrollTo({ top: Math.max(0, section.getBoundingClientRect().top + window.scrollY - clearance - 12), behavior: reduced ? "auto" : "smooth" });
+          // Move keyboard focus with the section jump without changing the scroll position.
+          const previousTabIndex = section.getAttribute("tabindex");
+          section.setAttribute("tabindex", "-1");
+          section.focus({ preventScroll: true });
+          section.addEventListener("blur", () => {
+            if (previousTabIndex === null) section.removeAttribute("tabindex");
+            else section.setAttribute("tabindex", previousTabIndex);
+          }, { once: true });
+        }}
+      ><span aria-hidden="true">✦</span>{label}<span className="hcp3-nav-arrow" aria-hidden="true">↘</span></a>)}
+    </div>
+  </motion.nav>;
+}
+
+const SHARE_URL = "https://share.karaoverse.com/og/pride";
+
+function PrideWelcome({ onComplete }) {
+
+  const reduced = useReducedMotion();
+
+  const skip = useRef(null);
+
+  useEffect(() => {
+
+    if (reduced) { onComplete(); return; }
+
+    const previous = document.activeElement, overflow = document.body.style.overflow;
+
+    document.body.style.overflow = "hidden";
+
+    skip.current?.focus();
+
+    const timer = window.setTimeout(onComplete, 3000);
+
+    const key = event => { if (event.key === "Escape") onComplete(); if (event.key === "Tab") { event.preventDefault(); skip.current?.focus(); } };
+
+    window.addEventListener("keydown", key);
+
+    return () => { window.clearTimeout(timer); window.removeEventListener("keydown", key); document.body.style.overflow = overflow; if (previous?.isConnected) previous.focus?.(); };
+
+  }, [onComplete, reduced]);
+
+  return <div className="hcp3-scope hcp3-welcome" role="dialog" aria-modal="true" aria-label="Welcome to Capital City Pride"><div className="hcp3-welcome-inner"><img src="/ccp.jpg" alt="Capital City Pride"/><h2>Hartford Pride Center</h2><p>Capital City Pride</p><div className="hcp3-welcome-rule" aria-hidden="true"/><button ref={skip} type="button" onClick={onComplete}>Come celebrate ↗</button></div></div>;
+
+}
 
 export default function HartfordCityPride() {
-  const year = new Date().getFullYear();
-  const [showSponsorModal, setShowSponsorModal] = React.useState(false);
-  const [prideEvent, setPrideEvent] = useState(null);
-  const [showMap, setShowMap] = useState(false);
-const itineraryRef = React.useRef(null);
-const vendorsRef = React.useRef(null);
-const talentRef = React.useRef(null);
-const sponsorsRef = React.useRef(null);
-const handleShare = () => {
-  const shareUrl =
-    "https://share.karaoverse.com/og/pride";
 
-  if (navigator.share) {
-    navigator
-      .share({
-        title: "Capital City Pride",
-        text: "Check out the Capital City Pride Page!",
-        url: shareUrl,
-      })
-      .catch(() => {});
-  } else {
-    navigator.clipboard.writeText(shareUrl);
+  const annual = usePrideResource("/pride/2/annual");
 
-    alert("Share link copied to clipboard!");
-  }
-};
-const scrollToSection = (ref) => {
-  ref?.current?.scrollIntoView({
-    behavior: "smooth",
-    block: "start",
-  });
-};
-  const [hasPublicFunders, setHasPublicFunders] = useState(false);
-  const [vendors, setVendors] = useState([]);
-  const navigate = useNavigate();
-const [showIntro, setShowIntro] = useState(true);
-const [fadeOut, setFadeOut] = useState(false);
-const scrollRef = React.useRef(null);
-  useEffect(() => {
-    axios
-      .get("https://singspacebackend.onrender.com/pride/2/annual")
-      .then((res) => setPrideEvent(res.data))
-      .catch((err) => console.error("Error loading Annual Pride event:", err));
-  }, []);
+  const [intro, setIntro] = useState(true), [shareMessage, setShareMessage] = useState(""), [copyFallback, setCopyFallback] = useState(false);
 
-useEffect(() => {
-  const el = scrollRef.current;
-  if (!el) return;
+  const main = useRef(null);
 
-  const speed = 0.15;
-  let animationFrame;
-  let paused = false;
+  const finish = useCallback(() => setIntro(false), []);
 
-  const scroll = () => {
-    if (!paused) {
-      if (el.scrollTop + el.clientHeight >= el.scrollHeight) {
-        el.scrollTop = 0;
-      } else {
-        el.scrollTop += speed;
-      }
-    }
+  useEffect(() => { if (!intro) main.current?.focus({ preventScroll: true }); }, [intro]);
 
-    animationFrame = requestAnimationFrame(scroll);
+  const share = async () => {
+
+    try {
+
+      if (navigator.share) { await navigator.share({ title: "Capital City Pride", text: "Celebrate with our Hartford Pride community!", url: SHARE_URL }); return; }
+
+      await navigator.clipboard.writeText(SHARE_URL); setShareMessage("Share link copied.");
+
+    } catch (error) { if (error.name !== "AbortError") { setCopyFallback(true); setShareMessage("Copy the link below to share Pride."); } }
+
   };
 
-  const handleEnter = () => (paused = true);
-  const handleLeave = () => (paused = false);
+  const address = [annual.data?.address, annual.data?.city, annual.data?.state].filter(Boolean).join(", ") || "Pratt Street, Hartford, CT";
 
-  el.addEventListener("mouseenter", handleEnter);
-  el.addEventListener("mouseleave", handleLeave);
+  return <><style>{STYLES}</style>{intro ? <PrideWelcome onComplete={finish}/> : <main ref={main} tabIndex={-1} className="hcp3-scope hcp3-page" aria-label="Capital City Pride"><div className="hcp3-rainbow" aria-hidden="true"/>
 
-  animationFrame = requestAnimationFrame(scroll);
+    <PrideHero festival date={<ExternalLink href="https://karaoverse.com/venue/capital-city-pride"><FaCalendarAlt aria-hidden="true"/>{annual.loading ? "Finding our festival date…" : formatDate(annual.data?.date)} <span aria-hidden="true">↗</span></ExternalLink>}><PrideQuickNav/></PrideHero>
 
-  return () => {
-    cancelAnimationFrame(animationFrame);
-    el.removeEventListener("mouseenter", handleEnter);
-    el.removeEventListener("mouseleave", handleLeave);
-  };
-}, []);
+    <AnnualPrideEventDetails event={annual.data} loading={annual.loading} error={annual.error} onRetry={annual.retry}/>
 
-useEffect(() => {
-  axios
-    .get("https://singspacebackend.onrender.com/pride/2/annual")
-    .then((res) => {
-      console.log("🏳️‍🌈 Pride Event API Response:", res.data);
-      console.log("📅 Pride Event Date:", res.data?.date);
+    <Section id="pride-sponsors" tone="lavender" eyebrow="The people behind the celebration" title={<>Proud <em>sponsors.</em></>} intro="Local generosity. A whole city of possibility." extra={<Link className="hcp3-inline-link" to="/sponsorinvitation">Support Pride ↗</Link>}><SponsorSlider embedded/></Section>
 
-      setPrideEvent(res.data);
-    })
-    .catch((err) =>
-      console.error("Error loading Annual Pride event:", err)
-    );
-}, []);
-  
-  const SectionHeader = ({ icon, title, subtitle }) => (
-    <div className="text-center mb-4 ">
-      <h3 className="text-5xl sm:text-6xl font-[Aspire] text-yellow-300 drop-shadow-lg">
-        {icon} {title}
-      </h3>
-      <p className="mt-2 text-yellow-100 text-xs font-semibold tracking-wide">
-        {subtitle}
-      </p>
-    </div>
-  );
+    <Section id="pride-vendors" tone="mint" eyebrow="The Pride marketplace" title={<>Meet the <em>makers.</em></>} intro="Good food, creative finds, and the local businesses that make our community shine."><VendorSlider embedded/></Section>
 
-  const RainbowDivider = () => (
-    <div
-      className="my-16 h-1 w-full rounded-full bg-gradient-to-r 
-    from-red-500 via-orange-400 via-yellow-300 via-green-400 
-    via-blue-400 via-purple-500 to-pink-500
-    shadow-[0_0_20px_rgba(255,255,255,0.35)]
-  "
-    />
-  );
-useEffect(() => {
-  const fadeTimer = setTimeout(() => {
-    setFadeOut(true);
-  }, 3000); // show image for 3s
+    <Section id="pride-funders" tone="blue" eyebrow="Community, made possible" title={<>Generosity with <em>heart.</em></>} intro="Champions whose support helps connection, creativity, and Pride grow."><PublicFundersSection embedded/></Section>
 
-  const removeTimer = setTimeout(() => {
-    setShowIntro(false);
-  }, 4000); // remove after fade finishes
+    <footer className="hcp3-footer"><Reveal className="hcp3-container"><div className="hcp3-footer-grid"><div><p className="hcp3-eyebrow">Hartford Pride Center</p><h2>More visibility.<br/><em>More joy. More community.</em></h2><p>Uplifting, supporting, and connecting LGBTQIA+ people through advocacy, wellness resources, volunteerism, partnerships, events, education, and year-round community engagement.</p><div className="hcp3-footer-map"><iframe title="Capital City Pride location" src={`https://maps.google.com/maps?q=${encodeURIComponent(address)}&z=16&output=embed`} loading="lazy"/></div>{address && <ExternalLink href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`}>{address} ↗</ExternalLink>}</div><div><h3>Explore Hartford Pride</h3><div className="hcp3-footer-links">{[["About", "/about"], ["Services", "/services"], ["Events", "/events"], ["Volunteer", "/volunteer"], ["Resources", "/resources"], ["Contact", "/contact"], ["Donate", "/support"], ["Sponsors", "/sponsors"]].map(([label, to]) => <Link to={to} key={to}>{label} ↗</Link>)}</div></div><div><h3>Stay connected</h3><p>Volunteer, sponsor, collaborate, find support, or just say hello. There’s a place for you here.</p><a className="hcp3-inline-link hcp3-footer-email" href="mailto:david@hartfordpridecenter.org">david@hartfordpridecenter.org</a><div className="hcp3-footer-socials"><a className="hcp3-icon-button" href="https://www.instagram.com/hartfordpride/" target="_blank" rel="noopener noreferrer" aria-label="Hartford Pride on Instagram"><FaInstagram/></a><a className="hcp3-icon-button" href="https://www.facebook.com/HartfordPrideCenter" target="_blank" rel="noopener noreferrer" aria-label="Hartford Pride Center on Facebook"><FaFacebook/></a><a className="hcp3-icon-button" href="mailto:david@hartfordpridecenter.org" aria-label="Email Hartford Pride"><FaEnvelope/></a><button type="button" className="hcp3-button" onClick={share}><FaPaperPlane aria-hidden="true"/>Share</button></div><p className="hcp3-share-message" role="status">{shareMessage}</p>{copyFallback && <input className="hcp3-share-fallback" aria-label="Share link" readOnly value={SHARE_URL} onFocus={event => event.target.select()}/>}</div></div><p className="hcp3-copyright">© {new Date().getFullYear()} Hartford Pride Center · Built with Pride, for Hartford and beyond.</p></Reveal></footer><div className="hcp3-rainbow" aria-hidden="true"/>
 
-  return () => {
-    clearTimeout(fadeTimer);
-    clearTimeout(removeTimer);
-  };
-}, []);
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-700 via-balck to-slate-700 text-white lg:pt-24 pt-4">
-{showIntro && (
-  <div
-    className={`
-      fixed inset-0 z-[9999]
-      flex items-center justify-center
-      bg-black/95
-      transition-opacity duration-1000
-      ${fadeOut ? "opacity-0" : "opacity-100"}
-    `}
-  >
-<img
-  src="/ccp.jpg"
-  alt="Pride Logo"
-  className={`
-    w-[90%] max-w-2xl
-    h-auto
-    max-h-[80vh]
-    object-contain
-    rounded-2xl
-    shadow-2xl
-    transition-opacity duration-1000
-    ${fadeOut ? "opacity-0" : "opacity-100"}
-  `}
-/>
-  </div>
-)}
-      {/* 🌞 HERO SECTION */}
-    {/* 🌞 HERO SECTION */}
-<section
-  className="
-    relative text-center py-24
-    bg-[url('https://www.vacationer.travel/wp-content/uploads/2023/05/West-Hartford-Pride-1024x768.jpg')]
-    bg-cover bg-center
-    shadow-[0_40px_100px_-30px_rgba(0,0,0,0.9)]
-  "
->
+  </main>}</>;
 
-  {/* dark cinematic overlay */}
-  <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/60 to-black/80"></div>
-
-  {/* subtle rainbow glow */}
-
-  <div className="relative z-10 max-w-5xl mx-auto ">
-
-    <h1 className="text-5xl sm:text-7xl font-[Aspire] font-bold tracking-wide text-white drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)]">
-      Capital City <span className="text-yellow-300">Pride</span>
-    </h1>
-
-    <p className="mt-4 text-xl text-yellow-100 font-semibold">
-      The Official Pride Celebration of Hartford, Connecticut 
-    </p>
-
-    {/* Event Date Badge */}
-<div
-  className="
-    mt-8 inline-flex items-center
-    bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-500
-    text-black
-    px-8 py-1
-    rounded-full
-    font-bold
-    text-lg
-    shadow-[0_10px_40px_rgba(255,215,0,0.5)]
-    border border-white/30
-    cursor-pointer
-    hover:scale-105 hover:brightness-110
-    transition
-  "
-  onClick={() => {
-    if (
-      window.confirm(
-        "You’re being redirected to the full event page on Karaoverse!\n\nContinue?"
-      )
-    ) {
-      window.location.href =
-        "https://karaoverse.com/venue/capital-city-pride";
-    }
-  }}
->
-  {prideEvent ? (
-    new Date(prideEvent.date + "T00:00:00").toLocaleDateString(
-      "en-US",
-      {
-        weekday: "long",
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-      }
-    )
-  ) : (
-    "June 2026"
-  )}
-</div>
-{/* QUICK NAV */}
-
-  </div>
- <div
-  className="
-    absolute
-
-    bottom-4
-    left-1/2
-
-    -translate-x-1/2
-
-    z-20
-
-    flex
-    flex-wrap
-
-    items-center
-    justify-center
-
-    gap-2
-
-    w-full
-
-    px-3
-  "
->
-  {[
-    {
-      label: "Itinerary",
-      color:
-        "bg-gradient-to-r from-red-500 to-red-600 text-white border-red-300/40",
-      onClick: () => {
-        const el =
-          document.getElementById("pride-itinerary");
-
-        if (!el) return;
-
-        const y =
-          el.getBoundingClientRect().top +
-          window.pageYOffset -
-          120;
-
-        window.scrollTo({
-          top: y,
-          behavior: "smooth",
-        });
-      },
-    },
-    {
-      label: "Vendors",
-      color:
-        "bg-gradient-to-r from-green-400 to-emerald-500 text-black border-green-100/40",
-      ref: vendorsRef,
-    },
-    {
-      label: "Talent",
-      color:
-        "bg-gradient-to-r from-blue-500 to-cyan-500 text-white border-blue-100/40",
-      ref: talentRef,
-    },
-    {
-      label: "Sponsors",
-      color:
-        "bg-gradient-to-r from-purple-500 to-indigo-500 text-white border-blue-100/40",
-      ref: sponsorsRef,
-    },
-  ].map((item) => (
-    <button
-      key={item.label}
-      onClick={() => {
-        if (item.onClick) {
-          item.onClick();
-        } else {
-          scrollToSection(item.ref);
-        }
-      }}
-      className={`
-        px-3
-        py-1.5
-
-        rounded-full
-
-        ${item.color}
-
-        border
-
-        text-[10px]
-        sm:text-xs
-
-        font-black
-        font-serif
-
-        tracking-[0.08em]
-
-        shadow-lg
-
-        hover:brightness-110
-        hover:scale-105
-
-        transition-all
-        duration-300
-      `}
-    >
-      {item.label}
-    </button>
-  ))}
-</div>
-</section>
-
-       <hr className="rainbow-hr" />
-
-
-{/* 🌈 OVERVIEW SECTION */}
-
-
- 
-      {/* 🎭 MAIN FEATURES */}
-  <div ref={talentRef}></div>
-  
-            <AnnualPrideEventDetails />
-
-      {/* 🌈 PRIDE PARTNERS SHOWCASE */}
-      {/* 🎤 BECOME A PERFORMER */}
-
-       <hr className="rainbow-hr" />
-
-<section
-  className="
-    relative w-full
-    bg-gradient-to-br from-[#ff4fd8] via-[#110012] to-[#5321d9]
-    py-6 sm:py-4
-    overflow-hidden
-    shadow-[inset_0_0_120px_rgba(0,0,0,0.45)]
-  "
->
-  <div className="absolute -top-20 left-10 w-72 h-72 bg-yellow-300/20 rounded-full blur-3xl" />
-  <div className="absolute top-24 right-10 w-80 h-80 bg-pink-400/15 rounded-full blur-3xl" />
-  <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-cyan-400/10 rounded-full blur-3xl" />
-
-  <div className="relative max-w-7xl mx-auto px-1 sm:px-6 space-y-12">
-
-    {/* 🏆 SPONSORS */}
-    <div ref={sponsorsRef}></div>
-    <div className="rounded-[2.5rem]  p-1 py-2 sm:p-10 border border-white bg-black/30 backdrop-blur-2xl shadow-[0_25px_100px_-30px_rgba(0,0,0,0.85)] text-center">
-      <SectionHeader
-        icon="🏆"
-        title="Proud Sponsors"
-        subtitle="Businesses and organizations powering Pride"
-      />
-
-      <div className="w-40 h-1 rounded-full bg-gradient-to-r from-transparent via-yellow-300 to-transparent mx-auto mt-4 mb-2" />
-
-      <div className="flex justify-center">
-        <SponsorSlider />
-      </div>
-    </div>
-
-    {/* 💛 VOLUNTEERS */}
-    {/* <div className="rounded-[2.5rem] p-6 sm:p-10 border border-white bg-black/30 backdrop-blur-2xl shadow-[0_25px_100px_-30px_rgba(0,0,0,0.85)]">
-      <div className="grid md:grid-cols-2 gap-8 items-center">
-        <img
-          src="https://main-stream.org/wp-content/uploads/2024/05/call-for-Pride-volunteers-cover-image-770x434-1.jpg"
-          alt="Volunteer helping at Pride"
-          className="w-full rounded-3xl border border-white/10 shadow-xl"
-        />
-
-        <div className="text-center md:text-left">
-          <h2 className="text-4xl sm:text-5xl font-[Aspire] text-yellow-300 mb-4">
-            💛 Become a Volunteer
-          </h2>
-
-          <p className="text-yellow-100/85 text-lg leading-relaxed mb-6">
-            Help bring Hartford Pride to life. From event support and guest guidance
-            to stage operations and outreach, every helping hand creates a stronger celebration.
-          </p>
-
-          <button
-            onClick={() => navigate("/contact")}
-            className="px-8 py-3 rounded-2xl bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-500 text-black font-extrabold shadow-xl hover:scale-105 transition"
-          >
-            Contact Us
-          </button>
-        </div>
-      </div>
-    </div> */}
-    {/* <div className="rounded-[2.5rem] p-2 sm:p-10 border border-white bg-black/30 backdrop-blur-2xl shadow-[0_25px_100px_-30px_rgba(0,0,0,0.85)]">
-      <div className="grid md:grid-cols-2 gap-8 items-center">
-        <div className="text-center md:text-left order-2 md:order-1">
-          <h2 className="text-4xl border-b sm:text-5xl font-[Aspire] text-purple-300 mb-1">
-            Perform with Pride!
-          </h2>
-
-          <p className="text-yellow-100/85 text-md leading-relaxed mb-6">
-            Drag artists, DJs, musicians, dancers, and LGBTQIA+ entertainers —
-            showcase your talent through Karaoverse and become part of South Haven Pride.
-          </p>
-
-          <a
-            href="https://karaoverse.com/job-postings"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-8 py-1 rounded-2xl bg-gradient-to-r from-fuchsia-500 via-purple-600 to-indigo-600 text-white font-extrabold shadow-xl hover:scale-105 transition"
-          >
-            Apply ↗
-          </a>
-        </div>
-
-        <img
-          src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819"
-          alt="Performer on stage"
-          className="w-full rounded-3xl border  shadow-pink-400 shadow-xl order-1 md:order-2"
-        />
-      </div>
-    </div> */}
-    {/* 🛍️ VENDORS */}
-    <div ref={vendorsRef}></div>
-    <div className="rounded-[2.5rem] p-6 sm:p-10 border border-white bg-black/30 backdrop-blur-2xl shadow-[0_25px_100px_-30px_rgba(0,0,0,0.85)] text-center">
-      <SectionHeader
-        icon="🛍️"
-        title="Featured Vendors"
-        subtitle="Local businesses bringing food, goods, and colorful experiences"
-      />
-
-      <div className="w-40 h-1 rounded-full bg-gradient-to-r from-transparent via-pink-300 to-transparent mx-auto mt-4 mb-2" />
-
-      <div className="flex justify-center">
-        <VendorSlider />
-      </div>
-    </div>
-
-    {/* 🎤 PERFORMERS */}
-
-
-    {hasPublicFunders && (
-  <div className="rounded-[2.5rem] p-6 sm:p-10 border border-white/10 bg-black/30 backdrop-blur-2xl shadow-[0_25px_100px_-30px_rgba(0,0,0,0.85)] text-center">
-    <SectionHeader
-      icon="💖"
-      title="Community Funders"
-      subtitle="Champions whose generosity helps make this possible"
-    />
-
-    <div className="w-40 h-1 rounded-full bg-gradient-to-r from-transparent via-cyan-300 to-transparent mx-auto mt-4 mb-8" />
-
-    <div className="flex justify-center">
-      <PublicFundersSection onHasFunders={setHasPublicFunders} />
-    </div>
-  </div>
-)}
-
-  </div>
-</section>
-      {/* 🛍️ VENDOR / SPONSOR / VOLUNTEER */}
-      {/* ⭐ Sponsor Modal */}
-      {showSponsorModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="relative bg-white text-black max-w-3xl w-full max-h-[85vh] overflow-y-auto rounded-xl shadow-2xl border-4 border-yellow-500">
-            <button
-              onClick={() => setShowSponsorModal(false)}
-              className="absolute top-2 right-2 z-50 px-4 py-1 bg-yellow-500 text-black font-bold border-2 border-white shadow hover:bg-yellow-600 transition rounded-md"
-            >
-              ✖ Close
-            </button>
-
-            <div>
-              <SponsorInvitationPage />
-            </div>
-          </div>
-        </div>
-      )}
-      {/* 📍 MAP */}
-   
-      {/* ⭐ FOOTER — YELLOW THEME */}
-  <footer className="relative overflow-hidden border-t border-pink-200">
-
-  {/* PRIDE BACKGROUND */}
-  <div className="absolute inset-0 bg-gradient-to-br from-pink-100 via-yellow-50 to-cyan-100" />
-
-  <div className="absolute -top-20 -left-10 w-72 h-72 bg-pink-400/30 rounded-full blur-3xl pointer-events-none" />
-  <div className="absolute bottom-0 right-0 w-80 h-80 bg-cyan-300/30 rounded-full blur-3xl pointer-events-none" />
-  <div className="absolute top-12 right-[30%] w-64 h-64 bg-yellow-300/20 rounded-full blur-3xl pointer-events-none" />
-
-  {/* RAINBOW GLOW */}
-  <div className="absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_top_left,rgba(255,0,128,0.15),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(0,200,255,0.18),transparent_30%)]" />
-
-  <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-16">
-
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-
-      {/* ORG */}
-      <div>
-
-        <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white shadow-xl text-pink-500 font-black uppercase tracking-[0.25em] text-xs sm:text-sm">
-          🌈 Capital City Pride
-        </div>
-{/* LOCATION CARD */}
-<div className="mt-6">
-  <div
-    className="
-      overflow-hidden
-      rounded-[2rem]
-      bg-white
-      shadow-[0_25px_70px_-25px_rgba(0,0,0,0.35)]
-      border border-pink-100
-    "
-  >
-
-    {/* MAP */}
-<button
-  onClick={() =>
-    window.open(
-      "https://www.google.com/maps/search/?api=1&query=Pratt+Street+Hartford+CT",
-      "_blank"
-    )
-  }
-  className="
-    relative
-    w-full
-    h-[180px]
-    overflow-hidden
-    group
-  "
->
-      <iframe
-        className="
-          absolute inset-0
-          w-full h-full
-          pointer-events-none
-          scale-110
-          group-hover:scale-125
-          transition-all
-          duration-700
-        "
-src="https://maps.google.com/maps?q=100%20Pratt%20Street%20Hartford%20CT&t=&z=17&ie=UTF8&iwloc=&output=embed"        loading="lazy"
-      />
-
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-
-      <div
-        className="
-          absolute bottom-3 left-3
-          px-3 py-2
-          rounded-full
-          bg-white/95
-          backdrop-blur
-          font-black
-          text-pink-500
-          shadow-lg
-        "
-      >
-        📍 View Location
-      </div>
-    </button>
-
-    {/* ADDRESS */}
-    <a
-      href="https://www.google.com/maps/search/?api=1&query=Pratt+Street+Hartford+CT"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="
-        block
-        p-5
-        hover:bg-pink-50/50
-        transition-all
-      "
-    >
-      <div className="flex gap-4">
-
-        <div
-          className="
-            w-12 h-12
-            rounded-2xl
-            bg-pink-100
-            flex items-center justify-center
-            text-xl
-          "
-        >
-          📍
-        </div>
-
-        <div>
-          <div className="text-xs uppercase tracking-[0.25em] text-pink-500 font-black">
-            Event Location
-          </div>
-
-          <h5 className="text-lg font-black text-gray-900 mt-1">
-            Pratt Street
-          </h5>
-
-          <p className="text-gray-600 font-semibold">
-            Downtown Hartford, Connecticut
-          </p>
-
-          <div className="mt-2 text-sm font-black text-cyan-500">
-            Open In Google Maps ↗
-          </div>
-        </div>
-
-      </div>
-    </a>
-
-  </div>
-</div>
-
-        <h3 className="mt-6 text-3xl sm:text-5xl font-black leading-tight text-gray-900">
-          Building LGBTQIA+
-          <span className="block text-pink-500">
-            Visibility, Joy & Community.
-          </span>
-        </h3>
-
-        <p className="mt-5 text-gray-700 font-semibold leading-relaxed text-[15px]">
-          The Hartford Pride Center exists to uplift, support, empower,
-          and connect LGBTQIA+ individuals through advocacy,
-          wellness resources, volunteerism, partnerships,
-          events, education, and year-round community engagement.
-        </p>
-
-        <div className="mt-7 flex flex-wrap gap-3">
-
-          <div className="px-5 py-3 rounded-2xl bg-white shadow-lg font-black text-pink-500 rotate-[-2deg]">
-            🏳️‍🌈 Everyone Is Welcome
-          </div>
-
-          <div className="px-5 py-3 rounded-2xl bg-white shadow-lg font-black text-cyan-500 rotate-[2deg]">
-            ✨ Community Powered
-          </div>
-
-        </div>
-      </div>
-
-      {/* LINKS */}
-      <div>
-
-        <h4 className="text-2xl font-black text-gray-900">
-          Explore Hartford Pride
-        </h4>
-
-        <div className="mt-6 grid grid-cols-2 gap-3">
-
-          <Link
-            to="/about"
-            className="rounded-2xl bg-white px-4 py-3 shadow-xl font-black text-pink-500 hover:scale-105 transition text-center"
-          >
-            About
-          </Link>
-
-          <Link
-            to="/services"
-            className="rounded-2xl bg-white px-4 py-3 shadow-xl font-black text-yellow-500 hover:scale-105 transition text-center"
-          >
-            Services
-          </Link>
-
-          <Link
-            to="/events"
-            className="rounded-2xl bg-white px-4 py-3 shadow-xl font-black text-cyan-500 hover:scale-105 transition text-center"
-          >
-            Events
-          </Link>
-
-          <Link
-            to="/volunteer"
-            className="rounded-2xl bg-white px-4 py-3 shadow-xl font-black text-purple-500 hover:scale-105 transition text-center"
-          >
-            Volunteer
-          </Link>
-
-          <Link
-            to="/resources"
-            className="rounded-2xl bg-white px-4 py-3 shadow-xl font-black text-pink-500 hover:scale-105 transition text-center"
-          >
-            Resources
-          </Link>
-
-          <Link
-            to="/contact"
-            className="rounded-2xl bg-white px-4 py-3 shadow-xl font-black text-cyan-500 hover:scale-105 transition text-center"
-          >
-            Contact
-          </Link>
-
-
-          <Link
-            to="/support"
-            className="rounded-2xl bg-white px-4 py-3 shadow-xl font-black text-cyan-500 hover:scale-105 transition text-center"
-          >
-            Donate
-          </Link>
-
-
-          <Link
-            to="/sponsors"
-            className="rounded-2xl bg-white px-4 py-3 shadow-xl font-black text-purple-500 hover:scale-105 transition text-center"
-          >
-            Sponsors
-          </Link>
-
-        </div>
-      </div>
-
-      {/* CONTACT */}
-      <div>
-
-        <h4 className="text-2xl font-black text-gray-900">
-          Stay Connected
-        </h4>
-
-        <p className="mt-5 text-gray-700 font-bold leading-relaxed">
-          Looking to volunteer, sponsor, collaborate,
-          seek support, or get involved in Hartford Pride?
-          Reach out and connect with our community.
-        </p>
-
-        <div className="mt-6 space-y-3">
-
-          <p className="text-gray-700 font-black">
-            📧{" "}
-            <a
-              href="mailto:david@hartfordpridecenter.org"
-              className="underline hover:text-pink-500 transition"
-            >
-              david@hartfordpridecenter.org
-            </a>
-          </p>
-
-
-        </div>
-
-        <div className="mt-7 flex items-center gap-4">
-
-          <a
-            href="https://www.instagram.com/hartfordpride/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-12 h-12 rounded-full bg-pink-500 text-white flex items-center justify-center shadow-xl hover:scale-110 transition"
-          >
-            <FaInstagram className="text-xl" />
-          </a>
-
-          <a
-            href="https://www.facebook.com/HartfordPrideCenter"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-12 h-12 rounded-full bg-cyan-400 text-white flex items-center justify-center shadow-xl hover:scale-110 transition"
-          >
-            <FaFacebook className="text-xl" />
-          </a>
-
-          <a
-            href="mailto:david@hartfordpridecenter.org"
-            className="w-12 h-12 rounded-full bg-yellow-400 text-white flex items-center justify-center shadow-xl hover:scale-110 transition"
-          >
-            <FaEnvelope className="text-xl" />
-          </a>
-<button
-  onClick={handleShare}
-  className="
-    inline-flex items-center gap-2
-
-    rounded-full
-
-    bg-gradient-to-br
-    from-green-600
-    via-emerald-500
-    to-green-900
-
-    px-5 py-1
-
-    border border-white
-
-    text-white
-    font-black
-    text-sm
-    lg:text-base
-
-    hover:scale-105
-    transition-all
-  "
->
-  <FaPaperPlane />
-  Share
-</button>
-        </div>
-
-      </div>
-
-    </div>
-
-    {/* BOTTOM */}
-    <div className="mt-16 pt-8 border-t border-pink-200 text-center">
-
-      <p className="text-sm text-gray-600 font-bold">
-        © {year} Hartford Pride Center — Celebrating inclusion,
-        advocacy, creativity, and LGBTQIA+ community connection.
-      </p>
-
-      <p className="mt-2 text-xs text-gray-500 font-semibold">
-        Built with pride for Hartford and beyond.
-      </p>
-
-    </div>
-
-  </div>
-</footer>
-    </div>
-  );
 }
+
+const STYLES = `
+
+.hcp3-scope{--hcp3-text:#49364f;--hcp3-muted:#735f75;--hcp3-line:#dfd0de;--hcp3-accent:#89507e;--hcp3-wash:#f7e9f2;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px;line-height:1.65;color:var(--hcp3-text);color-scheme:light;-webkit-font-smoothing:antialiased}
+
+.hcp3-scope *{box-sizing:border-box}.hcp3-scope :is(h1,h2,h3,h4,p,figure){margin:0}.hcp3-scope a{color:inherit}.hcp3-scope button,.hcp3-scope input,.hcp3-scope select{font:inherit}.hcp3-scope button{cursor:pointer}.hcp3-scope button:disabled{cursor:default;opacity:.35}.hcp3-scope :is(a,button,input,select,[tabindex="0"]):focus-visible{outline:3px solid #8754a0;outline-offset:4px}.hcp3-scope [hidden]{display:none!important}.hcp3-scope em{font-family:Georgia,"Times New Roman",serif;font-weight:400}.hcp3-container{width:97%;max-width:1560px;padding-inline:clamp(12px,2.3vw,34px);margin-inline:auto;min-width:0}.hcp3-page{background:#fcf9f5;min-height:100vh;padding-top:var(--hhcp3-header-offset,var(--hcp3-header-clearance))}
+
+.hcp3-rainbow{height:4px;background:linear-gradient(90deg,#dc789c,#e5af7d,#d9c677,#90bca0,#8dabe0,#b692d0)}
+
+.hcp3-band{width:100%;border-block-start:1px solid var(--hcp3-line);border-radius:0;padding-block:36px 40px;scroll-margin-top:calc(var(--hhcp3-header-offset,var(--hcp3-header-clearance)) + 12px)}
+
+.hcp3-band-cream{background:#fcf8ee;--hcp3-accent:#806529;--hcp3-line:#e2d4b6;--hcp3-wash:#f8edce}.hcp3-band-mint{background:#edf6f1;--hcp3-accent:#2c6e54;--hcp3-line:#bfd9cb;--hcp3-wash:#dff1e7}.hcp3-band-pink{background:#fbecf1;--hcp3-accent:#98385e;--hcp3-line:#e7c8d5;--hcp3-wash:#f6dce7}.hcp3-band-lavender{background:#f0eafa;--hcp3-accent:#785297;--hcp3-line:#d2c4e5;--hcp3-wash:#e8dcf6}.hcp3-band-blue{background:#ebf2fc;--hcp3-accent:#3a6199;--hcp3-line:#c5d5eb;--hcp3-wash:#dfebfc}
+
+.hcp3-section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;padding-bottom:20px;border-bottom:1px solid var(--hcp3-line);margin-bottom:24px}.hcp3-eyebrow{font-size:10px;font-weight:750;letter-spacing:1.7px;text-transform:uppercase;color:var(--hcp3-accent)}.hcp3-section-head h2{font-size:clamp(29px,3.2vw,43px);letter-spacing:-1.1px;line-height:1.18;font-weight:600;margin-top:7px}.hcp3-section-head h2 em{color:var(--hcp3-accent)}.hcp3-intro{max-width:740px;font-size:13px;line-height:1.8;color:var(--hcp3-muted);margin-top:10px!important}.hcp3-count{font-size:11px;white-space:nowrap;color:var(--hcp3-accent)}
+
+.hcp3-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:9px 17px;border:1px solid var(--hcp3-line);border-radius:99px;background:#fffafde6;color:var(--hcp3-accent)!important;font-size:12px!important;font-weight:650;text-decoration:none;transition:background .2s,transform .2s}.hcp3-button:hover{background:var(--hcp3-wash);transform:translateY(-1px)}.hcp3-button-primary{background:#79517f;color:#fff!important;border-color:#79517f}.hcp3-button-primary:hover{background:#62406a}.hcp3-icon-button{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;width:44px;height:44px;border:1px solid var(--hcp3-line);border-radius:50%;background:#fffc;color:var(--hcp3-accent)}.hcp3-icon-button:hover:not(:disabled){background:var(--hcp3-wash)}.hcp3-link-row{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin-top:20px}.hcp3-inline-link{display:inline-flex;align-items:center;gap:7px;min-height:44px;font-size:13px;color:var(--hcp3-accent)!important;text-decoration:underline!important;text-decoration-thickness:1px;text-underline-offset:5px;overflow-wrap:anywhere}.hcp3-inline-link:hover{text-decoration-thickness:2px!important}
+
+.hcp3-state{padding:25px 16px;text-align:center;color:var(--hcp3-muted);font-size:13px}.hcp3-state .hcp3-button{margin-top:15px}.hcp3-loading-line{display:block;width:100px;height:3px;margin:0 auto 15px;background:linear-gradient(90deg,#d5668b,#dcb956,#62a381,#748ecd,#a276bb);animation:hcp3-soft-pulse 1.8s ease-in-out infinite}.hcp3-image-fallback{display:flex!important;align-items:center;justify-content:center;flex-direction:column;gap:7px;text-align:center;padding:14px;background:linear-gradient(135deg,#f8e0e9,#fff1d2,#dff0e8,#e4eafa,#f0e0f6);color:#76547c;font-weight:650;overflow-wrap:anywhere}.hcp3-image-fallback>span:first-child{font-size:29px;font-family:Georgia,serif}
+
+.hcp3-hero{position:relative;isolation:isolate;padding-block:20px 0;border-bottom:1px solid #e6d4e0;overflow:hidden}.hcp3-hero-aurora{position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 12% 0,#f2c3d54a,transparent 55%),radial-gradient(ellipse at 90% 100%,#c6b6eb36,transparent 50%)}.hcp3-hero-grid{display:grid;grid-template-columns:1.12fr .88fr;align-items:center;gap:clamp(25px,5vw,80px)}.hcp3-hero h1{font-size:clamp(39px,5.4vw,73px);line-height:1.03;letter-spacing:-2px;font-weight:580;margin:17px 0 21px}.hcp3-hero h1 em{background:linear-gradient(100deg,#a83568,#a7612a,#81701c,#327253,#4368a3,#87509e);background-clip:text;-webkit-background-clip:text;color:transparent;padding-right:5px}.hcp3-hero-copy>p:not(.hcp3-eyebrow){font-size:15px;line-height:1.85;color:#725d73;max-width:650px}.hcp3-hero-logo{position:relative;justify-self:center;width:min(100%,340px);padding:10px;background:#fffdfd;border:1px solid #e7d5df;box-shadow:0 12px 28px #79527b14;transform:rotate(2deg)}.hcp3-hero-logo:before{content:"";position:absolute;width:66px;height:23px;top:-11px;left:calc(50% - 33px);background:#e4c8eaac;transform:rotate(-5deg);border-inline:1px dashed #bc95c755}.hcp3-hero-logo img,.hcp3-hero-logo>.hcp3-image-fallback{display:block;width:100%;height:245px;object-fit:contain}.hcp3-hero-logo figcaption{font-family:Georgia,serif;font-style:italic;text-align:center;color:#895d81;font-size:16px;padding:10px 2px 2px}.hcp3-hero-date{margin-top:16px}.hcp3-hero-date .hcp3-inline-link{font-size:13px;font-weight:650}.hcp3-values{display:flex;flex-wrap:wrap;gap:5px 17px;list-style:none;margin:20px 0 0;padding:0}.hcp3-values li{font-size:11px;color:#6e596e;display:flex;gap:7px;align-items:center}.hcp3-values li:before{content:"✦";color:var(--value-ink);font-size:9px}.hcp3-quick-nav{display:flex;gap:22px;overflow-x:auto;padding-block:18px 0;margin-top:20px;border-top:1px solid #e1d1dd;scrollbar-width:thin}.hcp3-quick-nav a{flex-shrink:0;display:inline-flex;align-items:center;gap:7px;min-height:44px;text-decoration:none;font-size:12px;font-weight:650;color:#6e526f;border-bottom:2px solid var(--value-ink)}
+
+.hcp3-footer{padding-block:34px 22px;background:#f7f1f8;border-top:1px solid #dfcde4}.hcp3-footer-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:35px}.hcp3-footer h2{font-size:29px;line-height:1.2;letter-spacing:-.7px;font-weight:550}.hcp3-footer h3{font-size:15px;font-weight:700;margin-bottom:11px}.hcp3-footer p{font-size:12px;line-height:1.8;color:#776179;margin-top:12px}.hcp3-footer-links{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}.hcp3-footer-links a{font-size:12px;min-height:44px;display:flex;align-items:center;text-decoration:none}.hcp3-footer-socials{display:flex;flex-wrap:wrap;gap:9px;margin-top:13px}.hcp3-footer-email{overflow-wrap:anywhere}.hcp3-copyright{padding-top:19px;margin-top:24px;border-top:1px solid #dfcde4;font-size:10px!important;text-align:center}.hcp3-share-message{font-size:11px;min-height:18px;margin-top:8px}.hcp3-share-fallback{width:100%;font-size:12px;margin-top:9px;padding:9px;border:1px solid #d7c4dc}
+
+.hcp3-welcome{position:fixed;inset:0;z-index:2300;display:grid;place-items:center;padding:20px;text-align:center;color:#fff;background:radial-gradient(ellipse at 30% 15%,#55354f88,transparent 50%),radial-gradient(ellipse at 75% 85%,#24386588,transparent 50%),#181321}.hcp3-welcome-inner{max-width:650px}.hcp3-welcome img{width:min(62vw,210px);height:150px;object-fit:contain;margin:0 auto 22px;border-radius:5px}.hcp3-welcome h2{font-family:Georgia,serif;font-size:clamp(34px,6vw,57px);font-weight:400;line-height:1.12;letter-spacing:-1px}.hcp3-welcome p{font-size:clamp(22px,5vw,39px);font-family:Georgia,serif;font-style:italic;letter-spacing:.5px;margin-top:15px;color:#fff2fb;text-shadow:0 0 10px #f9b4dd,0 0 25px #d482b9,0 0 42px #9372d1}.hcp3-welcome-rule{height:2px;background:linear-gradient(90deg,#f38fae,#eeb879,#f6e092,#9bdcb4,#a5c7fa,#d4b3f0);width:min(70vw,350px);margin:25px auto}.hcp3-welcome button{border:1px solid #ffffff50;border-radius:99px;background:#ffffff0c;color:#fff;min-height:44px;padding:9px 20px;font-size:12px;margin-top:10px}
+
+@keyframes hcp3-soft-pulse{0%,100%{opacity:.4}50%{opacity:1}}
+
+@media(min-width:1400px){.hcp3-lineup{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}}
+
+@media(max-width:760px){.hcp3-band{padding-block:27px 30px}.hcp3-section-head{gap:12px;margin-bottom:19px;padding-bottom:17px}.hcp3-section-head h2{font-size:31px}.hcp3-hero{padding-block:20px 0}.hcp3-hero-grid{grid-template-columns:1fr;gap:24px;text-align:center}.hcp3-hero-logo{grid-row:1;width:min(53vw,210px);transform:rotate(-2deg)}.hcp3-hero-logo img,.hcp3-hero-logo>.hcp3-image-fallback{height:145px}.hcp3-hero-logo figcaption{font-size:13px}.hcp3-hero h1{font-size:clamp(38px,8vw,53px);letter-spacing:-1.6px;margin:13px 0 16px}.hcp3-hero-copy>p:not(.hcp3-eyebrow){font-size:14px;margin-inline:auto}.hcp3-hero-date .hcp3-inline-link{justify-content:center}.hcp3-hero-date{margin-top:9px}.hcp3-values{justify-content:center;gap:6px 12px;margin-top:14px}.hcp3-values li{font-size:10px}.hcp3-quick-nav{gap:20px;margin-top:19px;padding-top:9px}.hcp3-quick-nav a{font-size:11px}.hcp3-event-summary{grid-template-columns:1fr;gap:20px}.hcp3-footer-grid{grid-template-columns:1fr 1fr;gap:25px}.hcp3-footer-grid>div:first-child{grid-column:1/-1}.hcp3-modal{padding:10px}.hcp3-modal-panel{max-height:94dvh}.hcp3-modal-head{padding:13px 16px}.hcp3-modal-head h2{font-size:20px}.hcp3-modal-body{padding:17px}.hcp3-lineup{grid-template-columns:repeat(3,minmax(0,1fr));gap:20px 12px}.hcp3-directory-art{height:135px}.hcp3-rail>*{flex-basis:200px}}
+
+@media(max-width:480px){.hcp3-filters{grid-template-columns:1fr;gap:9px}.hcp3-filters input,.hcp3-filters select{font-size:16px}.hcp3-directory-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.hcp3-directory-grid .hcp3-directory-art{height:106px}.hcp3-directory-grid h3{font-size:14px}.hcp3-directory-copy{padding-inline:3px}.hcp3-directory-card{padding:6px 6px 11px}.hcp3-schedule-row{grid-template-columns:72px minmax(0,1fr);gap:12px;padding-block:18px}.hcp3-schedule-time{font-size:11px}.hcp3-schedule-time span{font-size:10px}.hcp3-schedule-content h3{font-size:19px}.hcp3-schedule-description{font-size:12px}.hcp3-lineup{grid-template-columns:repeat(2,minmax(0,1fr))}.hcp3-footer-grid{grid-template-columns:1fr;gap:23px}.hcp3-footer-grid>div:first-child{grid-column:auto}.hcp3-detail-image{height:170px}.hcp3-map{height:310px}.hcp3-section-head{align-items:start}.hcp3-count{font-size:10px;margin-top:6px}}
+
+@media(prefers-reduced-motion:reduce){.hcp3-scope *{animation:none!important;transition:none!important;scroll-behavior:auto!important}.hcp3-directory-card:hover,.hcp3-person:hover .hcp3-portrait{transform:none}}
+
+@media(forced-colors:active){.hcp3-hero h1 em{background:none;color:CanvasText}.hcp3-directory-card,.hcp3-hero-logo{border:1px solid CanvasText}.hcp3-welcome p{text-shadow:none;color:CanvasText}}
+
+.hcp3-page:focus{outline:none}
+
+.hcp3-footer-map{width:100%;max-width:400px;margin-top:16px;border:1px solid #dac7dc;background:#e5dfe8}
+
+.hcp3-footer-map iframe{display:block;width:100%;height:150px;border:0}
+
+.hcp3-band-lavender{border-top:3px solid #b198d1}
+
+.hcp3-band-mint{border-top:3px solid #91baa3}
+
+.hcp3-band-blue{border-top:3px solid #9ab7dc}
+
+.hcp3-section-head h2 em{background:linear-gradient(100deg,#a52d59,#995120,#7b651c,#28694e,#365fab,#80509b);background-clip:text;-webkit-background-clip:text;color:transparent;padding-right:4px}
+
+.hcp3-band :is(.pc-directory,.pc-scope){min-width:0}
+
+@media(max-width:600px){.hcp3-section-head{flex-wrap:wrap}.hcp3-section-head>.hcp3-inline-link{min-height:44px;font-size:12px}}
+
+@media(forced-colors:active){.hcp3-section-head h2 em{background:none;color:CanvasText}}
+
+/* Clear the fixed site header, including the taller mobile branding row.
+   A parent can override --hhcp3-header-offset if its navigation changes height. */
+.hcp3-page{--hcp3-header-clearance:calc(96px + env(safe-area-inset-top,0px))}
+.hcp3-quick-nav{display:block;width:100%;max-width:none;border-radius:0;overflow:visible;margin-top:30px;padding:17px 20px 19px;background:#302038;border:1px solid #6e5177;border-top:3px solid #c4a0d0;box-shadow:0 9px 24px #42214926;color:#fff8ff}
+.hcp3-nav-caption{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:15px;font-weight:750;color:#fff8ff;letter-spacing:.15px}
+.hcp3-nav-caption>span{font-size:11px;font-weight:500;color:#e0cde8}
+.hcp3-nav-links{display:flex;flex-wrap:nowrap;gap:10px;margin-top:10px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scroll-padding-inline:8px;padding:8px 6px 12px;scrollbar-width:thin;scrollbar-color:#bd98cf #493251;-webkit-overflow-scrolling:touch}.hcp3-nav-links>a{flex:1 0 135px;white-space:nowrap;scroll-snap-align:start}.hcp3-nav-links::-webkit-scrollbar{height:5px}.hcp3-nav-links::-webkit-scrollbar-thumb{background:#bd98cf;border-radius:4px}.hcp3-nav-links::-webkit-scrollbar-track{background:#493251}
+.hcp3-quick-nav a{position:relative;display:flex;align-items:center;gap:8px;min-width:0;min-height:49px;padding:10px 12px;background:#493251;border:1px solid #84638d;border-bottom:3px solid var(--menu-color);border-radius:3px;color:#fff8ff;font-size:13px;font-weight:750;text-decoration:none;transition:background .2s,color .2s,box-shadow .2s}
+.hcp3-quick-nav a>span:first-child{color:var(--menu-color);font-size:16px}
+.hcp3-nav-arrow{margin-left:auto;color:var(--menu-color)}
+.hcp3-quick-nav a:hover,.hcp3-quick-nav a:focus-visible{background:var(--menu-color);color:var(--menu-ink);box-shadow:0 0 18px -5px var(--menu-color);animation:none}
+.hcp3-quick-nav a:hover>span,.hcp3-quick-nav a:focus-visible>span{color:inherit}
+.hcp3-quick-nav a:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.hcp3-nav-introduced a{animation:hcp3-menu-light .85s ease-in-out var(--menu-delay) 1}
+.hcp3-nav-introduced a>span{animation:hcp3-menu-symbol .85s ease-in-out var(--menu-delay) 1}
+@keyframes hcp3-menu-light{0%,100%{background:#493251;color:#fff8ff;box-shadow:0 0 0 transparent}30%,65%{background:var(--menu-color);color:var(--menu-ink);box-shadow:0 0 22px -4px var(--menu-color)}}
+@keyframes hcp3-menu-symbol{0%,100%{color:var(--menu-color)}30%,65%{color:var(--menu-ink)}}
+
+@media(max-width:760px){.hcp3-page{--hcp3-header-clearance:calc(112px + env(safe-area-inset-top,0px))}.hcp3-hero{padding-top:20px}.hcp3-quick-nav{margin-top:25px;padding:14px 12px 15px}.hcp3-nav-caption{font-size:14px}.hcp3-nav-caption>span{font-size:10px}.hcp3-nav-links{gap:9px 7px}.hcp3-quick-nav a{font-size:12px;padding:9px 8px;gap:5px}.hcp3-nav-arrow{display:none}}
+@media(max-width:360px){.hcp3-nav-caption{align-items:flex-start;flex-direction:column;gap:2px}.hcp3-quick-nav a{font-size:11px}}
+@media(prefers-reduced-motion:reduce){.hcp3-nav-introduced a,.hcp3-nav-introduced a>span{animation:none!important}}
+@media(forced-colors:active){.hcp3-quick-nav,.hcp3-quick-nav a{background:Canvas;color:CanvasText;border-color:CanvasText}.hcp3-quick-nav a>span{color:LinkText;animation:none}}
+`;
