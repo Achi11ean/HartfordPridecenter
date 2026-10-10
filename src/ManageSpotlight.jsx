@@ -1,421 +1,255 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+
 import axios from "axios";
-import { motion, AnimatePresence } from "framer-motion";
+
+
+
 import { useAuth } from "./AuthContext";
+
 import { toast } from "react-toastify";
 
 const API = "https://singspacebackend.onrender.com";
 
 /* 🌤 Cloudinary */
+
 const CLOUD_NAME = "dincfzdau";
+
 const UPLOAD_PRESET = "pridecenters";
 
 export default function ManageSpotlights() {
+
   const { prideId, token, isAdmin, isStaff } = useAuth();
 
   const [spotlights, setSpotlights] = useState([]);
+
   const [editingId, setEditingId] = useState(null);
+
   const [editForm, setEditForm] = useState({});
+
   const [loading, setLoading] = useState(true);
-
-const inlineInput =
-  "w-full bg-white/5 border border-white/20 rounded-xl px-4 py-2 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-emerald-400/60 transition";
-
-const inlineTextarea =
-  "w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-emerald-400/60 transition resize-none";
-
-
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState("all");
+  const [largeText, setLargeText] = useState(false);
+  const editRef = useRef(null);
+  useEffect(() => () => { editRef.current = null; }, []);
 
   const authHeaders = {
+
     headers: { Authorization: `Bearer ${token}` },
+
   };
 
   /* ---------------- LOAD SPOTLIGHTS ---------------- */
+
   const loadSpotlights = () => {
-    if (!prideId) return;
+
+    if (!prideId || !token || (!isAdmin && !isStaff)) { setLoading(false); return; }
 
     setLoading(true);
-    axios
+    setError("");
+
+    return axios
+
       .get(`${API}/api/pride/${prideId}/volunteer-spotlights`, authHeaders)
+
       .then((res) => setSpotlights(res.data || []))
-      .catch(() => setSpotlights([]))
+
+      .catch(() => setError("Couldn’t load volunteer spotlights. Please try again."))
+
       .finally(() => setLoading(false));
+
   };
 
   useEffect(() => {
+
     loadSpotlights();
-  }, [prideId]);
+
+  }, [prideId, token, isAdmin, isStaff]);
 
   /* ---------------- CLOUDINARY ---------------- */
+
   const openUploadWidget = (spotlightId) => {
+
+    if (!window.cloudinary?.openUploadWidget) { toast.error("Photo uploader is unavailable. Try again or paste an image URL."); return; }
     window.cloudinary.openUploadWidget(
+
       {
+
         cloudName: CLOUD_NAME,
+
         uploadPreset: UPLOAD_PRESET,
+
         sources: ["local", "url", "camera"],
+
         multiple: false,
+
         cropping: true,
+
         folder: "volunteer_spotlights",
+
       },
+
       (error, result) => {
-        if (!error && result?.event === "success") {
+
+        if (error) { toast.error("Photo upload failed. Please try again."); return; }
+      if (editRef.current !== spotlightId) return;
+      if (result?.event === "success") {
+
           setEditForm((prev) => ({
+
             ...prev,
+
             image_url: result.info.secure_url,
+
           }));
+
           toast.success("📸 Image uploaded!");
+
         }
+
       }
+
     );
+
   };
 
   /* ---------------- ACTIONS ---------------- */
+
   const startEdit = (s) => {
+
+    editRef.current = s.id;
     setEditingId(s.id);
+
     setEditForm({ ...s });
+
   };
 
   const saveEdit = async (id) => {
+    if (busy) return;
+    setBusy(true);
+
     try {
+
       await axios.patch(
+
         `${API}/api/volunteer-spotlights/${id}`,
+
         editForm,
+
         authHeaders
+
       );
+
       toast.success("✨ Spotlight updated");
-      setEditingId(null);
+
+      editRef.current = null;
+    setEditingId(null);
+
       loadSpotlights();
+
     } catch {
+
       toast.error("Failed to update spotlight");
-    }
+
+    } finally { setBusy(false); }
+
   };
 
   const toggleActive = async (s) => {
+    if (busy) return;
+    setBusy(true);
+
     try {
+
       await axios.patch(
+
         `${API}/api/volunteer-spotlights/${s.id}`,
+
         { is_active: !s.is_active },
+
         authHeaders
+
       );
+
       loadSpotlights();
+
     } catch {
+
       toast.error("Failed to update status");
-    }
+
+    } finally { setBusy(false); }
+
   };
 
   const deleteSpotlight = async (id) => {
-    if (!window.confirm("Delete this spotlight permanently?")) return;
+
+    if (busy || !window.confirm("Delete this spotlight permanently?")) return;
+    setBusy(true);
 
     try {
+
       await axios.delete(
+
         `${API}/api/volunteer-spotlights/${id}`,
+
         authHeaders
+
       );
+
       toast.success("🗑 Spotlight deleted");
+
       loadSpotlights();
+
     } catch {
+
       toast.error("Failed to delete spotlight");
-    }
+
+    } finally { setBusy(false); }
+
   };
 
   if (!isAdmin && !isStaff) return null;
 
-  /* ---------------- UI ---------------- */
-  if (loading) {
-    return (
-      <div className="py-20 text-center text-white animate-pulse">
-        Loading volunteer spotlights…
-      </div>
-    );
-  }
-
- return (
-  <div className="space-y-12">
-    {/* SECTION HEADER */}
-    <div className="flex items-center gap-4">
-      <div className="h-12 w-12 rounded-2xl bg-emerald-400/20 flex items-center justify-center text-emerald-300 text-2xl">
-        🌟
-      </div>
-      <div>
-        <h2 className="text-4xl font-black text-emerald-300 tracking-tight">
-          Manage Volunteer Spotlights
-        </h2>
-        <p className="text-white/60 text-sm">
-          Highlight, edit, and celebrate your amazing volunteers
-        </p>
-      </div>
-    </div>
-
-    {/* SPOTLIGHT CARDS */}
-    {spotlights.map((s) => (
-      <motion.div
-        key={s.id}
-        layout
-        whileHover={{ scale: 1.01 }}
-        className="
-          relative overflow-hidden
-          bg-gradient-to-br from-black/70 via-black/60 to-black/80
-          border border-white/15 rounded-3xl
-          shadow-[0_20px_60px_rgba(0,0,0,0.6)]
-          p-6 space-y-6
-        "
-      >
-        {/* STATUS GLOW */}
-        {s.is_active && (
-          <div className="absolute inset-0 rounded-3xl ring-1 ring-emerald-400/20 pointer-events-none" />
-        )}
-
-        {/* HEADER */}
-        <div className="flex flex-col md:flex-row gap-6 items-center">
-          {s.image_url ? (
-            <img
-              src={s.image_url}
-              alt={s.name}
-              className="
-                h-28 w-28 object-cover rounded-2xl
-                border border-white/30 shadow-lg
-              "
-            />
-          ) : (
-            <div className="h-28 w-28 rounded-2xl bg-emerald-400/20 flex items-center justify-center text-3xl">
-              🌱
-            </div>
-          )}
-
-          <div className="flex-1 space-y-1">
-            <h3 className="text-2xl font-black tracking-tight">
-              {s.name}
-            </h3>
-
-            {s.role && (
-              <p className="text-sm text-white/70">
-                {s.role}
-              </p>
-            )}
-
-            <div className="flex gap-2 pt-1">
-              {s.is_active ? (
-                <span className="px-3 py-1 rounded-full bg-emerald-400/20 text-emerald-300 text-xs font-bold">
-                  ACTIVE
-                </span>
-              ) : (
-                <span className="px-3 py-1 rounded-full bg-red-500/20 text-red-400 text-xs font-bold">
-                  INACTIVE
-                </span>
-              )}
-            </div>
-          </div>
-
-          {/* ACTIONS */}
-          <div className="flex flex-wrap gap-2">
-            <button
-              onClick={() => startEdit(s)}
-              className="px-4 py-2 rounded-xl bg-yellow-300 text-black font-bold hover:scale-105 transition"
-            >
-              ✏️ Edit
-            </button>
-
-            <button
-              onClick={() => toggleActive(s)}
-              className="px-4 py-2 rounded-xl bg-indigo-300 text-black font-bold hover:scale-105 transition"
-            >
-              {s.is_active ? "Deactivate" : "Activate"}
-            </button>
-
-            <button
-              onClick={() => deleteSpotlight(s.id)}
-              className="px-4 py-2 rounded-xl bg-red-500 text-white font-bold hover:scale-105 transition"
-            >
-              🗑 Delete
-            </button>
-          </div>
-        </div>
-
-        {/* READ VIEW */}
-   {/* READ MODE — BIO */}
-{editingId !== s.id && s.bio && (
-  <div className="relative bg-gradient-to-br from-black/60 to-black/40 border border-white/10 rounded-3xl p-6">
-    <div className="absolute top-3 right-4 text-xs text-white/30 tracking-wide">
-      Volunteer Bio
-    </div>
-    <p className="whitespace-pre-line text-white/90 leading-relaxed text-sm md:text-base">
-      {s.bio}
-    </p>
-  </div>
-)}
-
-{/* EDIT MODE */}
-<AnimatePresence>
-  {editingId === s.id && (
-    <motion.div
-      initial={{ opacity: 0, y: -6 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -6 }}
-      transition={{ duration: 0.2 }}
-      className="
-        bg-black/60 border border-white/15
-        rounded-3xl p-6 space-y-6
-      "
-    >
-      {/* FIELDS */}
-      <div className="grid md:grid-cols-2 gap-5">
-        {/* Name */}
-        <div className="relative">
-          <input
-            value={editForm.name || ""}
-            onChange={(e) =>
-              setEditForm({ ...editForm, name: e.target.value })
-            }
-            placeholder=" "
-            className="
-              peer w-full bg-transparent text-white
-              border-b border-white/20
-              focus:border-emerald-400 outline-none
-              pt-5 pb-1 transition
-            "
-          />
-          <label className="absolute left-0 top-1 text-xs text-white/50 peer-focus:text-emerald-300">
-            Name
-          </label>
-        </div>
-
-        {/* Role */}
-        <div className="relative">
-          <input
-            value={editForm.role || ""}
-            onChange={(e) =>
-              setEditForm({ ...editForm, role: e.target.value })
-            }
-            placeholder=" "
-            className="
-              peer w-full bg-transparent text-white
-              border-b border-white/20
-              focus:border-emerald-400 outline-none
-              pt-5 pb-1 transition
-            "
-          />
-          <label className="absolute left-0 top-1 text-xs text-white/50 peer-focus:text-emerald-300">
-            Role
-          </label>
-        </div>
-
-        {/* Years */}
-        <div className="relative md:col-span-2 max-w-xs">
-          <input
-            type="number"
-            value={editForm.years_of_service || ""}
-            onChange={(e) =>
-              setEditForm({
-                ...editForm,
-                years_of_service: e.target.value,
-              })
-            }
-            placeholder=" "
-            className="
-              peer w-full bg-transparent text-white
-              border-b border-white/20
-              focus:border-emerald-400 outline-none
-              pt-5 pb-1 transition
-            "
-          />
-          <label className="absolute left-0 top-1 text-xs text-white/50 peer-focus:text-emerald-300">
-            Years of Service
-          </label>
-        </div>
-      </div>
-
-      {/* IMAGE ROW */}
-      <div className="flex flex-wrap items-center gap-4">
-        <button
-          onClick={() => openUploadWidget(s.id)}
-          className="
-            px-5 py-2 rounded-xl bg-emerald-400/90
-            text-black font-bold
-            hover:bg-emerald-400 hover:scale-[1.03]
-            transition
-          "
-        >
-          📸 Upload Photo
-        </button>
-
-        <input
-          value={editForm.image_url || ""}
-          onChange={(e) =>
-            setEditForm({ ...editForm, image_url: e.target.value })
-          }
-          placeholder="Paste image URL"
-          className="
-            flex-1 bg-black/40 border border-white/20
-            rounded-xl px-4 py-2 text-white
-            placeholder-white/40 outline-none
-            focus:border-emerald-400 transition
-          "
-        />
-      </div>
-
-      {/* IMAGE PREVIEW */}
-      {editForm.image_url && (
-        <img
-          src={editForm.image_url}
-          alt="Preview"
-          className="
-            h-36 w-36 object-cover rounded-2xl
-            border border-white/20 shadow-lg
-          "
-        />
-      )}
-
-      {/* BIO */}
-      <div>
-        <label className="block text-xs text-white/50 mb-1">
-          Volunteer Bio
-        </label>
-        <textarea
-          rows={4}
-          value={editForm.bio || ""}
-          onChange={(e) =>
-            setEditForm({ ...editForm, bio: e.target.value })
-          }
-          className="
-            w-full bg-black/40 border border-white/20
-            rounded-2xl p-4 text-white
-            placeholder-white/40 outline-none
-            focus:border-emerald-400 transition
-          "
-          placeholder="Share something meaningful about this volunteer…"
-        />
-      </div>
-
-      {/* ACTIONS */}
-      <div className="flex gap-3 pt-2">
-        <button
-          onClick={() => saveEdit(s.id)}
-          className="
-            px-6 py-2 rounded-xl
-            bg-emerald-500 text-black font-bold
-            hover:scale-105 transition
-          "
-        >
-          💾 Save
-        </button>
-        <button
-          onClick={() => setEditingId(null)}
-          className="
-            px-6 py-2 rounded-xl
-            bg-white/20 text-white
-            hover:bg-white/30 transition
-          "
-        >
-          Cancel
-        </button>
-      </div>
-    </motion.div>
-  )}
-</AnimatePresence>
-
-      </motion.div>
-    ))}
-  </div>
-);
-
+  const filtered = spotlights.filter(s => (filter === "all" || Boolean(s.is_active) === (filter === "active")) && [s.name,s.role,s.bio].some(value => String(value || "").toLowerCase().includes(query.trim().toLowerCase())));
+  const locked = busy || loading;
+  const cancelEdit = () => { editRef.current = null; setEditingId(null); setEditForm({}); };
+  return <section className={`ms-panel${largeText ? " ms-large" : ""}`} aria-label="Manage volunteer spotlights">
+    <style>{STYLES}</style>
+    <header className="ms-header"><div><p className="ms-eyebrow">People who make a difference</p><h2>Volunteer spotlights <span>{spotlights.length}</span></h2><p>Celebrate your volunteers and manage their stories.</p></div><div className="ms-tools"><button type="button" aria-pressed={largeText} onClick={()=>setLargeText(v=>!v)}>A+ Larger text</button><button type="button" disabled={locked || editingId !== null} onClick={loadSpotlights}>{loading ? "Refreshing…" : "↻ Refresh"}</button></div></header>
+    <div className="ms-toolbar"><label className="ms-search"><span>Search volunteers</span><input type="search" value={query} disabled={editingId !== null} onChange={e=>setQuery(e.target.value)} placeholder="Name, role, or bio…"/></label><label className="ms-filter"><span>Visibility</span><select value={filter} disabled={editingId !== null} onChange={e=>setFilter(e.target.value)}><option value="all">All spotlights</option><option value="active">Active</option><option value="inactive">Inactive</option></select></label></div>
+    <div className="ms-results" role="status">{editingId !== null ? "Save or cancel your edit to search and filter." : `${filtered.length} spotlights · ${spotlights.filter(s=>s.is_active).length} active`}{(query || filter !== "all") && editingId === null && <button type="button" onClick={()=>{setQuery("");setFilter("all");}}>Clear filters</button>}</div>
+    {error ? <div className="ms-state" role="alert">{error}<button type="button" onClick={loadSpotlights}>Try again</button></div> : loading && !spotlights.length ? <div className="ms-state" role="status">Loading volunteer spotlights…</div> : !filtered.length ? <div className="ms-state"><strong>{spotlights.length ? "No matching volunteers" : "No spotlights yet"}</strong><p>{spotlights.length ? "Try a different search or visibility filter." : "Volunteer spotlights will appear here once added."}</p></div> : <div className="ms-grid" aria-busy={loading}>{filtered.map(s=>{
+      const editing = editingId === s.id;
+      return <article key={s.id} className={`ms-card${editing ? " ms-editing" : ""}`} style={{"--ms-ink":s.is_active?"#356f59":"#796884","--ms-wash":s.is_active?"#e0f1e8":"#eee8f3"}}>
+        <div className="ms-spot-head"><SpotlightPhoto src={editing ? editForm.image_url : s.image_url} name={editing ? editForm.name : s.name}/><div><span className="ms-badge">{s.is_active ? "Active" : "Inactive"}</span><h3>{s.name || "Unnamed volunteer"}</h3>{s.role && <p>{s.role}</p>}{s.years_of_service !== null && s.years_of_service !== undefined && s.years_of_service !== "" && <small>{s.years_of_service} {Number(s.years_of_service)===1 ? "year" : "years"} of service</small>}</div></div>
+        {editing ? <form onSubmit={e=>{e.preventDefault();saveEdit(s.id);}}><div className="ms-edit-fields">
+          <label><span>Name</span><input autoFocus value={editForm.name || ""} disabled={locked} onChange={e=>setEditForm({...editForm,name:e.target.value})}/></label>
+          <label><span>Role</span><input value={editForm.role || ""} disabled={locked} onChange={e=>setEditForm({...editForm,role:e.target.value})}/></label>
+          <label><span>Years of service</span><input type="number" min="0" value={editForm.years_of_service ?? ""} disabled={locked} onChange={e=>setEditForm({...editForm,years_of_service:e.target.value})}/></label>
+          <div className="ms-upload"><button type="button" disabled={locked} onClick={()=>openUploadWidget(s.id)}>↥ Upload photo</button></div>
+          <label className="ms-wide"><span>Photo URL</span><input value={editForm.image_url || ""} disabled={locked} onChange={e=>setEditForm({...editForm,image_url:e.target.value})} placeholder="Or paste an image URL"/><small>Photo changes are published when you save.</small></label>
+          <label className="ms-wide"><span>Volunteer bio</span><textarea rows={6} value={editForm.bio || ""} disabled={locked} onChange={e=>setEditForm({...editForm,bio:e.target.value})} placeholder="Share their story and impact…"/></label>
+        </div><footer className="ms-actions"><button type="submit" className="ms-primary" disabled={locked}>{busy ? "Saving…" : "Save changes"}</button><button type="button" disabled={locked} onClick={cancelEdit}>Cancel</button></footer></form> : <>
+          <div className="ms-bio-label">Volunteer story</div><div className="ms-message" role="region" tabIndex={0} aria-label={`Bio for ${s.name || "volunteer"}`}>{s.bio || "No bio added yet. Edit this spotlight to share their story."}</div>
+          <footer className="ms-actions"><button type="button" className="ms-primary" disabled={locked || editingId !== null} onClick={()=>startEdit(s)}>Edit spotlight</button><button type="button" disabled={locked || editingId !== null} onClick={()=>toggleActive(s)}>{s.is_active ? "Deactivate" : "Activate"}</button><button type="button" className="ms-delete" disabled={locked || editingId !== null} onClick={()=>deleteSpotlight(s.id)}>Delete</button></footer>
+        </>}
+      </article>;
+    })}</div>}
+  </section>;
 }
+
+function SpotlightPhoto({src,name}) {
+  const [failed,setFailed] = useState(false);
+  useEffect(()=>setFailed(false),[src]);
+  return src && !failed ? <img className="ms-photo" src={src} alt={name || "Volunteer"} loading="lazy" onError={()=>setFailed(true)}/> : <div className="ms-photo ms-photo-fallback" role="img" aria-label={name || "Volunteer"}>{(name || "♡").trim().split(/\s+/).slice(0,2).map(word=>word[0]).join("").toUpperCase()}</div>;
+}
+
+const STYLES = `
+.ms-panel{width:100%;min-width:0;padding:clamp(12px,2vw,22px);background:#f6f3f8;color:#392f43;border:1px solid #ded5e5;border-radius:12px;font:14px/1.55 Inter,ui-sans-serif,system-ui,sans-serif;color-scheme:light}.ms-panel *{box-sizing:border-box}.ms-panel :is(h2,h3,p){margin:0}.ms-panel :is(button,input,select,textarea){font:inherit}.ms-panel button{min-height:44px;padding:9px 13px;border:1px solid #d4c6df;border-radius:7px;background:#fff;color:#564263;font-weight:650;cursor:pointer;transition:background .18s}.ms-panel button:hover:not(:disabled){background:#f0e8f7}.ms-panel button:disabled{opacity:.5;cursor:not-allowed}.ms-panel :is(button,a,input,select,textarea,[tabindex]):focus-visible{outline:3px solid #795394;outline-offset:3px}.ms-panel :is(input,select,textarea){width:100%;min-width:0;min-height:44px;border:1px solid #cfc3d9;border-radius:7px;background:#fff;color:#392f43;padding:9px 11px;font-size:16px}.ms-panel textarea{resize:vertical;min-height:140px}.ms-header{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:18px}.ms-eyebrow{font-size:10px;font-weight:750;letter-spacing:1.4px;text-transform:uppercase;color:#77538b}.ms-header h2{display:flex;align-items:center;flex-wrap:wrap;gap:9px;font-size:clamp(20px,2.5vw,27px);letter-spacing:-.6px;font-weight:750;line-height:1.3;margin:5px 0}.ms-header h2>span{font-size:12px;letter-spacing:0;padding:3px 8px;border-radius:20px;background:#e9def1;color:#68477c}.ms-header>div>p:last-child{font-size:12px;color:#74647e}.ms-tools{display:flex;gap:7px;flex-shrink:0}.ms-tools button{font-size:12px}.ms-tools button[aria-pressed=true]{background:#77518a;color:#fff;border-color:#77518a}.ms-toolbar{display:flex;gap:12px;align-items:end}.ms-toolbar label>span,.ms-edit-fields label>span{display:block;margin-bottom:5px;font-size:11px;font-weight:750;color:#695575}.ms-search{flex:1;min-width:0}.ms-filter{width:195px;flex-shrink:0}.ms-results{display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:42px;font-size:11px;color:#73627e}.ms-results button{font-size:11px;border:0;background:none;text-decoration:underline;padding:4px;min-height:36px}.ms-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:13px;align-items:start}.ms-card{min-width:0;display:flex;flex-direction:column;background:#fff;border:1px solid #ded6e5;border-top:3px solid var(--ms-ink);border-radius:10px;padding:16px;box-shadow:0 4px 15px #4c335a08}.ms-card-top{display:flex;align-items:center;gap:11px}.ms-avatar{width:42px;height:42px;flex-shrink:0;display:grid;place-items:center;background:var(--ms-wash);color:var(--ms-ink);font-weight:800;border-radius:12px;font-size:14px}.ms-person{min-width:0}.ms-card h3{font-size:16px;font-weight:750;line-height:1.35;overflow-wrap:anywhere}.ms-badge{display:inline-block;font-size:10px;font-weight:750;padding:2px 8px;border-radius:20px;background:var(--ms-wash);color:var(--ms-ink);margin-top:4px}.ms-reach{display:flex;flex-direction:column;gap:2px;margin:10px 0;min-width:0}.ms-reach a{font-size:13px;color:#65507e;text-underline-offset:3px;overflow-wrap:anywhere;min-height:28px;display:flex;align-items:center}.ms-message{max-height:145px;overflow-y:auto;min-height:75px;padding:11px 12px;background:#f8f6fa;border:1px solid #e9e2ed;border-radius:6px;font-size:13px;line-height:1.75;white-space:pre-wrap;overflow-wrap:anywhere;scrollbar-width:thin;scrollbar-color:#b19bbd #f1ebf5}.ms-status-control{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}.ms-status-control>span{font-size:11px;font-weight:650;color:#74617f}.ms-status-control select{width:155px;font-size:14px;background:var(--ms-wash);color:var(--ms-ink);border-color:transparent;font-weight:650}.ms-actions{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid #eee7f1}.ms-actions button{font-size:12px}.ms-panel .ms-primary{background:#77518a;color:#fff;border-color:#77518a}.ms-panel .ms-primary:hover:not(:disabled){background:#603d73}.ms-panel .ms-delete{margin-left:auto;background:#fff;color:#9b3d57;border-color:#ead5dc}.ms-panel .ms-delete:hover:not(:disabled){background:#fbeaf0}.ms-actions>span{font-size:11px;color:#745181}.ms-edit-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}.ms-editing{box-shadow:0 0 0 2px #ad91bd}.ms-edit-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.ms-wide{grid-column:1/-1}.ms-state{padding:35px 16px;text-align:center;border:1px dashed #cdbed8;border-radius:9px;background:#fff;color:#6f5b7b}.ms-state strong{display:block;color:#4f3a5c;font-size:17px;margin-bottom:5px}.ms-state button{display:block;margin:13px auto 0}.ms-error{color:#963955;background:#fff6f8}.ms-large .ms-message{font-size:18px}.ms-large .ms-reach a{font-size:16px}.ms-large .ms-card h3{font-size:19px}
+@media(max-width:700px){.ms-header{align-items:flex-start;flex-direction:column;gap:10px}.ms-tools{width:100%}.ms-tools button{flex:1}.ms-toolbar{flex-wrap:wrap;gap:9px}.ms-search{flex-basis:100%}.ms-filter{width:100%}.ms-panel{padding:12px}.ms-card{padding:14px}.ms-edit-fields{grid-template-columns:1fr}.ms-panel .ms-status-control select{font-size:16px}}
+@media(prefers-reduced-motion:reduce){.ms-panel *{transition:none!important}}
+
+.ms-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr))}.ms-spot-head{display:flex;align-items:center;gap:14px;margin-bottom:14px}.ms-spot-head>div{min-width:0}.ms-photo{display:block;width:78px;height:88px;object-fit:cover;border-radius:9px;border:3px solid #fff;outline:1px solid #e1d5e5;flex-shrink:0;background:#f0e8f6;box-shadow:0 4px 12px #56336512}.ms-photo-fallback{display:grid;place-items:center;color:#7d588c;font-size:23px;font-weight:750;background:linear-gradient(135deg,#f5deeb,#e4edf9)}.ms-spot-head h3{margin-top:5px}.ms-spot-head p{font-size:13px;color:#675570;margin-top:3px;overflow-wrap:anywhere}.ms-spot-head small{display:block;font-size:11px;color:#706075;margin-top:4px}.ms-bio-label{font-size:10px;font-weight:750;letter-spacing:1px;text-transform:uppercase;color:#7c6386;margin-bottom:6px}.ms-edit-fields{padding-top:14px;border-top:1px solid #eee5f2}.ms-upload{display:flex;align-items:flex-end}.ms-upload button{width:100%}.ms-edit-fields small{display:block;font-size:11px;color:#716179;margin-top:5px}.ms-large .ms-spot-head p{font-size:16px}.ms-card .ms-actions{gap:6px}.ms-card .ms-actions button{padding-inline:10px}
+`;
