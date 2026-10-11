@@ -1,35 +1,9 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { motion } from "framer-motion";
-import {
-  Heart,
-  X,
-  ArrowUpRight,
-  ArrowRight,
-  Clock,
-  Share2,
-} from "lucide-react";
-
-/* ─────────────────────────────────────────────────────────────
-   HARTFORD PRIDE CENTER — SUPPORT / SPONSOR PAGE
-   "Community Poster" redesign to match HomePage:
-   cream paper, flat pride-flag color blocks, ink outlines,
-   hard offset shadows, huge Archivo type, rainbow marquee.
-   All donation logic (Stripe links, once/monthly, amount
-   sheet, share, link validation) is unchanged.
-   ───────────────────────────────────────────────────────────── */
-
-const FLAG = ["#E40303", "#FF8C00", "#FFED00", "#008026", "#004DFF", "#750787"];
-const INK = "#181310";
-
-/* ------------------------------------------------------------------ */
-/*  DATA — Stripe links untouched.                                     */
-/*  `hue` is now the poster flag color for each card (assigned by      */
-/*  order below). `pastelHue` keeps the old soft color if you want it. */
-/* ------------------------------------------------------------------ */
+import React, { useEffect, useId, useRef, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { Heart, ArrowUpRight, Share2, X } from "lucide-react";
+const PALETTE = ["#df9db0", "#dbb08b", "#cbb878", "#96b9a1", "#99b5d0", "#b4a0cc"];
 const SHARED_ONE_TIME_LINK = "https://buy.stripe.com/8x24gs2cj5Mm1Sy0Gccwg0e";
-
 const MONTHLY_AMOUNTS = [10, 20, 50];
-
 const FUNDS = [
   {
     id: "medication",
@@ -115,550 +89,232 @@ const FUNDS = [
       50: null,
     },
   },
-].map((f, i) => ({ ...f, hue: FLAG[i % FLAG.length] }));
-
+].map((f, i) => ({ ...f, hue: PALETTE[i % PALETTE.length] }));
 const CONTACT_URL = "/contact";
 const SHARE_URL = "https://share.karaoverse.com/og/pride/support";
-
-/* ------------------------------------------------------------------ */
-/*  Link safety — config typos are the one bug class that costs real   */
-/*  donations, so every URL is validated at render instead of trusted. */
-/* ------------------------------------------------------------------ */
-const safeLink = (value) => {
+const safeLink = value => {
   if (typeof value !== "string") return null;
-  const url = value.trim();
-  return /^https:\/\/\S+$/i.test(url) ? url : null;
+  try { const url = new URL(value.trim()); return url.protocol === "https:" ? url.href : null; } catch { return null; }
 };
+const ANIMATION_COLORS = ["#e88ba6", "#edac80", "#e8ca78", "#90bba0", "#87afd3", "#b699ce"];
+function DonationAnimation({ sceneRef, replay, onReplay }) {
+  const reduced = useReducedMotion();
+  const id = useId().replace(/:/g, "");
+  return <div className="hpd-animation">
+    <svg ref={sceneRef} key={replay} className={reduced ? "hpd-scene hpd-still" : "hpd-scene"} viewBox="0 0 560 350" role="img" aria-labelledby={`${id}-title ${id}-desc`}>
+      <title id={`${id}-title`}>A little generosity. A little more belonging.</title>
+      <desc id={`${id}-desc`}>A hand places a banknote into a community donation box. A single six-color rainbow emerges from the donation slot, arches to the right, and continues to the bottom of the page.</desc>
+      <defs>
+        <linearGradient id={`${id}-paper`} x1="0" y1="0" x2="1" y2="1"><stop stopColor="#fff8ef"/><stop offset="1" stopColor="#f2e2ee"/></linearGradient>
+        <linearGradient id={`${id}-box`} x1="0" y1="0" x2="0" y2="1"><stop stopColor="#fffdf6"/><stop offset="1" stopColor="#f0e4d5"/></linearGradient>
+        <clipPath id={`${id}-above`}><rect x="0" y="0" width="560" height="213"/></clipPath>
+      </defs>
+      <ellipse cx="280" cy="309" rx="126" ry="13" fill="#6f447e" opacity=".08"/>
+      <circle cx="280" cy="170" r="143" fill={`url(#${id}-paper)`}/>
+      <g className="hpd-sparkles" fill="#b48ac6">
+        <path d="M119 132l4 12 12 4-12 4-4 12-4-12-12-4 12-4z"/>
+        <path d="M440 147l3 9 9 3-9 3-3 9-3-9-9-3 9-3z"/>
+        <path d="M392 77l3 8 8 3-8 3-3 8-3-8-8-3 8-3z" fill="#d4ae63"/>
+        <circle cx="151" cy="92" r="3" fill="#d4ae63"/><circle cx="427" cy="235" r="3" fill="#87afd3"/>
+      </g>
+      <g className="hpd-hearts" fill="#d581a4">
+        <path d="M154 186c-16-10-20-19-12-23 5-3 10 0 12 5 2-5 7-8 12-5 8 4 4 13-12 23z"/>
+        <path d="M408 123c-12-8-15-15-9-18 4-2 7 0 9 4 2-4 5-6 9-4 6 3 3 10-9 18z"/>
+      </g>
+      {/* Box rear and slot sit behind the banknote. */}
+      <path d="M184 216l24-26h144l24 26v77H184z" fill="#e5d4c4" stroke="#a98e79" strokeWidth="2"/>
+      <path d="M184 216l24-26h144l24 26z" fill="#f5e9dc" stroke="#a98e79" strokeWidth="2"/>
+      <path d="M240 207h80" stroke="#66505c" strokeWidth="6" strokeLinecap="round"/>
+      {/* The note is clipped at the slot so it disappears inside the box. */}
+      <g clipPath={`url(#${id}-above)`}>
+        <g className="hpd-note">
+          <rect x="261" y="80" width="38" height="89" rx="4" fill="#b5d9b7" stroke="#56836b" strokeWidth="2"/>
+          <rect x="266" y="86" width="28" height="77" rx="3" fill="none" stroke="#75a17f"/>
+          <ellipse cx="280" cy="124" rx="10" ry="15" fill="#e4f0d6"/>
+          <text x="280" y="130" textAnchor="middle" fontFamily="Georgia, serif" fontSize="19" fill="#47745d">$</text>
+        </g>
+      </g>
+      <g className="hpd-hand">
+        <path d="M387-22h55l-27 83-46 33-67 9-10-23 54-13 24-25z" fill="#be865e" stroke="#8f5b44" strokeWidth="2" strokeLinejoin="round"/>
+        <path d="M381-22h66l-12 39-67-17z" fill="#a691c8" stroke="#7b659f" strokeWidth="2"/>
+        <path d="M348 67l-48 4-28 6c-13 3-12 19 1 21l20-3 18 2" fill="#ce986e" stroke="#8f5b44" strokeWidth="2" strokeLinecap="round"/>
+        <path d="M286 78l-11 3c-5 2-5 6-1 8l10-1" fill="#ebc0a0"/>
+      </g>
+      {/* Front hides the lower note once it passes through the slot. */}
+      <rect x="184" y="216" width="192" height="82" rx="8" fill={`url(#${id}-box)`} stroke="#a98e79" strokeWidth="2"/>
+      <rect x="218" y="234" width="124" height="47" rx="5" fill="#fffdf9" stroke="#dcc4cd"/>
+      <path d="M236 258c-9-6-11-11-7-13 3-2 6 0 7 3 1-3 4-5 7-3 4 2 2 7-7 13z" fill="#c77797"/>
+      <text x="283" y="254" textAnchor="middle" fill="#674b66" fontFamily="system-ui, sans-serif" fontSize="10" fontWeight="700">FOR OUR</text>
+      <text x="283" y="268" textAnchor="middle" fill="#674b66" fontFamily="system-ui, sans-serif" fontSize="10" fontWeight="700">COMMUNITY</text>
+      <g className="hpd-glow" fill="#fffdf1"><circle cx="245" cy="205" r="3"/><circle cx="315" cy="205" r="3"/><path d="M280 173l3 11 11 3-11 3-3 11-3-11-11-3 11-3z"/></g>
+    </svg>
+    <div className="hpd-animation-caption"><span>A little generosity. A lot of belonging.</span><button type="button" onClick={onReplay} disabled={reduced} aria-label="Replay donation animation">{reduced ? "Motion reduced" : "↻ Replay"}</button></div>
+  </div>;
+}
+// Measure the actual slot in page coordinates, including responsive SVG scaling.
+function PageRainbow({ pageRef, sceneRef, replay, reduced }) {
+  const rainbowId = useId().replace(/:/g, "");
+  const [geometry, setGeometry] = useState(null);
+  useEffect(() => {
+    const page = pageRef.current;
+    const scene = sceneRef.current;
+    if (!page || !scene) return;
+    let frame;
+    const measure = () => {
+      const matrix = scene.getScreenCTM();
+      if (!matrix) return;
+      const bounds = page.getBoundingClientRect();
+      const point = scene.createSVGPoint();
+      point.x = 280;
+      point.y = 207; // Exact center of the money slot.
+      const slot = point.matrixTransform(matrix);
+      const scale = Math.hypot(matrix.a, matrix.b);
+      setGeometry({
+        width: page.clientWidth,
+        height: page.clientHeight,
+        x: slot.x - bounds.left,
+        y: slot.y - bounds.top,
+        band: Math.min(6, 7 * scale),
+        scale,
+      });
+    };
+    const schedule = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(measure);
+    };
+    const observer = new ResizeObserver(schedule);
+    observer.observe(page);
+    observer.observe(scene);
+    window.addEventListener("resize", schedule);
+    measure();
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      window.removeEventListener("resize", schedule);
+    };
+  }, [pageRef, sceneRef, replay]);
+  if (!geometry) return null;
+  const { width, height, x, y, band, scale } = geometry;
+  const outerStart = x - 2.5 * band;
+  // A true semicircle, sized to the illustration rather than the page edge.
+  const outerRadius = Math.min(165 * scale, (width - 8 - outerStart) / 2, y - 20);
+  const center = outerStart + outerRadius;
+  return <svg
+    key={replay}
+    className={`hps-page-rainbow${reduced ? " hps-page-rainbow-still" : ""}`}
+    viewBox={`0 0 ${width} ${height}`}
+    preserveAspectRatio="none"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <defs>
+      {ANIMATION_COLORS.map((color, index) => <linearGradient
+        key={color}
+        id={`${rainbowId}-band-${index}`}
+        gradientUnits="userSpaceOnUse"
+        x1="0" x2="0" y1={y} y2={y + 100 * scale}
+      >
+        <stop offset="0" stopColor={color} stopOpacity="1" />
+        <stop offset="1" stopColor={color} stopOpacity="0.14" />
+      </linearGradient>)}
+    </defs>
+    {ANIMATION_COLORS.map((color, index) => {
+      const radius = outerRadius - index * band;
+      return <path
+        key={color}
+        d={`M ${center - radius} ${y} A ${radius} ${radius} 0 0 1 ${center + radius} ${y} V ${height}`}
+        fill="none"
+        stroke={`url(#${rainbowId}-band-${index})`}
+        strokeWidth={band + 0.15}
+        strokeLinecap="butt"
+        pathLength="1"
+      />;
+    })}
+  </svg>;
+}
 
-/* Pick ink or white text for a given flag color so labels stay legible
-   on yellow/orange as well as the darker hues. */
-const readableText = (hex) => {
-  const h = hex.replace("#", "");
-  const r = parseInt(h.slice(0, 2), 16);
-  const g = parseInt(h.slice(2, 4), 16);
-  const b = parseInt(h.slice(4, 6), 16);
-  const L = 0.299 * r + 0.587 * g + 0.114 * b;
-  return L > 150 ? INK : "#ffffff";
-};
-
-const fadeUp = {
-  initial: { opacity: 0, y: 24 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: "-60px" },
-  transition: { duration: 0.55, ease: "easeOut" },
-};
-
-const FOCUS =
-  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#181310]";
-
-/* ------------------------------------------------------------------ */
-/*  COMPONENT                                                          */
-/* ------------------------------------------------------------------ */
 export default function SponsorInvitation() {
+  const pageRef = useRef(null);
+  const sceneRef = useRef(null);
+  const [replay, setReplay] = useState(0);
   const [mode, setMode] = useState("once");
   const [activeFund, setActiveFund] = useState(null);
   const [copied, setCopied] = useState(false);
-  const closeRef = useRef(null);
-
-  const closeSheet = () => setActiveFund(null);
-
-  useEffect(() => {
-    if (!activeFund) return;
-    const onKey = (e) => e.key === "Escape" && closeSheet();
-    document.addEventListener("keydown", onKey);
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    closeRef.current?.focus();
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prev;
-    };
-  }, [activeFund]);
-
+  const [paused, setPaused] = useState(false);
+  const dialog = useRef(null);
+  const trigger = useRef(null);
+  const copyTimer = useRef(null);
+  const id = useId();
+  const reduced = useReducedMotion();
+  const reveal = reduced ? {} : { initial: {opacity:0,y:16}, whileInView:{opacity:1,y:0}, viewport:{once:true,amount:.1}, transition:{duration:.5} };
+  const closeSheet = () => {setActiveFund(null);requestAnimationFrame(()=>trigger.current?.focus());};
+  useEffect(()=>()=>clearTimeout(copyTimer.current),[]);
+  useEffect(()=>{
+    if(!activeFund)return;
+    const node=dialog.current;if(node&&!node.open)node.showModal();
+    const previous=document.body.style.overflow;document.body.style.overflow="hidden";
+    return()=>{if(node?.open)node.close();document.body.style.overflow=previous;};
+  },[activeFund]);
   const handleShare = async () => {
-    const payload = {
-      title: "Support Hartford Pride Center",
-      text: "Six funds, one community. Pick where your gift goes.",
-      url: SHARE_URL,
-    };
-    if (navigator.share) {
-      try {
-        await navigator.share(payload);
-      } catch {
-        /* dismissed */
-      }
-      return;
-    }
-    try {
-      await navigator.clipboard.writeText(SHARE_URL);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      window.open(SHARE_URL, "_blank", "noopener");
-    }
+    if(navigator.share){try{await navigator.share({title:"Support Hartford Pride Center",text:"Six funds, one community. Pick where your gift goes.",url:SHARE_URL});return;}catch(err){if(err.name==="AbortError")return;}}
+    try{await navigator.clipboard.writeText(SHARE_URL);setCopied(true);clearTimeout(copyTimer.current);copyTimer.current=setTimeout(()=>setCopied(false),2000);}catch{window.open(SHARE_URL,"_blank","noopener,noreferrer");}
   };
-
-  const monthlyLinks = useMemo(() => {
-    if (!activeFund) return [];
-    return MONTHLY_AMOUNTS.map((amount) => ({
-      amount,
-      link: safeLink(activeFund.monthly?.[amount]),
-    }));
-  }, [activeFund]);
-
-  return (
-    <div className="min-h-screen bg-[#FFFBF2] text-[#181310] overflow-x-hidden hpc-body">
-      {/* local styles: display font + marquee animation */}
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,400..900&display=swap');
-        .hpc-display { font-family: 'Archivo', system-ui, sans-serif; font-stretch: 87%; }
-        .hpc-body { font-family: 'Archivo', system-ui, sans-serif; }
-        @keyframes hpc-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-        .hpc-marquee-track { animation: hpc-marquee 26s linear infinite; }
-        @keyframes cd-rise {
-          from { opacity: 0; transform: translateY(18px) }
-          to { opacity: 1; transform: translateY(0) }
-        }
-        .cd-rise { animation: cd-rise .26s cubic-bezier(.22,1,.36,1) }
-        @media (prefers-reduced-motion: reduce) {
-          .hpc-marquee-track { animation: none; }
-          .cd-rise { animation: none; }
-        }
-      `}</style>
-
-      {/* ── FLAG STRIPE TOPBAR ── */}
-      <div className="flex h-2.5 mt-10 w-full" aria-hidden="true">
-        {FLAG.map((c) => (
-          <div key={c} className="flex-1" style={{ backgroundColor: c }} />
-        ))}
-      </div>
-
-      {/* ── HERO ── */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-12 sm:pt-16 pb-10 sm:pb-14">
-        <div className="grid lg:grid-cols-[1.15fr,0.85fr] gap-10 lg:gap-14 items-center">
-          {/* headline side */}
-          <motion.div
-            initial={{ opacity: 0, y: 28 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, ease: "easeOut" }}
-          >
-            <p className="inline-block rounded-full bg-[#181310] text-white text-[11px] sm:text-xs font-bold uppercase tracking-[0.25em] px-4 py-2">
-              Support · Hartford Pride Center
-            </p>
-
-            <h1 className="hpc-display mt-6 font-black uppercase leading-[0.92] tracking-tight text-[clamp(2.4rem,8vw,5rem)]">
-              Give where
-              <br />
-              it
-              <span
-                className="mx-2 inline-block -rotate-1 rounded-lg px-3"
-                style={{ backgroundColor: "#FFED00" }}
-              >
-                matters
-              </span>
-              <br />
-              <span
-                className="inline-block rotate-1 rounded-lg px-3 text-white"
-                style={{ backgroundColor: "#750787" }}
-              >
-                most.
-              </span>
-            </h1>
-
-            <p className="mt-6 max-w-xl text-base sm:text-lg leading-relaxed text-[#4a4038] font-medium">
-              Six funds, one community. Pick exactly where your gift goes —
-              medication, food, housing, trans care, programming, or wherever
-              the need is greatest.
-            </p>
-
-            {/* quick CTAs */}
-            <div className="mt-8 flex flex-col flex-wrap gap-3 sm:flex-row">
-              <a
-                href="#funds"
-                className="
-                  inline-flex items-center justify-center gap-2
-                  rounded-xl border-2 border-[#181310]
-                  bg-blue-500 px-6 py-4
-                  text-sm font-black uppercase tracking-wide text-white
-                  shadow-[4px_4px_0_#181310]
-                  transition-all
-                  hover:translate-x-[2px] hover:translate-y-[2px]
-                  hover:bg-blue-600
-                  hover:shadow-[2px_2px_0_#181310]
-                "
-              >
-                Choose a fund <ArrowRight size={16} />
-              </a>
-
-              <button
-                type="button"
-                onClick={handleShare}
-                className="
-                  inline-flex items-center justify-center gap-2
-                  rounded-xl border-2 border-[#181310]
-                  bg-white px-6 py-4
-                  text-sm font-black uppercase tracking-wide
-                  shadow-[4px_4px_0_#181310]
-                  transition-all
-                  hover:translate-x-[2px] hover:translate-y-[2px]
-                  hover:shadow-[2px_2px_0_#181310]
-                "
-              >
-                <Share2 size={15} /> {copied ? "Link copied" : "Share"}
-              </button>
-            </div>
-          </motion.div>
-
-          {/* poster / badge side */}
-          <motion.div
-            initial={{ opacity: 0, y: 28 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, delay: 0.15, ease: "easeOut" }}
-            className="relative mx-auto w-full max-w-sm lg:max-w-none"
-          >
-            <div className="relative rotate-2 rounded-2xl border-2 border-[#181310] bg-white p-6 sm:p-8 shadow-[8px_8px_0_#181310]">
-              <p className="hpc-display text-6xl sm:text-7xl font-black leading-none tracking-tight">
-                100%
-              </p>
-              <p className="mt-3 text-sm sm:text-base font-bold uppercase tracking-wide text-[#4a4038]">
-                of every dollar stays in the community
-              </p>
-              <div className="mt-6 grid grid-cols-3 gap-2">
-                {FUNDS.map((f) => (
-                  <div
-                    key={f.id}
-                    className="flex h-12 items-center justify-center rounded-lg border-2 border-[#181310] text-xl"
-                    style={{ backgroundColor: f.hue }}
-                    aria-hidden="true"
-                  >
-                    <span>{f.emoji}</span>
-                  </div>
-                ))}
-              </div>
-              <div
-                className="mt-5 flex h-2 w-full overflow-hidden rounded-full"
-                aria-hidden="true"
-              >
-                {FLAG.map((c) => (
-                  <div key={c} className="flex-1" style={{ backgroundColor: c }} />
-                ))}
-              </div>
-            </div>
-
-            {/* sticker badges */}
-            <div
-              className="absolute -top-4 -left-3 -rotate-6 rounded-full border-2 border-[#181310] px-4 py-2 text-xs font-black uppercase tracking-wider shadow-[3px_3px_0_#181310]"
-              style={{ backgroundColor: "#FFED00" }}
-            >
-              6 Funds
-            </div>
-            <div
-              className="absolute -bottom-4 -right-2 rotate-3 rounded-full border-2 border-[#181310] px-4 py-2 text-xs font-black uppercase tracking-wider text-white shadow-[3px_3px_0_#181310]"
-              style={{ backgroundColor: "#008026" }}
-            >
-              501(c)(3)
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ── RAINBOW MARQUEE (signature) ── */}
-      <div className="overflow-hidden border-y-2 border-[#181310] bg-[#181310] py-3 sm:py-4">
-        <div className="hpc-marquee-track flex w-max items-center gap-8 whitespace-nowrap">
-          {[0, 1].map((copy) => (
-            <div key={copy} className="flex items-center gap-8" aria-hidden={copy === 1}>
-              {["Give", "Sustain", "Uplift", "Protect", "Nourish", "Together"].map(
-                (word, i) => (
-                  <span key={word} className="flex items-center gap-8">
-                    <span
-                      className="hpc-display text-2xl sm:text-3xl font-black uppercase tracking-tight"
-                      style={{ color: FLAG[i % FLAG.length] }}
-                    >
-                      {word}
-                    </span>
-                    <span className="text-white/60 text-xl">✦</span>
-                  </span>
-                )
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ── FUNDS ── */}
-      <section id="funds" className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
-        <motion.div {...fadeUp}>
-          <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#750787]">
-            Where your gift goes
-          </p>
-          <h2 className="hpc-display mt-2 text-3xl sm:text-5xl font-black uppercase tracking-tight">
-            Pick your fund
-          </h2>
-        </motion.div>
-
-        {/* ---------- Mode toggle ---------- */}
-        <div className="mt-6 sm:mt-8">
-          <div
-            className="grid w-full max-w-[19rem] grid-cols-2 gap-1 rounded-full border-2 border-[#181310] bg-white p-1 shadow-[3px_3px_0_#181310]"
-            role="tablist"
-            aria-label="Giving frequency"
-          >
-            {[
-              { id: "once", label: "Give once" },
-              { id: "monthly", label: "Give monthly" },
-            ].map((opt) => {
-              const on = mode === opt.id;
-              return (
-                <button
-                  key={opt.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={on}
-                  onClick={() => setMode(opt.id)}
-                  className={`cursor-pointer rounded-full px-3 py-2.5 text-[0.8rem] font-black uppercase tracking-wide transition-colors ${FOCUS}`}
-                  style={{
-                    background: on ? INK : "transparent",
-                    color: on ? "#ffffff" : "#4a4038",
-                  }}
-                >
-                  {opt.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* ---------- Fund cards ---------- */}
-        <ul className="mt-8 grid list-none grid-cols-1 gap-5 p-0 sm:grid-cols-2 lg:grid-cols-3">
-          {FUNDS.map((fund, i) => {
-            const oneTime = safeLink(fund.oneTime) || SHARED_ONE_TIME_LINK;
-            const hasMonthly = MONTHLY_AMOUNTS.some((a) =>
-              safeLink(fund.monthly?.[a])
-            );
-            const txt = readableText(fund.hue);
-
-            return (
-              <motion.li
-                key={fund.id}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.5, ease: "easeOut", delay: i * 0.05 }}
-                className="flex"
-              >
-                <div className="flex h-full w-full flex-col overflow-hidden rounded-2xl border-2 border-[#181310] bg-white shadow-[6px_6px_0_#181310] transition-transform hover:-translate-y-1">
-                  {/* flag-color top bar */}
-                  <div
-                    className="h-3"
-                    style={{ backgroundColor: fund.hue }}
-                    aria-hidden="true"
-                  />
-                  <div className="flex flex-1 flex-col gap-3 p-5 sm:p-6">
-                    <div className="flex items-center gap-3">
-                      <span
-                        className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border-2 border-[#181310] text-xl"
-                        style={{ backgroundColor: fund.hue }}
-                        aria-hidden="true"
-                      >
-                        {fund.emoji}
-                      </span>
-                      <h3 className="hpc-display text-lg font-black uppercase leading-tight tracking-tight">
-                        {fund.name}
-                      </h3>
-                    </div>
-
-                    <p className="flex-1 text-sm font-semibold leading-relaxed text-[#4a4038]">
-                      {fund.blurb}
-                    </p>
-
-                    {mode === "once" ? (
-                      <a
-                        href={oneTime}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl border-2 border-[#181310] px-4 text-sm font-black uppercase tracking-wide no-underline shadow-[4px_4px_0_#181310] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#181310] ${FOCUS}`}
-                        style={{ backgroundColor: fund.hue, color: txt }}
-                      >
-                        Give once
-                        <ArrowUpRight size={16} strokeWidth={2.75} />
-                      </a>
-                    ) : hasMonthly ? (
-                      <button
-                        type="button"
-                        onClick={() => setActiveFund(fund)}
-                        className={`inline-flex min-h-[48px] cursor-pointer items-center justify-center gap-2 rounded-xl border-2 border-[#181310] px-4 text-sm font-black uppercase tracking-wide shadow-[4px_4px_0_#181310] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#181310] ${FOCUS}`}
-                        style={{ backgroundColor: fund.hue, color: txt }}
-                      >
-                        Choose an amount
-                      </button>
-                    ) : (
-                      <a
-                        href={CONTACT_URL}
-                        className={`inline-flex min-h-[48px] items-center justify-center gap-2 rounded-xl border-2 border-[#181310] bg-white px-4 text-sm font-black uppercase tracking-wide text-[#181310] no-underline shadow-[4px_4px_0_#181310] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#181310] ${FOCUS}`}
-                      >
-                        <Clock size={15} aria-hidden="true" />
-                        Ask us to set it up
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </motion.li>
-            );
-          })}
-        </ul>
-      </section>
-
-      {/* ── REASSURANCE BLOCK ── */}
-      <section className="border-y-2 border-[#181310]" style={{ backgroundColor: "#FFED00" }}>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16 text-center">
-          <motion.div {...fadeUp}>
-            <h2 className="hpc-display mx-auto max-w-3xl text-2xl sm:text-4xl font-black uppercase leading-tight tracking-tight">
-              Every dollar stays in the community.
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-base sm:text-lg font-semibold leading-relaxed text-[#4a3d00]">
-              Hartford Pride Center is a 501(c)(3) nonprofit. You can cancel a
-              monthly gift anytime, and your support goes directly to the people
-              who need it.
-            </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <a
-                href="#funds"
-                className="rounded-full border-2 border-[#181310] bg-white px-5 py-2.5 text-sm font-black uppercase tracking-wide hover:bg-[#181310] hover:text-white transition-colors"
-              >
-                Give now
-              </a>
-              <a
-                href={CONTACT_URL}
-                className="rounded-full border-2 border-[#181310] bg-white px-5 py-2.5 text-sm font-black uppercase tracking-wide hover:bg-[#181310] hover:text-white transition-colors"
-              >
-                Contact us
-              </a>
-              <button
-                type="button"
-                onClick={handleShare}
-                className="inline-flex items-center gap-2 rounded-full border-2 border-[#181310] bg-white px-5 py-2.5 text-sm font-black uppercase tracking-wide hover:bg-[#181310] hover:text-white transition-colors"
-              >
-                <Share2 size={14} />
-                {copied ? "Copied" : "Share this page"}
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ── FOOTER STRIPE ── */}
-      <div className="bg-[#181310] py-8">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col items-center gap-2 text-center">
-          <Heart size={16} className="text-white/70" aria-hidden="true" />
-          <p className="text-xs font-semibold text-white/60">
-            Thank you for supporting Hartford Pride Center.
-          </p>
-        </div>
-      </div>
-      <div className="flex h-2.5 w-full" aria-hidden="true">
-        {FLAG.map((c) => (
-          <div key={c} className="flex-1" style={{ backgroundColor: c }} />
-        ))}
-      </div>
-
-      {/* ---------- Monthly amount sheet ---------- */}
-      {activeFund && (
-        <div
-          className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-5"
-          style={{ background: "rgba(24, 19, 16, .55)" }}
-          onClick={closeSheet}
-          role="presentation"
-        >
-          <div
-            className="cd-rise relative max-h-[85vh] w-full max-w-sm overflow-y-auto rounded-t-3xl border-2 border-[#181310] bg-white px-5 pt-7 shadow-[0_-8px_0_#181310] sm:rounded-3xl sm:px-6 sm:pb-6 sm:shadow-[8px_8px_0_#181310]"
-            style={{
-              borderTopWidth: 8,
-              borderTopColor: activeFund.hue,
-              paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))",
-            }}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="cd-sheet-title"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              ref={closeRef}
-              type="button"
-              onClick={closeSheet}
-              aria-label="Close"
-              className={`absolute right-3 top-3 inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border-2 border-[#181310] bg-white text-[#181310] transition-colors hover:bg-[#181310] hover:text-white ${FOCUS}`}
-            >
-              <X size={18} />
-            </button>
-
-            <div className="mb-5 flex items-center gap-3 pr-12">
-              <span
-                className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border-2 border-[#181310] text-xl"
-                style={{ backgroundColor: activeFund.hue }}
-                aria-hidden="true"
-              >
-                {activeFund.emoji}
-              </span>
-              <div>
-                <h3
-                  id="cd-sheet-title"
-                  className="hpc-display text-base font-black uppercase leading-tight tracking-tight"
-                >
-                  {activeFund.name}
-                </h3>
-                <p className="mt-0.5 text-[0.72rem] font-bold uppercase tracking-wider text-[#6b5f57]">
-                  Monthly gift
-                </p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-3 gap-2.5">
-              {monthlyLinks.map(({ amount, link }) =>
-                link ? (
-                  <a
-                    key={amount}
-                    href={link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`flex min-h-[80px] flex-col items-center justify-center gap-0.5 rounded-2xl border-2 border-[#181310] bg-white no-underline shadow-[4px_4px_0_#181310] transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#181310] ${FOCUS}`}
-                  >
-                    <span className="hpc-display text-2xl font-black text-[#181310]">
-                      ${amount}
-                    </span>
-                    <span className="text-[0.66rem] font-bold uppercase tracking-wider text-[#6b5f57]">
-                      / month
-                    </span>
-                  </a>
-                ) : (
-                  <span
-                    key={amount}
-                    aria-disabled="true"
-                    className="flex min-h-[80px] cursor-not-allowed flex-col items-center justify-center gap-0.5 rounded-2xl border-2 border-dashed border-[#181310]/40 opacity-50"
-                  >
-                    <span className="hpc-display text-2xl font-black text-[#181310]">
-                      ${amount}
-                    </span>
-                    <span className="text-[0.66rem] font-bold uppercase tracking-wider text-[#6b5f57]">
-                      soon
-                    </span>
-                  </span>
-                )
-              )}
-            </div>
-
-            <p className="mt-5 text-center text-[0.75rem] font-semibold leading-relaxed text-[#6b5f57]">
-              Want a different amount?{" "}
-              <a
-                href={CONTACT_URL}
-                className="font-black underline underline-offset-2 text-[#181310]"
-              >
-                Contact us
-              </a>{" "}
-              and we'll set it up.
-            </p>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+  return <main ref={pageRef} className="hps-page">
+    <style>{STYLES}</style>
+    <PageRainbow pageRef={pageRef} sceneRef={sceneRef} replay={replay} reduced={reduced} />
+    <section className="hps-hero hps-inner">
+      <motion.div {...reveal}><p className="hps-eyebrow">Support · Hartford Pride Center</p><h1>Give where<br/>it <em>matters most.</em></h1><p className="hps-lead">Six funds, one community. Pick exactly where your gift goes — medication, food, housing, trans care, programming, or wherever the need is greatest.</p><div className="hps-actions"><a className="hps-primary" href="#funds">Choose a fund <ArrowUpRight size={17} aria-hidden="true"/></a><button className="hps-secondary" type="button" onClick={handleShare}><Share2 size={15} aria-hidden="true"/>{copied?"Link copied":"Share"}</button></div></motion.div>
+      <div className="hps-donation-art"><DonationAnimation sceneRef={sceneRef} replay={replay} onReplay={() => setReplay(v => v + 1)}/><p className="hps-animation-reassurance">100% of every dollar stays in the community. <span>501(c)(3) nonprofit</span></p></div>
+    </section>
+    <div className="hps-word-band"><div className="hps-marquee-window"><div className="hps-track" style={{animationPlayState:paused?"paused":"running"}}>{[0,1].map(copy=><div className="hps-word-copy" key={copy} aria-hidden={copy===1}>{["Give","Sustain","Uplift","Protect","Nourish","Together"].map((word,i)=><span key={word} style={{color:PALETTE[i]}}>{word}<b aria-hidden="true">✦</b></span>)}</div>)}</div></div><button type="button" className="hps-pause" onClick={()=>setPaused(v=>!v)} aria-pressed={paused} disabled={reduced}>{reduced?"Still":paused?"Play":"Pause"}</button></div>
+    <section id="funds" className="hps-funds"><div className="hps-inner"><motion.header className="hps-funds-heading" {...reveal}><div><p className="hps-eyebrow">Where your gift goes</p><h2>Find your way to give.</h2></div><fieldset className="hps-frequency"><legend>Giving frequency</legend>{[["once","Give once"],["monthly","Give monthly"]].map(([value,label])=><label key={value}><input type="radio" name={`${id}-frequency`} value={value} checked={mode===value} onChange={()=>setMode(value)}/><span>{label}</span></label>)}</fieldset></motion.header><p className="hps-mode-note" aria-live="polite">{mode==="once"?"Make a one-time gift to the fund you choose.":"Choose a fund, then select an available monthly amount."}</p>
+      <ul className="hps-grid">{FUNDS.map(fund=>{
+        const oneTime=safeLink(fund.oneTime)||safeLink(SHARED_ONE_TIME_LINK);
+        const hasMonthly=MONTHLY_AMOUNTS.some(amount=>safeLink(fund.monthly?.[amount]));
+        return <motion.li key={fund.id} className="hps-card" style={{"--fund-color":fund.hue}} {...reveal}><span className="hps-pin" aria-hidden="true"/><div className="hps-card-top"><span className="hps-emoji" aria-hidden="true">{fund.emoji}</span><span className="hps-frequency-label">{mode==="once"?"One-time gift":"Monthly support"}</span></div><h3>{fund.name}</h3><p>{fund.blurb}</p>{mode==="once"?<a className="hps-card-cta" href={oneTime} target="_blank" rel="noopener noreferrer" aria-label={`Give once to ${fund.name} (opens Stripe in a new tab)`}>Give once <ArrowUpRight size={16} aria-hidden="true"/></a>:hasMonthly?<button type="button" className="hps-card-cta" onClick={e=>{trigger.current=e.currentTarget;setActiveFund(fund);}} aria-label={`Choose a monthly amount for ${fund.name}`}>Choose an amount <span aria-hidden="true">→</span></button>:<a className="hps-card-cta" href={CONTACT_URL}>Ask us to set it up <ArrowUpRight size={16} aria-hidden="true"/></a>}</motion.li>;
+      })}</ul><p className="hps-stripe-note">Donation links open Stripe in a new tab.</p></div></section>
+    <section className="hps-closing"><motion.div className="hps-inner" {...reveal}><Heart size={22} aria-hidden="true"/><h2>Every dollar stays<br/><em>in the community.</em></h2><p>Hartford Pride Center is a 501(c)(3) nonprofit. You can cancel a monthly gift anytime, and your support goes directly to the people who need it.</p><div className="hps-actions"><a className="hps-primary" href="#funds">Give now <ArrowUpRight size={16} aria-hidden="true"/></a><a className="hps-text-link" href={CONTACT_URL}>Contact us</a><button className="hps-secondary" type="button" onClick={handleShare}><Share2 size={15} aria-hidden="true"/>{copied?"Copied":"Share this page"}</button></div></motion.div></section><footer className="hps-footer">Thank you for supporting Hartford Pride Center.</footer><div className="hps-rainbow" aria-hidden="true"/>
+    <span className="hps-sr" role="status">{copied?"Share link copied to clipboard.":""}</span>
+    {activeFund&&<dialog ref={dialog} className="hps-dialog" aria-labelledby={`${id}-sheet-title`} onCancel={e=>{e.preventDefault();closeSheet();}} onClick={e=>{if(e.target===e.currentTarget){const r=e.currentTarget.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)closeSheet();}}} style={{"--fund-color":activeFund.hue}}><button type="button" className="hps-close" onClick={closeSheet} aria-label="Close monthly donation options" autoFocus><X size={20}/></button><p className="hps-eyebrow">Monthly gift</p><span className="hps-dialog-emoji" aria-hidden="true">{activeFund.emoji}</span><h2 id={`${id}-sheet-title`}>{activeFund.name}</h2><p className="hps-dialog-note">Choose an available amount to continue to Stripe.</p><div className="hps-amounts">{MONTHLY_AMOUNTS.map(amount=>{const link=safeLink(activeFund.monthly?.[amount]);return link?<a key={amount} href={link} target="_blank" rel="noopener noreferrer" aria-label={`Give $${amount} per month to ${activeFund.name} (opens Stripe in a new tab)`}><strong>${amount}</strong><span>/ month ↗</span></a>:<div key={amount} className="hps-unavailable" aria-disabled="true"><strong>${amount}</strong><span>Unavailable</span></div>;})}</div><p className="hps-other-amount">Want a different amount? <a href={CONTACT_URL}>Contact us</a> and we'll set it up.</p></dialog>}
+  </main>;
 }
+const STYLES = `
+/* Content stays in its original layout; the rainbow occupies no layout space.
+   Section backgrounds stay beneath it, while text, cards and controls sit above. */
+.hps-hero > div:first-child,
+.hps-funds > .hps-inner,
+.hps-closing > .hps-inner,
+.hps-word-band,
+.hps-footer,
+.hpd-animation-caption,
+.hps-animation-reassurance{position:relative;z-index:3}
+.hps-page-rainbow{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;overflow:hidden}
+
+.hps-page{position:relative;isolation:isolate;--hps-header-clearance:96px;padding-top:var(--hps-header-clearance);min-height:100vh;background:#faf6f0;color:#493749;font:15px/1.7 Inter,ui-sans-serif,system-ui,sans-serif}.hps-page *{box-sizing:border-box}.hps-page :is(h1,h2,h3,p){margin:0}.hps-page :is(a,button,input):focus-visible{outline:3px solid #805995;outline-offset:4px}.hps-inner{width:94%;max-width:1120px;margin-inline:auto}.hps-hero{display:grid;grid-template-columns:1.15fr 1fr;align-items:center;gap:55px;padding-block:35px 42px}.hps-eyebrow{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#986f85;font-weight:750}.hps-hero h1{font:400 clamp(38px,5.5vw,68px)/1.08 Georgia,serif;letter-spacing:-2px;margin:15px 0 20px}.hps-hero h1 em{color:#8d5b84}.hps-lead{font-size:14px;line-height:1.85;color:#7b6678;max-width:530px}.hps-actions{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-top:23px}.hps-primary,.hps-secondary{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:46px;padding:11px 18px;border:1px solid #795482;border-radius:7px;font:700 13px/1.5 system-ui,sans-serif;text-decoration:none;cursor:pointer}.hps-primary{background:#795482;color:#fff}.hps-secondary{background:#fffafc;color:#755780;border-color:#d5c6dc}.hps-primary:hover{background:#63426d}.hps-secondary:hover{background:#efe5f5}.hps-poster{position:relative;max-width:420px;width:100%;margin-inline:auto;background:#fffdf8;border:1px solid #e5d9cc;border-radius:3px;padding:30px 25px;text-align:center;box-shadow:0 7px 22px #6b476b0a}.hps-tape{position:absolute;top:-9px;left:calc(50% - 30px);width:60px;height:20px;background:#dac8aa88;transform:rotate(-4deg)}.hps-heart{color:#b781a0;margin:18px auto 10px}.hps-poster h2{font:400 27px/1.3 Georgia,serif}.hps-poster h2 em{color:#92718e}.hps-symbols{display:flex;justify-content:center;gap:7px;margin:20px 0 16px}.hps-symbols>span{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;font-size:19px}.hps-poster>p:last-of-type{font-size:12px;color:#7e697b}.hps-nonprofit{font-size:10px;color:#917c92}.hps-word-band{display:flex;align-items:center;background:#392c44;padding:10px 12px;gap:12px}.hps-marquee-window{overflow:hidden;flex:1;min-width:0}.hps-track{display:flex;width:max-content;animation:hps-travel 25s linear infinite}.hps-word-copy{display:flex;flex-shrink:0;align-items:center}.hps-word-copy>span{display:flex;align-items:center;gap:30px;padding-right:30px;font:italic 24px/1.5 Georgia,serif;white-space:nowrap}.hps-word-copy b{font-size:12px;font-style:normal;color:#c1aaca}.hps-pause{min-height:44px;min-width:50px;background:transparent;border:1px solid #9b7da8;border-radius:6px;color:#e1d2e7;font-size:10px;cursor:pointer}.hps-pause:disabled{cursor:default}@keyframes hps-travel{from{transform:translateX(-50%)}to{transform:translateX(0)}}.hps-funds{padding:35px 0 30px;background:#eef3ee;scroll-margin-top:calc(var(--hps-header-clearance) + 12px)}.hps-funds-heading{display:flex;align-items:end;justify-content:space-between;gap:18px;flex-wrap:wrap}.hps-funds-heading h2{font:400 clamp(26px,3vw,35px)/1.25 Georgia,serif;margin-top:6px}.hps-frequency{display:flex;gap:4px;margin:0;padding:4px;background:#e1e6e0;border:1px solid #ccd8ce;border-radius:9px}.hps-frequency legend{position:absolute;clip-path:inset(50%);width:1px;height:1px;overflow:hidden}.hps-frequency label{position:relative;cursor:pointer}.hps-frequency input{position:absolute;opacity:0;width:1px;height:1px}.hps-frequency span{display:flex;align-items:center;justify-content:center;min-height:44px;padding:8px 17px;border-radius:6px;font-size:12px;font-weight:700;color:#6a786c}.hps-frequency input:checked+span{background:#fff;color:#655070;box-shadow:0 2px 7px #49374910}.hps-frequency input:focus-visible+span{outline:3px solid #805995;outline-offset:2px}.hps-mode-note{font-size:12px;color:#748071;margin:13px 0 21px!important}.hps-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px 16px;padding:0;margin:0;list-style:none}.hps-card{position:relative;display:flex;flex-direction:column;background:#fffdf9;border:1px solid #e0d7d1;border-top:3px solid var(--fund-color);border-radius:4px;padding:19px;box-shadow:0 4px 12px #55425d05}.hps-pin{position:absolute;right:17px;top:-6px;width:9px;height:9px;border-radius:50%;background:var(--fund-color);box-shadow:1px 2px 2px #684d7130}.hps-card-top{display:flex;align-items:center;justify-content:space-between;gap:10px}.hps-emoji{font-size:25px}.hps-frequency-label{font-size:9px;color:#9b859c;letter-spacing:.5px}.hps-card h3{font:400 22px/1.25 Georgia,serif;margin:10px 0}.hps-card>p{font-size:13px;color:#7c6b7b;line-height:1.75;margin-bottom:17px}.hps-card-cta{display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:46px;margin-top:auto;padding:10px 13px;border:1px solid #cbbad5;border-radius:6px;background:#f4edf7;color:#6a487b;font:700 12px/1.4 system-ui,sans-serif;text-decoration:none;cursor:pointer}.hps-card-cta:hover{background:#eaddf2}.hps-stripe-note{text-align:center;color:#818d7f;font-size:10px;margin-top:17px!important}.hps-closing{background:#f1e9f3;padding:36px 0;text-align:center;border-top:1px solid #ded2e5}.hps-closing svg{color:#af7b9c}.hps-closing h2{font:400 clamp(28px,4vw,40px)/1.2 Georgia,serif;margin:12px auto}.hps-closing h2 em{color:#8c668f}.hps-closing p{max-width:660px;margin:auto;font-size:13px;color:#826d88}.hps-closing .hps-actions{justify-content:center}.hps-text-link{color:#785284;font-size:12px;text-underline-offset:4px;padding:10px;min-height:44px}.hps-footer{background:#392c44;padding:20px;text-align:center;color:#d4bedc;font-size:11px}.hps-rainbow{height:4px;background:linear-gradient(90deg,#df9db0,#dbb08b,#cbb878,#96b9a1,#99b5d0,#b4a0cc)}.hps-sr{position:absolute;width:1px;height:1px;clip-path:inset(50%);overflow:hidden}.hps-dialog{position:fixed;inset:0;margin:auto;width:min(440px,calc(100% - 28px));max-height:85dvh;overflow:auto;border:1px solid #d8c8df;border-top:5px solid var(--fund-color);border-radius:13px;background:#fdf9fc;padding:24px;color:#493749;box-shadow:0 25px 80px #241b3940}.hps-dialog::backdrop{background:#291d38aa;backdrop-filter:blur(4px)}.hps-close{position:absolute;right:9px;top:9px;display:grid;place-items:center;width:44px;height:44px;border:1px solid #d7c5df;border-radius:50%;background:#fff;color:#795482;cursor:pointer}.hps-dialog>.hps-eyebrow{padding-right:45px}.hps-dialog-emoji{display:block;font-size:29px;margin-top:13px}.hps-dialog h2{font:400 27px/1.25 Georgia,serif;margin:9px 0}.hps-dialog-note{font-size:12px;color:#89718c}.hps-amounts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:21px 0}.hps-amounts>a,.hps-amounts>div{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:85px;border:1px solid #baa0ca;border-radius:8px;background:#efe3f5;color:#684078;text-decoration:none}.hps-amounts strong{font:400 29px/1.3 Georgia,serif}.hps-amounts span{font-size:10px}.hps-amounts .hps-unavailable{background:#f1edf2;border-style:dashed;border-color:#d6ccd9;color:#988a9e}.hps-other-amount{font-size:12px;color:#826b87;line-height:1.7}.hps-other-amount a{color:#725080;font-weight:700}.hps-page .hps-primary svg{color:inherit}
+@media(max-width:800px){.hps-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hps-hero{gap:25px}.hps-symbols{gap:4px}.hps-symbols>span{width:31px;height:31px;font-size:16px}.hps-poster{padding:25px 15px}}@media(max-width:600px){.hps-page{--hps-header-clearance:112px}.hps-hero{grid-template-columns:1fr;gap:27px;padding-block:22px 28px}.hps-hero h1{font-size:43px;letter-spacing:-1.2px}.hps-hero .hps-actions>*{flex:1}.hps-poster{max-width:none;padding:22px}.hps-poster h2{font-size:25px}.hps-heart{margin:10px auto 7px}.hps-symbols{margin:14px 0 10px}.hps-funds{padding-top:27px}.hps-grid{grid-template-columns:1fr;gap:16px}.hps-frequency{width:100%}.hps-frequency label{flex:1}.hps-card{padding:17px}.hps-card h3{font-size:23px}.hps-word-copy>span{font-size:21px}.hps-dialog{inset:auto 0 0;margin:0 auto;width:100%;max-width:500px;border-radius:16px 16px 0 0;padding-bottom:max(24px,env(safe-area-inset-bottom))}}
+@media(prefers-reduced-motion:reduce){.hps-track{animation:none}}
+.hpd-animation{position:relative}.hpd-scene{display:block;width:100%;height:auto;overflow:hidden}.hpd-animation-caption{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 12px;color:#8a7289;font-size:11px}.hpd-animation-caption button{min-height:28px;padding:3px 9px;border:1px solid #d9c9dc;border-radius:20px;color:#755480;background:#fff9fc;font:700 10px/1.4 system-ui,sans-serif;cursor:pointer;flex-shrink:0}.hpd-animation-caption button:hover{background:#efe5f5}.hpd-animation-caption button:disabled{cursor:default;color:#807487}
+/* One complete sequence: approach, release, withdraw, then rainbow reveal. */
+.hpd-note{animation:hpd-note 5.8s ease-in-out both}.hpd-hand{animation:hpd-hand 5.8s ease-in-out both}.hps-page-rainbow path{stroke-dasharray:1;stroke-dashoffset:1;animation:hpd-rainbow-draw 5.8s ease-in-out both}.hpd-hearts,.hpd-sparkles,.hpd-glow{animation:hpd-celebrate 5.8s ease-out both}
+@keyframes hpd-note{0%,10%{transform:translateY(-115px)}34%,40%{transform:translateY(36px)}53%,100%{transform:translateY(145px)}}
+@keyframes hpd-hand{0%,10%{transform:translateY(-115px)}34%,40%{transform:translateY(36px)}58%,100%{transform:translate(65px,-170px)}}
+@keyframes hpd-rainbow-draw{0%,55%{opacity:0;stroke-dashoffset:1}56%{opacity:1;stroke-dashoffset:1}85%,100%{opacity:1;stroke-dashoffset:0}}
+.hps-page-rainbow-still path{animation:none;stroke-dashoffset:0;opacity:1}
+@keyframes hpd-celebrate{0%,70%{opacity:0;transform:translateY(12px)}90%,100%{opacity:1;transform:translateY(0)}}
+.hpd-still .hpd-hand,.hpd-still .hpd-note{display:none}.hpd-still :is(.hpd-rainbow,.hpd-hearts,.hpd-sparkles,.hpd-glow){animation:none;opacity:1;transform:none}
+.hps-donation-art{min-width:0;width:100%;max-width:540px;margin-inline:auto}.hps-animation-reassurance{text-align:center;color:#88718b;font-size:11px;margin-top:12px!important}.hps-animation-reassurance span{display:block;font-size:10px;color:#958199}.hps-page .hpd-animation-caption button:focus-visible{outline:3px solid #805995;outline-offset:4px}
+@media(max-width:600px){.hps-donation-art{order:-1;max-width:440px}.hps-hero{gap:20px}.hpd-animation-caption{font-size:10px;padding:0 5px}.hps-animation-reassurance{margin-top:8px!important}}
+@media(prefers-reduced-motion:reduce){.hps-page-rainbow path{animation:none!important;stroke-dashoffset:0;opacity:1}.hpd-scene *{animation:none!important}.hpd-scene .hpd-rainbow path{stroke-dashoffset:0;opacity:1}.hpd-scene .hpd-note,.hpd-scene .hpd-hand{display:none}}
+/* Neutral ink and solid surfaces keep decorative color away from letterforms. */
+.hps-page{color:#302e33}
+.hps-page :is(h1,h2,h3){color:#302e33}
+.hps-hero h1 em,.hps-closing h2 em{color:#594058}
+.hps-lead,.hps-card>p,.hps-closing p,.hps-dialog-note,.hps-other-amount{color:#504b53}
+.hps-eyebrow,.hps-frequency-label,.hps-mode-note,.hps-stripe-note{color:#625967}
+.hps-hero>div:first-child,.hpd-animation-caption,.hps-animation-reassurance{background:#faf6f0}
+.hpd-animation-caption,.hps-animation-reassurance,.hps-animation-reassurance span{color:#5c535f}
+.hpd-animation-caption button{color:#493d4f}
+.hps-funds-heading,.hps-mode-note,.hps-stripe-note{background:#eef3ee}
+.hps-closing h2,.hps-closing p{background:#f1e9f3}
+
+`;
