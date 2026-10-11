@@ -152,6 +152,143 @@ function BelongingBanner() {
   </section>;
 }
 
+function ComingSoonConstruction() {
+  const sectionRef = useRef(null);
+  const reducedMotion = useReducedMotion();
+  const [started, setStarted] = useState(false);
+  const [replay, setReplay] = useState(0);
+  useEffect(() => {
+    if (reducedMotion || !window.IntersectionObserver) { setStarted(true); return undefined; }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { setStarted(true); observer.disconnect(); }
+    }, { threshold: 0.2 });
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, [reducedMotion]);
+  return <section ref={sectionRef} className="hpc-build-section hpc-container" aria-labelledby="hpc-build-heading">
+    <div className="hpc-build-card">
+      <header className="hpc-build-heading">
+        <p className="hpc-eyebrow">A new chapter for our community</p>
+        <h2 id="hpc-build-heading">Coming soon.</h2>
+        <p>Building a place for all of us.</p>
+      </header>
+      <div key={replay} className={`hpc-build-scene ${started ? "hpc-build-started" : ""} ${reducedMotion ? "hpc-build-still" : ""}`}>
+        <svg viewBox="0 0 800 430" role="img" aria-label="Two queer construction workers wearing Pride patches build an illustrated community center. Walls, windows and a rainbow canopy appear, followed by the Hartford Pride Center sign.">
+          <ellipse cx="400" cy="224" rx="329" ry="184" fill="#e8f2f1" />
+          <circle cx="649" cy="92" r="33" fill="#f8d896" />
+          <path d="M89 133h103M600 156h112" stroke="#fff" strokeWidth="18" strokeLinecap="round" />
+          <path d="M116 369Q397 350 691 369" fill="none" stroke="#c6d8ce" strokeWidth="5" strokeLinecap="round" />
+          <ellipse cx="400" cy="376" rx="292" ry="14" fill="#62746b" opacity=".09" />
+          <g className="hpc-build-foundation hpc-build-part">
+            <path d="M205 355h390l16 14H189z" fill="#c1c7c5" />
+            <rect x="202" y="349" width="396" height="12" rx="4" fill="#e0d9cf" />
+          </g>
+          <g className="hpc-build-walls hpc-build-part">
+            <rect x="216" y="163" width="368" height="186" rx="7" fill="#f4e3ce" stroke="#c8ac95" strokeWidth="2" />
+            <path d="M222 206h356M222 252h356M222 298h356M259 164v42m64 0v46m-64 0v46m64 0v46m154-180v42m64 0v46m-64 0v46m64 0v46" stroke="#e6cfb9" strokeWidth="2" />
+            <rect x="344" y="239" width="112" height="110" rx="7" fill="#fffaf2" />
+            <path d="M361 346v-91h78v91" fill="#9ebfc4" stroke="#587d80" strokeWidth="3" />
+            <path d="M400 255v91" stroke="#f8ffff" strokeWidth="3" />
+            <path d="M392 298v14m16-14v14" stroke="#fff5d6" strokeWidth="4" strokeLinecap="round" />
+          </g>
+          <g className="hpc-build-windows hpc-build-part">
+            <rect x="244" y="240" width="77" height="74" rx="9" fill="#9bbec7" stroke="#fffaf1" strokeWidth="7" />
+            <rect x="479" y="240" width="77" height="74" rx="9" fill="#9bbec7" stroke="#fffaf1" strokeWidth="7" />
+            <path d="M282 241v73m-37-36h74m198-37v73m-37-36h74" stroke="#fffaf1" strokeWidth="4" />
+            <path d="m250 256 17-10m218 10 17-10" stroke="#dceef0" strokeWidth="5" strokeLinecap="round" />
+            <rect x="240" y="317" width="85" height="12" rx="4" fill="#a47873" />
+            <rect x="475" y="317" width="85" height="12" rx="4" fill="#a47873" />
+            <path d="m252 316 5-13 9 13 13-17 9 17 11-13 10 13m178 0 5-13 9 13 13-17 9 17 11-13 10 13" fill="#6b9b7c" />
+            <circle cx="266" cy="304" r="4" fill="#d780a3" /><circle cx="300" cy="306" r="4" fill="#e9b965" />
+            <circle cx="498" cy="304" r="4" fill="#d780a3" /><circle cx="535" cy="306" r="4" fill="#e9b965" />
+          </g>
+          <g className="hpc-build-roof hpc-build-part">
+            <path d="M199 163 224 138h352l25 25v11H199z" fill="#7c788f" />
+            <path d="M217 139h366" stroke="#b9a1bd" strokeWidth="8" strokeLinecap="round" />
+            <path d="M335 242v-9a65 53 0 0 1 130 0v9" fill="#fff7ed" stroke="#dd859e" strokeWidth="8" />
+            <path d="M343 240v-7a57 45 0 0 1 114 0v7" fill="none" stroke="#e9ad7d" strokeWidth="8" />
+            <path d="M351 240v-7a49 37 0 0 1 98 0v7" fill="none" stroke="#e8ce80" strokeWidth="8" />
+            <path d="M359 240v-7a41 29 0 0 1 82 0v7" fill="none" stroke="#8fba9c" strokeWidth="8" />
+            <path d="M367 240v-7a33 21 0 0 1 66 0v7" fill="none" stroke="#8baed2" strokeWidth="8" />
+            <path d="M375 240v-7a25 13 0 0 1 50 0v7" fill="none" stroke="#b69acc" strokeWidth="8" />
+          </g>
+          <g className="hpc-build-sign hpc-build-part">
+            <rect x="228" y="94" width="344" height="51" rx="12" fill="#fffdf8" stroke="#b896b2" strokeWidth="2" />
+            <text x="400" y="127" textAnchor="middle" fill="#44364d" fontFamily="Georgia, serif" fontSize="29">Hartford Pride Center</text>
+          </g>
+          <g className="hpc-build-garden hpc-build-part">
+            <path d="M213 347v-29m375 29v-29" stroke="#679279" strokeWidth="4" />
+            <ellipse cx="203" cy="319" rx="13" ry="8" fill="#93b597" transform="rotate(35 203 319)" />
+            <ellipse cx="224" cy="309" rx="13" ry="8" fill="#6e9e85" transform="rotate(-35 224 309)" />
+            <ellipse cx="579" cy="309" rx="13" ry="8" fill="#93b597" transform="rotate(35 579 309)" />
+            <ellipse cx="598" cy="319" rx="13" ry="8" fill="#6e9e85" transform="rotate(-35 598 319)" />
+            <path d="m195 335 5 23h26l5-23zm375 0 5 23h26l5-23z" fill="#cd9a8c" />
+          </g>
+          {/* Two proud queer builders, with rainbow and trans Pride patches. */}
+          <g transform="translate(147 248)">
+            <g className="hpc-builder-body">
+              <path d="m-16 59-5 53m38-53 6 53" stroke="#535c81" strokeWidth="16" strokeLinecap="round" />
+              <path d="M-24 113h-12m61 0h12" stroke="#424052" strokeWidth="12" strokeLinecap="round" />
+              <rect x="-24" y="8" width="48" height="64" rx="15" fill="#e6af63" />
+              <path d="M-13 11v57m26-57v57M-23 51h46" stroke="#fff0b5" strokeWidth="5" />
+              <rect x="-24" y="64" width="48" height="9" rx="3" fill="#826351" />
+              <rect x="-18" y="70" width="16" height="19" rx="3" fill="#ae8566" />
+              <path d="M-22 22-33 48-24 62" fill="none" stroke="#875638" strokeWidth="11" strokeLinecap="round" />
+              <g className="hpc-builder-hammer">
+                <path d="M23 23 41 9 49-7" fill="none" stroke="#875638" strokeWidth="11" strokeLinecap="round" />
+                <path d="m47-2 12-27" stroke="#9f7955" strokeWidth="7" strokeLinecap="round" />
+                <path d="m50-33 22 9" stroke="#687382" strokeWidth="10" strokeLinecap="round" />
+              </g>
+              <rect x="-2" y="-6" width="9" height="18" rx="4" fill="#875638" />
+              <circle cx="0" cy="-15" r="21" fill="#a86f49" />
+              <path d="M-20-12q4 24 21 17 13-2 17-18v15q-18 24-36 0z" fill="#563c37" />
+              <circle cx="-7" cy="-15" r="2" fill="#332c35" /><circle cx="8" cy="-15" r="2" fill="#332c35" />
+              <path d="M-5-5q6 5 11-1" fill="none" stroke="#ffe0ba" strokeWidth="2" strokeLinecap="round" />
+              <path d="M-23-25a23 23 0 0 1 46 0" fill="#f6ce71" stroke="#bc9850" strokeWidth="2" />
+              <path d="M-28-24h56M0-45v17" stroke="#e0b456" strokeWidth="6" strokeLinecap="round" />
+              <g transform="translate(-8 24)">
+                <path d="M0 0h17" stroke="#df6985" strokeWidth="3" /><path d="M0 3h17" stroke="#e49a59" strokeWidth="3" /><path d="M0 6h17" stroke="#e2c36c" strokeWidth="3" /><path d="M0 9h17" stroke="#6b9b80" strokeWidth="3" /><path d="M0 12h17" stroke="#678ebc" strokeWidth="3" /><path d="M0 15h17" stroke="#9875b5" strokeWidth="3" />
+              </g>
+            </g>
+          </g>
+          <g transform="translate(651 248)">
+            <g className="hpc-builder-body">
+              <path d="m-15 63-7 49m36-49 8 49" stroke="#5b7279" strokeWidth="16" strokeLinecap="round" />
+              <path d="M-24 113h-12m60 0h12" stroke="#424052" strokeWidth="12" strokeLinecap="round" />
+              <rect x="-24" y="10" width="48" height="63" rx="15" fill="#9cb59a" />
+              <path d="M-13 12v57m26-57v57M-23 52h46" stroke="#e8efbc" strokeWidth="5" />
+              <path d="M24 25 32 51 24 64" fill="none" stroke="#edb89c" strokeWidth="11" strokeLinecap="round" />
+              <g className="hpc-builder-trowel">
+                <path d="M-22 25-43 39-55 22" fill="none" stroke="#edb89c" strokeWidth="11" strokeLinecap="round" />
+                <path d="m-55 24-5-17" stroke="#9c7758" strokeWidth="7" strokeLinecap="round" />
+                <path d="m-60 7-20-6 16-19z" fill="#879ba3" />
+              </g>
+              <rect x="-24" y="66" width="48" height="8" rx="3" fill="#826351" />
+              <rect x="4" y="70" width="17" height="19" rx="3" fill="#ae8566" />
+              <path d="M-19-24q-17 13-5 35l9-1 30-4q20-21-4-36" fill="#795485" />
+              <rect x="-4" y="-4" width="9" height="17" rx="4" fill="#edb89c" />
+              <circle cx="0" cy="-14" r="20" fill="#f0c0a5" />
+              <circle cx="-7" cy="-14" r="2" fill="#43333d" /><circle cx="8" cy="-14" r="2" fill="#43333d" />
+              <path d="M-5-4q6 5 11-1" fill="none" stroke="#995c62" strokeWidth="2" strokeLinecap="round" />
+              <circle cx="-19" cy="-1" r="4" fill="none" stroke="#d5a548" strokeWidth="2" />
+              <path d="M-23-24a23 23 0 0 1 46 0" fill="#d0b4e4" stroke="#9e7caf" strokeWidth="2" />
+              <path d="M-28-23h56M0-44v17" stroke="#b596cc" strokeWidth="6" strokeLinecap="round" />
+              <g transform="translate(-8 27)"><path d="M0 0h17" stroke="#72c6e7" strokeWidth="3" /><path d="M0 3h17" stroke="#efa8bc" strokeWidth="3" /><path d="M0 6h17" stroke="#fff" strokeWidth="3" /><path d="M0 9h17" stroke="#efa8bc" strokeWidth="3" /><path d="M0 12h17" stroke="#72c6e7" strokeWidth="3" /></g>
+            </g>
+          </g>
+          <g className="hpc-build-joy hpc-build-part" fill="#cb7296">
+            <path d="M181 175c-27-17-26-34-12-34 7 0 12 6 12 11 1-5 6-11 13-11 14 0 14 17-13 34z" />
+            <path d="M613 188c-20-13-20-25-9-25 5 0 9 4 9 8 1-4 4-8 9-8 11 0 11 12-9 25z" />
+            <path d="m605 78 4 12 12 4-12 4-4 12-4-12-12-4 12-4z" fill="#c7a45a" />
+          </g>
+        </svg>
+      </div>
+      <div className="hpc-build-bottom"><p>A little imagination. A lot of belonging.</p><button className="hpc-build-replay" type="button" onClick={() => { setStarted(true); setReplay(value => value + 1); }} disabled={reducedMotion} aria-label="Replay the Pride Center construction animation"><FaRedo aria-hidden="true" /> {reducedMotion ? "Still view" : "Replay"}</button></div>
+      <p className="hpc-build-caption">An illustrated vision of our next chapter.</p>
+    </div>
+  </section>;
+}
+
 function formatTime(value) {
   if (!Number.isFinite(value) || value < 0) return "0:00";
   const seconds = Math.floor(value);
@@ -333,6 +470,15 @@ export default function HomePage() {
         </section>
 
         <div className="hpc-container"><BelongingBanner /></div>
+
+        <section className="hpc-container hpc-new-location" aria-labelledby="hpc-location-coming-title">
+          <div className="hpc-new-location-card">
+            <p className="hpc-eyebrow">Rooted in community. Growing with Pride.</p>
+            <h2 id="hpc-location-coming-title">New Location Coming Soon <span>in Hartford</span></h2>
+            <p>A new place to connect, feel supported, and belong.</p>
+          </div>
+        </section>
+        <ComingSoonConstruction />
 
         <section className="hpc-container hpc-network-section" aria-labelledby="hpc-network-title">
           <a className="hpc-network-card" href="https://karaoverse.com/pride-network" target="_blank" rel="noopener noreferrer">
@@ -531,4 +677,38 @@ const HOME_STYLES = `
 @media(forced-colors:active){.hpc-neon-word.hpc-neon-loved,.hpc-intro-title>span{background:none;color:CanvasText;filter:none}.hpc-channel-dial{border-color:ButtonText}}
 
 @media(prefers-reduced-motion:reduce){.hpc-home *,.hpc-intro *{animation:none!important;transition:none!important;scroll-behavior:auto!important}.hpc-pride-flag{opacity:1;transform:rotate(var(--flag-rotation))}.hpc-neon-word{opacity:1;transform:none}.hpc-intro-progress>span{transform:scaleX(1)}}
+/* Compact replay controls and a new Hartford chapter. */
+.hpc-belonging-note .hpc-replay{min-width:0;min-height:28px;height:28px;padding:4px 9px;gap:5px;font-size:10px!important}
+.hpc-belonging-note .hpc-replay svg{font-size:9px}
+.hpc-new-location{padding-top:18px}
+.hpc-new-location-card{position:relative;padding:24px;text-align:center;border:1px solid #e2cbdc;border-radius:20px;background:linear-gradient(110deg,#ffedf2,#fff6df 42%,#eef7ee 72%,#f0eaff);overflow:hidden}
+.hpc-new-location-card::after{content:"";position:absolute;inset:auto 0 0;height:3px;background:linear-gradient(90deg,#ce728c,#d9a66b,#d1ba64,#81ad91,#82a3c7,#ac8abb)}
+.hpc-new-location-card h2{font:400 clamp(25px,3.4vw,39px)/1.2 Georgia,serif;color:#423649;margin-top:7px}
+.hpc-new-location-card h2 span{color:#76516f}
+.hpc-new-location-card>p:last-child{margin-top:9px;font-size:12px;color:#66566b}
+.hpc-build-section{padding-top:16px}
+.hpc-build-card{border:1px solid #e0d6e2;border-radius:22px;background:#fffdf9;padding:23px 22px 15px;overflow:hidden}
+.hpc-build-heading{text-align:center}
+.hpc-build-heading h2{font:400 clamp(26px,3vw,36px)/1.2 Georgia,serif;color:#44364d;margin:5px 0}
+.hpc-build-heading>p:last-child{font-size:13px;color:#6a596e}
+.hpc-build-scene{max-width:800px;margin:0 auto}
+.hpc-build-scene svg{display:block;width:100%;height:auto;overflow:visible}
+.hpc-build-bottom{display:flex;justify-content:space-between;align-items:center;gap:10px;max-width:760px;margin:0 auto}
+.hpc-build-bottom>p{font-size:12px;color:#65546a}
+.hpc-build-replay{display:inline-flex;align-items:center;gap:5px;min-height:28px;padding:4px 9px;border:1px solid #dfcddd;border-radius:99px;background:#fff6fa;color:#6b4b68;font-size:10px!important;flex-shrink:0}
+.hpc-build-replay:hover{background:#f4e7f2}
+.hpc-build-replay:focus-visible{outline:3px solid #795a8b;outline-offset:3px}
+.hpc-build-caption{text-align:center;font-size:10px;color:#817185;margin-top:10px!important}
+.hpc-build-part{opacity:0;transform-box:fill-box;transform-origin:center bottom;animation:hpc-build-arrive .75s cubic-bezier(.2,.8,.3,1) both;animation-play-state:paused}
+.hpc-build-foundation{animation-delay:.15s}.hpc-build-walls{animation-delay:1.15s}.hpc-build-windows{animation-delay:2.55s}.hpc-build-roof{animation-delay:3.75s}.hpc-build-garden{animation-delay:4.7s}.hpc-build-sign{animation-delay:5.6s}.hpc-build-joy{animation-delay:6.3s}
+.hpc-builder-hammer{transform-box:view-box;transform-origin:23px 23px;animation:hpc-hammer .65s ease-in-out 8 both;animation-play-state:paused}
+.hpc-builder-trowel{transform-box:view-box;transform-origin:-22px 25px;animation:hpc-trowel .85s ease-in-out 6 both;animation-play-state:paused}
+.hpc-build-started .hpc-build-part,.hpc-build-started .hpc-builder-hammer,.hpc-build-started .hpc-builder-trowel{animation-play-state:running}
+@keyframes hpc-build-arrive{from{opacity:0;transform:translateY(14px) scaleY(.85)}to{opacity:1;transform:none}}
+@keyframes hpc-hammer{0%,100%{transform:rotate(0)}40%{transform:rotate(-28deg)}65%{transform:rotate(9deg)}}
+@keyframes hpc-trowel{0%,100%{transform:rotate(0)}50%{transform:rotate(22deg)}}
+.hpc-build-still .hpc-build-part{animation:none;opacity:1;transform:none}
+.hpc-build-still .hpc-builder-hammer,.hpc-build-still .hpc-builder-trowel{animation:none;transform:none}
+@media(max-width:760px){.hpc-belonging.hpc-belonging-note{padding-bottom:49px}.hpc-belonging-note .hpc-replay{position:absolute;right:13px;bottom:12px;min-height:26px;height:26px;margin:0;padding:3px 8px;justify-self:end}.hpc-new-location-card{padding:20px 14px}.hpc-build-card{padding:19px 10px 12px}.hpc-build-bottom{padding-inline:4px}.hpc-build-bottom>p{font-size:10px}.hpc-build-caption{font-size:9px}}
+@media(prefers-reduced-motion:reduce){.hpc-build-part{opacity:1;transform:none!important}.hpc-builder-hammer,.hpc-builder-trowel{transform:none!important}}
 `;
