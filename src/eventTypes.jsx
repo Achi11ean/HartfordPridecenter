@@ -8,10 +8,15 @@ export const EVENT_TYPES = [
   { value: "burlesque", label: "💋 Burlesque" },
   { value: "book_signing", label: "📖 Book Signing" },
   { value: "live_music", label: "🎸 Live Music" },
+  { value: "21_plus", label: "🔞 21+ Only" },
+  { value: "18_plus", label: "🔞 18+ Only" },
+
+  { value: "contest", label: "🏆 Contest" },
   { value: "trivia", label: "🧠 Trivia" },
   { value: "paint_sip", label: "🍷 Paint & Sip" },
 { value: "bingo", label: "🎱 Bingo" },
 { value: "drag_story_time", label: "📚 Drag Story Time" },
+{ value: "family", label: "👨‍👩‍👧‍👦 Family Friendly" },
 { value: "parade", label: "🎉 Parade" },
 { value: "pride_after_party", label: "🦄 Pride After Party" },
   { value: "theatre", label: "🎭 Theatre Production" },
@@ -28,6 +33,7 @@ export const EVENT_TYPES = [
   { value: "concert", label: "🎟️ Concert" },
 { value: "speed_dating", label: "💘 Speed Dating" },
 { value: "fundraiser", label: "💖 Fundraiser" },
+  { value: "valentines_day", label: "💝 Valentine’s Day" },
   { value: "fireworks", label: "🎆 Fireworks" },
   { value: "halloween", label: "🎃 Halloween" },
   { value: "new_years_eve", label: "🎊 New Year’s Eve" },
@@ -47,6 +53,7 @@ export const EVENT_TYPE_LABEL_MAP = Object.fromEntries(
 
 // 🎨 Badge styles (used in cards, maps, calendars, etc.)
 export const EVENT_TYPE_STYLES = {
+  valentines_day: "bg-gradient-to-r from-rose-700 via-pink-600 to-fuchsia-600 border-rose-800 text-white",
   /* 🎤 PERFORMANCE CORE */
   karaoke:
     "bg-gradient-to-r from-pink-600 to-pink-400 border-pink-700 text-white",
@@ -56,7 +63,8 @@ export const EVENT_TYPE_STYLES = {
 
   cinco_de_mayo:
     "bg-gradient-to-r from-green-500 to-green-300 border-green-700 text-green-900",
-
+contest:
+  "bg-gradient-to-r from-amber-500 via-yellow-400 to-orange-500 border-amber-700 text-white",
   drag:
     "bg-gradient-to-r from-fuchsia-700 to-pink-600 border-fuchsia-800 text-white",
 drag_brunch:
@@ -83,7 +91,8 @@ pride_after_party:
 
   paint_sip:
     "bg-gradient-to-r from-purple-700 to-purple-400 border-purple-800 text-white",
-
+family:
+  "bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-500 border-emerald-700 text-white",
   /* 🌈 COMMUNITY & IDENTITY */
   lgbtqia_plus:
     "bg-gradient-to-r from-purple-700 via-pink-600 to-yellow-400 border-purple-800 text-white",
@@ -100,7 +109,10 @@ fundraiser:
 
   comedy:
     "bg-gradient-to-r from-rose-600 to-orange-500 border-rose-700 text-white",
-
+"21_plus":
+  "bg-gradient-to-r from-red-700 via-fuchsia-700 to-purple-900 border-red-800 text-white",
+  "18_plus":
+  "bg-gradient-to-r from-violet-700 via-purple-600 to-indigo-700 border-violet-800 text-white",
   /* 🎶 MOVEMENT & ARTS */
   dancing:
     "bg-gradient-to-r from-pink-500 to-red-400 border-pink-700 text-white",
@@ -147,8 +159,13 @@ fundraiser:
 
 // 📝 Human-friendly event descriptions
 export const EVENT_TYPE_DESCRIPTION_MAP = {
+  valentines_day: "Celebrate love and connection with Valentine’s parties, date nights, Galentine’s gatherings, and themed entertainment.",
   karaoke:
     "Sing your heart out with friends or solo — the stage is yours!",
+    family:
+  "Welcoming events for families, children, and guests of all ages! Discover community celebrations, live entertainment, festivals, creative activities, and memorable experiences everyone can enjoy.",
+    contest:
+  "Compete, perform, create, or show off your skills for prizes, recognition, and bragging rights!",
   open_mic:
     "Showcase any talent: music, poetry, comedy, or more.",
   live_music:
@@ -159,6 +176,8 @@ export const EVENT_TYPE_DESCRIPTION_MAP = {
   "A fabulous brunch experience with drag performances, music, food, drinks, and big daytime energy.",
 parade:
   "Marching bands, floats, performers, and large public street celebrations.",
+  "21_plus":
+  "Adults-only events for guests ages 21 and older, including nightlife, parties, club experiences, and age-restricted entertainment. Valid identification may be required for entry.",
 cinco_de_mayo:
   "Celebrate with festive food, music, and cultural events.",
 pride_after_party:
@@ -187,6 +206,8 @@ book_signing:
     "Larger-scale live shows by bands and artists.",
   poetry_slam:
     "Spoken word, slam poetry, and lyrical performances.",
+    "18_plus":
+  "Events exclusively for guests ages 18 and older, including live entertainment, performances, dance parties, social gatherings, and nightlife experiences. Valid identification may be required for entry. Alcohol availability and restrictions depend on the venue.",
   comedy:
     "Stand-up, improv, and laughs all night long.",
   lgbtqia_plus:
@@ -217,6 +238,7 @@ book_signing:
 
 // 📸 Event type → Images
 export const EVENT_TYPE_IMAGE_MAP = {
+  valentines_day: ["/valentines.png"],
    karaoke: [
     "https://www.shutterstock.com/shutterstock/videos/3786634929/thumb/1.jpg?ip=x480",
     "https://media.istockphoto.com/id/1362893836/photo/best-friends-singing-into-a-microphone-on-karaoke-night.jpg?s=612x612&w=0&k=20&c=KPFkclnzSEt0y14ma82CI7_EhEkRPHTPIVnLJuRLOOI=",
@@ -227,6 +249,10 @@ export const EVENT_TYPE_IMAGE_MAP = {
         "https://static.vecteezy.com/system/resources/previews/029/561/970/non_2x/music-karaoke-party-vivid-background-free-photo.jpg"
     
   ],
+  contest: [
+  "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExNnV4ZDl0Z2RldXRuZzR3aDZoOHU0dXp1Y3c4dHZpZm92eW1kaHk0NiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/qFWyE8Z8gp23lyu9Fc/giphy.webp",
+  "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExZWFtcjQwY2E0dnBjNmxudnB3bTNqNzU2cWIwMDNtZmNvcDNkYXpoZiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3ofSB8h3CxJFHpgFgc/200.webp"
+],
   pride_after_party: [
   "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExc2plaXpzdWl2NXEwa2o3OW1yMjdpbGRjdXpzOGllMms4aWhxbzBycCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/iCIOvrSSdi8W4kX9vJ/giphy.gif",
   "https://images.unsplash.com/photo-1514525253161-7a46d19cd819",
@@ -276,6 +302,11 @@ concert: [
     "https://www.thehobbycenter.org/wp-content/uploads/2022/12/WickedLargeFeaturedNewsImage1200x650-scaled.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Palais_Garnier._December_5%2C_2010.jpg/500px-Palais_Garnier._December_5%2C_2010.jpg",
   ],
+  family: [
+  "https://images.unsplash.com/photo-1472162314594-eca3c3d90d8c",
+  "https://images.unsplash.com/photo-1502086223501-7ea6ecd79368",
+  "https://images.unsplash.com/photo-1511632765486-a01980e01a18",
+],
   comedy: [
     "https://www.shutterstock.com/image-vector/comedy-show-sign-on-dark-600nw-2480894647.jpg",
     "https://www.shutterstock.com/shutterstock/photos/354475085/display_1500/stock-vector-comic-bubble-head-laughter-ha-ha-ha-pop-art-retro-style-humor-and-comedy-the-illustration-in-the-354475085.jpg",
@@ -350,10 +381,20 @@ parade: [
   "https://images.wsj.net/im-905253?width=1280&size=1",
   "https://media.timeout.com/images/106059419/image.jpg"
 ],
+"21_plus": [
+  "https://images.unsplash.com/photo-1571266028243-d220c9b3b157",
+  "https://images.unsplash.com/photo-1514525253161-7a46d19cd819",
+  "https://images.unsplash.com/photo-1492684223066-81342ee5ff30",
+],
 burlesque: [
   "https://images.unsplash.com/photo-1516280440614-37939bbacd81",
   "https://images.unsplash.com/photo-1501386761578-eac5c94b800a",
   "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f",
+],
+"18_plus": [
+  "https://images.unsplash.com/photo-1492684223066-81342ee5ff30",
+  "https://images.unsplash.com/photo-1506157786151-b8491531f063",
+  "https://images.unsplash.com/photo-1514525253161-7a46d19cd819",
 ],
 book_signing: [
   "https://images.unsplash.com/photo-1521587760476-6c12a4b040da",
