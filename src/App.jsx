@@ -20,6 +20,8 @@ import Signup from "./Signup";
 import AdminRequestPasswordReset from "./AdminRequestPasswordReset";
 import AdminPasswordReset from "./AdminResetPassword";
 import OurSponsorYellowTemplate from "./OurSponsors";
+import PrideRequestPasswordReset from "./PrideRequestPasswordReset";
+import PridePasswordReset from "./PridePasswordReset";
 import Resources from "./Resources";
 import SponsorInvitationPage from "./SponsorInvitationPage";
 import PrideServicePage from "./PrideServicePage";
@@ -42,13 +44,23 @@ function App() {
         <Route path="/contact" element={<ContactPageTemplate />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/volunteer" element={<Volunteer />} />
-        <Route path="/pride-admin/request-password-reset" element={<AdminRequestPasswordReset loginPath="/login" />} />
-<Route path="/pride-admin/reset-password" element={<AdminPasswordReset loginPath="/login" />} />
+    <Route
+  path="/pride-admin/request-password-reset"
+  element={<AdminRequestPasswordReset loginPath="/login" />}
+/>
+
+<Route
+  path="/pride-admin/reset-password"
+  element={<AdminPasswordReset loginPath="/login" />}
+/>
+<Route path="/pride-staff/request-password-reset" element={<PrideRequestPasswordReset loginPath="/login" />} />
+<Route path="/pride-staff/reset-password" element={<PridePasswordReset loginPath="/login" />} />
         <Route path="/kalos-gala" element={<KalosGala />} />
         <Route path="/driscoll-funds" element={<DriscollFunds />} />  
         <Route path="/events" element={<Events />} />
         <Route path="/pride" element={<HartfordCityPride />} />
         <Route path="/support" element={<SponsorInvitation/>}/>
+
         <Route path="/admin-signup" element={<AdminSignup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
