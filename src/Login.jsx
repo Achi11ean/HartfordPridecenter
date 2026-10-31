@@ -4,6 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
+import AdminRequestPasswordReset from "./AdminRequestPasswordReset";
 
 const API = "https://singspacebackend.onrender.com";
 const INTRO_MS = 3200;
@@ -62,6 +63,7 @@ function WelcomeIntro({ onComplete }) {
 }
 
 export default function Login() {
+  const [recovering, setRecovering] = useState(false);
   const [mode, setMode] = useState("admin");
   const [loading, setLoading] = useState(false);
   const [showIntro, setShowIntro] = useState(true);
@@ -116,6 +118,7 @@ export default function Login() {
         </aside>
 
         <section className="hpl-card" aria-labelledby="hpl-login-title">
+          {recovering ? <AdminRequestPasswordReset embedded initialUsername={form.username} onBack={() => { setRecovering(false); requestAnimationFrame(() => usernameRef.current?.focus()); }} /> : <>
           <div className="hpl-mobile-brand"><LoginIcon name="heart" size={18} /><span>Hartford Pride Center</span></div>
           <div className="hpl-login-heading"><span className="hpl-login-icon"><LoginIcon name="lock" size={23} /></span><p className="hpl-eyebrow">Your community workspace</p><h1 id="hpl-login-title">Welcome back<span>.</span></h1><p>Sign in and pick up where you left off.</p></div>
           <div className="hpl-role-switch" role="group" aria-label="Choose your login role">
@@ -128,6 +131,8 @@ export default function Login() {
             <button type="submit" className="hpl-submit" disabled={loading}>{loading ? <><span className="hpl-spinner" aria-hidden="true" />Signing in…</> : <>Sign in as {mode === "admin" ? "Admin" : "Staff"}<LoginIcon name="arrow" size={18} /></>}</button>
             <p className="hpl-login-note" aria-live="polite">{loading ? "Checking your details. Please wait." : `Use your ${mode} username and PIN to continue.`}</p>
           </form>
+          {mode === "admin" && <button type="button" className="hpl-recover" disabled={loading} onClick={() => setRecovering(true)}>Forgot your admin PIN?</button>}
+          </>}
           <div className="hpl-card-footer"><LoginIcon name="heart" size={13} /><span>Here, you belong.</span></div>
         </section>
       </div>
@@ -137,6 +142,8 @@ export default function Login() {
 }
 
 const STYLES = `
+.hpl-recover{display:block;min-height:44px;margin:12px auto 0;padding:8px 12px;border:0;background:transparent;color:#795388;text-decoration:underline;font-size:12px}
+
 .hpl-page,.hpl-intro{font:14px/1.6 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#3b3045;color-scheme:light;-webkit-font-smoothing:antialiased}
 .hpl-page *,.hpl-intro *{box-sizing:border-box}.hpl-page :is(h1,h2,p),.hpl-intro :is(h1,p){margin:0}.hpl-page button,.hpl-intro button{font-family:inherit;cursor:pointer}.hpl-page button:disabled{cursor:wait;opacity:.65}.hpl-page button:focus-visible,.hpl-intro button:focus-visible{outline:3px solid #876498;outline-offset:4px}
 .hpl-page{--hpl-header-offset:148px;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:calc(var(--hpl-header-offset) + 22px) 16px 25px;background:radial-gradient(ellipse at 10% 10%,#f6dce880,transparent 40%),radial-gradient(ellipse at 90% 95%,#e2e9f780,transparent 45%),#f9f6f2}

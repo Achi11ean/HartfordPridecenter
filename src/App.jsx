@@ -17,6 +17,8 @@ import DriscollFund from "./DriscollFund";
 import KalosGala from "./KalosGala";
 import StaffDashboard from "./StaffDashboard";
 import Signup from "./Signup";
+import AdminRequestPasswordReset from "./AdminRequestPasswordReset";
+import AdminPasswordReset from "./AdminResetPassword";
 import OurSponsorYellowTemplate from "./OurSponsors";
 import Resources from "./Resources";
 import SponsorInvitationPage from "./SponsorInvitationPage";
@@ -40,6 +42,8 @@ function App() {
         <Route path="/contact" element={<ContactPageTemplate />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/volunteer" element={<Volunteer />} />
+        <Route path="/pride-admin/request-password-reset" element={<AdminRequestPasswordReset loginPath="/login" />} />
+<Route path="/pride-admin/reset-password" element={<AdminPasswordReset loginPath="/login" />} />
         <Route path="/kalos-gala" element={<KalosGala />} />
         <Route path="/driscoll-funds" element={<DriscollFunds />} />  
         <Route path="/events" element={<Events />} />
