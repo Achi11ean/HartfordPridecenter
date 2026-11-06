@@ -53,6 +53,7 @@ function App() {
   path="/pride-admin/reset-password"
   element={<AdminPasswordReset loginPath="/login" />}
 />
+
 <Route path="/pride-staff/request-password-reset" element={<PrideRequestPasswordReset loginPath="/login" />} />
 <Route path="/pride-staff/reset-password" element={<PridePasswordReset loginPath="/login" />} />
         <Route path="/kalos-gala" element={<KalosGala />} />
